@@ -8,6 +8,11 @@ export const Routes = [
     icon: AiOutlineHome,
   },
   {
+    title: "شهداؤنا",
+    href: "/martyers",
+    icon: RxLayers,
+  },
+  {
     title: "من نحن",
     href: "/about",
     icon: RxLayers,

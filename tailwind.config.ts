@@ -22,17 +22,17 @@ module.exports = {
         text_light: "#181D31",
 
         // Primary theme variables
-        primary: "#17D1C6",
+        primary: "#5B913B",
         primary_hover: "#12a79d",
 
         overlay: "#01201e74",
 
         // Secondary theme variables
-        secondary: "#1E3250",
+        secondary: "#1e272e",
 
         blue: "#2980b9",
 
-        gray_overlay:"#ababab2a"
+        gray_overlay: "#ababab2a",
       },
 
       fontFamily: {
@@ -73,7 +73,7 @@ module.exports = {
       backgroundImage: {
         "home-landing": "url('/home-landing.jpg')",
         "about-landing": "url('/about-landing.jpg')",
-        "subscribe": "url('/subscribe.jpg')",
+        subscribe: "url('/subscribe.jpg')",
       },
     },
   },

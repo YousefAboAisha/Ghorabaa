@@ -9,7 +9,7 @@ import Image from "next/image";
 import logo from "@/public/zad-logo.svg";
 import Button from "./UI/inputs/button";
 import ProfilePopper from "./UI/modals/profilePopper";
-import { FiUser } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 
 export interface NavbarProps {
   session: {
@@ -60,13 +60,13 @@ const Navbar = ({ session }: NavbarProps) => {
           {!session ? (
             <Link
               href={"/signin"}
-              className="h-full w-full px-3 md:px-1 outline-none"
+              className="h-full w-full outline-none"
               prefetch
             >
               <Button
-                title="تسجيل الدخول"
+                title="إضافة قصة"
                 className="bg-primary text-sm px-3 md:px-1"
-                icon={<FiUser />}
+                icon={<FiPlus />}
                 hasShiningBar={false}
               />
             </Link>
