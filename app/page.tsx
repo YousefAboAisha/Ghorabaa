@@ -1,7 +1,5 @@
-import Footer from "@/components/footer";
 import Comments from "@/containers/home/comments";
-import Features from "@/containers/home/recentlyAddedMartyers";
-import Hero from "@/containers/home/hero";
+import RecentlyAddedMartyers from "@/containers/home/recentlyAddedMartyers";
 import Landing from "@/containers/home/landing";
 import MartyersStatistics from "@/containers/home/martyersStatistics";
 import TodaysMartyer from "@/containers/home/todaysMartyer";
@@ -28,9 +26,9 @@ export default function Home() {
     <>
       <Landing />
       <MartyersStatistics />
-      <div className="container mx-auto">
+      <div className="container">
         <TodaysMartyer />
-        <Features />
+        <RecentlyAddedMartyers />
       </div>
       <div className="container">
         {/* <Hero /> */}

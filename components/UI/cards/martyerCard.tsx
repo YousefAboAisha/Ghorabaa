@@ -1,8 +1,9 @@
 import Image from "next/image";
 import { BsEye } from "react-icons/bs";
-import image from "@/public/majd.png";
+import image from "@/public/work.jpg";
 import Link from "next/link";
 import Button from "../inputs/button";
+
 export type TalentCardType = {
   id: number;
   name?: string | undefined;
@@ -17,20 +18,16 @@ export type TalentCardType = {
 
 const MartyerCard = ({ name, id, major }: TalentCardType) => {
   return (
-    <div className="relative group w-full flex flex-col items-center border bg-white rounded-2xl p-4">
-      <div className="relative">
+    <div className="relative group w-full flex flex-col items-center border bg-white rounded-2xl overflow-hidden hover:shadow-xl duration-700">
+      <div className="relative max-h-[300px] overflow-hidden">
         <Image
           src={image || "./user.png"}
           alt="img"
-          className="w-[85px] h-[85px] rounded-full border border-light"
+          className="w-full h-full rounded-2xk rounded-b-none group-hover:scale-125 duration-700"
         />
       </div>
 
-      <h2 className="mt-4 text-sm">{name}</h2>
-
-      <p className="text-primary text-[12px] mt-1">{major}</p>
-
-      <div className="flex flex-col justify-center mb-6 mt-4 w-full">
+      <div className="relative p-4">
         <h4 className="text-[13px] font-bold">الشهيد/ محمد عبدالله حسب الله</h4>
         <p className="text-gray-600 text-[13px] mt-2">
           تجربتي كانت رائعة! الخدمة كانت سريعة والمنتج تجاوز توقعاتي. أنصح
@@ -49,13 +46,11 @@ const MartyerCard = ({ name, id, major }: TalentCardType) => {
             <p>عاماً</p>
           </div>
         </div>
-      </div>
 
-      <div className="w-full">
-        <Link href={`/talents/${id}`}>
+        <Link href={`/martyers/${id}`} className="mt-4">
           <Button
             title="عرض الملف الشخصي"
-            className="bg-primary text-white text-[12px]"
+            className="bg-primary text-white text-[12px] mt-4"
             icon={<BsEye size={18} />}
             hasShiningBar={false}
           />

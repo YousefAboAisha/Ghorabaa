@@ -30,7 +30,7 @@ const Navbar = ({ session }: NavbarProps) => {
         <Link
           key={index}
           href={href}
-          className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-md font-primary outline-none ${
+          className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-sm font-primary outline-none ${
             pathname === `${href}` ? "text-primary font-normal" : ""
           }`}
           title={title}
@@ -59,13 +59,13 @@ const Navbar = ({ session }: NavbarProps) => {
           {/* Conditionally render Sign In or Profile Icon */}
           {!session ? (
             <Link
-              href={"/signin"}
+              href={"/addMartyer"}
               className="h-full w-full outline-none"
               prefetch
             >
               <Button
                 title="إضافة قصة"
-                className="bg-primary text-sm px-3 md:px-1"
+                className="bg-primary text-[13px] px-3 md:px-1"
                 icon={<FiPlus />}
                 hasShiningBar={false}
               />

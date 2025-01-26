@@ -9,11 +9,7 @@ type FeatureCardProps = {
   profession: string;
 };
 
-const CommentCard = ({
-  reviewText,
-  reviewerName,
-  profession,
-}: FeatureCardProps) => {
+const CommentCard = ({ reviewText, reviewerName }: FeatureCardProps) => {
   return (
     <div className="relative flex flex-col gap-4 p-5 rounded-lg bg-white shadow-md border-b-4 border-primary w-full odd:translate-y-10 hover:shadow-2xl duration-300 cursor-pointer ">
       <div className="flex items-center gap-1 text-[11px]">

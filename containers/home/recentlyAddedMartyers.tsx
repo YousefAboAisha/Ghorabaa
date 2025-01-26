@@ -3,11 +3,13 @@ import MartyerCard from "@/components/UI/cards/martyerCard";
 import Heading from "@/components/UI/typography/heading";
 import { featuresData } from "@/data/featuresData";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import Link from "next/link";
+import { BsArrowLeft } from "react-icons/bs";
 
 const RecentlyAddedMartyers = () => {
   const breakboints = {
@@ -42,7 +44,6 @@ const RecentlyAddedMartyers = () => {
         modules={[Autoplay, Navigation]}
         pagination={{ clickable: true }}
         autoplay={{ delay: 3000 }}
-        className="mt-8"
         breakpoints={breakboints}
       >
         {featuresData.map((elem, index) => (
@@ -50,6 +51,14 @@ const RecentlyAddedMartyers = () => {
             <MartyerCard />
           </SwiperSlide>
         ))}
+
+        <Link
+          href={"/"}
+          className="text-primary font-bold  flex items-center gap-2 justify-center mt-6 hover:underline"
+        >
+          <p>عرض المزيد</p>
+          <BsArrowLeft />
+        </Link>
       </Swiper>
     </div>
   );
