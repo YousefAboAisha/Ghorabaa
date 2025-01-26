@@ -59,7 +59,7 @@ const Navbar = ({ session }: NavbarProps) => {
           {/* Conditionally render Sign In or Profile Icon */}
           {!session ? (
             <Link
-              href={"/addMartyer"}
+              href={"/addMartyr"}
               className="h-full w-full outline-none"
               prefetch
             >

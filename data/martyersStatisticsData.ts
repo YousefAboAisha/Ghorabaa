@@ -1,4 +1,4 @@
-export const MartyersStatisticsData = [
+export const MartyrsStatisticsData = [
   {
     label: "العدد الإجمالي",
     number: 70500,

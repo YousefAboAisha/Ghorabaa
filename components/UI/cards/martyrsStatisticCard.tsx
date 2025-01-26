@@ -7,7 +7,7 @@ type LeasingCardProps = {
   color: string;
 };
 
-const MartyersStatisticCard = ({ label, number }: LeasingCardProps) => {
+const MartyrsStatisticCard = ({ label, number }: LeasingCardProps) => {
   const [animatedNumber, setAnimatedNumber] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -75,4 +75,4 @@ const MartyersStatisticCard = ({ label, number }: LeasingCardProps) => {
   );
 };
 
-export default MartyersStatisticCard;
+export default MartyrsStatisticCard;

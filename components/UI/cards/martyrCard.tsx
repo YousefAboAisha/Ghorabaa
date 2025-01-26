@@ -16,14 +16,14 @@ export type TalentCardType = {
   bio?: string | undefined;
 };
 
-const MartyerCard = ({ name, id, major }: TalentCardType) => {
+const MartyrCard = ({ name, id, major }: TalentCardType) => {
   return (
     <div className="relative group w-full flex flex-col items-center border bg-white rounded-2xl overflow-hidden hover:shadow-xl duration-700">
       <div className="relative max-h-[300px] overflow-hidden">
         <Image
           src={image || "./user.png"}
           alt="img"
-          className="w-full h-full rounded-2xk rounded-b-none group-hover:scale-125 duration-700"
+          className="w-full rounded-2xl rounded-b-none group-hover:scale-125 duration-700"
         />
       </div>
 
@@ -47,7 +47,7 @@ const MartyerCard = ({ name, id, major }: TalentCardType) => {
           </div>
         </div>
 
-        <Link href={`/martyers/${id}`} className="mt-4">
+        <Link href={`/martyrs/${id}`} className="mt-4">
           <Button
             title="عرض الملف الشخصي"
             className="bg-primary text-white text-[12px] mt-4"
@@ -60,4 +60,4 @@ const MartyerCard = ({ name, id, major }: TalentCardType) => {
   );
 };
 
-export default MartyerCard;
+export default MartyrCard;

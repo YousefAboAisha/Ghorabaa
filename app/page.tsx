@@ -1,8 +1,8 @@
 import Comments from "@/containers/home/comments";
-import RecentlyAddedMartyers from "@/containers/home/recentlyAddedMartyers";
 import Landing from "@/containers/home/landing";
-import MartyersStatistics from "@/containers/home/martyersStatistics";
-import TodaysMartyer from "@/containers/home/todaysMartyer";
+import MartyrsStatistics from "@/containers/home/martyersStatistics";
+import RecentlyAddedMartyrs from "@/containers/home/recentlyAddedMartyers";
+import TodaysMartyr from "@/containers/home/todaysMartyer";
 
 export async function generateMetadata() {
   return {
@@ -25,10 +25,10 @@ export default function Home() {
   return (
     <>
       <Landing />
-      <MartyersStatistics />
+      <MartyrsStatistics />
       <div className="container">
-        <TodaysMartyer />
-        <RecentlyAddedMartyers />
+        <TodaysMartyr />
+        <RecentlyAddedMartyrs />
       </div>
       <div className="container">
         {/* <Hero /> */}

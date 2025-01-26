@@ -1,8 +1,8 @@
-import MartyersStatisticCard from "@/components/UI/cards/martyersStatisticCard";
+import MartyrsStatisticCard from "@/components/UI/cards/martyrsStatisticCard";
 import Heading from "@/components/UI/typography/heading";
-import { MartyersStatisticsData } from "@/data/martyersStatisticsData";
+import { MartyrsStatisticsData } from "@/data/martyersStatisticsData";
 
-const MartyersStatistics = () => {
+const MartyrsStatistics = () => {
   return (
     <div className="mt-24 ">
       <div className="container mt-24 mb-24 py-10">
@@ -15,9 +15,9 @@ const MartyersStatistics = () => {
         />
 
         <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-          {MartyersStatisticsData.map(({ label, number, color }, index) => {
+          {MartyrsStatisticsData.map(({ label, number, color }, index) => {
             return (
-              <MartyersStatisticCard
+              <MartyrsStatisticCard
                 key={index}
                 label={label}
                 number={number}
@@ -31,4 +31,4 @@ const MartyersStatistics = () => {
   );
 };
 
-export default MartyersStatistics;
+export default MartyrsStatistics;

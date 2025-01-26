@@ -1,5 +1,5 @@
 "use client";
-import MartyerCard from "@/components/UI/cards/martyerCard";
+import MartyrCard from "@/components/UI/cards/martyrCard";
 import Heading from "@/components/UI/typography/heading";
 import { featuresData } from "@/data/featuresData";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,7 +11,7 @@ import "swiper/css/scrollbar";
 import Link from "next/link";
 import { BsArrowLeft } from "react-icons/bs";
 
-const RecentlyAddedMartyers = () => {
+const RecentlyAddedMartyrs = () => {
   const breakboints = {
     // When window width is >= 640px
     200: {
@@ -39,22 +39,24 @@ const RecentlyAddedMartyers = () => {
         className="text-lg"
         details="فَرِحِينَ بِمَا آتَاهُمُ اللَّهُ مِن فَضْلِهِ وَيَسْتَبْشِرُونَ بِالَّذِينَ لَمْ يَلْحَقُوا بِهِم مِّنْ خَلْفِهِمْ أَلَّا خَوْفٌ عَلَيْهِمْ وَلَا هُمْ يَحْزَنُونَ"
       />
+
       <Swiper
         spaceBetween={8}
         modules={[Autoplay, Navigation]}
         pagination={{ clickable: true }}
         autoplay={{ delay: 3000 }}
         breakpoints={breakboints}
+        className="mt-8"
       >
         {featuresData.map((elem, index) => (
           <SwiperSlide key={index}>
-            <MartyerCard />
+            <MartyrCard />
           </SwiperSlide>
         ))}
 
         <Link
           href={"/"}
-          className="text-primary font-bold  flex items-center gap-2 justify-center mt-6 hover:underline"
+          className="text-primary flex items-center gap-2 justify-center mt-6 hover:underline text-sm w-fit mx-auto"
         >
           <p>عرض المزيد</p>
           <BsArrowLeft />
@@ -64,4 +66,4 @@ const RecentlyAddedMartyers = () => {
   );
 };
 
-export default RecentlyAddedMartyers;
+export default RecentlyAddedMartyrs;

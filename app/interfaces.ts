@@ -1,29 +1,25 @@
 import { Document } from "mongoose";
 
 // Define the User interface
-export interface UserInterface extends Document {
-  name: string;
-  email: string;
-  password: string;
-  phoneNumber: number;
-  profession: string;
-  rememberMe: boolean;
-  isVerified: boolean;
-  hasCompleteProfile: boolean;
+export interface MartyrInterface extends Document {
+  id_number: number;
+  first_name: string;
+  father_name: string;
+  grandfather_name: string;
+  last_name: string;
+  birth_date: string;
+  death_date: string;
+  city: string;
+  neighbourhood: string;
+  bio: string;
+  status: string;
   createdAt: Date;
-  subscriptions: SubscriptionInterface[]; // Array of subscription objects
+  comments: CommentInterface[]; // Array of subscription objects
 }
 
 // Define the SubscriptionInterface
-export interface SubscriptionInterface extends Document {
-  leasing_type: string;
-  start_date: string;
-  end_date: string;
-  payment_method: string;
-  notes: string;
-  isLastingCustomer: boolean;
-  room_id: string;
-  seat_id: string;
-  status: string;
+export interface CommentInterface extends Document {
+  author: string;
+  comment_text: string;
   createdAt: Date;
 }

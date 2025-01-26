@@ -4,20 +4,18 @@ import Image from "next/image";
 import React from "react";
 import { BsDash, BsEye } from "react-icons/bs";
 
-const TodaysMartyer = () => {
+const TodaysMartyr = () => {
   return (
     <div className="section grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="flex flex-col items-start">
         <Heading
           title=""
           highLightText="شهيد اليوم"
-          additionalStyles="mx-0 mb-2 text-3xl !w-fit"
           details="وَلَا تَقُولُوا لِمَن يُقْتَلُ فِي سَبِيلِ اللَّهِ أَمْوَاتٌ ۚ بَلْ أَحْيَاءٌ وَلَٰكِن لّا تَشْعُرُونَ"
           highlightColor="before:bg-primary"
-          className="!w-fit"
         />
 
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="flex flex-col gap-2 mt-4">
           <div className="flex flex-row items-center gap-4 text-[14px]">
             <h4 className="font-bold text-lg  ">محمد عبدالله حسب الله</h4>
             <div className="flex items-center gap-1 text-red-500 font-bold">
@@ -64,11 +62,11 @@ const TodaysMartyer = () => {
         src={"/work.jpg"}
         width={1000}
         height={1000}
-        alt="Today's martyer"
+        alt="Today's martyr"
         className="shadow-2xl rounded-2xl z-10"
       />
     </div>
   );
 };
 
-export default TodaysMartyer;
+export default TodaysMartyr;
