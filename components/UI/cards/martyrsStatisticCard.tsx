@@ -25,13 +25,14 @@ const MartyrsStatisticCard = ({ label, number }: LeasingCardProps) => {
       { threshold: 0.7 } // Trigger when 50% of the component is visible
     );
 
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
+    const currentCardRef = cardRef.current;
+    if (currentCardRef) {
+      observer.observe(currentCardRef);
     }
 
     return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
+      if (currentCardRef) {
+        observer.unobserve(currentCardRef);
       }
     };
   }, [number]);

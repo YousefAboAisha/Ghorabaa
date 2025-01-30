@@ -58,12 +58,8 @@ const Martyr = () => {
 
         {/* Martyr Cards Grid */}
         <div className="cards-grid-4 my-12">
-          {currentMartyrs.map((martyr) => (
-            <MartyrCard
-              key={martyr.id}
-              name={martyr.name}
-              bio={martyr.description}
-            />
+          {currentMartyrs.map((martyr, index) => (
+            <MartyrCard key={index} />
           ))}
         </div>
 

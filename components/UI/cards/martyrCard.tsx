@@ -3,20 +3,9 @@ import { BsEye } from "react-icons/bs";
 import image from "@/public/work.jpg";
 import Link from "next/link";
 import Button from "../inputs/button";
+// import { MartyrInterface } from "@/app/interfaces";
 
-export type TalentCardType = {
-  martyr_id: number;
-  name?: string | undefined;
-  isFullTime?: boolean | undefined;
-  major?: string | undefined;
-  profileURL?: string | undefined;
-  rate?: number | undefined;
-  skills?: string[] | undefined;
-  university?: string | undefined;
-  bio?: string | undefined;
-};
-
-const MartyrCard = ({ name, martyr_id, major }: TalentCardType) => {
+const MartyrCard = () => {
   return (
     <div className="relative group w-full flex flex-col items-center border bg-white rounded-2xl overflow-hidden hover:shadow-xl duration-700">
       <div className="relative max-h-[300px] overflow-hidden">
@@ -47,7 +36,7 @@ const MartyrCard = ({ name, martyr_id, major }: TalentCardType) => {
           </div>
         </div>
 
-        <Link href={`/martyr/${martyr_id}`} className="mt-4">
+        <Link href={`/martyr/1`} className="mt-4">
           <Button
             title="عرض الملف الشخصي"
             className="bg-primary text-white text-[12px] mt-4"
