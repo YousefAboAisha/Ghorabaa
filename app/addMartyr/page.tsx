@@ -12,10 +12,14 @@ import { FiArrowDown } from "react-icons/fi";
 import Select from "@/components/UI/inputs/selectInput";
 import { leasingPlansOptions } from "@/data/leasingPlansOptions";
 import TextArea from "@/components/UI/inputs/textArea";
+import Image from "next/image";
+import { CiImageOn } from "react-icons/ci";
 
 const AddMartyr = () => {
   const [formErrors, setFormErrors] = useState<string>("");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  // Updated initialValues to include image
   const initialValues = {
     id_number: "",
     first_name: "",
@@ -27,8 +31,10 @@ const AddMartyr = () => {
     city: "",
     neighbourhood: "",
     notes: "",
+    image: null as File | null, // Add image field
   };
 
+  // Updated validationSchema to include image validation (optional)
   const validationSchema = Yup.object({
     id_number: Yup.string().required("يرجى إدخال رقم الهوية"),
     first_name: Yup.string().required("يرجى إدخال الاسم الأول"),
@@ -40,6 +46,14 @@ const AddMartyr = () => {
     city: Yup.string().required("يرجى اختيار المدينة"),
     neighbourhood: Yup.string().required("يرجى اختيار الحي"),
     notes: Yup.string().required("يرجى إدخال السيرة الذاتية"),
+    image: Yup.mixed()
+      .required("يرجى إضافة صورة") // Optional: Validate that an image is uploaded
+      .test("fileSize", "حجم الصورة كبير جدًا", (value) => {
+        if (value) {
+          return (value as File).size <= 5 * 1024 * 1024; // 5MB limit
+        }
+        return true;
+      }),
   });
 
   const handleSubmit = async (
@@ -53,12 +67,21 @@ const AddMartyr = () => {
     setFormErrors("");
 
     try {
+      // Create FormData object to handle file upload
+      const formData = new FormData();
+      Object.entries(values).forEach(([key, value]) => {
+        if (key === "image" && value) {
+          formData.append(key, value); // Append the image file
+        } else {
+          formData.append(key, value as string); // Append other fields
+        }
+      });
+
+      console.log(formData);
+
       const response = await fetch("/api/martyr/create", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+        body: formData, // Use FormData instead of JSON
       });
 
       const data = await response.json();
@@ -75,7 +98,7 @@ const AddMartyr = () => {
 
       // Redirect to martyrs page after a short delay
       setTimeout(() => {
-        window.location.href = "/martyrs";
+        // window.location.href = "/martyrs";
       }, 1000);
 
       console.log("Martyr has been added successfully!", data);
@@ -130,9 +153,7 @@ const AddMartyr = () => {
                   placeholder="رقم الهوية"
                   label="رقم الهوية"
                   icon={BiIdCard}
-                  className={`focus:border-primary ${
-                    errors.id_number && "!border-[red]"
-                  }`}
+                  className={`focus:border-primary`}
                   aria-label="رقم الهوية"
                   aria-invalid={!!errors.id_number}
                 />
@@ -154,9 +175,7 @@ const AddMartyr = () => {
                     placeholder="الاسم الأول"
                     label="الاسم الأول"
                     icon={BiUser}
-                    className={`focus:border-primary ${
-                      errors.first_name && "!border-[red]"
-                    }`}
+                    className={`focus:border-primary`}
                     aria-label="الاسم الأول"
                     aria-invalid={!!errors.first_name}
                   />
@@ -176,9 +195,7 @@ const AddMartyr = () => {
                     placeholder="اسم الأب"
                     label="اسم الأب"
                     icon={BiUser}
-                    className={`focus:border-primary ${
-                      errors.father_name && "!border-[red]"
-                    }`}
+                    className={`focus:border-primary`}
                     aria-label="اسم الأب"
                     aria-invalid={!!errors.father_name}
                   />
@@ -201,9 +218,7 @@ const AddMartyr = () => {
                     placeholder="اسم الجد"
                     label="اسم الجد"
                     icon={BiUser}
-                    className={`focus:border-primary ${
-                      errors.grandfather_name && "!border-[red]"
-                    }`}
+                    className={`focus:border-primary`}
                     aria-label="اسم الجد"
                     aria-invalid={!!errors.grandfather_name}
                   />
@@ -223,9 +238,7 @@ const AddMartyr = () => {
                     placeholder="اسم العائلة"
                     label="اسم العائلة"
                     icon={BiUser}
-                    className={`focus:border-primary ${
-                      errors.last_name && "!border-[red]"
-                    }`}
+                    className={`focus:border-primary`}
                     aria-label="اسم العائلة"
                     aria-invalid={!!errors.last_name}
                   />
@@ -247,9 +260,7 @@ const AddMartyr = () => {
                     type="date"
                     placeholder="تاريخ الميلاد"
                     label="تاريخ الميلاد"
-                    className={`focus:border-primary ${
-                      errors.birth_date && "!border-[red]"
-                    }`}
+                    className={`focus:border-primary`}
                     aria-label="تاريخ الميلاد"
                     aria-invalid={!!errors.birth_date}
                   />
@@ -268,9 +279,7 @@ const AddMartyr = () => {
                     type="date"
                     placeholder="تاريخ الاستشهاد"
                     label="تاريخ الاستشهاد"
-                    className={`focus:border-primary ${
-                      errors.death_date && "!border-[red]"
-                    }`}
+                    className={`focus:border-primary`}
                     aria-label="تاريخ الاستشهاد"
                     aria-invalid={!!errors.death_date}
                   />
@@ -292,9 +301,7 @@ const AddMartyr = () => {
                   icon={<FiArrowDown />}
                   value={values.city}
                   onChange={(e) => setFieldValue("city", e.target.value)}
-                  className={`focus:border-primary ${
-                    errors.city && "!border-[red]"
-                  }`}
+                  className={`focus:border-primary`}
                 />
                 <ErrorMessage
                   name="city"
@@ -314,9 +321,7 @@ const AddMartyr = () => {
                   onChange={(e) =>
                     setFieldValue("neighbourhood", e.target.value)
                   }
-                  className={`focus:border-primary ${
-                    errors.neighbourhood && "!border-[red]"
-                  }`}
+                  className={`focus:border-primary`}
                 />
                 <ErrorMessage
                   name="neighbourhood"
@@ -342,11 +347,64 @@ const AddMartyr = () => {
                 />
               </div>
 
+              <div className="grid grid-cols-3 gap-4 mt-4 w-full h-40 max-h-40">
+                <label
+                  title="Upload your photo"
+                  className={`${
+                    false ? "cursor-not-allowed" : "cursor-pointer"
+                  } relative h-full rounded-md border col-span-2`} // col-span-2 takes 2/3 of the grid (75%)
+                >
+                  <input
+                    disabled={false}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        setFieldValue("image", e.target.files[0]); // Set the image file
+                        setImagePreview(URL.createObjectURL(e.target.files[0]));
+                      }
+                    }}
+                    className={`w-full h-full absolute opacity-0 disabled:cursor-not-allowed cursor-pointer`}
+                  />
+
+                  <div className="abs-center flex flex-col items-center justify-center gap-2">
+                    <CiImageOn size={70} className="text-gray-200" />
+                    <span className="text-[11px] text-theme text-center">
+                      اضغط هنا لإرفاق صورة الشهيد
+                    </span>
+                  </div>
+                </label>
+
+                {/* col-span-1 takes 1/3 of the grid (25%) */}
+                <div className="relative col-span-1 border rounded-md h-40">
+                  {imagePreview && (
+                    <Image
+                      src={imagePreview}
+                      alt="Preview"
+                      width={100}
+                      height={100}
+                      className="rounded-md h-full w-full"
+                    />
+                  )}
+
+                  {!imagePreview && (
+                    <span className="abs-center text-gray-600 text-[10px]">
+                      الصورة ستظهر هنا
+                    </span>
+                  )}
+                </div>
+                <ErrorMessage
+                  name="image"
+                  component="div"
+                  className="text-red-500 mt-2 font-bold text-[12px]"
+                />
+              </div>
+
               {/* Submit Button */}
               <Button
                 title={"إرسال"}
                 type="submit"
-                className="bg-primary w-full hover:shadow-lg"
+                className="bg-primary w-full hover:shadow-lg text-sm mt-6"
                 icon={<BiSend className="rotate-180" />}
                 loading={isSubmitting}
                 disabled={isSubmitting}

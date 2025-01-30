@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       birth_date,
       death_date,
       city,
-      neighbourhood,
+      neighborhood,
       bio,
     } = body;
 
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       birth_date,
       death_date,
       city,
-      neighbourhood,
+      neighborhood,
       bio,
       comments: [],
     });

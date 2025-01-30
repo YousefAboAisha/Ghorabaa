@@ -31,10 +31,8 @@ export default function Home() {
         <RecentlyAddedMartyrs />
       </div>
       <div className="container">
-        {/* <Hero /> */}
         <Comments />
       </div>
-      {/* <Footer /> */}
     </>
   );
 }

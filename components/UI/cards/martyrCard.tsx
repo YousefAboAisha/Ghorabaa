@@ -5,7 +5,7 @@ import Link from "next/link";
 import Button from "../inputs/button";
 
 export type TalentCardType = {
-  id: number;
+  martyr_id: number;
   name?: string | undefined;
   isFullTime?: boolean | undefined;
   major?: string | undefined;
@@ -16,7 +16,7 @@ export type TalentCardType = {
   bio?: string | undefined;
 };
 
-const MartyrCard = ({ name, id, major }: TalentCardType) => {
+const MartyrCard = ({ name, martyr_id, major }: TalentCardType) => {
   return (
     <div className="relative group w-full flex flex-col items-center border bg-white rounded-2xl overflow-hidden hover:shadow-xl duration-700">
       <div className="relative max-h-[300px] overflow-hidden">
@@ -47,7 +47,7 @@ const MartyrCard = ({ name, id, major }: TalentCardType) => {
           </div>
         </div>
 
-        <Link href={`/martyrs/${id}`} className="mt-4">
+        <Link href={`/martyr/${martyr_id}`} className="mt-4">
           <Button
             title="عرض الملف الشخصي"
             className="bg-primary text-white text-[12px] mt-4"

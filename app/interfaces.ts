@@ -10,13 +10,13 @@ export interface MartyrInterface extends Document {
   birth_date: string;
   death_date: string;
   city: string;
-  neighbourhood: string;
+  neighborhood: string;
   bio: string;
   status: string;
+  image: Buffer; // Binary data of the image
   createdAt: Date;
   comments: CommentInterface[]; // Array of subscription objects
 }
-
 // Define the SubscriptionInterface
 export interface CommentInterface extends Document {
   author: string;

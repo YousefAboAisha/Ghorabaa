@@ -37,9 +37,9 @@ const martyrSchema = new Schema<MartyrInterface>(
       type: String,
       required: [true, "City is required and cannot be empty."],
     },
-    neighbourhood: {
+    neighborhood: {
       type: String,
-      required: [true, "Neighbourhood is required and cannot be empty."],
+      required: [true, "Neighborhood is required and cannot be empty."],
     },
     bio: {
       type: String,

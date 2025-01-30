@@ -1,10 +1,11 @@
 import Button from "@/components/UI/inputs/button";
 import Heading from "@/components/UI/typography/heading";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { BsDash, BsEye } from "react-icons/bs";
 
-const TodaysMartyr = () => {
+const TodaysMartyr = ({ martyr_id }) => {
   return (
     <div className="section grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="flex flex-col items-start">
@@ -50,12 +51,17 @@ const TodaysMartyr = () => {
           </p>
         </div>
 
-        <Button
-          title="عرض الملف الشخصي"
-          className="lg:w-4/12 md:6/12 w-full bg-primary text-[12px] mt-4"
-          icon={<BsEye size={18} />}
-          hasShiningBar={false}
-        />
+        <Link
+          href={`/martyr/${martyr_id}`}
+          className="mt-4 lg:w-4/12 md:6/12 1"
+        >
+          <Button
+            title="عرض الملف الشخصي"
+            className="w-full bg-primary text-[12px]"
+            icon={<BsEye size={18} />}
+            hasShiningBar={false}
+          />
+        </Link>
       </div>
 
       <Image
