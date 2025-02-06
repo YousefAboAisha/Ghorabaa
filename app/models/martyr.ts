@@ -1,11 +1,16 @@
 import { Schema, model, models } from "mongoose";
 import { MartyrInterface } from "@/app/interfaces";
 
+enum enumStatus {
+  pending = "0",
+  verified = "1",
+}
+
 // Define the Martyr schema
 const martyrSchema = new Schema<MartyrInterface>(
   {
     id_number: {
-      type: Number,
+      type: String,
       required: [true, "ID number is required and cannot be empty."],
       unique: true, // Ensure ID number is unique
     },
@@ -45,9 +50,15 @@ const martyrSchema = new Schema<MartyrInterface>(
       type: String,
       required: [true, "Bio is required and cannot be empty."],
     },
+    image: {
+      type: String,
+      required: [true, "Image is required and cannot be empty."],
+    },
     status: {
       type: String,
-      default: "0",
+      enum: Object.values(enumStatus),
+      default: enumStatus.pending,
+      required:true,
     },
     comments: {
       type: [{ type: Schema.Types.ObjectId, ref: "Comment" }], // Reference to Comment documents

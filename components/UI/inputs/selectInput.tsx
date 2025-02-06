@@ -4,7 +4,7 @@ type SelectProps = {
   title: string;
   options: {
     title: string;
-    value: number;
+    value: string;
   }[];
   additionalStyles?: string;
   icon?: JSX.Element;

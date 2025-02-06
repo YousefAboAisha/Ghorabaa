@@ -17,7 +17,7 @@ export default async function middleware(req: NextRequest) {
     // Decrypt the session
     session = await decrypt(cookie);
   } catch (error) {
-    console.error("Failed to decrypt session:", error);
+    // console.error("Failed to decrypt session:", error);
     // If session decryption fails, treat it as no session
     session = null;
   }

@@ -1,10 +1,31 @@
+"use client";
 import Image from "next/image";
 import React from "react";
 import image from "@/public/work.jpg";
 import { BsDash } from "react-icons/bs";
 import MartyrComment from "@/containers/martyrDetails/martyrComment";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import TextArea from "@/components/UI/inputs/textArea";
+import Button from "@/components/UI/inputs/button";
+import * as Yup from "yup";
+import { BiPlus } from "react-icons/bi";
+import Input from "@/components/UI/inputs/input";
 
 const MartyrPage = () => {
+  // Updated initialValues to include image
+  const initialValues = {
+    martyr_friend_name: "",
+    notes: "",
+  };
+
+  // Updated validationSchema to include image validation (optional)
+  const validationSchema = Yup.object({
+    martyr_friend_name: Yup.string().required(
+      "يرجى إدخال اسمك لإضافة التعليق "
+    ),
+    notes: Yup.string().required("يرجى كتابة التعليق للشهيد"),
+  });
+
   return (
     <div className="container lg:w-6/12 mt-[70px] min-h-screen">
       <div className="flex flex-col gap-2 mt-24">
@@ -83,13 +104,70 @@ const MartyrPage = () => {
             </p>
           </div>
         </div>
-        ``
       </div>
 
       <div className="flex flex-col gap-2 mb-10 mt-8">
         <h2 className="font-bold text-lg">التعليقات</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={() => {}}
+        >
+          {({ isSubmitting, values, errors }) => (
+            <Form className="flex flex-col gap-6 mt-4">
+              {/* ID Number Field */}
+              <div>
+                <Field
+                  disabled={isSubmitting}
+                  name="martyr_friend_name"
+                  as={Input}
+                  type="text"
+                  placeholder="اسم الصديق"
+                  label="التعليق بواسطة"
+                  className={`focus:border-primary bg-white`}
+                  value={values.martyr_friend_name}
+                  aria-label="الاسم الأول"
+                  aria-invalid={!!errors.martyr_friend_name}
+                />
+                <ErrorMessage
+                  name="martyr_friend_name"
+                  component="div"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
+                />
+              </div>
+
+              {/* Notes Field */}
+              <div>
+                <Field
+                  name="notes"
+                  as={TextArea}
+                  placeholder="في ذكرى الشهداء"
+                  label="أضف تعليقاً أو ذكرى للشهيد"
+                  className={`w-full focus:border-primary bg-white`}
+                  value={values.notes}
+                />
+                <ErrorMessage
+                  name="notes"
+                  component="div"
+                  className="text-red-500 font-bold text-[10px]"
+                />
+              </div>
+
+              <Button
+                title={"إضافة"}
+                type="submit"
+                className="bg-primary lg:w-3/12 md:w-4/12 w-5/12 text-sm"
+                icon={<BiPlus size={17} />}
+                loading={isSubmitting}
+                disabled={isSubmitting}
+                hasShiningBar={false}
+              />
+            </Form>
+          )}
+        </Formik>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
           <MartyrComment />
           <MartyrComment />
           <MartyrComment />
