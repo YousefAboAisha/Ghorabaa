@@ -1,45 +1,43 @@
-import { FooterData } from "@/data/footerData";
-import logo from "@/public/zad-logo.svg";
-import FooterCard from "./UI/cards/footercard";
-import Link from "next/link";
-import { Social } from "@/data/social";
-import Image from "next/image";
+"use client";
+// import logo from "@/public/zad-logo.svg";
+// import Link from "next/link";
+// import Image from "next/image";
+// import { Routes } from "@/data/routes";
+// import { usePathname } from "next/navigation";
+// import { useMemo } from "react";
 
 const Footer = () => {
   const date = new Date().getFullYear();
+  // const pathname = usePathname();
+
+  // const renderedRoutes = useMemo(
+  //   () =>
+  //     Routes.map(({ title, href }, index) => (
+  //       <Link
+  //         key={index}
+  //         href={href}
+  //         className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-md outline-none ${
+  //           pathname === `${href}` ? "text-primary font-semibold" : ""
+  //         }`}
+  //         title={title}
+  //       >
+  //         <h2 className="text-sm">{title}</h2>
+  //       </Link>
+  //     )),
+  //   [pathname]
+  // );
 
   return (
-    <footer className="relative container grid grid-cols-1 lg:grid-cols-2 mt-24 mb-12 p-6 gap-4 border rounded-md bg-white">
-      <div className="flex flex-col gap-4">
-        {FooterData.map(({ label, value, image }, index) => {
-          return (
-            <FooterCard key={index} label={label} value={value} image={image} />
-          );
-        })}
-      </div>
+    <footer className="relative container mt-24 mb-12 p-6 gap-4 border rounded-md bg-white ">
+      {/* <div className="flex gap-4 justify-center items-center">
+        {renderedRoutes}
+      </div> */}
 
-      <div className="flex flex-col gap-3 items-center justify-center">
-        <Link href={"/"} className="flex items-center gap-2 text-xl mb-4">
-          <Image src={logo} width={50} alt="Zad logo" className="h-auto" />
-        </Link>
-
-        <div className="flex flex-row mx-auto gap-3 my-2">
-          {Social.map(({ href, image }, index) => {
-            return (
-              <Link
-                key={index}
-                href={href}
-                target={"_blank"}
-                rel={"noreferrer"}
-              >
-                <Image src={image} alt="icon" height={20} width={20} />
-              </Link>
-            );
-          })}
-        </div>
-        <p className="text-sm text-grey text-center">
-          جميع الحقوق محفوظة لدى يوسف رشاد أبو عيشة {date}
+      <div className="flex items-center justify-center gap-1">
+        <p>
+          هذه المنصة صدقة جارية عن روح الشهيد المهندس/ محمد عبد الله حسب الله
         </p>
+        {date} 🧡
       </div>
     </footer>
   );

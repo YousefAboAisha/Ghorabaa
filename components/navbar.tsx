@@ -9,17 +9,19 @@ import Image from "next/image";
 import logo from "@/public/zad-logo.svg";
 import Button from "./UI/inputs/button";
 import ProfilePopper from "./UI/modals/profilePopper";
-import { FiPlus } from "react-icons/fi";
+import { FiUser } from "react-icons/fi";
 
-export interface NavbarProps {
-  session: {
-    userId: string;
-    expiresAt: Date;
+export interface SessionProps {
+  session?: {
+    id: string;
+    name: string;
     email: string;
+    role: "ADMIN";
+    expiresAt: Date;
   } | null;
 }
 
-const Navbar = ({ session }: NavbarProps) => {
+const Navbar = ({ session }: SessionProps) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -30,7 +32,7 @@ const Navbar = ({ session }: NavbarProps) => {
         <Link
           key={index}
           href={href}
-          className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-sm font-primary outline-none ${
+          className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-md font-primary outline-none ${
             pathname === `${href}` ? "text-primary font-normal" : ""
           }`}
           title={title}
@@ -41,12 +43,17 @@ const Navbar = ({ session }: NavbarProps) => {
     [pathname]
   );
 
+  // Only render the navbar if it's not an admin page
+  if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) {
+    return null;
+  }
+
   return (
     <nav
       className={`fixed w-full h-[70px] top-0 left-0 z-[1000] items-center bg-white text-black duration-500 border-light border-b shadow-sm`}
     >
       <div className="container flex flex-row justify-between items-center h-full">
-        <div className={`flex items-center gap-1 md:gap-6 lg:gap-8`}>
+        <div className={`flex items-center gap-1`}>
           <div className="flex md:hidden cursor-pointer">
             <Hamburger
               toggled={sidebarIsOpen}
@@ -59,23 +66,23 @@ const Navbar = ({ session }: NavbarProps) => {
           {/* Conditionally render Sign In or Profile Icon */}
           {!session ? (
             <Link
-              href={"/addMartyr"}
-              className="h-full w-full outline-none"
+              href={"/signin"}
+              className="h-full w-full px-3 md:px-1 outline-none"
               prefetch
             >
               <Button
-                title="إضافة قصة"
-                className="bg-primary text-[13px] px-3 md:px-1"
-                icon={<FiPlus />}
+                title="تسجيل الدخول"
+                className="bg-primary text-sm "
+                icon={<FiUser />}
                 hasShiningBar={false}
               />
             </Link>
-          ) : (
+          ) : session?.role == "ADMIN" ? (
             <ProfilePopper session={session} />
-          )}
+          ) : null}
 
           {/* Routes */}
-          <div className="hidden md:flex gap-6">{renderedRoutes}</div>
+          <div className="hidden md:flex gap-6 mr-4">{renderedRoutes}</div>
         </div>
 
         {/* Logo */}

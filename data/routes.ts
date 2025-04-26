@@ -13,6 +13,16 @@ export const Routes = [
     icon: RxLayers,
   },
   {
+    title: "حملات التبرع",
+    href: "/dontaionCampaigns",
+    icon: RxLayers,
+  },
+  {
+    title: "الفعاليات",
+    href: "/events",
+    icon: RxLayers,
+  },
+  {
     title: "من نحن",
     href: "/about",
     icon: RxLayers,

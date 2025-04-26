@@ -3,11 +3,11 @@ import { BsEye } from "react-icons/bs";
 import image from "@/public/work.jpg";
 import Link from "next/link";
 import Button from "../inputs/button";
-// import { MartyrInterface } from "@/app/interfaces";
+import { MartyrInterface } from "@/app/interfaces";
 
-const MartyrCard = () => {
+const MartyrCard = ({ martyr }: { martyr: MartyrInterface }) => {
   return (
-    <div className="relative group w-full flex flex-col items-center border bg-white rounded-2xl overflow-hidden hover:shadow-xl duration-700">
+    <div className="relative group w-full flex flex-col border bg-white rounded-2xl overflow-hidden hover:shadow-xl duration-700">
       <div className="relative max-h-[300px] overflow-hidden">
         <Image
           src={image || "./user.png"}
@@ -17,15 +17,17 @@ const MartyrCard = () => {
       </div>
 
       <div className="relative p-4">
-        <h4 className="text-[13px] font-bold">الشهيد/ محمد عبدالله حسب الله</h4>
-        <p className="text-gray-600 text-[13px] mt-2">
-          تجربتي كانت رائعة! الخدمة كانت سريعة والمنتج تجاوز توقعاتي. أنصح
-          الجميع بهذه الخدمةتجربتي كانت رائعة!
-        </p>
+        <div className="flex items-center gap-2 text-[13px] ">
+          <h4 className="text-gray-500">الشهيد/ </h4>
+          <h4 className="font-bold">
+            {martyr?.first_name} {martyr?.last_name} محمد عبدالله حسب الله
+          </h4>
+        </div>
+        <p className="text-gray-600 text-[13px] mt-2">{martyr?.bio}</p>
 
         <div className="flex items-center gap-2 text-[13px] mt-4 font-bold ">
           <p className="text-red-600">استشهد بتاريخ: </p>
-          <p>8 - 12 - 2023</p>
+          <p>{martyr?.death_date} 8 - 12 - 2023 </p>
         </div>
 
         <div className="flex items-center gap-2 text-[13px] mt-2 font-bold ">

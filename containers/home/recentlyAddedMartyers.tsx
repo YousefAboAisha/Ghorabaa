@@ -1,7 +1,6 @@
 "use client";
 import MartyrCard from "@/components/UI/cards/martyrCard";
 import Heading from "@/components/UI/typography/heading";
-import { featuresData } from "@/data/featuresData";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
@@ -48,11 +47,21 @@ const RecentlyAddedMartyrs = () => {
         breakpoints={breakboints}
         className="mt-8"
       >
-        {featuresData.map((elem, index) => (
-          <SwiperSlide key={index}>
-            <MartyrCard />
-          </SwiperSlide>
-        ))}
+        <SwiperSlide>
+          <MartyrCard />
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <MartyrCard />
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <MartyrCard />
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <MartyrCard />
+        </SwiperSlide>
 
         <Link
           href={"/"}
