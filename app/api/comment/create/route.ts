@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   // Get the session and userId
   const session = await getSession();
   console.log("Session", session);
-  const userId = session?.userId;
+  const userId = session?.id;
 
   console.log("Customer user ID", userId);
 

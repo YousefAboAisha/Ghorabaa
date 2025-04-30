@@ -16,7 +16,7 @@ export interface SessionProps {
     id: string;
     name: string;
     email: string;
-    role: "ADMIN";
+    role: string;
     expiresAt: Date;
   } | null;
 }

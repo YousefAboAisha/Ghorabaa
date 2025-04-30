@@ -1,5 +1,5 @@
 "use client";
-import { NavbarProps } from "@/components/navbar";
+import { SessionProps } from "@/components/navbar";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Link from "next/link";
 import { CiEdit, CiLogout, CiUser } from "react-icons/ci";
@@ -7,7 +7,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function ProfilePopper({ session }: NavbarProps) {
+function ProfilePopper({ session }: SessionProps) {
   const handleLogout = async () => {
     try {
       const response = await fetch("/api/users/signout", {
@@ -21,7 +21,7 @@ function ProfilePopper({ session }: NavbarProps) {
       // toast.success("تم تسجيل الخروج بنجاح!");
 
       // setTimeout(() => {
-        window.location.reload();
+      window.location.reload();
       // }, 1000);
     } catch (error) {
       console.error("Logout failed:", error);

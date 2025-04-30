@@ -5,9 +5,14 @@ import { cookies } from "next/headers";
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
 
-export async function createSession(userId: string, email: string) {
+export async function createSession(
+  id: string,
+  name: string,
+  email: string,
+  role: string
+) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  const session = await encrypt({ userId, email, expiresAt });
+  const session = await encrypt({ id, name, email, role, expiresAt });
 
   (await cookies()).set("session", session, {
     httpOnly: true,
@@ -20,9 +25,11 @@ export async function deleteSession() {
   (await cookies()).delete("session");
 }
 
-type SessionPayload = {
-  userId: string;
+export type SessionPayload = {
+  id: string;
+  name: string;
   email: string;
+  role: string;
   expiresAt: Date;
 };
 
@@ -41,7 +48,7 @@ export async function decrypt(session: string | undefined = "") {
     });
     return payload;
   } catch (error) {
-    // console.error("Failed to verify session", error);
+    console.error("Failed to verify session", error);
   }
 }
 

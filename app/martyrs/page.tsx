@@ -29,9 +29,6 @@ const Martyr = () => {
 
   // Pagination logic
   const totalPages = Math.ceil(filteredMartyrs.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentMartyrs = filteredMartyrs.slice(startIndex, endIndex);
 
   // Handle page change
   const handlePageChange = (page: number) => {
@@ -143,7 +140,7 @@ const Martyr = () => {
           ) : (
             <div className="cards-grid-4">
               {martyrs?.map((martyr: MartyrInterface, index) => (
-                <MartyrCard key={index} martyr={martyr} />
+                <MartyrCard key={index} />
               ))}
             </div>
           )}

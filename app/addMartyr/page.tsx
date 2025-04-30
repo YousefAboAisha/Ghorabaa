@@ -15,6 +15,7 @@ import { CitiesData } from "@/data/citiesData";
 import ReactImageUploading, { ImageListType } from "react-images-uploading";
 import { CiImageOn } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
+import Image from "next/image";
 
 const AddMartyr = () => {
   const [formErrors, setFormErrors] = useState<string>("");
@@ -386,7 +387,7 @@ const AddMartyr = () => {
                               key={index}
                               className="relative w-fit mt-4 border rounded-lg"
                             >
-                              <img
+                              <Image
                                 src={image.data_url}
                                 alt=""
                                 width={200}

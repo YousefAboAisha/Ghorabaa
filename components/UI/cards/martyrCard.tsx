@@ -3,9 +3,8 @@ import { BsEye } from "react-icons/bs";
 import image from "@/public/work.jpg";
 import Link from "next/link";
 import Button from "../inputs/button";
-import { MartyrInterface } from "@/app/interfaces";
 
-const MartyrCard = ({ martyr }: { martyr: MartyrInterface }) => {
+const MartyrCard = () => {
   return (
     <div className="relative group w-full flex flex-col border bg-white rounded-2xl overflow-hidden hover:shadow-xl duration-700">
       <div className="relative max-h-[300px] overflow-hidden">
@@ -19,15 +18,13 @@ const MartyrCard = ({ martyr }: { martyr: MartyrInterface }) => {
       <div className="relative p-4">
         <div className="flex items-center gap-2 text-[13px] ">
           <h4 className="text-gray-500">الشهيد/ </h4>
-          <h4 className="font-bold">
-            {martyr?.first_name} {martyr?.last_name} محمد عبدالله حسب الله
-          </h4>
+          <h4 className="font-bold">محمد عبدالله حسب الله</h4>
         </div>
-        <p className="text-gray-600 text-[13px] mt-2">{martyr?.bio}</p>
+        <p className="text-gray-600 text-[13px] mt-2"></p>
 
         <div className="flex items-center gap-2 text-[13px] mt-4 font-bold ">
           <p className="text-red-600">استشهد بتاريخ: </p>
-          <p>{martyr?.death_date} 8 - 12 - 2023 </p>
+          <p> 8 - 12 - 2023 </p>
         </div>
 
         <div className="flex items-center gap-2 text-[13px] mt-2 font-bold ">

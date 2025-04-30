@@ -1,7 +1,5 @@
 import React from "react";
 import Image, { StaticImageData } from "next/image";
-import { Social } from "@/data/social";
-import Link from "next/link";
 
 type TeamCardType = {
   name: string;
@@ -20,11 +18,9 @@ export const TeamCard = ({
 }: TeamCardType) => {
   return (
     <div
-      style={
-        {
-          borderColor: color,
-        }
-      }
+      style={{
+        borderColor: color,
+      }}
       className="group relative flex flex-col rounded-xl p-6 shadow-lg hover:shadow-xl duration-500 border-b-8 hover:-translate-y-2 bg-white"
     >
       <div
@@ -54,17 +50,6 @@ export const TeamCard = ({
         >
           {profession}
         </p>
-      </div>
-
-      {/* social media Icons */}
-      <div className="flex flex-row gap-3 mx-auto mt-8">
-        {Social.map(({ href, image }, index) => {
-          return (
-            <Link key={index} href={href} target={"_blank"} rel={"noreferrer"}>
-              <Image src={image} alt="icon" height={20} width={20} />
-            </Link>
-          );
-        })}
       </div>
     </div>
   );

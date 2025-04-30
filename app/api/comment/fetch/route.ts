@@ -10,7 +10,7 @@ export async function GET() {
 
   const session = await getSession();
   console.log("Session", session);
-  const userId = session?.userId;
+  const userId = session?.id;
 
   if (!userId) {
     return NextResponse.json(
