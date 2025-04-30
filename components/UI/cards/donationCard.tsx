@@ -14,7 +14,7 @@ const DonationCard = () => {
       <div className="relative group w-full flex flex-col border bg-white rounded-lg overflow-hidden hover:shadow-xl duration-700">
         <div className="relative max-h-[300px] overflow-hidden">
           <Image
-            src={"/home-landing.jpg"}
+            src={"/event.jpg"}
             alt="img"
             className="w-full rounded-b-none"
             width={1000}

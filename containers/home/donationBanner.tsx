@@ -55,11 +55,11 @@ const DonationBanner = () => {
       </div>
 
       <Image
-        src={"/work.jpg"}
+        src={"/donation.jpg"}
         width={1000}
         height={1000}
         alt="Today's martyr"
-        className="shadow-2xl z-10"
+        className="shadow-2xl z-10 h-full"
       />
     </div>
   );
