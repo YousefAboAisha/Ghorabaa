@@ -1,7 +1,14 @@
+import EventsCards from "@/containers/events/eventsCards";
+import Hero from "@/containers/events/hero";
 import React from "react";
 
-const Events = () => {
-  return <div>This is events page</div>;
+const page = () => {
+  return (
+    <div className="relative">
+      <Hero />
+      <EventsCards />
+    </div>
+  );
 };
 
-export default Events;
+export default page;

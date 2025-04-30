@@ -14,7 +14,7 @@ export const Routes = [
   },
   {
     title: "حملات التبرع",
-    href: "/dontaionCampaigns",
+    href: "/donationCampaigns",
     icon: RxLayers,
   },
   {

@@ -7,7 +7,6 @@ type SelectProps = {
     value: string;
   }[];
   additionalStyles?: string;
-  icon?: JSX.Element;
   label?: string;
   required?: boolean;
 } & React.ComponentProps<"select">;

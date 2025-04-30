@@ -54,7 +54,7 @@ const Navbar = ({ session }: SessionProps) => {
     >
       <div className="container flex flex-row justify-between items-center h-full">
         <div className={`flex items-center gap-1`}>
-          <div className="flex md:hidden cursor-pointer">
+          <div className="flex md:hidden cursor-pointer m-0">
             <Hamburger
               toggled={sidebarIsOpen}
               toggle={setSidebarIsOpen}
@@ -67,12 +67,12 @@ const Navbar = ({ session }: SessionProps) => {
           {!session ? (
             <Link
               href={"/signin"}
-              className="h-full w-full px-3 md:px-1 outline-none"
+              className="h-full w-full outline-none"
               prefetch
             >
               <Button
                 title="تسجيل الدخول"
-                className="bg-primary text-sm "
+                className="bg-primary text-sm px-4 md:px-0"
                 icon={<FiUser />}
                 hasShiningBar={false}
               />

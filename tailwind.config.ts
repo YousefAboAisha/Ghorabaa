@@ -13,26 +13,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Dark Theme variables
-        background_dark: "#181D31",
-        text_dark: "#EEEEEE",
-
-        // Light theme variables
-        background_light: "#f8f8f8",
-        text_light: "#181D31",
-
-        // Primary theme variables
         primary: "#5B913B",
-        primary_hover: "#12a79d",
-
-        overlay: "#01201e74",
-
-        // Secondary theme variables
         secondary: "#1e272e",
-
         blue: "#2980b9",
+        gray_light: "#f3f3f3",
+        gray_dark: "#828282",
 
+        primary_hover: "#12a79d",
+        overlay: "#01201e74",
         gray_overlay: "#ababab2a",
+
+        background_light: "#f8f8f8",
+
       },
 
       fontFamily: {

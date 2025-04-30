@@ -8,7 +8,6 @@ import Input from "@/components/UI/inputs/input";
 import Heading from "@/components/UI/typography/heading";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FiArrowDown } from "react-icons/fi";
 import Select from "@/components/UI/inputs/selectInput";
 import TextArea from "@/components/UI/inputs/textArea";
 import { CountriesData } from "@/data/countriesData";
@@ -295,7 +294,6 @@ const AddMartyr = () => {
                     label="المدينة"
                     options={CountriesData}
                     title="اختر المدينة"
-                    icon={<FiArrowDown />}
                     value={values.city}
                     onChange={(e) => {
                       const selectedCity = e.target.value;
@@ -316,7 +314,6 @@ const AddMartyr = () => {
                     label="الحي"
                     options={cities}
                     title="اختر الحي"
-                    icon={<FiArrowDown />}
                     value={values.neighbourhood}
                     onChange={(e) =>
                       setFieldValue("neighbourhood", e.target.value)

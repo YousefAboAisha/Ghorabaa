@@ -29,10 +29,10 @@ export default function RootLayout({
       <body
         suppressHydrationWarning={true}
         dir="rtl"
-        className="relative w-full h-full bg-background_light"
+        className="relative h-full w-full bg-background_light"
       >
         <NavbarWrapper /> {/* Use the server-side wrapper */}
-        {children}
+        <div className="mt-[70px] min-h-screen">{children}</div>
         <Footer />
       </body>
     </html>
