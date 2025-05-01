@@ -10,13 +10,11 @@ const Footer = () => {
   const date = new Date().getFullYear();
 
   return (
-    <footer className="relative container mt-24 mb-12 p-6 gap-4 border rounded-md bg-white ">
-      <div className="flex items-center justify-center gap-1">
-        <p>
-          هذه المنصة صدقة جارية عن روح الشهيد المهندس/ محمد عبد الله حسب الله
-        </p>
+    <footer className="relative container max-w-fit mt-24 mb-12 p-6 gap-4 border rounded-md bg-white ">
+      <h2 className="text-center text-sm">
+        هذه المنصة صدقة جارية عن روح الشهيد المهندس/ محمد عبد الله حسب الله{" "}
         {date} 🧡
-      </div>
+      </h2>
     </footer>
   );
 };

@@ -119,21 +119,23 @@ const Martyr = () => {
         className="w-fit"
       />
 
-      <div className="mt-12">
+      <div className="mt-12 w-full">
         {/* Search Input */}
-        <Input
-          placeholder="ابحث عن الشهيد.."
-          className="bg-white !h-[50px]"
-          type="text"
-          icon={BiSearch}
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setCurrentPage(1); // Reset to the first page when searching
-          }}
-        />
+        <div className="md:w-[50%] w-full">
+          <Input
+            placeholder="ابحث عن الشهيد.."
+            className="bg-white !h-[50px] w-full"
+            type="text"
+            icon={BiSearch}
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1); // Reset to the first page when searching
+            }}
+          />
+        </div>
 
-        <div className="relative min-h-[70vh] my-8">
+        <div className="relative min-h-[70vh] my-12">
           {/* Martyr Cards Grid */}
           {loading ? (
             renderLoadingSkeletons()
@@ -142,12 +144,19 @@ const Martyr = () => {
               {martyrs?.map((martyr: MartyrInterface, index) => (
                 <MartyrCard key={index} />
               ))}
+              <MartyrCard />
+              <MartyrCard />
+              <MartyrCard />
+              <MartyrCard />
+              <MartyrCard />
+              <MartyrCard />
+              <MartyrCard />
             </div>
           )}
         </div>
 
         {/* Pagination Controls */}
-        <div className="flex justify-center gap-2 my-8">
+        <div className="flex gap-2 justify-center mt-16">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <button
               key={page}

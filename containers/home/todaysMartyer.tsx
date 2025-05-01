@@ -51,13 +51,10 @@ const TodaysMartyr = () => {
           </p>
         </div>
 
-        <Link
-          href={`/martyr/1`}
-          className="mt-4 lg:w-4/12 md:6/12 1"
-        >
+        <Link href={`/martyr/1`} className="mt-4">
           <Button
             title="عرض الملف الشخصي"
-            className="w-full bg-primary text-[12px]"
+            className="w-full bg-primary text-[12px] px-4"
             icon={<BsEye size={18} />}
             hasShiningBar={false}
           />
@@ -65,11 +62,11 @@ const TodaysMartyr = () => {
       </div>
 
       <Image
-        src={"/work.jpg"}
+        src={"/event.jpg"}
         width={1000}
         height={1000}
         alt="Today's martyr"
-        className="shadow-2xl rounded-2xl z-10"
+        className="shadow-2xl rounded-2xl z-10 self-center"
       />
     </div>
   );

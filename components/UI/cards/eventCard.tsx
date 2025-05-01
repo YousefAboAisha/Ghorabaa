@@ -17,7 +17,7 @@ const EventCard = () => {
         </div>
 
         <div className="relative p-4">
-          <h4>يوم الشهيد </h4>
+          <h4 className="font-bold">يوم الشهيد </h4>
 
           <p className="text-gray-600 text-[13px] mt-2">
             هذه تفاصيل الفعالية هذه تفاصيل الفعالية هذه تفاصيل الفعالية هذه
@@ -28,14 +28,14 @@ const EventCard = () => {
           </p>
 
           <div className="flex flex-col gap-2 mt-6 text-[13px]">
-            <div className="flex items-center gap-2 font-bold ">
+            <div className="flex items-center gap-2 text-[12px] font-semibold">
               <FiCalendar className="text-gray_dark" size={16} />
-              <p className="flex items-center gap-1">17 فبراير 2025</p>
+              <h4 className="flex items-center gap-1">17 فبراير 2025</h4>
             </div>
 
-            <div className="flex items-center gap-2 font-bold ">
+            <div className="flex items-center gap-2 text-[12px] font-semibold">
               <FiClock className="text-gray_dark" size={16} />
-              <p className="flex items-center gap-1">الساعة الخامسة مساءً</p>
+              <h4 className="flex items-center gap-1">الساعة الخامسة مساءً</h4>
             </div>
           </div>
         </div>

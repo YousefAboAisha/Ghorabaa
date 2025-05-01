@@ -36,7 +36,7 @@
 
   /* Track */
   ::-webkit-scrollbar-track {
-    @apply bg-primary;
+    @apply bg-gray_light;
   }
 
   /* Handle */

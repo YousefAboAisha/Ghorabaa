@@ -7,14 +7,14 @@ import { FaCoins } from "react-icons/fa";
 
 const DonationBanner = () => {
   return (
-    <div className="section grid grid-cols-1 lg:grid-cols-2 gap-8 bg-primary rounded-xl overflow-hidden">
-      <div className="flex flex-col items-start p-8">
+    <div className="section grid grid-cols-1 lg:grid-cols-2 gap-10 bg-primary rounded-xl overflow-hidden p-10">
+      <div className="flex flex-col">
         <Heading
           title=""
           highLightText="حملات التبرع"
           details="وَلَا تَقُولُوا لِمَن يُقْتَلُ فِي سَبِيلِ اللَّهِ أَمْوَاتٌ ۚ بَلْ أَحْيَاءٌ وَلَٰكِن لّا تَشْعُرُونَ"
-          highlightColor="before:bg-primary"
-          className="text-white"
+          highlightColor="before:bg-secondary"
+          className="text-white !w-fit"
         />
 
         <div className="flex flex-col gap-2 mt-4">
@@ -44,7 +44,7 @@ const DonationBanner = () => {
           </p>
         </div>
 
-        <Link href={`/martyr/1`} className="mt-4 lg:w-4/12 md:6/12 w-full">
+        <Link href={`/martyr/1`} className="mt-6 lg:w-4/12 md:6/12 w-5/12">
           <Button
             title="تبرع الآن"
             className="w-full bg-white !text-black font-bold text-[12px]"
@@ -59,7 +59,7 @@ const DonationBanner = () => {
         width={1000}
         height={1000}
         alt="Today's martyr"
-        className="shadow-2xl z-10 h-full"
+        className="shadow-xl rounded-xl self-center"
       />
     </div>
   );

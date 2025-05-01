@@ -30,23 +30,26 @@ const DonationCard = () => {
             تفاصيل الفعالية هذه تفاصيل الفعالية هذه تفاصيل الفعالية هذه تفاصيل
             الفعالية هذه تفاصيل الفعالية هذه تفاصيل الفعالية هذه تفاصيل الفعالية
             هذه تفاصيل الفعالية هذه تفاصيل الفعالية هذه تفاصيل الفعالية هذه
-            تفاصيل الفعالية هذه تفاصيل الفعالية
+            تفاصيل الفعالية هذه تفاصيل الفعالية.
           </p>
 
-          <div className="flex flex-col gap-2 mt-4 text-md">
-            <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2 mt-6 text-md">
+            <div className="flex items-center justify-between text-[13px]">
               <div className="flex items-center gap-2">
-                <p>نسبة الاكتمال</p>
-                <p className="text-primary font-bold">{progress}%</p>
+                <h4>نسبة الاكتمال</h4>
+                <h4 className="text-primary font-bold">{progress}%</h4>
               </div>
+
               <div className="flex items-center gap-2">
-                <p className="font-bold">{currentAmount} $ </p>
+                <h4 className="font-bold">{currentAmount} $ </h4>
                 <FiArrowLeft />
-                <p className="text-gray_dark">{goalAmount} $</p>
+                <h4 className="text-gray_dark">{goalAmount} $</h4>
               </div>
             </div>
 
-            <div className={`relative bg-gray_light rounded-xl h-1  overflow-hidden`}>
+            <div
+              className={`relative bg-gray_light rounded-xl h-1  overflow-hidden`}
+            >
               <div
                 style={{
                   width: `${progress}%`,
@@ -55,9 +58,9 @@ const DonationCard = () => {
               ></div>
             </div>
 
-            <div className="flex items-center gap-2 font-bold mt-4 text-[12px] text-gray_dark">
-              <p className="">بواسطة | </p>
-              <p className="flex items-center gap-1">يوسف رشاد أبو عيشة</p>
+            <div className="flex items-center gap-2 mt-4 text-[11px] text-gray_dark">
+              <h4 className="">بواسطة | </h4>
+              <h4 className="flex items-center gap-1">يوسف رشاد أبو عيشة</h4>
             </div>
           </div>
         </div>

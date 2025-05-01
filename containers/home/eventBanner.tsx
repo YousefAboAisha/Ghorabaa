@@ -17,7 +17,7 @@ const EventBanner = () => {
         />
 
         <Link
-          href={"/signin"}
+          href={"/events"}
           className="w-6/12 md:w-6/12 lg:w-2/12 outline-none"
         >
           <Button

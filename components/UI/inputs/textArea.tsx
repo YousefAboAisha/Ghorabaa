@@ -23,9 +23,10 @@ const TextArea = ({
 
       <textarea
         {...rest}
-        className={`h-full text-[13px] w-full p-3 pl-2 pr-4 rounded-xl duration-200 outline-none border-2 border-transparent disabled:cursor-not-allowed bg-gray-50 focus:border-blue focus:border-2 disabled:bg-gray-300 disabled:opacity-50 ${className}`}
+        className={`text-[13px] w-full p-3 pl-10 pr-4 rounded-xl duration-200 outline-none border-2 border-transparent disabled:cursor-not-allowed bg-gray-50 focus:border-blue focus:border-2 disabled:bg-gray-300 disabled:opacity-50 ${className}`}
         placeholder={placeholder}
-        rows={8}
+        rows={5}
+        draggable={false}
       ></textarea>
     </>
   );

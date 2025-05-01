@@ -19,7 +19,6 @@ const Signup = () => {
     name: "",
     email: "",
     phoneNumber: "",
-    profession: "",
     password: "",
     confirmPassword: "",
   };
@@ -35,7 +34,6 @@ const Signup = () => {
       .matches(/^[0-9]+$/, "يرجى إدخال أرقام فقط")
       .min(10, "رقم الهاتف يجب أن يكون 10 أرقام على الأقل")
       .required("يرجى إدخال رقم الهاتف"),
-    profession: Yup.string().required("يرجى إدخال التخصص"),
     password: Yup.string()
       .min(6, "كلمة المرور يجب أن تكون 6 أحرف على الأقل")
       .required("يرجى إدخال كلمة المرور"),
@@ -167,25 +165,47 @@ const Signup = () => {
                 />
               </div>
 
-              {/* Email Field */}
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="email"
-                  as={Input}
-                  type="email"
-                  placeholder="البريد الالكتروني"
-                  label="البريد الالكتروني"
-                  icon={BiMailSend}
-                  className={`focus:border-primary`}
-                  aria-label="البريد الالكتروني"
-                  aria-invalid={!!errors.email}
-                />
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  className="text-red-500 mt-2 font-bold text-[12px]"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {/* Email Field */}
+                <div>
+                  <Field
+                    disabled={isSubmitting}
+                    name="email"
+                    as={Input}
+                    type="email"
+                    placeholder="البريد الالكتروني"
+                    label="البريد الالكتروني"
+                    icon={BiMailSend}
+                    className={`focus:border-primary`}
+                    aria-label="البريد الالكتروني"
+                    aria-invalid={!!errors.email}
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="text-red-500 mt-2 font-bold text-[12px]"
+                  />
+                </div>
+                {/* Phone Number Field */}
+                <div>
+                  <Field
+                    disabled={isSubmitting}
+                    name="phoneNumber"
+                    as={Input}
+                    type="text"
+                    placeholder="رقم الجوال"
+                    label="رقم الجوال"
+                    icon={BiPhone}
+                    className={`focus:border-primary`}
+                    aria-label="رقم الجوال"
+                    aria-invalid={!!errors.phoneNumber}
+                  />
+                  <ErrorMessage
+                    name="phoneNumber"
+                    component="div"
+                    className="text-red-500 mt-2 font-bold text-[12px]"
+                  />
+                </div>
               </div>
 
               {/* Password Field */}
@@ -225,27 +245,6 @@ const Signup = () => {
                 />
                 <ErrorMessage
                   name="confirmPassword"
-                  component="div"
-                  className="text-red-500 mt-2 font-bold text-[12px]"
-                />
-              </div>
-
-              {/* Phone Number and Profession Fields */}
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="phoneNumber"
-                  as={Input}
-                  type="text"
-                  placeholder="رقم الجوال"
-                  label="رقم الجوال"
-                  icon={BiPhone}
-                  className={`focus:border-primary`}
-                  aria-label="رقم الجوال"
-                  aria-invalid={!!errors.phoneNumber}
-                />
-                <ErrorMessage
-                  name="phoneNumber"
                   component="div"
                   className="text-red-500 mt-2 font-bold text-[12px]"
                 />

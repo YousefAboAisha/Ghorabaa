@@ -35,7 +35,6 @@ const RecentlyAddedMartyrs = () => {
         highLightText="قصص مضافة حديثاً"
         highlightColor="before:bg-primary"
         title=""
-        className="text-lg"
         details="فَرِحِينَ بِمَا آتَاهُمُ اللَّهُ مِن فَضْلِهِ وَيَسْتَبْشِرُونَ بِالَّذِينَ لَمْ يَلْحَقُوا بِهِم مِّنْ خَلْفِهِمْ أَلَّا خَوْفٌ عَلَيْهِمْ وَلَا هُمْ يَحْزَنُونَ"
       />
 
@@ -64,7 +63,7 @@ const RecentlyAddedMartyrs = () => {
         </SwiperSlide>
 
         <Link
-          href={"/"}
+          href={"/martyrs"}
           className="text-primary flex items-center gap-2 justify-center mt-6 hover:underline text-sm w-fit mx-auto"
         >
           <p>عرض المزيد</p>

@@ -64,13 +64,13 @@ const MartyrsStatisticCard = ({ label, number }: LeasingCardProps) => {
       ref={cardRef}
       className={`relative flex flex-col items-center justify-center gap-6 p-6 py-10 border bg-white`}
     >
-      <h2 className={`text-lg font-el_messiri z-10 text-gray-600`}>{label}</h2>
+      <h2 className={`text-lg z-10 text-gray-600`}>{label}</h2>
 
       <div className="flex flex-row gap-2 z-10 items-center">
         <p className="text-5xl md:text-5xl lg:text-4xl font-extrabold">
           {animatedNumber.toLocaleString()}
         </p>
-        <p className="text-4xl text-primary font-bold">&#43;</p>
+        <p className="text-4xl text-[red] font-bold">&#43;</p>
       </div>
     </div>
   );

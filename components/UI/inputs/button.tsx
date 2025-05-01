@@ -21,12 +21,12 @@ const Button = ({
     <button
       {...rest}
       title={title}
-      className={`relative group uppercase text-white w-full py-[10px] outline-none flex justify-center gap-3 items-center disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer transition shadow-lg rounded-md border-transparent border-[1px] hover:border-[1px] duration-500 overflow-hidden hover:shadow-2xl ${additionalStyles} ${className}`}
+      className={`relative group uppercase text-white text-[12px] w-full py-[10px] outline-none flex justify-center gap-3 items-center disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer transition shadow-lg rounded-md border-transparent border-[1px] hover:border-[1px] duration-500 overflow-hidden hover:shadow-2xl ${additionalStyles} ${className}`}
     >
-      <p className="flex flex-row gap-2 items-center font-secondary">
+      <p className="flex flex-row gap-2 items-center font-noto_kufi">
         {title}
         {loading ? (
-          <AiOutlineLoading3Quarters size={20} className="animate-spin" />
+          <AiOutlineLoading3Quarters size={17} className="animate-spin" />
         ) : (
           icon
         )}

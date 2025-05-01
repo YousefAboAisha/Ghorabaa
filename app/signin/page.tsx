@@ -187,7 +187,7 @@ const Signin = () => {
                     className="text-primary font-bold hover:underline"
                     href={"/signup"}
                   >
-                    الانضمام إلينا
+                    إنشاء حساب
                   </Link>
                 </div>
               )}

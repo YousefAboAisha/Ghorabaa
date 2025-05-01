@@ -1,29 +1,24 @@
 "use client";
 import Image from "next/image";
 import React from "react";
-import image from "@/public/work.jpg";
+import image from "@/public/hasabo.jpg";
 import { BsDash } from "react-icons/bs";
 import MartyrComment from "@/containers/martyrDetails/martyrComment";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import TextArea from "@/components/UI/inputs/textArea";
-import Button from "@/components/UI/inputs/button";
 import * as Yup from "yup";
-import { BiPlus } from "react-icons/bi";
-import Input from "@/components/UI/inputs/input";
+import { FiPlus } from "react-icons/fi";
+import Button from "@/components/UI/inputs/button";
 
 const MartyrPage = () => {
   // Updated initialValues to include image
   const initialValues = {
-    martyr_friend_name: "",
-    notes: "",
+    comment: "",
   };
 
   // Updated validationSchema to include image validation (optional)
   const validationSchema = Yup.object({
-    martyr_friend_name: Yup.string().required(
-      "يرجى إدخال اسمك لإضافة التعليق "
-    ),
-    notes: Yup.string().required("يرجى كتابة التعليق للشهيد"),
+    comment: Yup.string().required("يرجى كتابة التعليق للشهيد"),
   });
 
   return (
@@ -115,53 +110,25 @@ const MartyrPage = () => {
           onSubmit={() => {}}
         >
           {({ isSubmitting, values, errors }) => (
-            <Form className="flex flex-col gap-6 mt-4">
-              {/* ID Number Field */}
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="martyr_friend_name"
-                  as={Input}
-                  type="text"
-                  placeholder="اسم الصديق"
-                  label="التعليق بواسطة"
-                  className={`focus:border-primary bg-white`}
-                  value={values.martyr_friend_name}
-                  aria-label="الاسم الأول"
-                  aria-invalid={!!errors.martyr_friend_name}
-                />
-                <ErrorMessage
-                  name="martyr_friend_name"
-                  component="div"
-                  className="text-red-500 mt-2 font-bold text-[10px]"
-                />
-              </div>
-
+            <Form className="relative mt-4">
               {/* Notes Field */}
-              <div>
-                <Field
-                  name="notes"
-                  as={TextArea}
-                  placeholder="في ذكرى الشهداء"
-                  label="أضف تعليقاً أو ذكرى للشهيد"
-                  className={`w-full focus:border-primary bg-white`}
-                  value={values.notes}
-                />
-                <ErrorMessage
-                  name="notes"
-                  component="div"
-                  className="text-red-500 font-bold text-[10px]"
-                />
-              </div>
+              <Field
+                name="comment"
+                as={TextArea}
+                placeholder="أضف تعليقاً أو ذكرى.."
+                className={`w-full focus:border-secondary bg-white`}
+                value={values.comment}
+                aria-invalid={!!errors.comment}
+              />
 
               <Button
                 title={"إضافة"}
                 type="submit"
-                className="bg-primary lg:w-3/12 md:w-4/12 w-5/12 text-sm"
-                icon={<BiPlus size={17} />}
-                loading={isSubmitting}
-                disabled={isSubmitting}
+                className="bg-secondary text-white text-sm w-8/12 md:w-4/12 lg:w-2/12 mt-2"
+                disabled={isSubmitting || values.comment == ""}
                 hasShiningBar={false}
+                icon={<FiPlus />}
+                loading={isSubmitting}
               />
             </Form>
           )}

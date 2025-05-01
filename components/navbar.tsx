@@ -32,7 +32,7 @@ const Navbar = ({ session }: SessionProps) => {
         <Link
           key={index}
           href={href}
-          className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-md font-primary outline-none ${
+          className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-sm font-primary outline-none font-noto_kufi ${
             pathname === `${href}` ? "text-primary font-normal" : ""
           }`}
           title={title}
@@ -67,12 +67,12 @@ const Navbar = ({ session }: SessionProps) => {
           {!session ? (
             <Link
               href={"/signin"}
-              className="h-full w-full outline-none"
+              className="h-full outline-none"
               prefetch
             >
               <Button
                 title="تسجيل الدخول"
-                className="bg-primary text-sm px-4 md:px-0"
+                className="bg-primary px-4 md:px-3"
                 icon={<FiUser />}
                 hasShiningBar={false}
               />
