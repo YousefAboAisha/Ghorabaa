@@ -4,13 +4,21 @@ import { CommentInterface } from "@/app/interfaces";
 // Define the Comment schema
 const commentSchema = new Schema<CommentInterface>(
   {
-    author: {
-      type: String,
-      required: [true, "Author is required and cannot be empty."],
-    },
-    comment_text: {
+    text: {
       type: String,
       required: [true, "Comment text is required and cannot be empty."],
+    },
+
+    user_id: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
+    story_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Story",
+      required: true,
     },
   },
   {

@@ -1,6 +1,6 @@
 import clientPromise from "@/app/lib/mongodb";
 import { NextResponse } from "next/server";
-import Martyr from "@/app/models/martyr";
+import Martyr from "@/app/models/story";
 
 export async function POST(req: Request) {
   const client = await clientPromise;
