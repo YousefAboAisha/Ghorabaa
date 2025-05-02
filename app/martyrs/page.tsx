@@ -4,38 +4,38 @@ import MartyrCard from "@/components/UI/cards/martyrCard";
 import Input from "@/components/UI/inputs/input";
 import Heading from "@/components/UI/typography/heading";
 import { BiSearch } from "react-icons/bi";
-import { MartyrInterface } from "../interfaces";
 import { toast } from "react-toastify";
 import { CiImageOn } from "react-icons/ci";
+import { StoryInterface } from "../interfaces";
 
-// Mock data for martyrs (replace this with your actual data fetching logic)
-const mockMartyrs = Array.from({ length: 20 }, (_, i) => ({
+// Mock data for stories (replace this with your actual data fetching logic)
+const mockStories = Array.from({ length: 20 }, (_, i) => ({
   id: i + 1,
   name: `الشهيد ${i + 1}`,
   description: "وصف قصير عن الشهيد...",
 }));
 
 const Martyr = () => {
-  const [martyrs, setMartyrs] = useState<MartyrInterface[] | undefined>([]);
+  const [stories, setStories] = useState<StoryInterface[] | undefined>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 8; // Number of items to display per page
 
-  // Filter martyrs based on search query
-  const filteredMartyrs = mockMartyrs.filter((martyr) =>
+  // Filter stories based on search query
+  const filteredStories = mockStories.filter((martyr) =>
     martyr.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredMartyrs.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredStories.length / itemsPerPage);
 
   // Handle page change
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const getAllMartyrs = async () => {
+  const getAllStories = async () => {
     setLoading(true);
     try {
       const response = await fetch("/api/martyr/fetchAll");
@@ -46,10 +46,10 @@ const Martyr = () => {
       }
 
       const res = await response.json();
-      console.log("Response:", res.martyrs);
+      console.log("Response:", res.stories);
 
-      if (res?.martyrs) {
-        setMartyrs(res.martyrs);
+      if (res?.stories) {
+        setStories(res.stories);
         setLoading(false);
       }
     } catch (error) {
@@ -62,7 +62,7 @@ const Martyr = () => {
   };
 
   useEffect(() => {
-    getAllMartyrs();
+    getAllStories();
   }, []);
 
   const renderLoadingSkeletons = () => (
@@ -141,7 +141,7 @@ const Martyr = () => {
             renderLoadingSkeletons()
           ) : (
             <div className="cards-grid-4">
-              {martyrs?.map((martyr: MartyrInterface, index) => (
+              {stories?.map((martyr: StoryInterface, index) => (
                 <MartyrCard key={index} />
               ))}
               <MartyrCard />
