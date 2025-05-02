@@ -35,35 +35,33 @@ const MartyrPage = () => {
             quality={100}
           />
         </div>
-        <div className="relative p-4">
-          <h4 className="text-[13px] font-bold">
-            الشهيد/ محمد عبدالله حسب الله
-          </h4>
+        <div className="relative mt-6">
+          <h4 className="text-lg font-bold">الشهيد/ محمد عبدالله حسب الله</h4>
 
           <div className="flex items-center gap-8 mt-4">
-            <div className="flex items-center gap-2 text-[13px] font-bold ">
-              <p className="text-gray-500">ولد بتاريخ: </p>
-              <p>25 - 01 - 2002</p>
+            <div className="flex items-center gap-2 text-sm font-bold ">
+              <h4 className="text-gray_dark">ولد بتاريخ: </h4>
+              <h4>25 - 01 - 2002</h4>
             </div>
 
-            <div className="flex items-center gap-2 text-[13px] font-bold ">
-              <p className="text-gray-500">استشهد بتاريخ: </p>
-              <p>8 - 12 - 2023</p>
+            <div className="flex items-center gap-2 text-sm font-bold ">
+              <h4 className="text-gray_dark">استشهد بتاريخ: </h4>
+              <h4>8 - 12 - 2023</h4>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-[13px] font-bold mt-2">
-            <p className="text-gray-500"> المنطقة: </p>
+          <div className="flex items-center gap-2 text-sm font-bold mt-2">
+            <h4 className="text-gray_dark"> المنطقة: </h4>
             <div className="flex items-center gap-1">
-              <p>غزة</p>
+              <h4>غزة</h4>
               <BsDash size={16} />
-              <p>تل الهوا</p>
+              <h4>تل الهوا</h4>
             </div>
           </div>
 
           <div className="mt-8">
             <h2 className="font-bold text-lg">نبذة عن الشهيد </h2>
-            <p className="text-gray-600 text-[13px] mt-2">
+            <p className="text-gray-600 text-md mt-2">
               الشّهيد الصّديق وحبيب القلب المُهندس محمد عبد الله حسب الله، كان
               سَمِحاً، باسماً، عاليَ الخُلق والهِمّة، مُلتزماً ومحبوباً من
               الجميع، متفوقاً في دراسته في كافة مراحله الدراسية، حيث كان من
@@ -116,7 +114,7 @@ const MartyrPage = () => {
                 name="comment"
                 as={TextArea}
                 placeholder="أضف تعليقاً أو ذكرى.."
-                className={`w-full focus:border-secondary bg-white`}
+                className={`w-full focus:border-secondary bg-white text-md`}
                 value={values.comment}
                 aria-invalid={!!errors.comment}
               />

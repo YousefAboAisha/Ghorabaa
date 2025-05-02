@@ -3,7 +3,7 @@ import Hero from "@/containers/donationCampaigns/hero";
 
 const DonationCampaigns = () => {
   return (
-    <div className="relative">
+    <div className="container relative">
       <Hero />
       <DonationCards />
     </div>

@@ -3,7 +3,7 @@ import Heading from "@/components/UI/typography/heading";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { FaCoins } from "react-icons/fa";
+import { FaCoins, FaEye } from "react-icons/fa";
 
 const DonationBanner = () => {
   return (
@@ -44,11 +44,11 @@ const DonationBanner = () => {
           </p>
         </div>
 
-        <Link href={`/martyr/1`} className="mt-6 lg:w-4/12 md:6/12 w-5/12">
+        <Link href={`/donationCampaigns`} className="mt-6 lg:w-4/12 md:6/12 w-5/12">
           <Button
-            title="تبرع الآن"
+            title="عرض الجميع"
             className="w-full bg-white !text-black font-bold text-[12px]"
-            icon={<FaCoins size={18} />}
+            icon={<FaEye size={18} />}
             hasShiningBar={false}
           />
         </Link>

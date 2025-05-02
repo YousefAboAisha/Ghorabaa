@@ -4,7 +4,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="relative">
+    <div className="relative container">
       <Hero />
       <EventsCards />
     </div>
