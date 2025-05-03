@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import image from "@/public/event.jpg";
 import { FiCalendar, FiClock, FiMapPin } from "react-icons/fi";
+import ShareModal from "@/containers/events/shareModal";
 
 export async function generateMetadata() {
   return {
@@ -26,28 +27,39 @@ const page = () => {
           alt="Event Title"
           width={1000}
           height={1000}
-          className="mx-auto rounded-2xl shadow-md z-[10]"
+          className="rounded-2xl shadow-md"
           priority
           quality={100}
         />
+
         <div className="relative mt-6">
-          <h4 className="text-lg font-bold">فعالية يوم الشهيد</h4>
+          <div className="flex items-center gap-2 text-[12px] text-gray_dark">
+            <p>بواسطة: </p>
+            <p>يوسف رشاد أبو عيشة</p>
+            <p> | </p>
+            <p>16 فبراير 2026</p>
+          </div>
+
+          <div className="flex items-center justify-between gap-8">
+            <h4 className="text-lg font-bold">فعالية يوم الشهيد</h4>
+            <ShareModal />
+          </div>
 
           <div className="flex gap-6 mt-6 text-[13px]">
             <div className="flex items-center gap-2 text-[13px] font-semibold">
               <FiCalendar className="text-gray_dark" size={16} />
-              <h4 className="flex items-center gap-1">17 فبراير 2025</h4>
+              <p className="flex items-center gap-1">17 فبراير 2025</p>
             </div>
 
             <div className="flex items-center gap-2 text-[13px] font-semibold">
               <FiClock className="text-gray_dark" size={16} />
-              <h4 className="flex items-center gap-1">الساعة الخامسة مساءً</h4>
+              <p className="flex items-center gap-1">الساعة الخامسة مساءً</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-[13px] font-semibold mt-3">
             <FiMapPin className="text-gray_dark" size={16} />
-            <h4 className="flex items-center gap-1">فندق المشتل</h4>
+            <p className="flex items-center gap-1">فندق المشتل</p>
           </div>
 
           <div className="mt-8">

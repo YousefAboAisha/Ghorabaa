@@ -5,21 +5,27 @@ import { Role } from "../enums";
 // Define the Martyr schema
 const userSchema = new Schema<UserInterface>(
   {
+    profile_image: {
+      type: String,
+      required: [true, "Profile Image is required and cannot be empty."],
+    },
+
     name: {
       type: String,
-      required: [true, "ID number is required and cannot be empty."],
-      unique: true, // Ensure ID number is unique
+      required: [true, "User name is required and cannot be empty."],
     },
 
     email: {
       type: String,
-      required: [true, "Profile image is required and cannot be empty."],
+      required: [true, "Email is required and cannot be empty."],
+      unique: true,
     },
 
     password: {
       type: String,
-      required: [true, "First name is required and cannot be empty."],
+      required: [true, "Password is required and cannot be empty."],
     },
+
     role: {
       type: String,
       enum: Object.values(Role),

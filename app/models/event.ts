@@ -17,17 +17,17 @@ const eventSchema = new Schema<EventInterface>(
 
     location: {
       type: String,
-      required: true,
+      required: [true, "Event Location is required and cannot be empty."],
     },
 
     start_date: {
       type: Date,
-      required: true,
+      required: [true, "Event start_date is required and cannot be empty."],
     },
 
     end_date: {
       type: Date,
-      required: true,
+      required: [true, "Event end_date is required and cannot be empty."],
     },
 
     status: {

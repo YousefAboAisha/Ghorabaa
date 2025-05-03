@@ -125,7 +125,7 @@ const Signin = () => {
                 <ErrorMessage
                   name="email"
                   component="div"
-                  className="text-red-500 mt-2 font-bold text-[12px]"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
                 />
               </div>
 
@@ -146,12 +146,12 @@ const Signin = () => {
                 <ErrorMessage
                   name="password"
                   component="div"
-                  className="text-red-500 mt-2 font-bold text-[12px]"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
                 />
 
                 {/* Remember Me Checkbox */}
                 <label className="flex items-center gap-2 cursor-pointer w-fit">
-                  <p>تذكر كلمة المرور</p>
+                  <p className="text-sm">تذكر كلمة المرور</p>
                   <Input
                     placeholder=""
                     type="checkbox"

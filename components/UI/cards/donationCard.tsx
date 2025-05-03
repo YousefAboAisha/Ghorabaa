@@ -23,7 +23,7 @@ const DonationCard = () => {
         </div>
 
         <div className="relative p-4">
-          <h4>حملة الإحسان الخيرية</h4>
+          <h2 className="font-bold">حملة الإحسان الخيرية</h2>
 
           <p className="text-gray-600 text-[13px] mt-2">
             هذه تفاصيل الفعالية هذه تفاصيل الفعالية هذه تفاصيل الفعالية هذه
@@ -36,14 +36,14 @@ const DonationCard = () => {
           <div className="flex flex-col gap-2 mt-6 text-md">
             <div className="flex items-center justify-between text-[13px]">
               <div className="flex items-center gap-2">
-                <h4>نسبة الاكتمال</h4>
-                <h4 className="text-primary font-bold">{progress}%</h4>
+                <p>نسبة الاكتمال</p>
+                <p className="text-primary font-bold">{progress}%</p>
               </div>
 
               <div className="flex items-center gap-2">
-                <h4 className="font-bold">{currentAmount} $ </h4>
+                <p className="font-bold">{currentAmount} $ </p>
                 <FiArrowLeft />
-                <h4 className="text-gray_dark">{goalAmount} $</h4>
+                <p className="text-gray_dark">{goalAmount} $</p>
               </div>
             </div>
 
@@ -59,8 +59,8 @@ const DonationCard = () => {
             </div>
 
             <div className="flex items-center gap-2 mt-4 text-[11px] text-gray_dark">
-              <h4 className="">بواسطة | </h4>
-              <h4 className="flex items-center gap-1">يوسف رشاد أبو عيشة</h4>
+              <p className="">بواسطة | </p>
+              <p className="flex items-center gap-1">يوسف رشاد أبو عيشة</p>
             </div>
           </div>
         </div>

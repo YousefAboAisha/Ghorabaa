@@ -10,6 +10,7 @@ import {
 
 // Define the User interface
 export interface UserInterface extends Document {
+  profile_image: string;
   name: string;
   email: string;
   password: string;
@@ -30,7 +31,6 @@ export interface StoryInterface extends Document {
   city: string;
   neighborhood: string;
   bio: string;
-  related_images: string[];
   status: StoryStatus;
   publisher_id: Types.ObjectId; // Reference to User who made the add story request.
   createdAt: Date;

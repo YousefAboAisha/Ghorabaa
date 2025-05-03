@@ -51,7 +51,7 @@ const TodaysMartyr = () => {
           </p>
         </div>
 
-        <Link href={`/martyr/1`} className="mt-4">
+        <Link href={`/martyrs/1`} className="mt-4">
           <Button
             title="عرض الملف الشخصي"
             className="w-full bg-primary text-[12px] px-4"
@@ -66,7 +66,7 @@ const TodaysMartyr = () => {
         width={1000}
         height={1000}
         alt="Today's martyr"
-        className="shadow-2xl rounded-2xl z-10 self-center"
+        className="shadow-2xl rounded-2xl self-center"
       />
     </div>
   );

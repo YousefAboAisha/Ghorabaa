@@ -61,10 +61,6 @@ const storySchema = new Schema<StoryInterface>(
       required: [true, "Bio is required and cannot be empty."],
     },
 
-    related_images: {
-      type: [],
-    },
-
     publisher_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
 
     status: {

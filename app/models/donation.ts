@@ -6,7 +6,7 @@ const donationSchema = new Schema<DonationInterface>(
   {
     amount: {
       type: Number,
-      required: [true, "Donation Title is required and cannot be empty."],
+      required: [true, "Donation amount is required and cannot be empty."],
     },
 
     donationCampaign_id: {

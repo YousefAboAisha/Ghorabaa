@@ -140,7 +140,7 @@ const Signup = () => {
                 <ErrorMessage
                   name="idNumber"
                   component="div"
-                  className="text-red-500 mt-2 font-bold text-[12px]"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
                 />
               </div>
 
@@ -161,7 +161,7 @@ const Signup = () => {
                 <ErrorMessage
                   name="name"
                   component="div"
-                  className="text-red-500 mt-2 font-bold text-[12px]"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
                 />
               </div>
 
@@ -183,7 +183,7 @@ const Signup = () => {
                   <ErrorMessage
                     name="email"
                     component="div"
-                    className="text-red-500 mt-2 font-bold text-[12px]"
+                    className="text-red-500 mt-2 font-bold text-[10px]"
                   />
                 </div>
                 {/* Phone Number Field */}
@@ -203,7 +203,7 @@ const Signup = () => {
                   <ErrorMessage
                     name="phoneNumber"
                     component="div"
-                    className="text-red-500 mt-2 font-bold text-[12px]"
+                    className="text-red-500 mt-2 font-bold text-[10px]"
                   />
                 </div>
               </div>
@@ -225,7 +225,7 @@ const Signup = () => {
                 <ErrorMessage
                   name="password"
                   component="div"
-                  className="text-red-500 mt-2 font-bold text-[12px]"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
                 />
               </div>
 
@@ -246,7 +246,7 @@ const Signup = () => {
                 <ErrorMessage
                   name="confirmPassword"
                   component="div"
-                  className="text-red-500 mt-2 font-bold text-[12px]"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
                 />
               </div>
 

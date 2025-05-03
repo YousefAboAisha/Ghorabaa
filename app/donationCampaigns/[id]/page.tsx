@@ -32,17 +32,17 @@ const page = () => {
           alt="Donation Campaign Title"
           width={1000}
           height={1000}
-          className="mx-auto rounded-2xl shadow-md z-[10]"
+          className="mx-auto rounded-2xl shadow-md"
           priority
           quality={100}
         />
 
         <div className="relative mt-6">
           <div className="flex items-center gap-2 text-[12px] text-gray_dark">
-            <h4>بواسطة: </h4>
-            <h4>يوسف رشاد أبو عيشة</h4>
-            <h4> | </h4>
-            <h4>16 فبراير 2026</h4>
+            <p>بواسطة: </p>
+            <p>يوسف رشاد أبو عيشة</p>
+            <p> | </p>
+            <p>16 فبراير 2026</p>
           </div>
 
           <h4 className="text-lg font-bold mt-2">حملة أيادي الخير</h4>
@@ -50,19 +50,19 @@ const page = () => {
           <div className="flex flex-col gap-2 mt-4 rounded-md border p-6 text-md">
             <div className="flex flex-col gap-2 lg:flex-row lg:items-center justify-between text-sm mb-4">
               <div className="flex items-center gap-2">
-                <h4>تم جمع مبلغ </h4>
-                <h4 className="bg-primary p-1 px-2 text-white rounded-sm">
-                  {currentAmount} ${" "}
-                </h4>
-                <h4>من أصل</h4>
-                <h4 className=" bg-gray-300 p-1 px-2 rounded-sm font-bold">
+                <p>تم جمع مبلغ </p>
+                <p className="bg-primary p-1 px-2 text-white rounded-sm">
+                  {currentAmount} $
+                </p>
+                <p>من أصل</p>
+                <p className=" bg-gray-300 p-1 px-2 rounded-sm font-bold">
                   {goalAmount} $
-                </h4>
+                </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              <h4 className="font-bold text-lg">{progress}%</h4>
+              <p className="font-bold text-lg">{progress}%</p>
               <div
                 className={`relative bg-gray-300 rounded-sm h-1 overflow-hidden w-full`}
               >
@@ -70,7 +70,7 @@ const page = () => {
                   style={{
                     width: `${progress}%`,
                   }}
-                  className="absolute bg-primary right-0 z-10 h-full"
+                  className="absolute bg-primary right-0 z-1 h-full"
                 ></div>
               </div>
             </div>
@@ -131,7 +131,7 @@ const page = () => {
             </div>
 
             <div className="text-primary flex items-center gap-2 justify-center mt-8 hover:underline text-sm w-fit mx-auto cursor-pointer">
-              <h4>إظهار المزيد</h4>
+              <p>إظهار المزيد</p>
             </div>
           </div>
         </div>

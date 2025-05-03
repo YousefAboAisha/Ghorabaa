@@ -50,9 +50,9 @@ const Input = ({
         />
 
         {error ? (
-          <span className="absolute text-[red] text-[10px] w-fit right-1 top-[52px]">
+          <p className="absolute text-[red] !text-[10px] w-fit right-1 top-[52px]">
             {error}
-          </span>
+          </p>
         ) : null}
       </div>
     </div>

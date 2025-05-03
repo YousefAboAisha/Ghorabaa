@@ -36,26 +36,26 @@ const MartyrPage = () => {
           />
         </div>
         <div className="relative mt-6">
-          <h4 className="text-lg font-bold">الشهيد/ محمد عبدالله حسب الله</h4>
+          <p className="text-lg font-bold">الشهيد/ محمد عبدالله حسب الله</p>
 
           <div className="flex items-center gap-8 mt-4">
             <div className="flex items-center gap-2 text-sm font-bold ">
-              <h4 className="text-gray_dark">ولد بتاريخ: </h4>
-              <h4>25 - 01 - 2002</h4>
+              <p className="text-gray_dark">ولد بتاريخ: </p>
+              <p>25 - 01 - 2002</p>
             </div>
 
             <div className="flex items-center gap-2 text-sm font-bold ">
-              <h4 className="text-gray_dark">استشهد بتاريخ: </h4>
-              <h4>8 - 12 - 2023</h4>
+              <p className="text-gray_dark">استشهد بتاريخ: </p>
+              <p>8 - 12 - 2023</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-sm font-bold mt-2">
-            <h4 className="text-gray_dark"> المنطقة: </h4>
+            <p className="text-gray_dark"> المنطقة: </p>
             <div className="flex items-center gap-1">
-              <h4>غزة</h4>
+              <p>غزة</p>
               <BsDash size={16} />
-              <h4>تل الهوا</h4>
+              <p>تل الهوا</p>
             </div>
           </div>
 
