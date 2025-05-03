@@ -137,7 +137,7 @@ const Martyr = () => {
 
         <div className="relative min-h-[70vh] my-12">
           {/* Martyr Cards Grid */}
-          {loading ? (
+          {!loading ? (
             renderLoadingSkeletons()
           ) : (
             <div className="cards-grid-4">

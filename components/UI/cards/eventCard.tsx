@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FiCalendar, FiClock, FiMapPin } from "react-icons/fi";
+import { FiCalendar, FiMapPin } from "react-icons/fi";
 
 const EventCard = () => {
   return (
@@ -26,21 +26,20 @@ const EventCard = () => {
             هذه تفاصيل الفعالية هذه تفاصيل الفعالية هذه تفاصيل الفعالية هذه
             تفاصيل الفعالية هذه تفاصيل الفعالية
           </p>
+        </div>
 
-          <div className="flex gap-6 mt-6 text-[13px]">
-            <div className="flex items-center gap-2 text-[12px] font-semibold">
-              <FiCalendar className="text-gray_dark" size={16} />
-              <p className="flex items-center gap-1">17 فبراير 2025</p>
-            </div>
+        <hr className="mt-2" />
 
-            <div className="flex items-center gap-2 text-[12px] font-semibold">
-              <FiClock className="text-gray_dark" size={16} />
-              <p className="flex items-center gap-1">الساعة الخامسة مساءً</p>
-            </div>
+        <div className="flex flex-col gap-3 p-4">
+          <div className="flex items-center gap-2 text-[12px] font-semibold">
+            <FiCalendar className="text-primary" size={18} />
+            <p className="flex items-center gap-1">
+              17 فبراير 2025 - الساعة 5 مساءً
+            </p>
           </div>
 
-          <div className="flex items-center gap-2 text-[12px] font-semibold mt-3">
-            <FiMapPin className="text-gray_dark" size={16} />
+          <div className="flex items-center gap-2 text-[12px] font-semibold">
+            <FiMapPin className="text-primary" size={18} />
             <p className="flex items-center gap-1">فندق المشتل</p>
           </div>
         </div>

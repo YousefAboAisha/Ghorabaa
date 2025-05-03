@@ -3,26 +3,19 @@ import Heading from "@/components/UI/typography/heading";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { FaEye } from "react-icons/fa";
+import { BiDonateHeart } from "react-icons/bi";
 
 const DonationBanner = () => {
   return (
-    <div className="section grid grid-cols-1 lg:grid-cols-2 gap-10 bg-primary rounded-xl overflow-hidden p-10">
+    <div className="section grid grid-cols-1 lg:grid-cols-2 gap-10 bg-secondary text-white rounded-xl overflow-hidden p-10">
       <div className="flex flex-col">
-        <Heading
-          title=""
-          highLightText="حملات التبرع"
-          details="وَلَا تَقُولُوا لِمَن يُقْتَلُ فِي سَبِيلِ اللَّهِ أَمْوَاتٌ ۚ بَلْ أَحْيَاءٌ وَلَٰكِن لّا تَشْعُرُونَ"
-          highlightColor="before:bg-secondary"
-          className="text-white !w-fit"
-        />
-
         <div className="flex flex-col gap-2 mt-4">
-          <div className="flex flex-row items-center gap-4 text-[14px]">
-            <h4 className="font-bold text-lg  text-white">
-              كن دعماً وعوناً لأهالي الشهداء، واترك سهماً نافعاً
-            </h4>
-          </div>
+          <Heading
+            title="اترك سهماً نافعاً"
+            details="الَّذِينَ يُنفِقُونَ أَمْوَالَهُم بِاللَّيْلِ وَالنَّهَارِ سِرًّا وَعَلَانِيَةً فَلَهُمْ أَجْرُهُمْ عِندَ رَبِّهِمْ وَلَا خَوْفٌ عَلَيْهِمْ وَلَا هُمْ يَحْزَنُونَ"
+            className="!w-fit"
+            highlightColor="before:bg-primary"
+          />
 
           <p className="text-[13px] text-gray-50">
             المهندس الحبيب محمد 🤍 تمرُّ اليوم الذكرى الأولى لأفدح خساراتي،
@@ -49,9 +42,17 @@ const DonationBanner = () => {
           className="mt-6 lg:w-4/12 md:6/12 w-5/12"
         >
           <Button
-            title="عرض الجميع"
-            className="w-full bg-white !text-black font-bold text-[12px]"
-            icon={<FaEye size={18} />}
+            title="حملات التبرع"
+            className="w-full bg-primary text-white text-sm"
+            icon={
+              <BiDonateHeart
+                style={{
+                  transform: "scale(-1,1)",
+                }}
+                size={18}
+                className="scale-[-1,1]"
+              />
+            }
             hasShiningBar={false}
           />
         </Link>

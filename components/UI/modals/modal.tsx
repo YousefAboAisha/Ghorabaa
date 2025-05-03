@@ -14,7 +14,7 @@ const Modal = ({
   isOpen,
   bg = "bg-[#000000e7]",
   className,
-  zIndex = "z-50",
+  zIndex = "z-[50]",
   children,
 }: ModalType) => {
   return (

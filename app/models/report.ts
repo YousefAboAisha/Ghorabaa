@@ -23,6 +23,11 @@ const reportSchema = new Schema<ReportInterface>(
       required: true,
     },
 
+    message: {
+      type: String,
+      required: true,
+    },
+
     status: {
       type: String,
       enum: Object.values(ReportStatus),

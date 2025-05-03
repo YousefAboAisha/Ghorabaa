@@ -50,7 +50,7 @@ const Navbar = ({ session }: SessionProps) => {
 
   return (
     <nav
-      className={`fixed w-full h-[70px] top-0 left-0 z-[99] items-center bg-white text-black duration-500 border-light border-b shadow-sm`}
+      className={`fixed w-full h-[70px] top-0 left-0 z-[50] items-center bg-white text-black duration-500 border-light border-b shadow-sm`}
     >
       <div className="container flex flex-row justify-between items-center h-full">
         <div className={`flex items-center gap-1`}>

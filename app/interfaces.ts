@@ -42,6 +42,7 @@ export interface ReportInterface extends Document {
   status: ReportStatus;
   content_id: Types.ObjectId; // Reference to the content that a user has reported.
   user_id: Types.ObjectId; // Reference to the user who made the report.
+  message: string;
   createdAt: Date;
 }
 
