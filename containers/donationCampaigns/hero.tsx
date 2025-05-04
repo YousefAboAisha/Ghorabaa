@@ -2,7 +2,7 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <div className="section relative bg-donation-banner w-full min-h-[40vh] lg:bg-cover bg-bottom rounded-lg flex flex-col justify-center p-8 before:absolute before:w-full before:h-full before:left-0 before:top-0 before:bg-[#000000a4] before:rounded-lg mt-24 bg-fixed">
+    <div className="relative mt-8 bg-donation-banner w-full min-h-[40vh] lg:bg-cover bg-bottom rounded-lg flex flex-col justify-center p-8 before:absolute before:w-full before:h-full before:left-0 before:top-0 before:bg-[#000000a4] before:rounded-lg bg-fixed">
       <div className="flex flex-col justify-center items-center text-white z-10">
         <h2 className="text-6xl font-bold text-white mb-6 text-center">
           حملات التبرع

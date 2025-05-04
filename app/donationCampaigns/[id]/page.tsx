@@ -4,6 +4,7 @@ import image from "@/public/event.jpg";
 import DonationDetailsCard from "@/components/UI/cards/donationDetailsCard";
 import Button from "@/components/UI/inputs/button";
 import { FaCoins } from "react-icons/fa";
+import PageTitles from "@/components/UI/typography/pageTitles";
 
 export async function generateMetadata() {
   return {
@@ -27,6 +28,14 @@ const page = () => {
   return (
     <div className="container lg:w-6/12 mt-[70px] min-h-screen">
       <div className="flex flex-col gap-2 mt-24">
+        <PageTitles
+          first_title="حملات التبرع"
+          second_title={{
+            title: "حملة أيادي الخير",
+            href: "X",
+          }}
+        />
+
         <Image
           src={image}
           alt="Donation Campaign Title"

@@ -1,8 +1,9 @@
 import Image from "next/image";
 import React from "react";
 import image from "@/public/event.jpg";
-import { FiCalendar, FiClock, FiMapPin } from "react-icons/fi";
+import { FiCalendar, FiMapPin } from "react-icons/fi";
 import ShareModal from "@/containers/events/shareModal";
+import PageTitles from "@/components/UI/typography/pageTitles";
 
 export async function generateMetadata() {
   return {
@@ -22,6 +23,14 @@ const page = () => {
   return (
     <div className="container lg:w-6/12 mt-[70px] min-h-screen">
       <div className="flex flex-col gap-2 mt-24">
+        <PageTitles
+          first_title="الفعاليات"
+          second_title={{
+            title: "فعالية يوم الشهيد",
+            href: "X",
+          }}
+        />
+        
         <Image
           src={image}
           alt="Event Title"
@@ -32,34 +41,41 @@ const page = () => {
           quality={100}
         />
 
-        <div className="relative mt-6">
-          <div className="flex items-center gap-2 text-[12px] text-gray_dark">
-            <p>بواسطة: </p>
-            <p>يوسف رشاد أبو عيشة</p>
-            <p> | </p>
-            <p>16 فبراير 2026</p>
+        <div className="relative mt-1 ">
+          <div className="flex flex- justify-between text-[11px]">
+            <div className="flex items-center gap-2 text-gray_dark">
+              <p>بواسطة: </p>
+              <p>يوسف رشاد أبو عيشة</p>
+              <p> | </p>
+              <p>16 فبراير 2026</p>
+            </div>
+
+            <div className="flex items-center gap-2 text-gray_dark">
+              <p>المشاهدات: </p>
+              <p>232</p>
+            </div>
           </div>
 
-          <div className="flex items-center justify-between gap-8">
+          <div className="flex items-center gap-8 mt-6">
             <h4 className="text-lg font-bold">فعالية يوم الشهيد</h4>
-            <ShareModal />
+            <ShareModal
+              title="مشاركة الفعالية"
+              sharedLink="http://localhost:3000/events/1"
+            />
           </div>
 
-          <div className="flex gap-6 mt-6 text-[13px]">
-            <div className="flex items-center gap-2 text-[13px] font-semibold">
-              <FiCalendar className="text-gray_dark" size={16} />
-              <p className="flex items-center gap-1">17 فبراير 2025</p>
+          <div className="flex flex-col gap-2 mt-4 text-sm">
+            <div className="flex items-center gap-2 text-sm">
+              <FiCalendar className="text-primary" size={16} />
+              <p className="flex items-center gap-1">
+                17 فبراير 2025 - الساعة الخامسة مساءً
+              </p>
             </div>
 
-            <div className="flex items-center gap-2 text-[13px] font-semibold">
-              <FiClock className="text-gray_dark" size={16} />
-              <p className="flex items-center gap-1">الساعة الخامسة مساءً</p>
+            <div className="flex items-center gap-2 text-sm">
+              <FiMapPin className="text-primary" size={16} />
+              <p className="flex items-center gap-1">فندق المشتل</p>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2 text-[13px] font-semibold mt-3">
-            <FiMapPin className="text-gray_dark" size={16} />
-            <p className="flex items-center gap-1">فندق المشتل</p>
           </div>
 
           <div className="mt-8">

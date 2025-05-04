@@ -1,3 +1,4 @@
+import PageTitles from "@/components/UI/typography/pageTitles";
 import EventsCards from "@/containers/events/eventsCards";
 import Hero from "@/containers/events/hero";
 import React from "react";
@@ -5,6 +6,10 @@ import React from "react";
 const page = () => {
   return (
     <div className="relative container">
+      <div className="mt-24">
+        <PageTitles first_title="الفعاليات القادمة" />
+      </div>
+
       <Hero />
       <EventsCards />
     </div>

@@ -2,13 +2,15 @@
 import Image from "next/image";
 import React from "react";
 import image from "@/public/hasabo.jpg";
-import { BsDash } from "react-icons/bs";
 import MartyrComment from "@/containers/martyrDetails/martyrComment";
 import { Field, Form, Formik } from "formik";
 import TextArea from "@/components/UI/inputs/textArea";
 import * as Yup from "yup";
 import { FiPlus } from "react-icons/fi";
 import Button from "@/components/UI/inputs/button";
+import ShareModal from "@/containers/events/shareModal";
+import { BsDash } from "react-icons/bs";
+import PageTitles from "@/components/UI/typography/pageTitles";
 
 const MartyrPage = () => {
   // Updated initialValues to include image
@@ -24,6 +26,14 @@ const MartyrPage = () => {
   return (
     <div className="container lg:w-6/12 mt-[70px] min-h-screen">
       <div className="flex flex-col gap-2 mt-24">
+        <PageTitles
+          first_title="شهداؤنا"
+          second_title={{
+            title: "محمد عبد الله حسب الله",
+            href: "X",
+          }}
+        />
+
         <div className="relative flex flex-col justify-center items-start w-full min-h-[80vh] bg-home-landing bg-cover before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#000000d8] bg-fixed rounded-xl before:rounded-xl">
           <Image
             src={image}
@@ -35,29 +45,87 @@ const MartyrPage = () => {
             quality={100}
           />
         </div>
-        <div className="relative mt-6">
-          <p className="text-lg font-bold">الشهيد/ محمد عبدالله حسب الله</p>
 
-          <div className="flex items-center gap-8 mt-4">
-            <div className="flex items-center gap-2 text-sm font-bold ">
-              <p className="text-gray_dark">ولد بتاريخ: </p>
-              <p>25 - 01 - 2002</p>
+        <div className="relative mt-1">
+          <div className="flex flex- justify-between text-[11px]">
+            <div className="flex items-center gap-2 text-gray_dark">
+              <p>بواسطة: </p>
+              <p>يوسف رشاد أبو عيشة</p>
+              <p> | </p>
+              <p>16 فبراير 2026</p>
             </div>
 
-            <div className="flex items-center gap-2 text-sm font-bold ">
-              <p className="text-gray_dark">استشهد بتاريخ: </p>
-              <p>8 - 12 - 2023</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 text-sm font-bold mt-2">
-            <p className="text-gray_dark"> المنطقة: </p>
-            <div className="flex items-center gap-1">
-              <p>غزة</p>
-              <BsDash size={16} />
-              <p>تل الهوا</p>
+            <div className="flex items-center gap-2 text-gray_dark">
+              <p>المشاهدات: </p>
+              <p>232</p>
             </div>
           </div>
+
+          <div className="flex items-center gap-8 mt-6">
+            <h4 className="text-lg font-extrabold">
+              الشهيد | محمد عبد الله حسب الله
+            </h4>
+            <ShareModal
+              title="مشاركة صفحة الشهيد"
+              sharedLink="http://localhost:3000/martyrs/1"
+            />
+          </div>
+
+          <table className="min-w-full bg-white border border-gray-200 mt-6">
+            <thead>
+              <tr className="bg-secondary text-white ">
+                <td className="py-3 px-4 border-b text-right text-sm">
+                  الولادة
+                </td>
+                <td className="py-3 px-4 border-b text-right text-sm">
+                  الاستشهاد
+                </td>
+                <td className="py-3 px-4 border-b text-right text-sm">العمر</td>
+                <td className="py-3 px-4 border-b text-right text-sm">السكن</td>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td className="py-3 px-4 border-b text-right text-sm">
+                  25 يناير 2002
+                </td>
+
+                <td className="py-3 px-4 border-b text-right text-sm">
+                  8 ديسمبر 2023
+                </td>
+
+                <td className="py-3 px-4 border-b text-right text-sm">
+                  21 عاماً
+                </td>
+
+                <td className="py-3 px-4 border-b text-right text-sm">
+                  <div className="flex items-center gap-1">
+                    <p>غزة</p>
+                    <BsDash size={16} />
+                    <p>تل الهوا</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* <div className="flex flex-col gap-4 mt-4 text-sm">
+            <div className="flex items-center gap-2">
+              <p className="font-semibold">تاريخ الولادة: </p>
+              <p></p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <p className="font-semibold">تاريخ الاستشهاد: </p>
+              <p></p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <p className="font-semibold"> المنطقة: </p>
+              
+            </div>
+          </div> */}
 
           <div className="mt-8">
             <h2 className="font-bold text-lg">نبذة عن الشهيد </h2>

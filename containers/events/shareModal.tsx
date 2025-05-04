@@ -13,21 +13,26 @@ import {
 import { FaX } from "react-icons/fa6";
 import { FiCopy, FiLink } from "react-icons/fi";
 
-const ShareModal = () => {
+type ShareModalProps = {
+  title: string;
+  sharedLink: string;
+};
+
+const ShareModal = ({ title, sharedLink }: ShareModalProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <>
       <div
-        title="مشاركة الفعالية"
+        title={title}
         onClick={() => setIsOpen(true)}
-        className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200"
+        className=" cursor-pointer"
       >
-        <FiLink size={20} />
+        <FiLink size={18} />
       </div>
 
       <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
         <div className="relative flex flex-col gap-2 p-6">
-          <h2 className="text-center text-xl font-semibold">مشاركة الفعالية</h2>
+          <h2 className="text-center text-xl font-semibold">{title}</h2>
 
           <div className="relative mt-4 flex flex-col gap-2">
             <h4 className="text-md font-light">نسخ الرابط</h4>
@@ -37,7 +42,7 @@ const ShareModal = () => {
                 placeholder=""
                 readOnly
                 className="border-none pr-8"
-                value={"https://twitter.com/home?lang=ar"}
+                value={sharedLink}
               />
               <div
                 title="نسخ الرابط"

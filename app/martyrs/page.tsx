@@ -7,6 +7,7 @@ import { BiSearch } from "react-icons/bi";
 import { toast } from "react-toastify";
 import { CiImageOn } from "react-icons/ci";
 import { StoryInterface } from "../interfaces";
+import PageTitles from "@/components/UI/typography/pageTitles";
 
 // Mock data for stories (replace this with your actual data fetching logic)
 const mockStories = Array.from({ length: 20 }, (_, i) => ({
@@ -111,12 +112,14 @@ const Martyr = () => {
   );
 
   return (
-    <div className="container mt-32 min-h-screen">
+    <div className="container mt-24 min-h-screen">
+      <PageTitles first_title="شهداؤنا" />
+
       <Heading
         title=""
         highLightText="شهداؤنا الأبرار"
         details="وَلَئِن قُتِلْتُمْ فِي سَبِيلِ اللَّهِ أَوْ مُتُّمْ لَمَغْفِرَةٌ مِّنَ اللَّهِ وَرَحْمَةٌ خَيْرٌ مِّمَّا يَجْمَعُونَ"
-        className="w-fit"
+        className="w-fit mt-8"
       />
 
       <div className="mt-12 w-full">
