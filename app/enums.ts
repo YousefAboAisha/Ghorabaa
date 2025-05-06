@@ -32,7 +32,17 @@ export enum DonationCampaignStatus {
   FINISHED = "FINISHED",
 }
 
+// Reort Reasons Enums
 export enum ReportReasons {
   INCORRECT_INFORMATION = "INCORRECT_INFORMATION",
   MISSING_INFORMATION = "MISSING_INFORMATION",
+}
+
+// Notification Types Enums
+export enum NotificationTypes {
+  DONATION = "DONATION",
+  BAN = "BAN",
+  REJECT = "REJECT",
+  ACCEPT = "ACCEPT",
+  COMMENT = "COMMENT",
 }

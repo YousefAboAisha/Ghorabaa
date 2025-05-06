@@ -9,7 +9,6 @@ import * as Yup from "yup";
 import { FiPlus } from "react-icons/fi";
 import Button from "@/components/UI/inputs/button";
 import ShareModal from "@/containers/events/shareModal";
-import { BsDash } from "react-icons/bs";
 import PageTitles from "@/components/UI/typography/pageTitles";
 
 const MartyrPage = () => {
@@ -102,7 +101,7 @@ const MartyrPage = () => {
                 <td className="py-3 px-4 border-b text-right text-sm">
                   <div className="flex items-center gap-1">
                     <p>غزة</p>
-                    <BsDash size={16} />
+                    -
                     <p>تل الهوا</p>
                   </div>
                 </td>

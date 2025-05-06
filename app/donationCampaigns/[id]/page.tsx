@@ -117,7 +117,7 @@ const page = () => {
             </p>
           </div>
 
-          <div className="w-full md:w-4/12 mt-4">
+          <div className="w-full md:w-4/12 lg:w-3/12 mt-8">
             <Button
               title="تبرع الآن"
               className="bg-primary text-white"

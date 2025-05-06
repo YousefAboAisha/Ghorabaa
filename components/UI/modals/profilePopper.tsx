@@ -53,8 +53,8 @@ function ProfilePopper({ session }: SessionProps) {
                 className={`${active && "rotate-180"} duration-200`}
                 size={14}
               />
-              <p className="flex items-center justify-center w-12 h-12 bg-primary text-white rounded-full cursor-pointer text-lg shadow-md capitalize">
-                {session?.email.charAt(0)}
+              <p className="flex items-center justify-center w-11 h-11 bg-primary text-white rounded-full cursor-pointer text-md shadow-md capitalize">
+                {session?.email.charAt(0)} YA
               </p>
             </div>
           )}
@@ -64,31 +64,31 @@ function ProfilePopper({ session }: SessionProps) {
           transition
           className="flex flex-col gap-2 min-w-48 bg-white z-[100000] rounded-xl border shadow-2xl origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 outline-none"
         >
-          <MenuItem disabled>
-            <span className="flex items-center gap-2 p-4 bg-gray-300 text-sm">
+          {/* <MenuItem disabled>
+            <span className="flex items-center gap-2 p-4 bg-gray_light text-sm">
               {session?.email}
             </span>
-          </MenuItem>
+          </MenuItem> */}
 
           <div className="p-1 flex flex-col gap-2">
             <MenuItem>
               <Link
                 href={"/profile"}
-                className="flex items-center gap-2 p-3 hover:bg-gray-300 cursor-pointer duration-100 text-sm rounded-lg"
+                className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-sm rounded-lg"
                 prefetch
               >
                 <CiUser size={20} />
-                <span>الصفحة الشخصية</span>
+                <span>الملف الشخصي</span>
               </Link>
             </MenuItem>
 
             <MenuItem>
               <Link
                 href={"/edit"}
-                className="flex items-center gap-2 p-3 hover:bg-gray-300 cursor-pointer duration-100 text-sm rounded-lg"
+                className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-sm rounded-lg"
               >
                 <CiEdit size={20} />
-                <span>تعديل البيانات</span>
+                <span>إعدادات الحساب</span>
               </Link>
             </MenuItem>
 

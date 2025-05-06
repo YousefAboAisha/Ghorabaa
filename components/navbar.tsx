@@ -64,12 +64,8 @@ const Navbar = ({ session }: SessionProps) => {
           </div>
 
           {/* Conditionally render Sign In or Profile Icon */}
-          {!session ? (
-            <Link
-              href={"/signin"}
-              className="h-full outline-none"
-              prefetch
-            >
+          {session ? (
+            <Link href={"/signin"} className="h-full outline-none" prefetch>
               <Button
                 title="تسجيل الدخول"
                 className="bg-primary px-4 md:px-3"
@@ -77,7 +73,7 @@ const Navbar = ({ session }: SessionProps) => {
                 hasShiningBar={false}
               />
             </Link>
-          ) : session?.role == "ADMIN" ? (
+          ) : "ADMIN" == "ADMIN" ? (
             <ProfilePopper session={session} />
           ) : null}
 

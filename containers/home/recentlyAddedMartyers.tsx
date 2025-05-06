@@ -36,6 +36,7 @@ const RecentlyAddedMartyrs = () => {
         highlightColor="before:bg-primary"
         title=""
         details="فَرِحِينَ بِمَا آتَاهُمُ اللَّهُ مِن فَضْلِهِ وَيَسْتَبْشِرُونَ بِالَّذِينَ لَمْ يَلْحَقُوا بِهِم مِّنْ خَلْفِهِمْ أَلَّا خَوْفٌ عَلَيْهِمْ وَلَا هُمْ يَحْزَنُونَ"
+        className="w-fit"
       />
 
       <Swiper
