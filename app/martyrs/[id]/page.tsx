@@ -100,31 +100,12 @@ const MartyrPage = () => {
 
                 <td className="py-3 px-4 border-b text-right text-sm">
                   <div className="flex items-center gap-1">
-                    <p>غزة</p>
-                    -
-                    <p>تل الهوا</p>
+                    <p>غزة</p>-<p>تل الهوا</p>
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
-
-          {/* <div className="flex flex-col gap-4 mt-4 text-sm">
-            <div className="flex items-center gap-2">
-              <p className="font-semibold">تاريخ الولادة: </p>
-              <p></p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <p className="font-semibold">تاريخ الاستشهاد: </p>
-              <p></p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <p className="font-semibold"> المنطقة: </p>
-              
-            </div>
-          </div> */}
 
           <div className="mt-8">
             <h2 className="font-bold text-lg">نبذة عن الشهيد </h2>
