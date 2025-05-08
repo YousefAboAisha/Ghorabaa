@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import MartyrCard from "@/components/UI/cards/martyrCard";
-import Input from "@/components/UI/inputs/input";
 import Heading from "@/components/UI/typography/heading";
-import { BiSearch } from "react-icons/bi";
 import { toast } from "react-toastify";
 import { CiImageOn } from "react-icons/ci";
 import { StoryInterface } from "../interfaces";
@@ -13,7 +11,6 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const Martyr = () => {
   const [stories, setStories] = useState<StoryInterface[] | undefined>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const getAllStories = async () => {
     setLoading(true);
@@ -101,47 +98,30 @@ const Martyr = () => {
         className="w-fit mt-8"
       />
 
-      <div className="mt-12 w-full">
-        {/* Search Input */}
-        <div className="md:w-[50%] w-full">
-          <Input
-            placeholder="ابحث عن الشهيد.."
-            className="bg-white !h-[50px] w-full"
-            type="text"
-            icon={BiSearch}
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              // setCurrentPage(1); // Reset to the first page when searching
-            }}
-          />
-        </div>
+      <div className="relative min-h-[70vh] mb-12 mt-8">
+        {/* Martyr Cards Grid */}
+        {loading ? (
+          renderLoadingSkeletons()
+        ) : (
+          <div className="cards-grid-4">
+            {stories?.map((martyr: StoryInterface, index) => (
+              <MartyrCard key={index} />
+            ))}
+            <MartyrCard />
+            <MartyrCard />
+            <MartyrCard />
+            <MartyrCard />
+            <MartyrCard />
+            <MartyrCard />
+            <MartyrCard />
+            <MartyrCard />
+          </div>
+        )}
+      </div>
 
-        <div className="relative min-h-[70vh] my-12">
-          {/* Martyr Cards Grid */}
-          {loading ? (
-            renderLoadingSkeletons()
-          ) : (
-            <div className="cards-grid-4">
-              {stories?.map((martyr: StoryInterface, index) => (
-                <MartyrCard key={index} />
-              ))}
-              <MartyrCard />
-              <MartyrCard />
-              <MartyrCard />
-              <MartyrCard />
-              <MartyrCard />
-              <MartyrCard />
-              <MartyrCard />
-              <MartyrCard />
-            </div>
-          )}
-        </div>
-
-        <div className="mt-4 flex justify-center gap-2 text-gray_dark text-[14px] ">
-          جارٍ جلب البيانات
-          <AiOutlineLoading3Quarters size={16} className="animate-spin" />
-        </div>
+      <div className="mt-4 flex justify-center gap-2 text-gray_dark text-[14px] ">
+        جارٍ جلب البيانات
+        <AiOutlineLoading3Quarters size={16} className="animate-spin" />
       </div>
     </div>
   );

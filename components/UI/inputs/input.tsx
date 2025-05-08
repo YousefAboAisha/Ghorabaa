@@ -1,9 +1,7 @@
-import { IconType } from "react-icons";
-
 type InputProps = {
   placeholder: string;
   additionalStyles?: string;
-  icon?: IconType;
+  icon?: JSX.Element;
   error?: string;
   pattern?: string;
   required?: boolean;
@@ -34,7 +32,7 @@ const Input = ({
 
       <div className={`relative h-[52px] rounded-xl ${className} `}>
         <div className="absolute flex justify-center p-2 rounded-l-md items-center right-1 top-[50%] translate-y-[-50%] h-full border-none outline-none text-grey opacity-70">
-          {Icon && <Icon size={20} />}
+          {Icon}
         </div>
 
         <input

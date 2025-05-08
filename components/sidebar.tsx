@@ -25,7 +25,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarTypes) => {
             <Link
               key={index}
               href={href}
-              className={`cursor-pointer p-4 border-b duration-300 hover:text-primary `}
+              className={`cursor-pointer p-4 border-b text-sm duration-300 hover:text-primary `}
               title={title}
               onClick={() => setIsOpen(false)}
             >

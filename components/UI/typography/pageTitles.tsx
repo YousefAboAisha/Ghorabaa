@@ -13,6 +13,7 @@ const pathTranslations: Record<string, string> = {
   martyrs: "شهداؤنا",
   donationCampaigns: "حملات التبرع",
   events: "الفعاليات",
+  search: "البحث عن الشهداء",
 };
 
 const PageTitles = () => {

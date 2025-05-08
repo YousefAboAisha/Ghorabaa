@@ -13,6 +13,11 @@ export const Routes = [
     icon: RxLayers,
   },
   {
+    title: "البحث عن الشهداء",
+    href: "/search",
+    icon: RxLayers,
+  },
+  {
     title: "حملات التبرع",
     href: "/donationCampaigns",
     icon: RxLayers,
@@ -20,11 +25,6 @@ export const Routes = [
   {
     title: "الفعاليات",
     href: "/events",
-    icon: RxLayers,
-  },
-  {
-    title: "من نحن",
-    href: "/about",
     icon: RxLayers,
   },
 ];
