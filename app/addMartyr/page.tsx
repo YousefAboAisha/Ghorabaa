@@ -389,7 +389,7 @@ const AddMartyr = () => {
                             >
                               <Image
                                 src={image.data_url}
-                                alt=""
+                                alt="صورة الشهيد"
                                 width={200}
                                 height={200}
                               />

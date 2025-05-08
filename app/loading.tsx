@@ -12,7 +12,7 @@ const Spinner = ({ additionalStyles }: SpinnerProps) => {
         src={logo}
         width={25}
         height={25}
-        alt="Zad logo"
+        alt="صورة الشعار"
         className="animate-pulse"
       />
     </div>

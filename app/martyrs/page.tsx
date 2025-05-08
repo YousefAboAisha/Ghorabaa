@@ -10,32 +10,10 @@ import { StoryInterface } from "../interfaces";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-// Mock data for stories (replace this with your actual data fetching logic)
-// const mockStories = Array.from({ length: 20 }, (_, i) => ({
-//   id: i + 1,
-//   name: `الشهيد ${i + 1}`,
-//   description: "وصف قصير عن الشهيد...",
-// }));
-
 const Martyr = () => {
   const [stories, setStories] = useState<StoryInterface[] | undefined>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  // const [currentPage, setCurrentPage] = useState<number>(1);
-  // const itemsPerPage = 8; // Number of items to display per page
-
-  // Filter stories based on search query
-  // const filteredStories = mockStories.filter((martyr) =>
-  //   martyr.name.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
-
-  // Pagination logic
-  // const totalPages = Math.ceil(filteredStories.length / itemsPerPage);
-
-  // Handle page change
-  // const handlePageChange = (page: number) => {
-  //   setCurrentPage(page);
-  // };
 
   const getAllStories = async () => {
     setLoading(true);
@@ -114,7 +92,7 @@ const Martyr = () => {
 
   return (
     <div className="container mt-24 min-h-screen">
-      <PageTitles first_title="شهداؤنا" />
+      <PageTitles />
 
       <Heading
         title=""
@@ -160,27 +138,10 @@ const Martyr = () => {
           )}
         </div>
 
-        <div className="mt-4 flex justify-center gap-2 text-gray_dark ">
+        <div className="mt-4 flex justify-center gap-2 text-gray_dark text-[14px] ">
           جارٍ جلب البيانات
-          <AiOutlineLoading3Quarters size={20} className="animate-spin" />
+          <AiOutlineLoading3Quarters size={16} className="animate-spin" />
         </div>
-
-        {/* Pagination Controls */}
-        {/* <div className="flex gap-2 justify-center mt-16">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              className={`p-2 px-3 rounded-lg text-[12px] ${
-                currentPage === page
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-        </div> */}
       </div>
     </div>
   );

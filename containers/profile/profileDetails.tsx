@@ -16,7 +16,7 @@ const ProfileDetails = () => {
               src={"/me.png"}
               width={100}
               height={100}
-              alt="Profile"
+              alt="صورة الملف الشخصي"
               className="rounded-full"
             />
           </div>
@@ -24,53 +24,57 @@ const ProfileDetails = () => {
 
         <div className="flex flex-col gap-2 w-full h-full">
           <table className="min-w-full bg-white border border-gray-200 h-full">
-            <tr>
-              <td className="py-3 px-4 border-b text-right text-sm border-l">الاسم</td>
+            <tbody>
+              <tr>
+                <td className="py-3 px-4 border-b text-right text-sm border-l">
+                  الاسم
+                </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm ">
-                يوسف رشاد ابو عيشة
-              </td>
-            </tr>
+                <td className="py-3 px-4 border-b text-right text-sm ">
+                  يوسف رشاد ابو عيشة
+                </td>
+              </tr>
 
-            <tr>
-              <td className="py-3 px-4 border-b text-right text-sm border-l">
-                رقم الهوية
-              </td>
+              <tr>
+                <td className="py-3 px-4 border-b text-right text-sm border-l">
+                  رقم الهوية
+                </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm ">
-                407709260
-              </td>
-            </tr>
+                <td className="py-3 px-4 border-b text-right text-sm ">
+                  407709260
+                </td>
+              </tr>
 
-            <tr>
-              <td className="py-3 px-4 border-b text-right text-sm border-l">
-                البريد الالكتروني
-              </td>
+              <tr>
+                <td className="py-3 px-4 border-b text-right text-sm border-l">
+                  البريد الالكتروني
+                </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm ">
-                yousef.aboesha@hotmail.com
-              </td>
-            </tr>
+                <td className="py-3 px-4 border-b text-right text-sm ">
+                  yousef.aboesha@hotmail.com
+                </td>
+              </tr>
 
-            <tr>
-              <td className="py-3 px-4 border-b text-right text-sm border-l">
-                رقم الهاتف
-              </td>
+              <tr>
+                <td className="py-3 px-4 border-b text-right text-sm border-l">
+                  رقم الهاتف
+                </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm ">
-                0592551405
-              </td>
-            </tr>
+                <td className="py-3 px-4 border-b text-right text-sm ">
+                  0592551405
+                </td>
+              </tr>
 
-            <tr>
-              <td className="py-3 px-4 border-b text-right text-sm border-l">
-                تاريخ الإنشاء
-              </td>
+              <tr>
+                <td className="py-3 px-4 border-b text-right text-sm border-l">
+                  تاريخ الإنشاء
+                </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm ">
-                25 فبراير 2025
-              </td>
-            </tr>
+                <td className="py-3 px-4 border-b text-right text-sm ">
+                  25 فبراير 2025
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>

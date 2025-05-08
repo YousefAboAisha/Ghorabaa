@@ -7,7 +7,7 @@ const page = () => {
   return (
     <div className="relative container">
       <div className="mt-24">
-        <PageTitles first_title="الفعاليات القادمة" />
+        <PageTitles />
       </div>
 
       <Hero />

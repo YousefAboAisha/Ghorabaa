@@ -1,51 +1,59 @@
-import Link from "next/link";
-import React from "react";
+"use client";
+
 import { MdKeyboardArrowLeft } from "react-icons/md";
+import React from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
-type PageTitlesProps = {
-  first_title: string;
-  second_title?: {
-    title: string;
-    href: string;
-  };
-} & React.HTMLAttributes<HTMLHeadingElement>;
+// Arabic labels for path segments
+const pathTranslations: Record<string, string> = {
+  dashboard: "لوحة التحكم",
+  settings: "الإعدادات",
+  profile: "الملف الشخصي",
+  martyrs: "شهداؤنا",
+  donationCampaigns: "حملات التبرع",
+  events: "الفعاليات",
+};
 
-const PageTitles = ({ first_title, second_title }: PageTitlesProps) => {
-  const renderTitles = () => {
-    if (first_title && second_title) {
-      return (
-        <>
-          <Link
-            href={second_title.href}
-            className="flex items-center text-gray-500 hover:underline"
-          >
-            {first_title}
-            <MdKeyboardArrowLeft size={20} />
-          </Link>
+const PageTitles = () => {
+  const pathname = usePathname();
 
-          <p className="mr-1">{second_title.title}</p>
-        </>
-      );
-    }
-
-    if (first_title && !second_title) {
-      return <p className="mr-1">{first_title}</p>;
-    }
-  };
+  const segments = pathname
+    .split("/")
+    .filter(Boolean)
+    .map((segment, index, arr) => {
+      const href = "/" + arr.slice(0, index + 1).join("/");
+      const title =
+        pathTranslations[segment] ||
+        decodeURIComponent(segment.replace(/-/g, " "));
+      return { title, href };
+    });
 
   return (
     <div className="flex items-center mb-2 text-sm">
-      {/* First title */}
       <Link
-        href={"/"}
+        href="/"
         className="flex items-center text-gray-500 hover:underline"
       >
         الرئيسية
-        <MdKeyboardArrowLeft size={20} />
+        {segments.length > 0 && <MdKeyboardArrowLeft size={20} />}
       </Link>
 
-      {/* Render Second Titles */}
-      {renderTitles()}
+      {segments.map((seg, i) => (
+        <React.Fragment key={seg.href}>
+          {i < segments.length - 1 ? (
+            <Link
+              href={seg.href}
+              className="flex items-center text-gray-500 hover:underline"
+            >
+              {seg.title}
+              <MdKeyboardArrowLeft size={20} />
+            </Link>
+          ) : (
+            <p className="mr-1">{seg.title}</p>
+          )}
+        </React.Fragment>
+      ))}
     </div>
   );
 };

@@ -6,7 +6,7 @@ const DonationCampaigns = () => {
   return (
     <div className="container relative">
       <div className="mt-24">
-        <PageTitles first_title="حملات التبرع" />
+        <PageTitles />
       </div>
 
       <Hero />

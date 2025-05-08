@@ -5,11 +5,10 @@ import Link from "next/link";
 import Sidebar from "./sidebar";
 import { Fade as Hamburger } from "hamburger-react";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
-import logo from "@/public/zad-logo.svg";
 import Button from "./UI/inputs/button";
 import ProfilePopper from "./UI/modals/profilePopper";
 import { FiUser } from "react-icons/fi";
+import Logo from "./UI/logo";
 
 export interface SessionProps {
   session?: {
@@ -82,15 +81,7 @@ const Navbar = ({ session }: SessionProps) => {
         </div>
 
         {/* Logo */}
-        <Link href={"/"}>
-          <Image
-            src={logo}
-            width={25}
-            alt="Zad logo"
-            className="h-auto"
-            priority // Optimize for above-the-fold images
-          />
-        </Link>
+        <Logo height={25} width={25} />
       </div>
 
       {/* Sidebar */}

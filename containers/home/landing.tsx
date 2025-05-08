@@ -21,9 +21,8 @@ const Landing = () => {
       <Image
         src={scrollDown}
         className="w-12 h-12 absolute text-white left-[50%] translate-x-[-50%] bottom-0 "
-        alt="title"
+        alt="سحب لأسفل"
         unoptimized
-        // Cuz it's an animated image
       />
     </div>
   );

@@ -28,17 +28,11 @@ const page = () => {
   return (
     <div className="container lg:w-6/12 mt-[70px] min-h-screen">
       <div className="flex flex-col gap-2 mt-24">
-        <PageTitles
-          first_title="حملات التبرع"
-          second_title={{
-            title: "حملة أيادي الخير",
-            href: "X",
-          }}
-        />
+        <PageTitles />
 
         <Image
           src={image}
-          alt="Donation Campaign Title"
+          alt="صورة حملة التبرع"
           width={1000}
           height={1000}
           className="mx-auto rounded-2xl shadow-md"

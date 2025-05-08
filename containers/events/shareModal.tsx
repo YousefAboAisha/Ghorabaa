@@ -3,6 +3,7 @@
 import Input from "@/components/UI/inputs/input";
 import Modal from "@/components/UI/modals/modal";
 import { useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
   FaFacebook,
   FaInstagram,
@@ -20,6 +21,17 @@ type ShareModalProps = {
 
 const ShareModal = ({ title, sharedLink }: ShareModalProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const copyToClipboard = async () => {
+    setLoading(true);
+    await navigator.clipboard.writeText(location.href).then(() => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    });
+  };
+
   return (
     <>
       <div
@@ -44,11 +56,20 @@ const ShareModal = ({ title, sharedLink }: ShareModalProps) => {
                 className="border-none pr-8"
                 value={sharedLink}
               />
+
               <div
                 title="نسخ الرابط"
                 className="bg-secondary h-full text-white flex items-center justify-center p-4 rounded-xl rounded-l-none absolute right-0 top-[50%] -translate-y-[50%]"
+                onClick={copyToClipboard}
               >
-                <FiCopy size={18} className="" />
+                {loading ? (
+                  <AiOutlineLoading3Quarters
+                    size={18}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <FiCopy size={18} />
+                )}
               </div>
             </div>
           </div>

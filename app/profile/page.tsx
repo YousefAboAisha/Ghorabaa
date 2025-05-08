@@ -9,7 +9,7 @@ import React from "react";
 const page = () => {
   return (
     <div className="container min-h-screen mt-24">
-      <PageTitles first_title="الملف الشخصي" />
+      <PageTitles />
       <ProfileDetails />
       <SubmittedStories />
       <RecentComments />

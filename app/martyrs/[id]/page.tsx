@@ -25,18 +25,12 @@ const MartyrPage = () => {
   return (
     <div className="container lg:w-6/12 mt-[70px] min-h-screen">
       <div className="flex flex-col gap-2 mt-24">
-        <PageTitles
-          first_title="شهداؤنا"
-          second_title={{
-            title: "محمد عبد الله حسب الله",
-            href: "X",
-          }}
-        />
+        <PageTitles />
 
         <div className="relative flex flex-col justify-center items-start w-full min-h-[80vh] bg-home-landing bg-cover before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#000000d8] bg-fixed rounded-xl before:rounded-xl">
           <Image
             src={image}
-            alt="Martyr"
+            alt="صورة الشهيد"
             width={350}
             height={350}
             className="mx-auto rounded-2xl shadow-xl z-[10]"
@@ -109,7 +103,7 @@ const MartyrPage = () => {
 
           <div className="mt-8">
             <h2 className="font-bold text-lg">نبذة عن الشهيد </h2>
-            <p className="text-gray-600 text-md mt-2">
+            <p className="font-light text-md mt-2">
               الشّهيد الصّديق وحبيب القلب المُهندس محمد عبد الله حسب الله، كان
               سَمِحاً، باسماً، عاليَ الخُلق والهِمّة، مُلتزماً ومحبوباً من
               الجميع، متفوقاً في دراسته في كافة مراحله الدراسية، حيث كان من

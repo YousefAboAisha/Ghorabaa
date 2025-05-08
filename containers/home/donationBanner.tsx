@@ -62,7 +62,7 @@ const DonationBanner = () => {
         src={"/donation.jpg"}
         width={1000}
         height={1000}
-        alt="Today's martyr"
+        alt="صورة شهيد اليوم"
         className="shadow-xl rounded-xl self-center"
       />
     </div>

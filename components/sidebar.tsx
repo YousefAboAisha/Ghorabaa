@@ -1,10 +1,8 @@
 import { Routes } from "@/data/routes";
-import Image from "next/image";
 import Link from "next/link";
-import logo from "@/public/zad-logo.svg";
 import { usePathname } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
-// import { useRouter } from "next/router";
+import Logo from "./UI/logo";
 
 type SidebarTypes = {
   isOpen: boolean;
@@ -42,13 +40,9 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarTypes) => {
           );
         })}
 
-        <Image
-          src={logo}
-          width={130}
-          height={130}
-          alt="Zad logo"
-          className="mx-auto bottom-2 opacity-5 mt-6"
-        />
+        <div className="mx-auto bottom-2 opacity-5 mt-6">
+          <Logo width={130} height={130} />
+        </div>
 
         <p className="text-sm font-light text-grey mt-6 text-center">
           جميع الحقوق محفوظة لدى يوسف رشاد أبو عيشة© {date}

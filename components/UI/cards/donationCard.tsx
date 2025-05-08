@@ -15,7 +15,7 @@ const DonationCard = () => {
         <div className="relative max-h-[300px] overflow-hidden">
           <Image
             src={"/event.jpg"}
-            alt="img"
+            alt="صورة غلاف الفعالية"
             className="w-full rounded-b-none"
             width={1000}
             height={1000}

@@ -5,7 +5,7 @@ const RecentComments = () => {
   return (
     <div className="section">
       <Heading title="" highLightText="التعليقات الأخيرة" className="" />
-      <div className="cards-grid-3 mt-8">
+      <div className="cards-grid-2 mt-8">
         <RecentCommentCard />
         <RecentCommentCard />
         <RecentCommentCard />
@@ -13,7 +13,7 @@ const RecentComments = () => {
         <RecentCommentCard />
         <RecentCommentCard />
       </div>
-      <p className="text-primary mx-auto w-fit hover:underline text-sm font-semibold mt-4 cursor-pointer">عرض المزيد</p>
+      <p className="text-primary mx-auto w-fit hover:underline text-sm font-semibold mt-8 cursor-pointer">عرض المزيد</p>
     </div>
   );
 };

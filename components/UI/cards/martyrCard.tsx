@@ -11,7 +11,7 @@ const MartyrCard = () => {
         <div className="relative max-h-[300px] overflow-hidden">
           <Image
             src={image}
-            alt="img"
+            alt="صورة الشهيد"
             className="w-full rounded-2xl rounded-b-none group-hover:scale-125 duration-700"
           />
         </div>

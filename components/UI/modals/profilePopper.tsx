@@ -74,7 +74,7 @@ function ProfilePopper({ session }: SessionProps) {
             <MenuItem>
               <Link
                 href={"/profile"}
-                className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-sm rounded-lg"
+                className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
                 prefetch
               >
                 <CiUser size={20} />
@@ -85,7 +85,7 @@ function ProfilePopper({ session }: SessionProps) {
             <MenuItem>
               <Link
                 href={"/edit"}
-                className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-sm rounded-lg"
+                className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
               >
                 <CiEdit size={20} />
                 <span>إعدادات الحساب</span>
@@ -95,7 +95,7 @@ function ProfilePopper({ session }: SessionProps) {
             <MenuItem>
               <div
                 onClick={handleLogout} // Add onClick handler for logout
-                className="flex items-center gap-2 p-3 cursor-pointer text-sm rounded-lg bg-[red] text-white"
+                className="flex items-center gap-2 p-3 cursor-pointer text-[13px] rounded-lg bg-[red] text-white"
               >
                 <CiLogout size={20} />
                 <p>تسجيل الخروج</p>

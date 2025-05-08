@@ -11,10 +11,10 @@ import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { API_BASE_URL } from "@/config";
+import { FcGoogle } from "react-icons/fc";
 
 const Signin = () => {
   const [formErrors, setFormErrors] = useState<string>("");
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -46,7 +46,7 @@ const Signin = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...values, rememberMe }),
+        body: JSON.stringify({ ...values }),
       });
 
       const data = await response.json();
@@ -148,20 +148,6 @@ const Signin = () => {
                   component="div"
                   className="text-red-500 mt-2 font-bold text-[10px]"
                 />
-
-                {/* Remember Me Checkbox */}
-                <label className="flex items-center gap-2 cursor-pointer w-fit">
-                  <p className="text-sm">تذكر كلمة المرور</p>
-                  <Input
-                    placeholder=""
-                    type="checkbox"
-                    className="w-4 h-4"
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    checked={rememberMe}
-                    aria-label="تذكر كلمة المرور"
-                    required={false}
-                  />
-                </label>
               </div>
 
               {/* Submit Button */}
@@ -172,6 +158,21 @@ const Signin = () => {
                 icon={<PiSignIn size={22} className="rotate-180" />}
                 loading={isSubmitting}
                 disabled={isSubmitting}
+              />
+
+              <p className="bg-transparent w-full flex justify-center text-sm">
+                أو
+              </p>
+
+              {/* Submit Button */}
+              <Button
+                title={"تسجيل بواسطة جوجل"}
+                type="submit"
+                className="bg-white !text-secondary border border-gray_dark shadow-none hover:shadow-none "
+                icon={<FcGoogle size={20} />}
+                loading={isSubmitting}
+                disabled={isSubmitting}
+                hasShiningBar={false}
               />
 
               {formErrors && (
