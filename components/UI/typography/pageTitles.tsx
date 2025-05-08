@@ -8,7 +8,7 @@ import Link from "next/link";
 // Arabic labels for path segments
 const pathTranslations: Record<string, string> = {
   dashboard: "لوحة التحكم",
-  settings: "الإعدادات",
+  addStory: "إضافة قصة جديدة",
   profile: "الملف الشخصي",
   martyrs: "شهداؤنا",
   donationCampaigns: "حملات التبرع",

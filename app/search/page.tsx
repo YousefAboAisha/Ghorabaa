@@ -217,7 +217,7 @@ const Page = () => {
 
       {/* Search Input */}
       <div className="flex items-center justify-between w-full mt-8 gap-4">
-        <div className="relative w-full md:w-full">
+        <div className="relative w-full md:w-8/12">
           <Input
             placeholder="قم بكتابة اسم الشهيد.."
             className="bg-white w-full border"
