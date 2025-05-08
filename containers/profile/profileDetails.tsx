@@ -10,7 +10,7 @@ const ProfileDetails = () => {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
       {/* Profile Card Details */}
       <div className="relative flex flex-col items-center bg-white rounded-lg col-span-1 w-full">
-        <div className="w-full bg-gray_dark p-4 rounded-t-lg">
+        <div className="w-full bg-secondary p-4 rounded-t-lg">
           <div className="w-[100px] h-[100px] rounded-full border-2 p-[2px] mx-auto">
             <Image
               src={"/me.png"}
@@ -25,49 +25,49 @@ const ProfileDetails = () => {
         <div className="flex flex-col gap-2 w-full h-full">
           <table className="min-w-full bg-white border border-gray-200 h-full">
             <tr>
-              <td className="py-3 px-4 border-b text-right text-sm">الاسم</td>
+              <td className="py-3 px-4 border-b text-right text-sm border-l">الاسم</td>
 
-              <td className="py-3 px-4 border-b text-right text-sm">
+              <td className="py-3 px-4 border-b text-right text-sm ">
                 يوسف رشاد ابو عيشة
               </td>
             </tr>
 
             <tr>
-              <td className="py-3 px-4 border-b text-right text-sm">
+              <td className="py-3 px-4 border-b text-right text-sm border-l">
                 رقم الهوية
               </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm">
+              <td className="py-3 px-4 border-b text-right text-sm ">
                 407709260
               </td>
             </tr>
 
             <tr>
-              <td className="py-3 px-4 border-b text-right text-sm">
+              <td className="py-3 px-4 border-b text-right text-sm border-l">
                 البريد الالكتروني
               </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm">
+              <td className="py-3 px-4 border-b text-right text-sm ">
                 yousef.aboesha@hotmail.com
               </td>
             </tr>
 
             <tr>
-              <td className="py-3 px-4 border-b text-right text-sm">
+              <td className="py-3 px-4 border-b text-right text-sm border-l">
                 رقم الهاتف
               </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm">
+              <td className="py-3 px-4 border-b text-right text-sm ">
                 0592551405
               </td>
             </tr>
 
             <tr>
-              <td className="py-3 px-4 border-b text-right text-sm">
+              <td className="py-3 px-4 border-b text-right text-sm border-l">
                 تاريخ الإنشاء
               </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm">
+              <td className="py-3 px-4 border-b text-right text-sm ">
                 25 فبراير 2025
               </td>
             </tr>

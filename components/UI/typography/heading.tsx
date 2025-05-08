@@ -22,7 +22,7 @@ const Heading = ({
 }: HeadingProps) => {
   return (
     <h4
-      className={`group relative text-3xl md:text-2xl lg:text-3xl font-semibold duration-500 uppercase w-fit ${className}`}
+      className={`group relative text-2xl md:text-xl lg:text-2xl font-semibold duration-500 uppercase w-fit ${className}`}
       {...rest}
     >
       {title}

@@ -3,7 +3,7 @@ import Heading from "@/components/UI/typography/heading";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { BsDash, BsEye } from "react-icons/bs";
+import { BsEye } from "react-icons/bs";
 
 const TodaysMartyr = () => {
   return (
@@ -19,11 +19,6 @@ const TodaysMartyr = () => {
         <div className="flex flex-col gap-2 mt-4">
           <div className="flex flex-row items-center gap-4 text-[14px]">
             <h4 className="font-bold text-lg  ">محمد عبدالله حسب الله</h4>
-            <div className="flex items-center gap-1 text-red-500 font-bold">
-              <h5>(2002</h5>
-              <BsDash size={20} />
-              <h5>2023)</h5>
-            </div>
           </div>
 
           <p className="text-[13px]">

@@ -49,10 +49,10 @@ const StoryTabs = () => {
 
   return (
     <div className="section relative">
-      <div className="flex items-center gap-4 text-sm">
+      <div className="flex items-center gap-4 text-sm overflow-auto scrollbar-hidden ">
         <div
           title="APPROVED"
-          className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 ${
+          className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit ${
             currentTap == "APPROVED" && "border-r-4 border-primary"
           } select-none `}
           onClick={() => setCurrentTap(StoryStatus.APPROVED)}
@@ -69,7 +69,7 @@ const StoryTabs = () => {
 
         <div
           title="PENDING"
-          className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4  ${
+          className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit  ${
             currentTap == "PENDING" && "border-r-4 border-orange-500"
           } select-none `}
           onClick={() => setCurrentTap(StoryStatus.PENDING)}
@@ -86,7 +86,7 @@ const StoryTabs = () => {
 
         <div
           title="REJECTED"
-          className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 ${
+          className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit ${
             currentTap == "REJECTED" && "border-r-4 border-red-600"
           } select-none `}
           onClick={() => setCurrentTap(StoryStatus.REJECTED)}

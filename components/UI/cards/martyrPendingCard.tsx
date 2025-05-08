@@ -3,7 +3,7 @@ import React from "react";
 const MartyrPendingCard = () => {
   return (
     <div className="relative flex flex-col gap-1 bg-white p-4 border rounded-lg hover:shadow-md duration-500 cursor-pointer">
-      <span className="absolute top-2 left-2 bg-orange-500 text-white text-[9px] p-1 rounded-md">
+      <span className="absolute top-4 left-4 bg-orange-500 text-white text-[9px] p-1 rounded-md">
         بانتظار الموافقة
       </span>
 

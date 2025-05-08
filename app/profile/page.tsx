@@ -1,5 +1,7 @@
 import PageTitles from "@/components/UI/typography/pageTitles";
+import BannedContent from "@/containers/profile/bannedContent";
 import ProfileDetails from "@/containers/profile/profileDetails";
+import RecentComments from "@/containers/profile/recentComments";
 import SubmittedStories from "@/containers/profile/submittedStories";
 
 import React from "react";
@@ -10,6 +12,8 @@ const page = () => {
       <PageTitles first_title="الملف الشخصي" />
       <ProfileDetails />
       <SubmittedStories />
+      <RecentComments />
+      <BannedContent />
     </div>
   );
 };
