@@ -17,7 +17,7 @@ import { CiImageOn } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 
-const AddMartyr = () => {
+const AddStory = () => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
@@ -25,11 +25,8 @@ const AddMartyr = () => {
 
   // Updated initialValues to include image
   const initialValues = {
-    id_number: "",
-    first_name: "",
-    father_name: "",
-    grandfather_name: "",
-    last_name: "",
+    id_number: "407709260",
+    full_name: "محمد عبد الله طارق حسب الله",
     birth_date: "",
     death_date: "",
     city: "",
@@ -39,13 +36,6 @@ const AddMartyr = () => {
   };
 
   const validationSchema = Yup.object({
-    id_number: Yup.string().required("يرجى إدخال رقم الهوية"),
-    first_name: Yup.string().required("يرجى إدخال الاسم الأول"),
-    father_name: Yup.string().required("يرجى إدخال اسم الأب"),
-    grandfather_name: Yup.string().required("يرجى إدخال اسم الجد"),
-    last_name: Yup.string().required("يرجى إدخال اسم العائلة"),
-    birth_date: Yup.date().required("يرجى إدخال تاريخ الميلاد"),
-    death_date: Yup.date().required("يرجى إدخال تاريخ الاستشهاد"),
     city: Yup.string().required("يرجى اختيار المدينة"),
     neighbourhood: Yup.string().required("يرجى اختيار الحي"),
     notes: Yup.string().required("يرجى إدخال السيرة الذاتية"),
@@ -110,7 +100,7 @@ const AddMartyr = () => {
   };
 
   return (
-    <div className="relative mb-14 flex items-center justify-center">
+    <div className="relative flex items-center justify-center">
       {/* Toast Container */}
       <ToastContainer
         position="top-center"
@@ -125,9 +115,10 @@ const AddMartyr = () => {
         theme="light"
       />
 
-      <div className="w-11/12 md:w-7/12 lg:w-6/12 border p-8 rounded-3xl shadow-sm bg-white mt-40">
+      <div className="relative w-full border p-8 bg-white">
         <Heading
-          title="إضافة قصة"
+          title=""
+          highLightText="إضافة قصة"
           highlightColor="before:bg-primary"
           className="mb-8 mx-auto text-center !text-2xl"
         />
@@ -146,112 +137,49 @@ const AddMartyr = () => {
                 {/* ID Number Field */}
                 <div>
                   <Field
-                    disabled={isSubmitting}
+                    required={false}
+                    readOnly
+                    disabled={true}
+                    value={initialValues.id_number}
                     name="id_number"
                     as={Input}
                     type="text"
                     placeholder="رقم الهوية"
                     label="رقم الهوية"
-                    icon={BiIdCard}
+                    icon={<BiIdCard />}
                     className={`focus:border-primary`}
                     aria-label="رقم الهوية"
                     aria-invalid={!!errors.id_number}
                   />
-                  <ErrorMessage
-                    name="id_number"
-                    component="div"
-                    className="text-red-500 mt-2 font-bold text-[10px]"
+                </div>
+
+                {/* Full Name Field */}
+                <div>
+                  <Field
+                    required={false}
+                    readOnly
+                    disabled={true}
+                    value={initialValues.full_name}
+                    name="full_name"
+                    as={Input}
+                    type="text"
+                    placeholder="اسم الشهيد رباعي"
+                    label="الاسم رباعي"
+                    icon={<BiUser />}
+                    className={`focus:border-primary`}
+                    aria-label="الاسم رباعي"
+                    aria-invalid={!!errors.full_name}
                   />
                 </div>
-                {/* First Name and Father Name Fields */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  <div>
-                    <Field
-                      disabled={isSubmitting}
-                      name="first_name"
-                      as={Input}
-                      type="text"
-                      placeholder="الاسم الأول"
-                      label="الاسم الأول"
-                      icon={BiUser}
-                      className={`focus:border-primary`}
-                      aria-label="الاسم الأول"
-                      aria-invalid={!!errors.first_name}
-                    />
-                    <ErrorMessage
-                      name="first_name"
-                      component="div"
-                      className="text-red-500 mt-2 font-bold text-[10px]"
-                    />
-                  </div>
 
-                  <div>
-                    <Field
-                      disabled={isSubmitting}
-                      name="father_name"
-                      as={Input}
-                      type="text"
-                      placeholder="اسم الأب"
-                      label="اسم الأب"
-                      icon={BiUser}
-                      className={`focus:border-primary`}
-                      aria-label="اسم الأب"
-                      aria-invalid={!!errors.father_name}
-                    />
-                    <ErrorMessage
-                      name="father_name"
-                      component="div"
-                      className="text-red-500 mt-2 font-bold text-[10px]"
-                    />
-                  </div>
-                </div>
-                {/* Grandfather Name and Last Name Fields */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  <div>
-                    <Field
-                      disabled={isSubmitting}
-                      name="grandfather_name"
-                      as={Input}
-                      type="text"
-                      placeholder="اسم الجد"
-                      label="اسم الجد"
-                      icon={BiUser}
-                      className={`focus:border-primary`}
-                      aria-label="اسم الجد"
-                      aria-invalid={!!errors.grandfather_name}
-                    />
-                    <ErrorMessage
-                      name="grandfather_name"
-                      component="div"
-                      className="text-red-500 mt-2 font-bold text-[10px]"
-                    />
-                  </div>
-
-                  <div>
-                    <Field
-                      disabled={isSubmitting}
-                      name="last_name"
-                      as={Input}
-                      type="text"
-                      placeholder="اسم العائلة"
-                      label="اسم العائلة"
-                      icon={BiUser}
-                      className={`focus:border-primary`}
-                      aria-label="اسم العائلة"
-                      aria-invalid={!!errors.last_name}
-                    />
-                    <ErrorMessage
-                      name="last_name"
-                      component="div"
-                      className="text-red-500 mt-2 font-bold text-[10px]"
-                    />
-                  </div>
-                </div>
                 {/* Birth Date and Death Date Fields */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   <div>
                     <Field
-                      disabled={isSubmitting}
+                      required={false}
+                      readOnly
+                      disabled={true}
+                      value={initialValues.birth_date}
                       name="birth_date"
                       as={Input}
                       type="date"
@@ -261,16 +189,14 @@ const AddMartyr = () => {
                       aria-label="تاريخ الميلاد"
                       aria-invalid={!!errors.birth_date}
                     />
-                    <ErrorMessage
-                      name="birth_date"
-                      component="div"
-                      className="text-red-500 mt-2 font-bold text-[10px]"
-                    />
                   </div>
 
                   <div>
                     <Field
-                      disabled={isSubmitting}
+                      required={false}
+                      readOnly
+                      disabled={true}
+                      value={initialValues.death_date}
                       name="death_date"
                       as={Input}
                       type="date"
@@ -279,11 +205,6 @@ const AddMartyr = () => {
                       className={`focus:border-primary`}
                       aria-label="تاريخ الاستشهاد"
                       aria-invalid={!!errors.death_date}
-                    />
-                    <ErrorMessage
-                      name="death_date"
-                      component="div"
-                      className="text-red-500 mt-2 font-bold text-[10px]"
                     />
                   </div>
                 </div>
@@ -440,4 +361,4 @@ const AddMartyr = () => {
   );
 };
 
-export default AddMartyr;
+export default AddStory;

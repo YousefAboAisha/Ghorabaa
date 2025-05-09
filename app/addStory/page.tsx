@@ -1,8 +1,10 @@
 "use client";
 import Button from "@/components/UI/inputs/button";
 import Input from "@/components/UI/inputs/input";
+import Modal from "@/components/UI/modals/modal";
 import Heading from "@/components/UI/typography/heading";
 import PageTitles from "@/components/UI/typography/pageTitles";
+import AddStoryModal from "@/containers/addStory/addStoryModal";
 import Link from "next/link";
 import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
@@ -10,6 +12,7 @@ import { BiSearch } from "react-icons/bi";
 const Page = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [isModalopen, setIsModalopen] = useState<boolean>(false);
 
   return (
     <div className="container lg:w-6/12 mt-24 min-h-screen">
@@ -51,10 +54,12 @@ const Page = () => {
           <table className="min-w-full bg-white border border-gray-200 h-full">
             <tbody>
               <tr>
-                <td className="py-3 px-4 border-b text-right text-sm border-l">
+                <td
+                  colSpan={2}
+                  className="py-3 px-4 border-b text-center text-sm border-l bg-gray-300 font-semibold"
+                >
                   المعلومات الشخصية
                 </td>
-                <td className="py-3 px-4 border-b text-right text-sm border-l"></td>
               </tr>
 
               <tr>
@@ -121,36 +126,45 @@ const Page = () => {
                 </td>
 
                 <td className="py-3 px-4 text-right text-sm">
-                  <div className="flex items-center gap-2">
-                    <p className="w-fit p-2 rounded-md text-[12px] bg-red-600 text-white">
-                      غير مكتمل
-                    </p>
-                    <p
-                      title="إضافة قصة للشهيد"
-                      className="text-secondary font-bold text-[13px] cursor-pointer hover:underline"
-                    >
-                      (إضافة قصة للشهيد)
-                    </p>
-                  </div>
+                  {0 ? (
+                    <div className="flex items-center gap-2">
+                      <p className="w-fit p-2 rounded-md text-[12px] bg-primary text-white">
+                        مكتمل
+                      </p>
 
-                  {/* <div className="flex items-center gap-2">
-                    <p className="w-fit p-2 rounded-md text-[12px] bg-primary text-white">
-                      مكتمل
-                    </p>
-
-                    <Link
-                      href={"/martyrs/1"}
-                      className="text-secondary font-bold text-[13px] cursor-pointer hover:underline"
-                    >
-                      (عرض ملف الشهيد)
-                    </Link>
-                  </div> */}
+                      <Link
+                        href={"/martyrs/1"}
+                        className="text-secondary font-bold text-[13px] cursor-pointer hover:underline"
+                      >
+                        (عرض ملف الشهيد)
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <p className="w-fit p-2 rounded-md text-[12px] bg-red-600 text-white">
+                        غير مكتمل
+                      </p>
+                      <p
+                        title="إضافة قصة للشهيد"
+                        className="text-secondary font-semibold text-[13px] cursor-pointer hover:underline"
+                        onClick={() => {
+                          setIsModalopen(true);
+                        }}
+                      >
+                        (إضافة قصة للشهيد)
+                      </p>
+                    </div>
+                  )}
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+
+      <Modal isOpen={isModalopen} setIsOpen={setIsModalopen}>
+        <AddStoryModal />
+      </Modal>
     </div>
   );
 };
