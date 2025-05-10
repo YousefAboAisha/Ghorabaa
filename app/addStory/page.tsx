@@ -11,7 +11,8 @@ import { BiSearch } from "react-icons/bi";
 
 const Page = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
+  const loading = false;
   const [isModalopen, setIsModalopen] = useState<boolean>(false);
 
   return (

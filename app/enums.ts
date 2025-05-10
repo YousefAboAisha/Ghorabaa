@@ -46,3 +46,9 @@ export enum NotificationTypes {
   ACCEPT = "ACCEPT",
   COMMENT = "COMMENT",
 }
+
+// Account Providers Enums
+export enum ProviderTypes {
+  GOOGLE = "google",
+  DEFAULT = "default",
+}

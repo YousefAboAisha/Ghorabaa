@@ -1,6 +1,6 @@
 import { Schema, model, models } from "mongoose";
 import { UserInterface } from "../interfaces";
-import { Role } from "../enums";
+import { ProviderTypes, Role } from "../enums";
 
 // Define the Martyr schema
 const userSchema = new Schema<UserInterface>(
@@ -28,6 +28,12 @@ const userSchema = new Schema<UserInterface>(
     password: {
       type: String,
       required: [true, "Password is required and cannot be empty."],
+    },
+    
+    provider: {
+      type: String,
+      enum: Object.values(ProviderTypes),
+      default: ProviderTypes.DEFAULT,
     },
 
     role: {

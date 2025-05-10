@@ -23,14 +23,8 @@ const page = () => {
   return (
     <div className="container lg:w-6/12 mt-[70px] min-h-screen">
       <div className="flex flex-col gap-2 mt-24">
-        <PageTitles
-          first_title="الفعاليات"
-          second_title={{
-            title: "فعالية يوم الشهيد",
-            href: "X",
-          }}
-        />
-        
+        <PageTitles />
+
         <Image
           src={image}
           alt="Event Title"

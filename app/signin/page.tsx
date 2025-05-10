@@ -82,15 +82,6 @@ const Signin = () => {
     }
   };
 
-  // const googleSignInHandler = async () => {
-  //   try {
-  //     const user = await loginAction();
-  //     console.log("User logged in:", user);
-  //   } catch (error) {
-  //     console.error("Login failed:", error);
-  //   }
-  // };
-
   const handleGoogleLogin = async () => {
     setLoading(true);
 
@@ -227,7 +218,7 @@ const Signin = () => {
               </div>
 
               {formErrors && (
-                <div className="rounded-lg p-4 w-full bg-red-100 text-[red] text-sm">
+                <div className="rounded-lg p-4 w-full bg-red-100 text-[red] text-[12px]">
                   {formErrors}
                 </div>
               )}

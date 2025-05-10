@@ -1,3 +1,4 @@
+import { Role } from "@/app/enums";
 import NextAuth from "next-auth";
 
 declare module "next-auth" {
@@ -8,6 +9,7 @@ declare module "next-auth" {
       email: string;
       image: string;
       createdAt: string;
+      role: Role;
     };
   }
 }
@@ -19,5 +21,6 @@ declare module "next-auth/jwt" {
     email: string;
     image: string;
     createdAt: string;
+    role: Role;
   }
 }

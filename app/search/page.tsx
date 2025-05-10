@@ -10,9 +10,11 @@ import { StoryInterface } from "../interfaces";
 import { BsExclamationCircle } from "react-icons/bs";
 
 const Page = () => {
-  const [stories, setStories] = useState<StoryInterface[] | undefined>([]);
+  // const [stories, setStories] = useState<StoryInterface[] | undefined>([]);
+  const stories: StoryInterface[] = [];
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
+  const loading = false;
 
   const renderLoadingSkeletons = () => (
     <div className="cards-grid-4">

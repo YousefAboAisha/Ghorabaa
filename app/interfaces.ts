@@ -1,5 +1,6 @@
 import { Document, Types } from "mongoose";
 import {
+  ProviderTypes,
   DonationCampaignStatus,
   EventStatus,
   ReportReasons,
@@ -15,6 +16,7 @@ export interface UserInterface extends Document {
   email: string;
   password?: string;
   role: Role;
+  provider: ProviderTypes;
   createdAt: Date;
 }
 

@@ -8,10 +8,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { GoogleSessionProps } from "@/app/interfaces";
+import { SessionProps } from "@/app/interfaces";
 import Image from "next/image";
 
-function ProfilePopper({ session }: GoogleSessionProps) {
+function ProfilePopper({ session }: SessionProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const profileImage = session?.image || "/me.png"; // Fallback image
 
