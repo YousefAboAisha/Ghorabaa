@@ -3,14 +3,13 @@ import NotificationCard from "@/components/UI/cards/notificationCard";
 import Image from "next/image";
 import React from "react";
 import { GrNotification } from "react-icons/gr";
-// import { GrNotification } from "react-icons/gr";
 
 const ProfileDetails = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
       {/* Profile Card Details */}
-      <div className="relative flex flex-col items-center bg-white rounded-lg col-span-1 w-full">
-        <div className="w-full bg-secondary p-4 rounded-t-lg">
+      <div className="relative flex flex-col bg-white rounded-lg col-span">
+        <div className="bg-secondary p-4 rounded-t-lg">
           <div className="w-[100px] h-[100px] rounded-full border-2 p-[2px] mx-auto">
             <Image
               src={"/me.png"}
@@ -22,8 +21,8 @@ const ProfileDetails = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 w-full h-full">
-          <table className="min-w-full bg-white border border-gray-200 h-full">
+        <div className="flex flex-col gap-2 h-full w-full">
+          <table className="bg-white border bordser-gray-200 h-full ">
             <tbody>
               <tr>
                 <td className="py-3 px-4 border-b text-right text-sm border-l">
@@ -79,8 +78,8 @@ const ProfileDetails = () => {
         </div>
       </div>
 
-      <div className="relative md:col-span-2 col-span-1">
-        <div className="flex flex-col gap-2 max-h-[50vh] overflow-auto pb-4">
+      <div className="relative w-full col-span-1 md:col-span-2 lg:col-span-2 max-h-[50vh] overflow-auto ">
+        <div className="flex flex-col gap-2 pb-4">
           <NotificationCard type={NotificationTypes.ACCEPT} />
           <NotificationCard type={NotificationTypes.BAN} />
           <NotificationCard type={NotificationTypes.COMMENT} />

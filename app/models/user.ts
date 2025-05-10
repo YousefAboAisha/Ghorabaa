@@ -5,7 +5,7 @@ import { Role } from "../enums";
 // Define the Martyr schema
 const userSchema = new Schema<UserInterface>(
   {
-    profile_image: {
+    image: {
       type: String,
       required: [true, "Profile Image is required and cannot be empty."],
     },
@@ -17,8 +17,12 @@ const userSchema = new Schema<UserInterface>(
 
     email: {
       type: String,
-      required: [true, "Email is required and cannot be empty."],
       unique: true,
+      required: [true, "Email is required"],
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Email is invalid",
+      ],
     },
 
     password: {

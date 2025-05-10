@@ -40,13 +40,11 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarTypes) => {
           );
         })}
 
-        <div className="mx-auto bottom-2 opacity-5 mt-6">
-          <Logo width={130} height={130} />
-        </div>
-
         <p className="text-sm font-light text-grey mt-6 text-center">
           جميع الحقوق محفوظة لدى يوسف رشاد أبو عيشة© {date}
         </p>
+
+        <Logo className="mx-auto bottom-2 opacity-5 mt-6 !text-5xl" />
       </div>
     </div>
   );

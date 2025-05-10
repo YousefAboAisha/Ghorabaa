@@ -132,7 +132,7 @@ const Signup = () => {
                   type="text"
                   placeholder="رقم الهوية"
                   label="رقم الهوية"
-                  icon={BiIdCard}
+                  icon={<BiIdCard size={20} />}
                   className={`focus:border-primary`}
                   aria-label="رقم الهوية"
                   aria-invalid={!!errors.idNumber}
@@ -153,7 +153,7 @@ const Signup = () => {
                   type="text"
                   placeholder="الاسم رباعي"
                   label="الاسم رباعي"
-                  icon={BiUser}
+                  icon={<BiUser size={20} />}
                   className={`focus:border-primary`}
                   aria-label="الاسم رباعي"
                   aria-invalid={!!errors.name}
@@ -175,7 +175,7 @@ const Signup = () => {
                     type="email"
                     placeholder="البريد الالكتروني"
                     label="البريد الالكتروني"
-                    icon={BiMailSend}
+                    icon={<BiMailSend size={20} />}
                     className={`focus:border-primary`}
                     aria-label="البريد الالكتروني"
                     aria-invalid={!!errors.email}
@@ -195,7 +195,7 @@ const Signup = () => {
                     type="text"
                     placeholder="رقم الجوال"
                     label="رقم الجوال"
-                    icon={BiPhone}
+                    icon={<BiPhone size={20} />}
                     className={`focus:border-primary`}
                     aria-label="رقم الجوال"
                     aria-invalid={!!errors.phoneNumber}
@@ -217,7 +217,7 @@ const Signup = () => {
                   type="password"
                   placeholder="كلمة المرور"
                   label="كلمة المرور"
-                  icon={BiLock}
+                  icon={<BiLock size={20} />}
                   className={`focus:border-primary`}
                   aria-label="كلمة المرور"
                   aria-invalid={!!errors.password}
@@ -238,7 +238,7 @@ const Signup = () => {
                   type="password"
                   placeholder="تأكيد كلمة المرور"
                   label="تأكيد كلمة المرور"
-                  icon={BiLock}
+                  icon={<BiLock size={20} />}
                   className={`focus:border-primary`}
                   aria-label="تأكيد كلمة المرور"
                   aria-invalid={!!errors.confirmPassword}
@@ -255,7 +255,7 @@ const Signup = () => {
                 title="إنشاء حساب"
                 type="submit"
                 className="bg-primary mt-2 w-full mx-auto"
-                icon={<PiShootingStarThin size={22} />}
+                icon={<PiShootingStarThin size={20} />}
                 disabled={isSubmitting}
                 loading={isSubmitting}
               />

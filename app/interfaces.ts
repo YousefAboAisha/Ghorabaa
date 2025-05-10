@@ -10,10 +10,10 @@ import {
 
 // Define the User interface
 export interface UserInterface extends Document {
-  profile_image: string;
+  image: string;
   name: string;
   email: string;
-  password: string;
+  password?: string;
   role: Role;
   createdAt: Date;
 }
@@ -89,4 +89,13 @@ export interface DonationInterface extends Document {
   donationCampaign_id: Types.ObjectId; // Reference to the Donation Campaign that a user has made a donation on.
   user_id: Types.ObjectId; // Reference to the user who made the donation.
   createdAt: Date;
+}
+
+export interface SessionProps {
+  session?: {
+    id: string;
+    name: string;
+    email: string;
+    image: string;
+  } | null;
 }

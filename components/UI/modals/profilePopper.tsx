@@ -1,31 +1,29 @@
 "use client";
-import { SessionProps } from "@/components/navbar";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Link from "next/link";
 import { CiEdit, CiLogout, CiUser } from "react-icons/ci";
 import { IoIosArrowDown } from "react-icons/io";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { signOut } from "next-auth/react";
+import { useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { GoogleSessionProps } from "@/app/interfaces";
+import Image from "next/image";
 
-function ProfilePopper({ session }: SessionProps) {
-  const handleLogout = async () => {
+function ProfilePopper({ session }: GoogleSessionProps) {
+  const [loading, setLoading] = useState<boolean>(false);
+  const profileImage = session?.image || "/me.png"; // Fallback image
+
+  const handleGoogleSignout = async () => {
+    setLoading(true);
+
     try {
-      const response = await fetch("/api/users/signout", {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to log out");
-      }
-
-      // toast.success("تم تسجيل الخروج بنجاح!");
-
-      // setTimeout(() => {
-      window.location.reload();
-      // }, 1000);
+      await signOut();
+      setLoading(false); // fallback if signIn fails
     } catch (error) {
-      console.error("Logout failed:", error);
-      toast.error("حدث خطأ أثناء تسجيل الخروج"); // Show error toast
+      console.error("Google sign-in failed:", error);
+      setLoading(false);
     }
   };
 
@@ -46,29 +44,43 @@ function ProfilePopper({ session }: SessionProps) {
       />
 
       <Menu as={"div"}>
-        <MenuButton as={"div"} className="cursor-pointer">
+        <MenuButton as={"button"} className="group cursor-pointer disabled:cursor-not-allowed disabled:opacity-80" disabled={loading}>
           {({ active }) => (
             <div className="flex items-center gap-1">
               <IoIosArrowDown
                 className={`${active && "rotate-180"} duration-200`}
                 size={14}
               />
-              <p className="flex items-center justify-center w-11 h-11 bg-primary text-white rounded-full cursor-pointer text-md shadow-md capitalize">
-                {session?.email.charAt(0)} YA
+              <p className="flex items-center justify-center w-11 h-11 text-secondary border rounded-full">
+                {loading ? (
+                  <AiOutlineLoading3Quarters
+                    size={17}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <Image
+                    src={profileImage}
+                    width={100}
+                    height={100}
+                    alt="صورة الملف الشخصي"
+                    className="rounded-full"
+                  />
+                )}
               </p>
             </div>
           )}
         </MenuButton>
+
         <MenuItems
           anchor={{ to: "bottom start", gap: "4px" }}
           transition
           className="flex flex-col gap-2 min-w-48 bg-white z-[100000] rounded-xl border shadow-2xl origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 outline-none"
         >
-          {/* <MenuItem disabled>
-            <span className="flex items-center gap-2 p-4 bg-gray_light text-sm">
+          <MenuItem disabled>
+            <span className="flex items-center gap-2 p-4 bg-gray_light text-[13px]">
               {session?.email}
             </span>
-          </MenuItem> */}
+          </MenuItem>
 
           <div className="p-1 flex flex-col gap-2">
             <MenuItem>
@@ -94,7 +106,7 @@ function ProfilePopper({ session }: SessionProps) {
 
             <MenuItem>
               <div
-                onClick={handleLogout} // Add onClick handler for logout
+                onClick={handleGoogleSignout} // Add onClick handler for logout
                 className="flex items-center gap-2 p-3 cursor-pointer text-[13px] rounded-lg bg-[red] text-white"
               >
                 <CiLogout size={20} />

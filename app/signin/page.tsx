@@ -12,9 +12,13 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { API_BASE_URL } from "@/config";
 import { FcGoogle } from "react-icons/fc";
+// import { loginAction } from "../actions/registerActions";
+import { signIn } from "next-auth/react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const Signin = () => {
   const [formErrors, setFormErrors] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -78,6 +82,46 @@ const Signin = () => {
     }
   };
 
+  // const googleSignInHandler = async () => {
+  //   try {
+  //     const user = await loginAction();
+  //     console.log("User logged in:", user);
+  //   } catch (error) {
+  //     console.error("Login failed:", error);
+  //   }
+  // };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+
+    try {
+      const result = await signIn("google", {
+        callbackUrl: "/profile",
+        redirect: false,
+      });
+
+      if (result?.url) {
+        const popup = window.open(
+          result.url,
+          "googleSignIn",
+          "width=500,height=600"
+        );
+
+        const pollTimer = setInterval(() => {
+          if (popup?.closed) {
+            clearInterval(pollTimer);
+            window.location.reload();
+          }
+        }, 500);
+      } else {
+        setLoading(false); // fallback if signIn fails
+      }
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="relative mb-14 flex items-center justify-center">
       {/* Toast Container */}
@@ -117,7 +161,7 @@ const Signin = () => {
                   type="email"
                   placeholder="البريد الالكتروني"
                   label="البريد الالكتروني"
-                  icon={BiUser}
+                  icon={<BiUser />}
                   className={`focus:border-primary`}
                   aria-label="البريد الالكتروني"
                   aria-invalid={!!errors.email}
@@ -138,7 +182,7 @@ const Signin = () => {
                   type="password"
                   placeholder="كلمة المرور"
                   label="كلمة المرور"
-                  icon={BiLock}
+                  icon={<BiLock />}
                   className={`focus:border-primary`}
                   aria-label="كلمة المرور"
                   aria-invalid={!!errors.password}
@@ -165,15 +209,22 @@ const Signin = () => {
               </p>
 
               {/* Submit Button */}
-              <Button
+              <div
+                onClick={() => handleGoogleLogin()}
+                className="px-2 py-3 cursor-pointer text-center justify-center rounded-lg text-sm bg-white border border-gray_dark shadow-none hover:shadow-none flex items-center gap-2"
                 title={"تسجيل بواسطة جوجل"}
-                type="submit"
-                className="bg-white !text-secondary border border-gray_dark shadow-none hover:shadow-none "
-                icon={<FcGoogle size={20} />}
-                loading={isSubmitting}
-                disabled={isSubmitting}
-                hasShiningBar={false}
-              />
+                aria-label="تسجيل بواسطة جوجل"
+              >
+                تسجيل بواسطة جوجل
+                {loading ? (
+                  <AiOutlineLoading3Quarters
+                    size={17}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <FcGoogle size={20} />
+                )}
+              </div>
 
               {formErrors && (
                 <div className="rounded-lg p-4 w-full bg-red-100 text-[red] text-sm">

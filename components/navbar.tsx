@@ -9,20 +9,13 @@ import Button from "./UI/inputs/button";
 import ProfilePopper from "./UI/modals/profilePopper";
 import { FiUser } from "react-icons/fi";
 import Logo from "./UI/logo";
-
-export interface SessionProps {
-  session?: {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    expiresAt: Date;
-  } | null;
-}
+import { SessionProps } from "@/app/interfaces";
 
 const Navbar = ({ session }: SessionProps) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const pathname = usePathname();
+
+  console.log("Session values", session);
 
   // Memoize the routes to avoid unnecessary re-renders
   const renderedRoutes = useMemo(
@@ -63,7 +56,7 @@ const Navbar = ({ session }: SessionProps) => {
           </div>
 
           {/* Conditionally render Sign In or Profile Icon */}
-          {session ? (
+          {!session ? (
             <Link href={"/signin"} className="h-full outline-none" prefetch>
               <Button
                 title="تسجيل الدخول"
@@ -81,7 +74,7 @@ const Navbar = ({ session }: SessionProps) => {
         </div>
 
         {/* Logo */}
-        <Logo height={25} width={25} />
+        <Logo className="text-xl" />
       </div>
 
       {/* Sidebar */}

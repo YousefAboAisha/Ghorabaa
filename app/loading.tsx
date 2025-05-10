@@ -1,5 +1,4 @@
-import Image from "next/image";
-import logo from "@/public/zad-logo.svg";
+import Logo from "@/components/UI/logo";
 
 type SpinnerProps = {
   additionalStyles?: string;
@@ -8,13 +7,7 @@ type SpinnerProps = {
 const Spinner = ({ additionalStyles }: SpinnerProps) => {
   return (
     <div role="status" className={`abs-center fixed z-50 ${additionalStyles}`}>
-      <Image
-        src={logo}
-        width={25}
-        height={25}
-        alt="صورة الشعار"
-        className="animate-pulse"
-      />
+      <Logo className="animate-pulse text-lg" />
     </div>
   );
 };
