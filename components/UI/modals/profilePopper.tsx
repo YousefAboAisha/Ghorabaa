@@ -2,7 +2,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Link from "next/link";
 import { CiEdit, CiLogout, CiUser } from "react-icons/ci";
-import { IoIosArrowDown } from "react-icons/io";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signOut } from "next-auth/react";

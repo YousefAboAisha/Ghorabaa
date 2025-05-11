@@ -2,7 +2,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
+// import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { GrNotification } from "react-icons/gr";
 import NotificationCard from "../cards/notificationCard";
@@ -10,7 +10,8 @@ import Link from "next/link";
 import { NotificationTypes } from "@/app/enums";
 
 function NotificationPopper() {
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
+  const loading = false;
 
   return (
     <>
