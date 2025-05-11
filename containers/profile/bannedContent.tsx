@@ -1,6 +1,5 @@
 import BannedContentCard from "@/components/UI/cards/bannedContentCard";
 import Heading from "@/components/UI/typography/heading";
-import React from "react";
 
 const BannedContent = () => {
   return (

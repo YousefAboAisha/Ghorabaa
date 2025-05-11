@@ -10,6 +10,8 @@ import ProfilePopper from "./UI/modals/profilePopper";
 import { FiUser } from "react-icons/fi";
 import Logo from "./UI/logo";
 import { SessionProps } from "@/app/interfaces";
+import NotificationPopper from "./UI/modals/notificationPopper";
+import { GrFavorite } from "react-icons/gr";
 
 const Navbar = ({ session }: SessionProps) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
@@ -56,7 +58,7 @@ const Navbar = ({ session }: SessionProps) => {
           </div>
 
           {/* Conditionally render Sign In or Profile Icon */}
-          {!session ? (
+          {session ? (
             <Link href={"/signin"} className="h-full outline-none" prefetch>
               <Button
                 title="تسجيل الدخول"
@@ -66,7 +68,17 @@ const Navbar = ({ session }: SessionProps) => {
               />
             </Link>
           ) : "ADMIN" == "ADMIN" ? (
-            <ProfilePopper session={session} />
+            <div className="flex items-center gap-1">
+              <ProfilePopper session={session} />
+              <NotificationPopper />
+              <Link
+                href={"/savedStories"}
+                className="flex items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+              >
+                <GrFavorite />
+              </Link>
+              <span className="hidden md:flex">|</span>
+            </div>
           ) : null}
 
           {/* Routes */}

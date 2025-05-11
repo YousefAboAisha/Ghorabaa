@@ -44,13 +44,13 @@ function ProfilePopper({ session }: SessionProps) {
       />
 
       <Menu as={"div"}>
-        <MenuButton as={"button"} className="group cursor-pointer disabled:cursor-not-allowed disabled:opacity-80" disabled={loading}>
-          {({ active }) => (
+        <MenuButton
+          as={"button"}
+          className="group cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
+          disabled={loading}
+        >
+          {() => (
             <div className="flex items-center gap-1">
-              <IoIosArrowDown
-                className={`${active && "rotate-180"} duration-200`}
-                size={14}
-              />
               <p className="flex items-center justify-center w-11 h-11 text-secondary border rounded-full">
                 {loading ? (
                   <AiOutlineLoading3Quarters
@@ -96,7 +96,7 @@ function ProfilePopper({ session }: SessionProps) {
 
             <MenuItem>
               <Link
-                href={"/edit"}
+                href={"/editProfile"}
                 className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
               >
                 <CiEdit size={20} />

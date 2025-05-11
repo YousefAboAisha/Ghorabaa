@@ -1,5 +1,4 @@
 import Image from "next/image";
-import React from "react";
 import image from "@/public/event.jpg";
 import DonationDetailsCard from "@/components/UI/cards/donationDetailsCard";
 import Button from "@/components/UI/inputs/button";

@@ -1,6 +1,4 @@
-import React from "react";
 import { BsBan, BsDot } from "react-icons/bs";
-import Link from "next/link";
 import { BiComment } from "react-icons/bi";
 import { NotificationTypes } from "@/app/enums";
 import { FaTimesCircle } from "react-icons/fa";
@@ -21,18 +19,13 @@ const NotificationCard = ({ type }: NotificationTypesProps) => {
             <FaCoins />
           </div>
 
-          <div className="mt-3 font-normal text-sm mb-2">
+          <div className="mt-3 font-normal text-[12px] mb-2">
             تم استلام تبرع جديد بقيمة
-            <p className="text-secondary font-bold inline-block mx-1">
-              10$
-            </p>
+            <p className="text-secondary font-bold inline-block mx-1">10$</p>
             بواسطة
-            <Link
-              href={""}
-              className="text-secondary hover:underline cursor-pointer font-bold mx-1"
-            >
+            <span className="text-secondary font-semibold mx-1">
               [محمد العشي]
-            </Link>
+            </span>
             على حملة تبرعك.
           </div>
 
@@ -52,14 +45,11 @@ const NotificationCard = ({ type }: NotificationTypesProps) => {
             <BsBan size={13} />
           </div>
 
-          <div className="mt-3 font-normal text-sm mb-2">
+          <div className="mt-3 font-normal text-[12px] mb-2">
             تم حظر المحتوى بعنوان
-            <Link
-              href={""}
-              className="text-red-600 hover:underline cursor-pointer font-bold mx-1"
-            >
+            <span className="text-red-600 font-semibold mx-1">
               [عنوان المحتوى]
-            </Link>
+            </span>
             بسبب مخالفته معايير المنصة.
           </div>
 
@@ -79,14 +69,11 @@ const NotificationCard = ({ type }: NotificationTypesProps) => {
             <FaTimesCircle size={13} />
           </div>
 
-          <div className="mt-3 font-normal text-sm mb-2">
+          <div className="mt-3 font-normal text-[12px] mb-2">
             تم رفض طلب إضافة القصة بعنوان
-            <Link
-              href={""}
-              className="text-orange-500 hover:underline cursor-pointer font-bold mx-1"
-            >
+            <span className="text-orange-500 font-semibold mx-1">
               [عنوان القصة]
-            </Link>
+            </span>
             لعدم صحة البيانات المُرسلة.
           </div>
 
@@ -106,14 +93,11 @@ const NotificationCard = ({ type }: NotificationTypesProps) => {
             <FiCheckCircle size={13} />
           </div>
 
-          <div className="mt-3 font-normal text-sm mb-2">
+          <div className="mt-3 font-normal text-[12px] mb-2">
             تم قبول طلبك لإضافة القصة بعنوان
-            <Link
-              href={""}
-              className="text-primary hover:underline cursor-pointer font-bold mx-1"
-            >
+            <span className="text-primary font-semibold mx-1">
               [محمد عبد الله حسب الله]
-            </Link>
+            </span>
           </div>
 
           <div className="absolute bottom-1 left-3 flex items-center gap-1 text-gray_dark text-[10px]">
@@ -132,14 +116,11 @@ const NotificationCard = ({ type }: NotificationTypesProps) => {
             <BiComment size={13} />
           </div>
 
-          <div className="mt-3 font-normal text-sm mb-2">
+          <div className="mt-3 font-normal text-[12px] mb-2">
             تمت إضافة تعليق من قبل
-            <Link
-              href={""}
-              className="text-gray_dark hover:underline cursor-pointer font-bold mx-1"
-            >
+            <span className="text-gray_dark font-semibold mx-1">
               [محمد العشي]
-            </Link>
+            </span>
             على قصتك.
           </div>
 

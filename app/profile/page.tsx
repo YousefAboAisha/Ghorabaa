@@ -4,15 +4,18 @@ import ProfileDetails from "@/containers/profile/profileDetails";
 import RecentComments from "@/containers/profile/recentComments";
 import SubmittedStories from "@/containers/profile/submittedStories";
 
-import React from "react";
 
 const page = () => {
   return (
     <div className="container min-h-screen mt-24">
       <PageTitles />
+
       <ProfileDetails />
+
       <SubmittedStories />
+
       <RecentComments />
+
       <BannedContent />
     </div>
   );

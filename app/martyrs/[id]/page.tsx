@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import React from "react";
 import image from "@/public/hasabo.jpg";
 import MartyrComment from "@/containers/martyrDetails/martyrComment";
 import { Field, Form, Formik } from "formik";

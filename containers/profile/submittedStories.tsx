@@ -1,4 +1,3 @@
-import React from "react";
 import StoryTabs from "./storyTabs";
 
 const SubmittedStories = () => {

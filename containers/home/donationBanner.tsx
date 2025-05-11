@@ -2,7 +2,6 @@ import Button from "@/components/UI/inputs/button";
 import Heading from "@/components/UI/typography/heading";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import { BiDonateHeart } from "react-icons/bi";
 
 const DonationBanner = () => {

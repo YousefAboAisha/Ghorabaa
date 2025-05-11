@@ -1,7 +1,6 @@
 "use client";
-
-import { MdKeyboardArrowLeft } from "react-icons/md";
 import React from "react";
+import { MdKeyboardArrowLeft } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -14,6 +13,9 @@ const pathTranslations: Record<string, string> = {
   donationCampaigns: "حملات التبرع",
   events: "الفعاليات",
   search: "البحث عن الشهداء",
+  editProfile: "تعديل الملف الشخصي",
+  notifications: "الإشعارات",
+  savedStories: "القصص المحفوظة",
 };
 
 const PageTitles = () => {

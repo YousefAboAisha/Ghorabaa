@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 import { FaBan } from "react-icons/fa6";
 
 const BannedContentCard = () => {

@@ -1,6 +1,5 @@
 import Button from "@/components/UI/inputs/button";
 import Link from "next/link";
-import React from "react";
 import { RiArrowGoBackFill } from "react-icons/ri";
 
 const PageNotFound = () => {
