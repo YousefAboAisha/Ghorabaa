@@ -1,7 +1,7 @@
 "use client";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Link from "next/link";
-import { CiEdit, CiLogout, CiUser } from "react-icons/ci";
+import { CiCirclePlus, CiEdit, CiLogout, CiUser } from "react-icons/ci";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signOut } from "next-auth/react";
@@ -45,7 +45,7 @@ function ProfilePopper({ session }: SessionProps) {
       <Menu as={"div"}>
         <MenuButton
           as={"button"}
-          className="group cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
+          className="group cursor-pointer disabled:cursor-not-allowed disabled:opacity-80 ml-1"
           disabled={loading}
         >
           {() => (
@@ -82,6 +82,17 @@ function ProfilePopper({ session }: SessionProps) {
           </MenuItem>
 
           <div className="p-1 flex flex-col gap-2">
+            <MenuItem>
+              <Link
+                href={"/addStory"}
+                className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
+                prefetch
+              >
+                <CiCirclePlus size={20} />
+                <span>قصة جديدة</span>
+              </Link>
+            </MenuItem>
+
             <MenuItem>
               <Link
                 href={"/profile"}

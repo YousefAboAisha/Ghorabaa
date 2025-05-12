@@ -11,7 +11,7 @@ import { FiUser } from "react-icons/fi";
 import Logo from "./UI/logo";
 import { SessionProps } from "@/app/interfaces";
 import NotificationPopper from "./UI/modals/notificationPopper";
-import { GrFavorite } from "react-icons/gr";
+import { BsBookmark } from "react-icons/bs";
 
 const Navbar = ({ session }: SessionProps) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
@@ -22,12 +22,14 @@ const Navbar = ({ session }: SessionProps) => {
   // Memoize the routes to avoid unnecessary re-renders
   const renderedRoutes = useMemo(
     () =>
-      Routes.map(({ title, href }, index) => (
+      Routes.filter(
+        ({ href }) => href !== "/donationCampaigns" && href !== "/events"
+      ).map(({ title, href }, index) => (
         <Link
           key={index}
           href={href}
           className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-sm font-primary outline-none font-noto_kufi ${
-            pathname === `${href}` ? "text-primary font-normal" : ""
+            pathname === href ? "text-primary font-normal" : ""
           }`}
           title={title}
         >
@@ -58,7 +60,7 @@ const Navbar = ({ session }: SessionProps) => {
           </div>
 
           {/* Conditionally render Sign In or Profile Icon */}
-          {session ? (
+          {!session ? (
             <Link href={"/signin"} className="h-full outline-none" prefetch>
               <Button
                 title="تسجيل الدخول"
@@ -67,19 +69,22 @@ const Navbar = ({ session }: SessionProps) => {
                 hasShiningBar={false}
               />
             </Link>
-          ) : "ADMIN" == "ADMIN" ? (
-            <div className="flex items-center gap-1">
+          ) : (
+            <div className="flex items-center">
               <ProfilePopper session={session} />
+
               <NotificationPopper />
               <Link
+                title="القصص المحفوظة"
+                prefetch
                 href={"/savedStories"}
                 className="flex items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
-                <GrFavorite />
+                <BsBookmark />
               </Link>
               <span className="hidden md:flex">|</span>
             </div>
-          ) : null}
+          )}
 
           {/* Routes */}
           <div className="hidden md:flex gap-6 mr-4">{renderedRoutes}</div>

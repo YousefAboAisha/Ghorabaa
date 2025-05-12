@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BiDonateHeart } from "react-icons/bi";
 
-const DonationBanner = () => {
+const AddStoryBanner = () => {
   return (
     <div className="section grid grid-cols-1 lg:grid-cols-2 gap-10 bg-secondary text-white rounded-xl overflow-hidden p-10">
       <div className="flex flex-col">
@@ -68,4 +68,4 @@ const DonationBanner = () => {
   );
 };
 
-export default DonationBanner;
+export default AddStoryBanner;

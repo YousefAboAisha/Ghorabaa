@@ -3,6 +3,7 @@ import image from "@/public/event.jpg";
 import { FiCalendar, FiMapPin } from "react-icons/fi";
 import ShareModal from "@/containers/events/shareModal";
 import PageTitles from "@/components/UI/typography/pageTitles";
+import { FaEye } from "react-icons/fa";
 
 export async function generateMetadata() {
   return {
@@ -44,8 +45,8 @@ const page = () => {
             </div>
 
             <div className="flex items-center gap-2 text-gray_dark">
-              <p>المشاهدات: </p>
               <p>232</p>
+              <FaEye size={16} />
             </div>
           </div>
 

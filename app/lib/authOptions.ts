@@ -14,6 +14,9 @@ export const authOptions: AuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
+      console.log("SIGNIN CALLBACK TRIGGERED");
+      console.log({ user, account });
+
       try {
         const client = await clientPromise;
         const db = client.db("ghorabaa");
@@ -45,6 +48,7 @@ export const authOptions: AuthOptions = {
         return false;
       }
     },
+
     async jwt({ token }) {
       const client = await clientPromise;
       const db = client.db("ghorabaa");
@@ -71,7 +75,7 @@ export const authOptions: AuthOptions = {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
-        session.user.image = token.profile_image as string;
+        session.user.image = token.image as string;
         session.user.role = token.role as Role;
         session.user.createdAt = token.createdAt as string;
       }

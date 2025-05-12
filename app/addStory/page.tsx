@@ -57,7 +57,7 @@ const Page = () => {
               <tr>
                 <td
                   colSpan={2}
-                  className="py-3 px-4 border-b text-center text-sm border-l bg-gray-300 font-semibold"
+                  className="py-3 px-4 border-b text-center text-sm border-l bg-gray-300"
                 >
                   المعلومات الشخصية
                 </td>
@@ -68,7 +68,7 @@ const Page = () => {
                   اسم الشهيد
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm ">
+                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
                   محمد عبد الله حسب الله
                 </td>
               </tr>
@@ -78,7 +78,7 @@ const Page = () => {
                   رقم الهوية
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm ">
+                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
                   407709260
                 </td>
               </tr>
@@ -88,7 +88,7 @@ const Page = () => {
                   الجنس
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm ">ذكر</td>
+                <td className="py-3 px-4 border-b text-right text-sm font-semibold">ذكر</td>
               </tr>
 
               <tr>
@@ -96,7 +96,7 @@ const Page = () => {
                   تاريخ الميلاد
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm ">
+                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
                   25 يناير 2002
                 </td>
               </tr>
@@ -106,7 +106,7 @@ const Page = () => {
                   تاريخ الاستشهاد
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm ">
+                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
                   8 ديسمبر 2023
                 </td>
               </tr>
@@ -116,7 +116,7 @@ const Page = () => {
                   العمر
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm ">
+                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
                   21 عاماً
                 </td>
               </tr>

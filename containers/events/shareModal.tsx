@@ -5,6 +5,7 @@ import Modal from "@/components/UI/modals/modal";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
+  FaCheck,
   FaFacebook,
   FaInstagram,
   FaLinkedin,
@@ -22,13 +23,22 @@ type ShareModalProps = {
 const ShareModal = ({ title, sharedLink }: ShareModalProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [shareIcon, setShareIcon] = useState(<FiCopy size={18} />);
 
   const copyToClipboard = async () => {
     setLoading(true);
+    setShareIcon(
+      <AiOutlineLoading3Quarters size={18} className="animate-spin" />
+    );
     await navigator.clipboard.writeText(location.href).then(() => {
       setTimeout(() => {
-        setLoading(false);
+        setShareIcon(<FaCheck size={18} />);
       }, 1000);
+
+      setTimeout(() => {
+        setLoading(false);
+        setShareIcon(<FiCopy size={18} />);
+      }, 2500);
     });
   };
 
@@ -62,14 +72,7 @@ const ShareModal = ({ title, sharedLink }: ShareModalProps) => {
                 className="bg-secondary h-full text-white flex items-center justify-center p-4 rounded-xl rounded-l-none absolute right-0 top-[50%] -translate-y-[50%]"
                 onClick={copyToClipboard}
               >
-                {loading ? (
-                  <AiOutlineLoading3Quarters
-                    size={18}
-                    className="animate-spin"
-                  />
-                ) : (
-                  <FiCopy size={18} />
-                )}
+                {shareIcon}
               </div>
             </div>
           </div>

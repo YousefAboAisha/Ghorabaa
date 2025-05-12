@@ -37,7 +37,7 @@ function NotificationPopper() {
         >
           {({ active }) => (
             <div className="flex items-center gap-1">
-              <p
+              <p title="الإشعارات"
                 className={`flex items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full ${
                   active && "bg-gray_light"
                 }`}

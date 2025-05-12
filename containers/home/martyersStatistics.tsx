@@ -4,7 +4,7 @@ import { MartyrsStatisticsData } from "@/data/martyersStatisticsData";
 
 const MartyrsStatistics = () => {
   return (
-    <div className="mt-24 ">
+    <div className="section">
       <div className="container mt-24 mb-24 py-10">
         <Heading
           title=""

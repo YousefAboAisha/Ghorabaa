@@ -1,10 +1,10 @@
-import Comments from "@/containers/home/comments";
+// import Comments from "@/containers/home/comments";
 import DonationBanner from "@/containers/home/donationBanner";
-import EventBanner from "@/containers/home/eventBanner";
 import Landing from "@/containers/home/landing";
 import MartyrsStatistics from "@/containers/home/martyersStatistics";
 import RecentlyAddedMartyrs from "@/containers/home/recentlyAddedMartyers";
 import TodaysMartyr from "@/containers/home/todaysMartyer";
+import AddStoryBanner from "@/containers/home/addStoryBanner";
 
 export async function generateMetadata() {
   return {
@@ -30,12 +30,12 @@ export default function Home() {
       <MartyrsStatistics />
       <div className="container">
         <TodaysMartyr />
+        <AddStoryBanner />
         <RecentlyAddedMartyrs />
-        <EventBanner />
       </div>
 
       <div className="container">
-        <Comments />
+        {/* <Comments /> */}
         <DonationBanner />
       </div>
     </>

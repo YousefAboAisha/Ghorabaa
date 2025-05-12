@@ -63,6 +63,18 @@ const RecentlyAddedMartyrs = () => {
           <MartyrCard />
         </SwiperSlide>
 
+        <SwiperSlide>
+          <MartyrCard />
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <MartyrCard />
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <MartyrCard />
+        </SwiperSlide>
+
         <Link
           href={"/martyrs"}
           className="text-primary flex items-center gap-2 justify-center mt-6 hover:underline text-sm w-fit mx-auto"

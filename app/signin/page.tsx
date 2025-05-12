@@ -15,10 +15,13 @@ import { FcGoogle } from "react-icons/fc";
 // import { loginAction } from "../actions/registerActions";
 import { signIn } from "next-auth/react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useSearchParams } from "next/navigation";
 
 const Signin = () => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/profile"; // default fallback
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -87,7 +90,7 @@ const Signin = () => {
 
     try {
       const result = await signIn("google", {
-        callbackUrl: "/profile",
+        callbackUrl: callbackUrl,
         redirect: false,
       });
 

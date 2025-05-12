@@ -17,14 +17,14 @@ export const Routes = [
     href: "/search",
     icon: RxLayers,
   },
-  // {
-  //   title: "حملات التبرع",
-  //   href: "/donationCampaigns",
-  //   icon: RxLayers,
-  // },
-  // {
-  //   title: "الفعاليات",
-  //   href: "/events",
-  //   icon: RxLayers,
-  // },
+  {
+    title: "حملات التبرع",
+    href: "/donationCampaigns",
+    icon: RxLayers,
+  },
+  {
+    title: "الفعاليات",
+    href: "/events",
+    icon: RxLayers,
+  },
 ];

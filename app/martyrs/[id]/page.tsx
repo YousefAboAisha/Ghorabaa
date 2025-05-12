@@ -1,32 +1,23 @@
-"use client";
 import Image from "next/image";
 import image from "@/public/hasabo.jpg";
 import MartyrComment from "@/containers/martyrDetails/martyrComment";
-import { Field, Form, Formik } from "formik";
-import TextArea from "@/components/UI/inputs/textArea";
-import * as Yup from "yup";
-import { FiPlus } from "react-icons/fi";
-import Button from "@/components/UI/inputs/button";
 import ShareModal from "@/containers/events/shareModal";
 import PageTitles from "@/components/UI/typography/pageTitles";
+import { FaEye } from "react-icons/fa";
+import { BsBookmark } from "react-icons/bs";
+import CommentForm from "@/components/UI/Forms/commentForm";
+import { getSessionAction } from "@/app/actions/registerActions";
 
-const MartyrPage = () => {
-  // Updated initialValues to include image
-  const initialValues = {
-    comment: "",
-  };
-
-  // Updated validationSchema to include image validation (optional)
-  const validationSchema = Yup.object({
-    comment: Yup.string().required("يرجى كتابة التعليق للشهيد"),
-  });
+const MartyrPage = async () => {
+  const session = await getSessionAction();
+  console.log("Session values", session);
 
   return (
     <div className="container lg:w-6/12 mt-[70px] min-h-screen">
       <div className="flex flex-col gap-2 mt-24">
         <PageTitles />
 
-        <div className="relative flex flex-col justify-center items-start w-full min-h-[80vh] bg-home-landing bg-cover before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#000000d8] bg-fixed rounded-xl before:rounded-xl">
+        <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-home-landing bg-cover before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#000000d8] bg-fixed rounded-xl before:rounded-xl">
           <Image
             src={image}
             alt="صورة الشهيد"
@@ -36,6 +27,13 @@ const MartyrPage = () => {
             priority
             quality={100}
           />
+
+          <div
+            title="إضافة إلى المحفوظات"
+            className="absolute top-5 right-5 backdrop-blur-sm rounded-full flex items-center justify-center p-3 bg-background_light shadow-lg cursor-pointer "
+          >
+            <BsBookmark size={16} />
+          </div>
         </div>
 
         <div className="relative mt-1">
@@ -48,8 +46,8 @@ const MartyrPage = () => {
             </div>
 
             <div className="flex items-center gap-2 text-gray_dark">
-              <p>المشاهدات: </p>
               <p>232</p>
+              <FaEye size={16} />
             </div>
           </div>
 
@@ -63,36 +61,54 @@ const MartyrPage = () => {
             />
           </div>
 
-          <table className="min-w-full bg-white border border-gray-200 mt-6">
-            <thead>
-              <tr className="bg-secondary text-white ">
-                <td className="py-3 px-4 border-b text-right text-sm">
-                  الولادة
-                </td>
-                <td className="py-3 px-4 border-b text-right text-sm">
-                  الاستشهاد
-                </td>
-                <td className="py-3 px-4 border-b text-right text-sm">العمر</td>
-                <td className="py-3 px-4 border-b text-right text-sm">السكن</td>
-              </tr>
-            </thead>
-
-            <tbody>
+          <table className="h-full w-full  border mt-8">
+            <tbody className="bg-white h-full">
               <tr>
-                <td className="py-3 px-4 border-b text-right text-sm">
+                <td
+                  colSpan={2}
+                  className="py-3 px-4 border-b text-center text-sm border-l bg-secondary text-white font-semibold"
+                >
+                  المعلومات الشخصية
+                </td>
+              </tr>
+
+              <tr>
+                <td className="py-3 px-4 border-b text-right text-sm border-l">
+                  تاريخ الميلاد
+                </td>
+
+                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
                   25 يناير 2002
                 </td>
+              </tr>
 
-                <td className="py-3 px-4 border-b text-right text-sm">
+              <tr>
+                <td className="py-3 px-4 border-b text-right text-sm border-l">
+                  تاريخ الاستشهاد
+                </td>
+
+                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
                   8 ديسمبر 2023
                 </td>
+              </tr>
 
-                <td className="py-3 px-4 border-b text-right text-sm">
-                  21 عاماً
+              <tr>
+                <td className="py-3 px-4 border-b text-right text-sm border-l">
+                  العمر
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm">
-                  <div className="flex items-center gap-1">
+                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
+                  21 عاماً
+                </td>
+              </tr>
+
+              <tr>
+                <td className="py-3 px-4 border-b text-right text-sm border-l">
+                  مكان السكن
+                </td>
+
+                <td className="py-3 px-4 border-b text-right text-sm ">
+                  <div className="flex items-center gap-1 font-semibold">
                     <p>غزة</p>-<p>تل الهوا</p>
                   </div>
                 </td>
@@ -143,37 +159,9 @@ const MartyrPage = () => {
       <div className="flex flex-col gap-2 mb-10 mt-8">
         <h2 className="font-bold text-lg">التعليقات</h2>
 
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={() => {}}
-        >
-          {({ isSubmitting, values, errors }) => (
-            <Form className="relative mt-4">
-              {/* Notes Field */}
-              <Field
-                name="comment"
-                as={TextArea}
-                placeholder="أضف تعليقاً أو ذكرى.."
-                className={`w-full focus:border-secondary bg-white text-md`}
-                value={values.comment}
-                aria-invalid={!!errors.comment}
-              />
+        <CommentForm session={session} />
 
-              <Button
-                title={"إضافة"}
-                type="submit"
-                className="bg-secondary text-white text-sm w-8/12 md:w-4/12 lg:w-2/12 mt-2"
-                disabled={isSubmitting || values.comment == ""}
-                hasShiningBar={false}
-                icon={<FiPlus />}
-                loading={isSubmitting}
-              />
-            </Form>
-          )}
-        </Formik>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
           <MartyrComment />
           <MartyrComment />
           <MartyrComment />

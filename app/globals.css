@@ -14,7 +14,7 @@
   }
 
   .section {
-    @apply relative w-full mt-32 mx-auto;
+    @apply relative w-full mt-24 mx-auto;
   }
 
   html,
