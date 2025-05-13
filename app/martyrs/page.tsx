@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import MartyrCard from "@/components/UI/cards/martyrCard";
 import Heading from "@/components/UI/typography/heading";
-import { toast } from "react-toastify";
 import { CiImageOn } from "react-icons/ci";
 import { StoryInterface } from "../interfaces";
 import PageTitles from "@/components/UI/typography/pageTitles";
@@ -15,23 +14,21 @@ const Martyr = () => {
   const getAllStories = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/martyr/fetchAll");
+      const response = await fetch("/api/story/fetchAll");
 
       if (!response.ok) {
-        toast.error("حدث خطأ جلب معلومات المستخدم"); // Show error toast
         throw new Error("Failed to fetch user details");
       }
 
       const res = await response.json();
-      console.log("Response:", res.stories);
+      console.log("Response:", res.data);
 
-      if (res?.stories) {
-        setStories(res.stories);
+      if (res?.data) {
+        setStories(res.data);
         setLoading(false);
       }
     } catch (error) {
       console.error("Fetching userDetails failed:", error);
-      toast.error("حدث خطأ أثناء العملية"); // Show error toast
       setLoading(false);
     } finally {
       setLoading(false);
@@ -105,16 +102,8 @@ const Martyr = () => {
         ) : (
           <div className="cards-grid-4">
             {stories?.map((martyr: StoryInterface, index) => (
-              <MartyrCard key={index} />
+              <MartyrCard key={index} data={martyr} />
             ))}
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
           </div>
         )}
       </div>

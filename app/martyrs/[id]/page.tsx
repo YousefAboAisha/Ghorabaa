@@ -1,5 +1,3 @@
-import Image from "next/image";
-import image from "@/public/hasabo.jpg";
 import MartyrComment from "@/containers/martyrDetails/martyrComment";
 import ShareModal from "@/containers/events/shareModal";
 import PageTitles from "@/components/UI/typography/pageTitles";
@@ -7,10 +5,23 @@ import { FaEye } from "react-icons/fa";
 import { BsBookmark } from "react-icons/bs";
 import CommentForm from "@/components/UI/Forms/commentForm";
 import { getSessionAction } from "@/app/actions/registerActions";
+import Image from "next/image";
 
-const MartyrPage = async () => {
+interface MartyrPageProps {
+  params: {
+    id: string;
+  };
+}
+
+const Page = async ({ params }: MartyrPageProps) => {
+  const { id } = await params;
+
   const session = await getSessionAction();
   console.log("Session values", session);
+
+  const res = await fetch(`http://localhost:3000/api/story/${id}`);
+
+  const martyr = await res.json();
 
   return (
     <div className="container lg:w-6/12 mt-[70px] min-h-screen">
@@ -19,7 +30,7 @@ const MartyrPage = async () => {
 
         <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-home-landing bg-cover before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#000000d8] bg-fixed rounded-xl before:rounded-xl">
           <Image
-            src={image}
+            src={martyr.image}
             alt="صورة الشهيد"
             width={350}
             height={350}
@@ -52,12 +63,11 @@ const MartyrPage = async () => {
           </div>
 
           <div className="flex items-center gap-8 mt-6">
-            <h4 className="text-lg font-extrabold">
-              الشهيد | محمد عبد الله حسب الله
-            </h4>
+            <h4 className="text-lg font-extrabold">الشهيد | {martyr.name}</h4>
             <ShareModal
               title="مشاركة صفحة الشهيد"
-              sharedLink="http://localhost:3000/martyrs/1"
+              // get the current URl
+              sharedLink={`https://ghorabaa.com/martyrs/${id}`}
             />
           </div>
 
@@ -77,8 +87,8 @@ const MartyrPage = async () => {
                   تاريخ الميلاد
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
-                  25 يناير 2002
+                <td className="py-3 px-4 border-b text-right text-sm">
+                  {martyr.birth_date}
                 </td>
               </tr>
 
@@ -87,8 +97,8 @@ const MartyrPage = async () => {
                   تاريخ الاستشهاد
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
-                  8 ديسمبر 2023
+                <td className="py-3 px-4 border-b text-right text-sm">
+                  {martyr.death_date}
                 </td>
               </tr>
 
@@ -97,7 +107,7 @@ const MartyrPage = async () => {
                   العمر
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
+                <td className="py-3 px-4 border-b text-right text-sm">
                   21 عاماً
                 </td>
               </tr>
@@ -108,8 +118,8 @@ const MartyrPage = async () => {
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-sm ">
-                  <div className="flex items-center gap-1 font-semibold">
-                    <p>غزة</p>-<p>تل الهوا</p>
+                  <div className="flex items-center gap-1">
+                    <p>{martyr.city}</p>-<p>{martyr.neighborhood}</p>
                   </div>
                 </td>
               </tr>
@@ -119,38 +129,7 @@ const MartyrPage = async () => {
           <div className="mt-8">
             <h2 className="font-bold text-lg">نبذة عن الشهيد </h2>
             <p className="font-light text-md mt-2">
-              الشّهيد الصّديق وحبيب القلب المُهندس محمد عبد الله حسب الله، كان
-              سَمِحاً، باسماً، عاليَ الخُلق والهِمّة، مُلتزماً ومحبوباً من
-              الجميع، متفوقاً في دراسته في كافة مراحله الدراسية، حيث كان من
-              أوائل كلية الهندسة في جامعة الأزهر، أمضينا سنين الجامعة في غرفته
-              الصغيرة التي كانت في الطابق الأرضي من بيتهم الجميل للغاية، والذي
-              كان محمد يعتني بنباتاته وأشجاره عناية فائقة، وكأنهم أبناؤه، فكان
-              البيت أشبه بالقصر! وللأسف كما هو الحال مع الكثير منّا، تم استهدافه
-              من قبل قوات الاحتلال الصهيونية دون أي سبب، وتدميره بالكامل! كان
-              مُثقفاً، حالماً، وطموحاً، يقول لنا دائماً:بديش تضيع عليا مرتبة
-              الشرف! عشان أول ما أتخرج أصير معيد مباشرة، وأكمل ماجستير ودكتوراه
-              وأصير دكتور جامعي، وبجانب تفوقه فقد كان محمد صاحبَ قضية ومبدأ، فلا
-              زلت أذكر يوم عملية الشهيد البطل خيRي علقم البطولية، عندما جاء
-              بالسيارة مسرعاً إلى بيوتنا، وقال لنا:اليوم عيد، لازم نتحلّى،
-              وبالفعل كان يوم عيد ذاك اليوم! اليوم الأول من الهدنة، كانت تلك آخر
-              مرة تحدّثتُ معه فيها، ولا زلت أذكر المحادثة عندما قال لي:وينك يا
-              زلمة صرلي شهر برن عليك، حتى وصّيت الشباب يعملولك برواز وصورة
-              ويكتبولك الشهيد البطل! بعدين شو بتسووا لليوم في غزة اطلعوا وتعالوا
-              عنا، فش إشي في الجنوب. أذكر أن المكالمة قد طالت وقتها بشكل غير
-              مألوف، لأنّ مكالماتنا خصوصاً بين الأصحاب المقربين تكون قصيرة، لم
-              أدرِ وقتها أنها ستكون المكالمة الأخيرة، المرة الأخيرة التي سأسمع
-              فيها صوته! جاءني نبأ استشهاده بعد خروجي مباشرة من الاعتقال
-              والتعذيب الشديد من قبل الوحوش البشرية الصهاينة، لم أستوعب الخبر
-              حينها؛ لأنني كنت تائهاً مشتتاً، وفكري وعقلي ما يزالان عالقَين في
-              عذابات ووحشية المعتقل الذي كنت فيه، فكلّ ما فعلته أو بالأحرى ما
-              كنت قادراً على فعله هو الصمت ومن ثم بدأت الدموع تنهمر كالسّيل، فلم
-              أجدْ وِصَالاً لروحِه غيرَ أدمُعِي. استُشهد محمد، ودُفن على عُجالة
-              قرب مكان نزوحه في مدينة خانيونس، لم يودّعه أحدٌ من أصدقائه، بل
-              وأنّ نسبةً كبيرة منهم علِموا نبأ استشهاده بعد فترة طويلة؛ بسبب شدة
-              ووطأة الحرب وانقطاع الاتصالات تماماً في ذلك الوقت. في رعاية الله
-              وحفظه يا صديقي، أنتم السابقون ونحن اللاحقون بإذن الله، رحمكَ اللهُ
-              يا حبيب، والمجد لك يا شهيد، سيظلّ ذكرُك الطيّبُ والحسنُ حاضراً
-              فينا إلى أن نلقى الله، ما تنسوا محمد أبداً ❤️
+             {martyr.bio}
             </p>
           </div>
         </div>
@@ -175,4 +154,4 @@ const MartyrPage = async () => {
   );
 };
 
-export default MartyrPage;
+export default Page;

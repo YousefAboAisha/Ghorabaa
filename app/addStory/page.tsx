@@ -5,6 +5,7 @@ import Modal from "@/components/UI/modals/modal";
 import Heading from "@/components/UI/typography/heading";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import AddStoryModal from "@/containers/addStory/addStoryModal";
+import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
@@ -68,7 +69,7 @@ const Page = () => {
                   اسم الشهيد
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
+                <td className="py-3 px-4 border-b text-right text-sm">
                   محمد عبد الله حسب الله
                 </td>
               </tr>
@@ -78,7 +79,7 @@ const Page = () => {
                   رقم الهوية
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
+                <td className="py-3 px-4 border-b text-right text-sm">
                   407709260
                 </td>
               </tr>
@@ -88,7 +89,7 @@ const Page = () => {
                   الجنس
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm font-semibold">ذكر</td>
+                <td className="py-3 px-4 border-b text-right text-sm">ذكر</td>
               </tr>
 
               <tr>
@@ -96,7 +97,7 @@ const Page = () => {
                   تاريخ الميلاد
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
+                <td className="py-3 px-4 border-b text-right text-sm">
                   25 يناير 2002
                 </td>
               </tr>
@@ -106,7 +107,7 @@ const Page = () => {
                   تاريخ الاستشهاد
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
+                <td className="py-3 px-4 border-b text-right text-sm">
                   8 ديسمبر 2023
                 </td>
               </tr>
@@ -116,7 +117,7 @@ const Page = () => {
                   العمر
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm font-semibold">
+                <td className="py-3 px-4 border-b text-right text-sm">
                   21 عاماً
                 </td>
               </tr>
@@ -164,7 +165,9 @@ const Page = () => {
       </div>
 
       <Modal isOpen={isModalopen} setIsOpen={setIsModalopen}>
-        <AddStoryModal />
+        <SessionProvider>
+          <AddStoryModal />
+        </SessionProvider>
       </Modal>
     </div>
   );

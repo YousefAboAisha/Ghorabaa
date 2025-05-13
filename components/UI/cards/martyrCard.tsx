@@ -1,30 +1,41 @@
 import Image from "next/image";
-import image from "@/public/hasabo.jpg";
 import Link from "next/link";
 import { GiPeaceDove } from "react-icons/gi";
 import { HiUser } from "react-icons/hi";
+import { StoryInterface } from "@/app/interfaces";
 
-const MartyrCard = () => {
+interface MartyrCardProps {
+  data: StoryInterface;
+}
+
+const MartyrCard = ({ data }: MartyrCardProps) => {
   return (
-    <Link href={`/martyrs/1`} className="mt-4" title="عرض الملف الشخصي">
+    <Link
+      href={`/martyrs/${data._id}`}
+      className="mt-4"
+      title="عرض الملف الشخصي"
+    >
       <div className="relative group w-full flex flex-col border bg-white rounded-2xl overflow-hidden hover:shadow-xl duration-700">
         <div className="relative max-h-[300px] overflow-hidden">
           <Image
-            src={image}
+            src={data.image}
             alt="صورة الشهيد"
             className="w-full rounded-2xl rounded-b-none group-hover:scale-125 duration-700"
+            width={500}
+            height={500}
           />
         </div>
 
         <div className="relative p-4">
-          <div className="flex items-center gap-2 text-sm">
-            <p className="text-gray_dark">الشهيد/ </p>
-            <p className="font-bold text-secondary">محمد عبدالله حسب الله</p>
+          <div className="flex items-center gap-2 text-sm overflow-hidden">
+            <p className="text-gray_dark whitespace-nowrap">الشهيد/</p>
+            <p className="font-bold text-secondary truncate whitespace-nowrap overflow-hidden text-ellipsis">
+              {data.name}
+            </p>
           </div>
-          <p className="text-gray-600 text-[13px] mt-2">
-            المهندس الحبيب محمد 🤍 تمرُّ اليوم الذكرى الأولى لأفدح خساراتي،
-            وكأنّ جزءًا من روحي برحيلك. عامٌ كاملٌ مضى، وحزني عليكَ لم يكتمل
-            بعد، وكأنّ كلَّ يومٍ هو أولُ يوم لِفراقك.
+
+          <p className="text-gray-600 text-[13px] mt-2 line-clamp-3">
+            {data.bio}{" "}
           </p>
         </div>
 
@@ -39,7 +50,7 @@ const MartyrCard = () => {
               size={22}
               className="text-primary"
             />
-            <p className=" ">8 ديسمبر 2023</p>
+            <p className=" ">{data.death_date}</p>
           </div>
 
           <div className="flex items-center gap-3 text-[13px]">

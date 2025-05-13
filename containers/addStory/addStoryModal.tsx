@@ -16,6 +16,7 @@ import ReactImageUploading, { ImageListType } from "react-images-uploading";
 import { CiImageOn } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 const AddStory = () => {
   const [formErrors, setFormErrors] = useState<string>("");
@@ -26,27 +27,25 @@ const AddStory = () => {
   // Updated initialValues to include image
   const initialValues = {
     id_number: "407709260",
-    full_name: "محمد عبد الله طارق حسب الله",
-    birth_date: "",
-    death_date: "",
+    name: "محمد عبد الله طارق حسب الله",
+    birth_date: new Date("2002-01-01").toISOString().split("T")[0],
+    death_date: new Date("2023-01-01").toISOString().split("T")[0],
     city: "",
-    neighbourhood: "",
-    notes: "",
+    neighborhood: "",
+    bio: "",
     image: null as string | null, // Add image field
   };
 
   const validationSchema = Yup.object({
     city: Yup.string().required("يرجى اختيار المدينة"),
-    neighbourhood: Yup.string().required("يرجى اختيار الحي"),
-    notes: Yup.string().required("يرجى إدخال السيرة الذاتية"),
+    neighborhood: Yup.string().required("يرجى اختيار الحي"),
+    bio: Yup.string().required("يرجى إدخال السيرة الذاتية"),
     image: Yup.mixed().required("يرجى إضافة صورة"), // Validate that an image is uploaded
-    // .test("fileSize", "حجم الصورة كبير جدًا", (value) => {
-    //   if (value) {
-    //     return (value as File).size <= 5 * 1024 * 1024; // 5MB limit
-    //   }
-    //   return true;
-    // }),
   });
+
+  const { data: session } = useSession();
+  console.log("Session Data:", session);
+  console.log("Session Access Token:", session?.accessToken);
 
   const handleSubmit = async (
     values: typeof initialValues,
@@ -61,9 +60,28 @@ const AddStory = () => {
     console.log("Values", values);
 
     try {
-      const response = await fetch("/api/martyr/create", {
+      // 1. Upload image to Cloudinary first
+      const imageUploadRes = await fetch("/api/upload", {
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify({ image: values.image }), // base64 image
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const { url } = await imageUploadRes.json();
+      console.log("Image URL:", url);
+      if (!imageUploadRes.ok) {
+        setFormErrors("Error uploading image");
+        console.log("Image Upload Error:", url);
+        return;
+      }
+
+      const response = await fetch("/api/story/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.accessToken || ""}`,
+        },
+        body: JSON.stringify({ ...values, image: url }),
       });
 
       const data = await response.json();
@@ -75,11 +93,7 @@ const AddStory = () => {
         return;
       }
 
-      toast.success("تمت إضافة الشهيد بنجاح!");
-      setTimeout(() => {
-        // window.location.href = "/martyrs";
-      }, 1000);
-
+      window.location.reload();
       console.log("Martyr has been added successfully!", data);
       setSubmitting(false);
     } catch (error) {
@@ -88,15 +102,6 @@ const AddStory = () => {
       toast.error("حدث خطأ أثناء إضافة الشهيد");
       console.error("Error adding martyr", error);
     }
-  };
-
-  const convertToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
   };
 
   return (
@@ -140,7 +145,6 @@ const AddStory = () => {
                     required={false}
                     readOnly
                     disabled={true}
-                    value={initialValues.id_number}
                     name="id_number"
                     as={Input}
                     type="text"
@@ -159,8 +163,7 @@ const AddStory = () => {
                     required={false}
                     readOnly
                     disabled={true}
-                    value={initialValues.full_name}
-                    name="full_name"
+                    name="name"
                     as={Input}
                     type="text"
                     placeholder="اسم الشهيد رباعي"
@@ -168,7 +171,7 @@ const AddStory = () => {
                     icon={<BiUser />}
                     className={`focus:border-primary`}
                     aria-label="الاسم رباعي"
-                    aria-invalid={!!errors.full_name}
+                    aria-invalid={!!errors.name}
                   />
                 </div>
 
@@ -179,7 +182,6 @@ const AddStory = () => {
                       required={false}
                       readOnly
                       disabled={true}
-                      value={initialValues.birth_date}
                       name="birth_date"
                       as={Input}
                       type="date"
@@ -196,7 +198,6 @@ const AddStory = () => {
                       required={false}
                       readOnly
                       disabled={true}
-                      value={initialValues.death_date}
                       name="death_date"
                       as={Input}
                       type="date"
@@ -216,11 +217,21 @@ const AddStory = () => {
                     label="المدينة"
                     options={CountriesData}
                     title="اختر المدينة"
-                    value={values.city}
                     onChange={(e) => {
                       const selectedCity = e.target.value;
                       setFieldValue("city", selectedCity);
-                      setCities(CitiesData[Number(selectedCity)]);
+
+                      // Find the city object that contains the selected city
+                      const cityObj = CitiesData.find(
+                        (city) => city[selectedCity as keyof typeof city]
+                      );
+
+                      // If found, update the cities state
+                      setCities(
+                        cityObj
+                          ? cityObj[selectedCity as keyof typeof cityObj] || []
+                          : []
+                      );
                     }}
                     className={`focus:border-primary`}
                   />
@@ -236,14 +247,13 @@ const AddStory = () => {
                     label="الحي"
                     options={cities}
                     title="اختر الحي"
-                    value={values.neighbourhood}
                     onChange={(e) =>
-                      setFieldValue("neighbourhood", e.target.value)
+                      setFieldValue("neighborhood", e.target.value)
                     }
                     className={`focus:border-primary`}
                   />
                   <ErrorMessage
-                    name="neighbourhood"
+                    name="neighborhood"
                     component="div"
                     className="text-red-500 mt-2 font-bold text-[10px]"
                   />
@@ -251,15 +261,15 @@ const AddStory = () => {
                 {/* Notes Field */}
                 <div>
                   <Field
-                    name="notes"
+                    disabled={isSubmitting}
+                    name="bio"
                     as={TextArea}
                     placeholder="عن حياة الشهيد..."
                     label="السيرة الذاتية"
                     className={`w-full focus:border-primary`}
-                    value={values.notes}
                   />
                   <ErrorMessage
-                    name="notes"
+                    name="bio"
                     component="div"
                     className="text-red-500 mt-2 font-bold text-[10px]"
                   />
@@ -273,11 +283,9 @@ const AddStory = () => {
                       onChange={async (imageList: ImageListType) => {
                         setImages(imageList);
                         if (imageList.length > 0) {
-                          const file = imageList[0].file as File;
-                          const base64 = await convertToBase64(file); // Convert to Base64
-                          setFieldValue("image", base64); // Update Formik's field value with Base64
+                          setFieldValue("image", imageList[0].data_url); // ✅ store base64
                         } else {
-                          setFieldValue("image", null); // Reset Formik's field value
+                          setFieldValue("image", null); // ✅ reset on remove
                         }
                       }}
                       maxNumber={maxNumber}

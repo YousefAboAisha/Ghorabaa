@@ -10,6 +10,7 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+
   secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
@@ -21,9 +22,6 @@ export const authOptions: AuthOptions = {
         const client = await clientPromise;
         const db = client.db("ghorabaa");
         const usersCollection = db.collection("users");
-
-        console.log("User data:", user);
-        console.log("Account data:", account);
 
         const existingUser = await usersCollection.findOne({
           email: user.email,
@@ -49,7 +47,7 @@ export const authOptions: AuthOptions = {
       }
     },
 
-    async jwt({ token }) {
+    async jwt({ token, account }) {
       const client = await clientPromise;
       const db = client.db("ghorabaa");
       const usersCollection = db.collection("users");
@@ -67,6 +65,11 @@ export const authOptions: AuthOptions = {
         token.createdAt = existingUser.createdAt?.toISOString?.() ?? null;
       }
 
+      // ✅ Attach the access token if available
+      if (account?.access_token) {
+        token.accessToken = account.access_token;
+      }
+
       return token;
     },
 
@@ -79,6 +82,12 @@ export const authOptions: AuthOptions = {
         session.user.role = token.role as Role;
         session.user.createdAt = token.createdAt as string;
       }
+
+      // ✅ Expose access token to client
+      (
+        session as { user: typeof session.user; accessToken?: string }
+      ).accessToken = token.accessToken as string | undefined;
+
       return session;
     },
   },

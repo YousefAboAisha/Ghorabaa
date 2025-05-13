@@ -1,26 +1,35 @@
 import { Role } from "@/app/enums";
-import NextAuth from "next-auth";
+// next-auth.d.ts
+import { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
+    accessToken?: string;
     user: {
       id: string;
       name: string;
       email: string;
       image: string;
-      createdAt: string;
       role: Role;
-    };
+      createdAt: string;
+    } & DefaultSession["user"];
+  }
+
+  interface User {
+    id: string;
+    role: Role;
+    createdAt: string;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    id: string;
-    name: string;
-    email: string;
-    image: string;
-    createdAt: string;
-    role: Role;
+    accessToken?: string;
+    id?: string;
+    name?: string;
+    email?: string;
+    image?: string;
+    role?: Role;
+    createdAt?: string;
   }
 }

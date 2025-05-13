@@ -11,29 +11,9 @@ const storySchema = new Schema<StoryInterface>(
       unique: true, // Ensure ID number is unique
     },
 
-    profile_image: {
-      type: String,
-      required: [true, "Profile image is required and cannot be empty."],
-    },
-
-    first_name: {
+    name: {
       type: String,
       required: [true, "First name is required and cannot be empty."],
-    },
-
-    father_name: {
-      type: String,
-      required: [true, "Father's name is required and cannot be empty."],
-    },
-
-    grandfather_name: {
-      type: String,
-      required: [true, "Grandfather's name is required and cannot be empty."],
-    },
-
-    last_name: {
-      type: String,
-      required: [true, "Last name is required and cannot be empty."],
     },
 
     birth_date: {
@@ -59,6 +39,11 @@ const storySchema = new Schema<StoryInterface>(
     bio: {
       type: String,
       required: [true, "Bio is required and cannot be empty."],
+    },
+
+    image: {
+      type: String,
+      required: [true, "Profile image is required and cannot be empty."],
     },
 
     publisher_id: { type: Schema.Types.ObjectId, ref: "User", required: true },

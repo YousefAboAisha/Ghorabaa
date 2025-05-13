@@ -1,3 +1,4 @@
+import { StoryStatus } from "@/app/enums";
 import clientPromise from "@/app/lib/mongodb";
 import { NextResponse } from "next/server";
 
@@ -7,10 +8,14 @@ export async function GET() {
     const db = client.db("ghorabaa");
     const collection = db.collection("martyrs");
 
-    // Fetch all martyrs from the collection
-    const martyrs = await collection.find({}).toArray();
+    // Fetch all martyrs from the collection with the status of APPROVED
+    const martyrs = await collection
+      .find({
+        status: StoryStatus.APPROVED,
+      })
+      .toArray();
 
-    if (!martyrs || martyrs.length === 0) {
+    if (!martyrs) {
       // If no martyrs are found, return an error
       return NextResponse.json(
         { error: "لم يتم العثور على أي شهداء" }, // No martyrs found
@@ -20,7 +25,7 @@ export async function GET() {
 
     // Return the list of martyrs
     return NextResponse.json(
-      { message: "تم جلب البيانات بنجاح", martyrs }, // Data fetched successfully
+      { message: "تم جلب البيانات بنجاح", data: martyrs }, // Data fetched successfully
       { status: 200 }
     );
   } catch (error) {

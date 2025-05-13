@@ -1,22 +1,22 @@
 export const CountriesData = [
   {
     title: "الشمال",
-    value: "0",
+    value: "الشمال",
   },
   {
     title: "غزة",
-    value: "1",
+    value: "غزة",
   },
   {
     title: "الوسطى",
-    value: "2",
+    value: "الوسطى",
   },
   {
     title: "خانيونس",
-    value: "3",
+    value: "خانيونس",
   },
   {
     title: "رفح",
-    value: "4",
+    value: "رفح",
   },
 ];

@@ -24,7 +24,6 @@ module.exports = {
         gray_overlay: "#ababab2a",
 
         background_light: "#f8f8f8",
-
       },
 
       fontFamily: {
@@ -69,5 +68,4 @@ module.exports = {
       },
     },
   },
-  plugins: [],
 };

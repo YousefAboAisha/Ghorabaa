@@ -23,17 +23,14 @@ export interface UserInterface extends Document {
 // Define the Story interface
 export interface StoryInterface extends Document {
   id_number: string;
-  profile_image: string;
-  first_name: string;
-  father_name: string;
-  grandfather_name: string;
-  last_name: string;
+  name: string;
   birth_date: string;
   death_date: string;
   city: string;
   neighborhood: string;
   bio: string;
   status: StoryStatus;
+  image: string;
   publisher_id: Types.ObjectId; // Reference to User who made the add story request.
   createdAt: Date;
 }
