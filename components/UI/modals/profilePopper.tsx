@@ -63,6 +63,7 @@ function ProfilePopper({ session }: SessionProps) {
                     height={100}
                     alt="صورة الملف الشخصي"
                     className="rounded-full"
+                    priority
                   />
                 )}
               </p>

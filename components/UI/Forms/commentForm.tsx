@@ -6,23 +6,33 @@ import { FiPlus } from "react-icons/fi";
 import Button from "@/components/UI/inputs/button";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { SessionProps } from "@/app/interfaces";
+import { CommentInterface, SessionProps } from "@/app/interfaces";
 
-const CommentForm = ({ session }: SessionProps) => {
+const CommentForm = ({
+  session,
+  story_id,
+}: SessionProps & { story_id: string }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentUrl =
     pathname + (searchParams.toString() ? `?${searchParams}` : "");
   console.log("Current URL:", currentUrl);
 
+  console.log("Session values", session);
+  console.log("Search params:", searchParams);
+
   // Updated initialValues to include image
-  const initialValues = {
-    comment: "",
+  const initialValues: Partial<CommentInterface> = {
+    text: "",
+    user_id: session?.id || "",
+    story_id: story_id,
+    author_name: session?.name || "",
+    author_image: session?.image || "",
   };
 
   // Updated validationSchema to include image validation (optional)
   const validationSchema = Yup.object({
-    comment: Yup.string().required("يرجى كتابة التعليق للشهيد"),
+    text: Yup.string().required("يرجى كتابة التعليق للشهيد"),
   });
 
   return (
@@ -31,25 +41,45 @@ const CommentForm = ({ session }: SessionProps) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={() => {}}
+          onSubmit={async (values, { resetForm, setSubmitting }) => {
+            try {
+              const response = await fetch("/api/comment/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(values),
+              });
+
+              const data = await response.json();
+
+              if (response.ok) {
+                console.log("Comment added:", data);
+                resetForm(); // ✅ This clears the form
+              } else {
+                console.error("Failed to add comment:", data.error);
+              }
+            } catch (error) {
+              console.error("Error submitting comment:", error);
+            } finally {
+              setSubmitting(false);
+            }
+          }}
         >
           {({ isSubmitting, values, errors }) => (
             <Form className="relative mt-4">
               {/* Notes Field */}
               <Field
-                name="comment"
+                name="text"
                 as={TextArea}
                 placeholder="أضف تعليقاً أو ذكرى.."
                 className={`w-full focus:border-secondary bg-white text-md`}
-                value={values.comment}
-                aria-invalid={!!errors.comment}
+                aria-invalid={!!errors.text}
               />
 
               <Button
                 title={"إضافة"}
                 type="submit"
                 className="bg-secondary text-white text-sm w-8/12 md:w-4/12 lg:w-2/12 mt-2"
-                disabled={isSubmitting || values.comment == ""}
+                disabled={isSubmitting || values.text == ""}
                 hasShiningBar={false}
                 icon={<FiPlus />}
                 loading={isSubmitting}
@@ -64,7 +94,7 @@ const CommentForm = ({ session }: SessionProps) => {
             validationSchema={validationSchema}
             onSubmit={() => {}}
           >
-            {({ isSubmitting, values, errors }) => (
+            {() => (
               <Form className="relative">
                 <div className="abs-center flex flex-col gap-2 w-fit p-4 bg-white border rounded-lg z-30 shadow-lg">
                   <p className="text-center text-[12px]">
@@ -84,22 +114,16 @@ const CommentForm = ({ session }: SessionProps) => {
                 </div>
                 {/* Notes Field */}
                 <Field
-                  name="comment"
                   as={TextArea}
                   placeholder="أضف تعليقاً أو ذكرى.."
                   className={`w-full focus:border-secondary bg-white text-md`}
-                  value={values.comment}
-                  aria-invalid={!!errors.comment}
                 />
 
                 <Button
                   title={"إضافة"}
-                  type="submit"
                   className="bg-secondary text-white text-sm w-8/12 md:w-4/12 lg:w-2/12 mt-2"
-                  disabled={isSubmitting || values.comment == ""}
                   hasShiningBar={false}
                   icon={<FiPlus />}
-                  loading={isSubmitting}
                 />
               </Form>
             )}

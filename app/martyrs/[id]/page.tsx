@@ -1,4 +1,3 @@
-import MartyrComment from "@/containers/martyrDetails/martyrComment";
 import ShareModal from "@/containers/events/shareModal";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { FaEye } from "react-icons/fa";
@@ -6,22 +5,33 @@ import { BsBookmark } from "react-icons/bs";
 import CommentForm from "@/components/UI/Forms/commentForm";
 import { getSessionAction } from "@/app/actions/registerActions";
 import Image from "next/image";
+import { CommentInterface, StoryInterface } from "@/app/interfaces";
+import { dateConversion } from "@/conversions";
+import CommentCard from "@/components/UI/cards/commentCard";
 
-interface MartyrPageProps {
-  params: {
-    id: string;
-  };
-}
-
-const Page = async ({ params }: MartyrPageProps) => {
+type Props = {
+  params: Promise<{ id: string }>;
+};
+export default async function Page({ params }: Props) {
   const { id } = await params;
 
   const session = await getSessionAction();
   console.log("Session values", session);
 
-  const res = await fetch(`http://localhost:3000/api/story/${id}`);
+  const martyrResponse = await fetch(`http://localhost:3000/api/story/${id}`);
+  const martyr: StoryInterface = await martyrResponse.json();
 
-  const martyr = await res.json();
+  const age =
+    martyr?.death_date && martyr?.birth_date
+      ? new Date(martyr.death_date).getFullYear() -
+        new Date(martyr.birth_date).getFullYear()
+      : "N/A";
+
+  const commentsResponse = await fetch(
+    `http://localhost:3000/api/comment/${id}`
+  );
+  const comments = await commentsResponse.json();
+  console.log("Comments Data", comments.data); // an array of comments
 
   return (
     <div className="container lg:w-6/12 mt-[70px] min-h-screen">
@@ -53,7 +63,7 @@ const Page = async ({ params }: MartyrPageProps) => {
               <p>بواسطة: </p>
               <p>يوسف رشاد أبو عيشة</p>
               <p> | </p>
-              <p>16 فبراير 2026</p>
+              <p>{dateConversion(martyr.createdAt)}</p>
             </div>
 
             <div className="flex items-center gap-2 text-gray_dark">
@@ -108,7 +118,10 @@ const Page = async ({ params }: MartyrPageProps) => {
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-sm">
-                  21 عاماً
+                  <div className="flex items-center gap-1  ">
+                    <p>{age}</p>
+                    <p>عاماً</p>
+                  </div>
                 </td>
               </tr>
 
@@ -128,9 +141,7 @@ const Page = async ({ params }: MartyrPageProps) => {
 
           <div className="mt-8">
             <h2 className="font-bold text-lg">نبذة عن الشهيد </h2>
-            <p className="font-light text-md mt-2">
-             {martyr.bio}
-            </p>
+            <p className="font-light text-md mt-2">{martyr.bio}</p>
           </div>
         </div>
       </div>
@@ -138,13 +149,18 @@ const Page = async ({ params }: MartyrPageProps) => {
       <div className="flex flex-col gap-2 mb-10 mt-8">
         <h2 className="font-bold text-lg">التعليقات</h2>
 
-        <CommentForm session={session} />
+        <CommentForm session={session} story_id={id} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-          <MartyrComment />
-          <MartyrComment />
-          <MartyrComment />
-          <MartyrComment />
+          {comments.data.map((elem: Partial<CommentInterface>) => (
+            <CommentCard
+              key={elem._id as string}
+              text={elem.text as string}
+              createdAt={elem.createdAt as Date}
+              image={elem?.author_image as string}
+              name={elem?.author_name as string}
+            />
+          ))}
         </div>
         <div className="text-primary flex items-center gap-2 justify-center mt-6 hover:underline text-sm w-fit mx-auto cursor-pointer">
           <p>عرض المزيد</p>
@@ -152,6 +168,4 @@ const Page = async ({ params }: MartyrPageProps) => {
       </div>
     </div>
   );
-};
-
-export default Page;
+}

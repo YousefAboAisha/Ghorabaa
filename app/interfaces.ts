@@ -31,7 +31,7 @@ export interface StoryInterface extends Document {
   bio: string;
   status: StoryStatus;
   image: string;
-  publisher_id: Types.ObjectId; // Reference to User who made the add story request.
+  publisher_id: Types.ObjectId | string; // Reference to User who made the add story request.
   createdAt: Date;
 }
 
@@ -39,17 +39,19 @@ export interface StoryInterface extends Document {
 export interface ReportInterface extends Document {
   reason: ReportReasons;
   status: ReportStatus;
-  content_id: Types.ObjectId; // Reference to the content that a user has reported.
-  user_id: Types.ObjectId; // Reference to the user who made the report.
+  content_id: Types.ObjectId | string; // Reference to the content that a user has reported.
+  user_id: Types.ObjectId | string; // Reference to the user who made the report.
   message: string;
   createdAt: Date;
 }
 
 // Define the Comment interface
 export interface CommentInterface extends Document {
+  author_name?: string;
+  author_image?: string;
   text: string;
-  user_id: Types.ObjectId; // Reference to the user who made the comment.
-  story_id: Types.ObjectId; // Reference to the content that a user has made a comment on.
+  user_id: Types.ObjectId | string; // Reference to the user who made the comment.
+  story_id: Types.ObjectId | string; // Reference to the content that a user has made a comment on.
   createdAt: Date;
 }
 
@@ -85,8 +87,8 @@ export interface DonationCampaignInterface extends Document {
 // Define the Donation interface
 export interface DonationInterface extends Document {
   amount: number;
-  donationCampaign_id: Types.ObjectId; // Reference to the Donation Campaign that a user has made a donation on.
-  user_id: Types.ObjectId; // Reference to the user who made the donation.
+  donationCampaign_id: Types.ObjectId | string; // Reference to the Donation Campaign that a user has made a donation on.
+  user_id: Types.ObjectId | string; // Reference to the user who made the donation.
   createdAt: Date;
 }
 

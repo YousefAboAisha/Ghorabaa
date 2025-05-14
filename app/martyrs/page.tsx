@@ -14,7 +14,7 @@ const Martyr = () => {
   const getAllStories = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/story/fetchAll");
+      const response = await fetch("/api/story/fetch");
 
       if (!response.ok) {
         throw new Error("Failed to fetch user details");

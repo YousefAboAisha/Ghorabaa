@@ -6,30 +6,30 @@ export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
-    const collection = db.collection("martyrs");
+    const collection = db.collection("stories");
 
-    // Fetch all martyrs from the collection with the status of APPROVED
-    const martyrs = await collection
+    // Fetch all stories from the collection with the status of APPROVED
+    const stories = await collection
       .find({
         status: StoryStatus.APPROVED,
       })
       .toArray();
 
-    if (!martyrs) {
-      // If no martyrs are found, return an error
+    if (!stories) {
+      // If no stories are found, return an error
       return NextResponse.json(
-        { error: "لم يتم العثور على أي شهداء" }, // No martyrs found
+        { error: "لم يتم العثور على أي شهداء" }, // No stories found
         { status: 404 }
       );
     }
 
-    // Return the list of martyrs
+    // Return the list of stories
     return NextResponse.json(
-      { message: "تم جلب البيانات بنجاح", data: martyrs }, // Data fetched successfully
+      { message: "تم جلب البيانات بنجاح", data: stories }, // Data fetched successfully
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching martyrs:", error);
+    console.error("Error fetching stories:", error);
     return NextResponse.json(
       { error: "حدث خطأ أثناء جلب البيانات" }, // An error occurred while fetching data
       { status: 500 }

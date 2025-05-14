@@ -17,6 +17,8 @@ import { CiImageOn } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { StoryInterface } from "@/app/interfaces";
+import { StoryStatus } from "@/app/enums";
 
 const AddStory = () => {
   const [formErrors, setFormErrors] = useState<string>("");
@@ -24,8 +26,12 @@ const AddStory = () => {
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
 
+  const { data: session } = useSession();
+  console.log("Session Data:", session);
+  console.log("Session Access Token:", session?.accessToken);
+
   // Updated initialValues to include image
-  const initialValues = {
+  const initialValues: Partial<StoryInterface> = {
     id_number: "407709260",
     name: "محمد عبد الله طارق حسب الله",
     birth_date: new Date("2002-01-01").toISOString().split("T")[0],
@@ -33,7 +39,9 @@ const AddStory = () => {
     city: "",
     neighborhood: "",
     bio: "",
-    image: null as string | null, // Add image field
+    image: "",
+    status: StoryStatus.APPROVED,
+    publisher_id: session?.user.id, // Assuming you have a way to get the user ID
   };
 
   const validationSchema = Yup.object({
@@ -42,10 +50,6 @@ const AddStory = () => {
     bio: Yup.string().required("يرجى إدخال السيرة الذاتية"),
     image: Yup.mixed().required("يرجى إضافة صورة"), // Validate that an image is uploaded
   });
-
-  const { data: session } = useSession();
-  console.log("Session Data:", session);
-  console.log("Session Access Token:", session?.accessToken);
 
   const handleSubmit = async (
     values: typeof initialValues,

@@ -31,23 +31,23 @@ export async function POST(originalReq: Request) {
   try {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
-    const collection = db.collection("martyrs");
+    const collection = db.collection("stories");
 
     const body = await originalReq.json(); // Now it's safe to read
     console.log("Raw Request Body:", body);
 
-    const { id_number } = body;
+    // const { id_number } = body;
 
-    const existingUser = await collection.findOne({ id_number });
+    // const existingUser = await collection.findOne({ id_number });
 
-    if (existingUser) {
-      return NextResponse.json(
-        { error: "الشهيد الذي تريد إضافته موجود بالفعل!" },
-        { status: 400 }
-      );
-    }
+    // if (existingUser) {
+    //   return NextResponse.json(
+    //     { error: "الشهيد الذي تريد إضافته موجود بالفعل!" },
+    //     { status: 400 }
+    //   );
+    // }
 
-    const martyr = new Story({
+    const story = new Story({
       id_number: body.id_number,
       name: body.name,
       birth_date: body.birth_date,
@@ -58,16 +58,17 @@ export async function POST(originalReq: Request) {
       image: body.image,
       publisher_id: token.id,
       status: body.status,
+      createdAt: new Date(),
     });
 
-    await collection.insertOne(martyr);
+    await collection.insertOne(story);
 
     return NextResponse.json(
-      { message: "Martyr created", martyr },
+      { message: "story created", story },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating martyr:", error);
+    console.error("Error creating story:", error);
     return NextResponse.json(
       { error: "حدث خطأ أثناء إضافة الشهيد." },
       { status: 500 }

@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
     const uploadResponse = await cloudinary.uploader.upload(image, {
       folder: "martyrs",
-      transformation: [{ width: 800, height: 600, crop: "limit" }],
+      transformation: [{ width: 500, height: 500, crop: "limit" }],
     });
 
     console.log("Upload Response:", uploadResponse);

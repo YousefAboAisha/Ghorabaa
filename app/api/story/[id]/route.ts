@@ -1,23 +1,26 @@
 import clientPromise from "@/app/lib/mongodb";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { StoryStatus } from "@/app/enums";
 
+type Params = Promise<{ id: string }>;
+
 export async function GET(
-  request: Request,
-  context: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Params } // params is a simple object, not a Promise
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await params; // Extract id from params
 
     const client = await clientPromise;
     const db = client.db("ghorabaa");
-    const collection = db.collection("martyrs");
+    const collection = db.collection("stories");
 
     const martyr = await collection.findOne({
       _id: new ObjectId(id),
       status: StoryStatus.APPROVED,
     });
+
     if (!martyr) {
       return NextResponse.json({ error: "Martyr not found" }, { status: 404 });
     }
