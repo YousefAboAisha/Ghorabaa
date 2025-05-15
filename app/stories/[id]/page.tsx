@@ -150,7 +150,7 @@ export default async function Page({ params }: Props) {
         </div>
       </div>
 
-      {session && <CommentsSection session={session} id={id} />}
+      {session && <CommentsSection session={{ session }} id={id} />}
     </div>
   );
 }

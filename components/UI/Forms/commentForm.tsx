@@ -31,10 +31,10 @@ const CommentForm = ({
   // Updated initialValues to include image
   const initialValues: Partial<CommentInterface> = {
     text: "",
-    user_id: session?.id || "",
+    user_id: session?.session?.id || "",
     story_id: story_id,
-    author_name: session?.name || "",
-    author_image: session?.image || "",
+    author_name: session?.session?.name || "",
+    author_image: session?.session?.image || "",
   };
 
   // Updated validationSchema to include image validation (optional)

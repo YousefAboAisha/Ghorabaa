@@ -3,11 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { StoryStatus } from "@/app/enums";
 
-type Params = { id: string };
+type Params = Promise<{ id: string }>;
 
 export async function GET(req: NextRequest, { params }: { params: Params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const client = await clientPromise;
     const db = client.db("ghorabaa");
     const storiesCollection = db.collection("stories");
@@ -37,12 +37,12 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
         {
           $project: {
             _id: 1,
-            image:1,
+            image: 1,
             name: 1,
             birth_date: 1,
             death_date: 1,
-            city:1,
-            neighborhood:1,
+            city: 1,
+            neighborhood: 1,
             bio: 1,
             status: 1,
             createdAt: 1,

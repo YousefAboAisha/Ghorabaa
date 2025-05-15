@@ -93,8 +93,18 @@ export interface DonationInterface extends Document {
 }
 
 export interface SessionProps {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
+  session:
+    | ({
+        id: string;
+        name: string;
+        email: string;
+        image: string;
+        role: Role;
+        createdAt: string;
+      } & {
+        name?: string | null;
+        email?: string | null;
+        image?: string | null;
+      })
+    | null;
 }
