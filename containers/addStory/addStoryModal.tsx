@@ -294,7 +294,7 @@ const AddStory = () => {
                       }}
                       maxNumber={maxNumber}
                       dataURLKey="data_url"
-                      acceptType={["jpg", "gif", "png"]}
+                      acceptType={["jpg", "gif", "png", "JFIF", "webp"]}
                     >
                       {({
                         onImageUpload,

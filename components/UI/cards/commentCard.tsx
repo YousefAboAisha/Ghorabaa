@@ -1,3 +1,4 @@
+"use client";
 import { dateConversion } from "@/conversions";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
@@ -10,14 +11,9 @@ type FeatureCardProps = {
   createdAt: Date;
 };
 
-const CommentCard = async ({
-  text,
-  name,
-  image,
-  createdAt,
-}: FeatureCardProps) => {
+const CommentCard = ({ text, name, image, createdAt }: FeatureCardProps) => {
   return (
-    <div className="relative flex flex-col gap-4 p-5 rounded-lg bg-white shadow-md w-full">
+    <div className="relative flex flex-col gap-4 p-5 rounded-3xl rounded-tr-none border bg-white shadow-sm w-full h-fit">
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
           {image ? (

@@ -23,14 +23,16 @@ const MartyrCard = ({ data }: MartyrCardProps) => {
       title="عرض الملف الشخصي"
     >
       <div className="relative group w-full flex flex-col border bg-white rounded-2xl overflow-hidden hover:shadow-xl duration-700">
-        <div className="flex items-center justify-center relative max-h-[300px] overflow-hidden">
+        <div className="flex items-center justify-center relative h-[270px] w-full overflow-hidden">
           {data?.image ? (
             <Image
               src={data?.image}
               alt="صورة الشهيد"
-              className="w-full rounded-2xl rounded-b-none group-hover:scale-125 duration-700"
-              width={500}
-              height={500}
+              className="w-full rounded-2xl rounded-b-none group-hover:scale-125 duration-700 object-cover"
+              width={1000}
+              height={1000}
+              blurDataURL="https://reactnative-examples.com/wp-content/uploads/2022/02/default-loading-image.png"
+              placeholder="blur"
             />
           ) : (
             <div className="p-8">

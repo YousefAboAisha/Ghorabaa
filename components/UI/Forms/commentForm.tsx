@@ -8,10 +8,17 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { CommentInterface, SessionProps } from "@/app/interfaces";
 
+type CommentFormProps = {
+  session: SessionProps | null;
+  story_id: string;
+  updateComments?: () => void;
+};
+
 const CommentForm = ({
   session,
   story_id,
-}: SessionProps & { story_id: string }) => {
+  updateComments,
+}: CommentFormProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentUrl =
@@ -54,6 +61,7 @@ const CommentForm = ({
               if (response.ok) {
                 console.log("Comment added:", data);
                 resetForm(); // ✅ This clears the form
+                if (updateComments) updateComments();
               } else {
                 console.error("Failed to add comment:", data.error);
               }

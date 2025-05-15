@@ -13,7 +13,8 @@ export async function GET() {
       .find({
         status: StoryStatus.APPROVED,
       })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+      .limit(10) // Limit to the last 10 stories
       .toArray();
 
     if (!stories) {

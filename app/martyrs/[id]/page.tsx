@@ -2,16 +2,16 @@ import ShareModal from "@/containers/events/shareModal";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { FaEye } from "react-icons/fa";
 import { BsBookmark } from "react-icons/bs";
-import CommentForm from "@/components/UI/Forms/commentForm";
 import { getSessionAction } from "@/app/actions/registerActions";
 import Image from "next/image";
-import { CommentInterface, StoryInterface } from "@/app/interfaces";
+import { StoryInterface } from "@/app/interfaces";
 import { dateConversion } from "@/conversions";
-import CommentCard from "@/components/UI/cards/commentCard";
+import CommentsSection from "@/containers/martyrDetails/commentsSection";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
+
 export default async function Page({ params }: Props) {
   const { id } = await params;
 
@@ -30,6 +30,7 @@ export default async function Page({ params }: Props) {
   const commentsResponse = await fetch(
     `http://localhost:3000/api/comment/${id}`
   );
+
   const comments = await commentsResponse.json();
   console.log("Comments Data", comments.data); // an array of comments
 
@@ -146,26 +147,7 @@ export default async function Page({ params }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 mb-10 mt-8">
-        <h2 className="font-bold text-lg">التعليقات</h2>
-
-        <CommentForm session={session} story_id={id} />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-          {comments.data.map((elem: Partial<CommentInterface>) => (
-            <CommentCard
-              key={elem._id as string}
-              text={elem.text as string}
-              createdAt={elem.createdAt as Date}
-              image={elem?.author_image as string}
-              name={elem?.author_name as string}
-            />
-          ))}
-        </div>
-        <div className="text-primary flex items-center gap-2 justify-center mt-6 hover:underline text-sm w-fit mx-auto cursor-pointer">
-          <p>عرض المزيد</p>
-        </div>
-      </div>
+      {session && <CommentsSection session={session} id={id} />}
     </div>
   );
 }
