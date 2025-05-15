@@ -2,7 +2,7 @@
 import PageTitles from "@/components/UI/typography/pageTitles";
 import Input from "@/components/UI/inputs/input";
 import { BiSearch } from "react-icons/bi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { CiImageOn } from "react-icons/ci";
 import MartyrCard from "@/components/UI/cards/storyCard";
@@ -10,11 +10,9 @@ import { StoryInterface } from "../interfaces";
 import { BsExclamationCircle } from "react-icons/bs";
 
 const Page = () => {
-  // const [stories, setStories] = useState<StoryInterface[] | undefined>([]);
-  const stories: StoryInterface[] = [];
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  // const [loading, setLoading] = useState<boolean>(false);
-  const loading = false;
+  const [stories, setStories] = useState<StoryInterface[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const renderLoadingSkeletons = () => (
     <div className="cards-grid-4">
@@ -213,6 +211,32 @@ const Page = () => {
     </div>
   );
 
+  console.log("Stories", stories);
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchQuery.length > 0) {
+        setLoading(true);
+        fetch(`/api/story/search?query=${encodeURIComponent(searchQuery)}`)
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("Failed to fetch");
+            }
+            return res.json();
+          })
+          .then((data) => {
+            setStories(data);
+            console.log("Data inside the useEffect", data);
+          })
+          .catch((err) => console.error(err))
+          .finally(() => setLoading(false));
+      } else {
+        setStories([]);
+      }
+    }, 500); // debounce
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
   return (
     <div className="container min-h-screen mt-24">
       <PageTitles />
@@ -256,18 +280,9 @@ const Page = () => {
               </div>
             ) : (
               stories?.map((martyr: StoryInterface, index) => (
-                <MartyrCard key={index} />
+                <MartyrCard key={index} data={martyr} />
               ))
             )}
-
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
-            <MartyrCard />
           </div>
         )}
       </div>
