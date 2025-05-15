@@ -10,9 +10,7 @@ import Heading from "@/components/UI/typography/heading";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { API_BASE_URL } from "@/config";
 import { FcGoogle } from "react-icons/fc";
-// import { loginAction } from "../actions/registerActions";
 import { signIn } from "next-auth/react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useSearchParams } from "next/navigation";
@@ -48,7 +46,7 @@ const Signin = () => {
     setFormErrors("");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/user/signin`, {
+      const response = await fetch(`/api/user/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

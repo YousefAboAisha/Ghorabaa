@@ -15,10 +15,10 @@ const CommentsSection = ({ session, id }: ComemntSectionProps) => {
 
   const fetchComments = async () => {
     setLoading(true);
-    const response = await fetch(`http://localhost:3000/api/comment/${id}`);
+    const response = await fetch(`/api/comment/${id}`);
     if (!response.ok) {
-      throw new Error("Failed to fetch comments");
       setLoading(false);
+      throw new Error("Failed to fetch comments");
     }
     const result = await response.json();
     if (result && result.data) {
@@ -122,6 +122,7 @@ const CommentsSection = ({ session, id }: ComemntSectionProps) => {
           ))}
         </div>
       )}
+
       <div className="text-primary flex items-center gap-2 justify-center mt-6 hover:underline text-sm w-fit mx-auto cursor-pointer">
         <p>عرض المزيد</p>
       </div>

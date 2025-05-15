@@ -6,12 +6,15 @@ import { BsEye } from "react-icons/bs";
 
 const TodaysMartyr = async () => {
   const fetchTodaysMartyr = async () => {
-    const res = await fetch(`http://localhost:3000/api/story/todaysMartyr`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/todaysMartyr`,
+      {
+        cache: "no-store",
+      }
+    );
 
     if (!res.ok) {
-      throw new Error("Failed to fetch data");
+      console.log("Failed to fetch data");
     }
     return res.json();
   };
@@ -29,13 +32,13 @@ const TodaysMartyr = async () => {
 
         <div className="flex flex-col gap-2 mt-4">
           <div className="flex flex-row items-center gap-4 text-[14px]">
-            <h4 className="font-bold text-lg  ">{data.name}</h4>
+            <h4 className="font-bold text-lg  ">{data?.name}</h4>
           </div>
 
-          <p className="text-[13px]">{data.bio}</p>
+          <p className="text-[13px]">{data?.bio}</p>
         </div>
 
-        <Link href={`/stories/${data._id}`} className="mt-4">
+        <Link href={`/stories/${data?._id}`} className="mt-4">
           <Button
             title="عرض الملف الشخصي"
             className="w-full bg-primary text-[12px] px-4"
@@ -47,7 +50,7 @@ const TodaysMartyr = async () => {
 
       <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[60vh] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#000000d8] rounded-xl before:rounded-xl">
         <Image
-          src={data.image || "/notFound.png"}
+          src={data?.image || "/notFound.png"}
           width={1000}
           height={1000}
           alt="Today's martyr"

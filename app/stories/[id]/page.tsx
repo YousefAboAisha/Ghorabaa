@@ -32,13 +32,6 @@ export default async function Page({ params }: Props) {
         new Date(data.birth_date).getFullYear()
       : "N/A";
 
-  const commentsResponse = await fetch(
-    `http://localhost:3000/api/comment/${id}`
-  );
-
-  const comments = await commentsResponse.json();
-  console.log("Comments Data", comments.data); // an array of comments
-
   return (
     <div className="container lg:w-6/12 mt-[70px] min-h-screen">
       <div className="flex flex-col gap-2 mt-24">
