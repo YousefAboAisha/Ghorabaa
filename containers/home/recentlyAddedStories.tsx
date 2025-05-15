@@ -5,9 +5,12 @@ import ImagesSwiper from "@/components/UI/imagesSwiper";
 
 const RecentlyAddedStories = async () => {
   const fetchRecentlyAddedStories = async () => {
-    const res = await fetch(`http://localhost:3000/api/story/recentlyAdded`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/recentlyAdded`,
+      {
+        cache: "no-store",
+      }
+    );
     if (!res.ok) {
       throw new Error("Failed to fetch data");
     }

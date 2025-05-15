@@ -44,7 +44,7 @@ const CommentForm = ({
 
   return (
     <div>
-      {session ? (
+      {session?.session ? (
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}

@@ -18,7 +18,9 @@ export default async function Page({ params }: Props) {
   const session = await getSessionAction();
   console.log("Session values", session);
 
-  const storyResponse = await fetch(`http://localhost:3000/api/story/${id}`);
+  const storyResponse = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/${id}`
+  );
   const data: StoryInterface & { publisherName: string } =
     await storyResponse.json();
 
@@ -150,7 +152,7 @@ export default async function Page({ params }: Props) {
         </div>
       </div>
 
-      {session && <CommentsSection session={{ session }} id={id} />}
+      {<CommentsSection session={{ session }} id={id} />}
     </div>
   );
 }

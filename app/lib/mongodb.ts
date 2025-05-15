@@ -20,13 +20,15 @@ if (process.env.NODE_ENV === "development") {
       global as { _mongoClientPromise?: Promise<MongoClient> }
     )._mongoClientPromise = client.connect();
   }
-  client = new MongoClient(uri, options);
-  clientPromise =
-    (global as { _mongoClientPromise?: Promise<MongoClient> })
-      ._mongoClientPromise || client.connect();
+  clientPromise = (global as { _mongoClientPromise?: Promise<MongoClient> })
+    ._mongoClientPromise!;
 } else {
   client = new MongoClient(uri, options);
   clientPromise = client.connect();
 }
+
+clientPromise.catch((err) => {
+  console.error("MongoDB connection error:", err);
+});
 
 export default clientPromise;
