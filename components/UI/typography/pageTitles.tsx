@@ -9,7 +9,7 @@ const pathTranslations: Record<string, string> = {
   dashboard: "لوحة التحكم",
   addStory: "إضافة قصة جديدة",
   profile: "الملف الشخصي",
-  martyrs: "شهداؤنا",
+  stories: "شهداؤنا",
   donationCampaigns: "حملات التبرع",
   events: "الفعاليات",
   search: "البحث عن الشهداء",

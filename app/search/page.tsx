@@ -5,7 +5,7 @@ import { BiSearch } from "react-icons/bi";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { CiImageOn } from "react-icons/ci";
-import MartyrCard from "@/components/UI/cards/martyrCard";
+import MartyrCard from "@/components/UI/cards/storyCard";
 import { StoryInterface } from "../interfaces";
 import { BsExclamationCircle } from "react-icons/bs";
 

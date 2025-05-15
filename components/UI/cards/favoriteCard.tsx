@@ -23,7 +23,7 @@ const FavoriteCard = () => {
           <div className="flex items-center justify-center gap-2 mt-2 w-full absolute bottom-4">
             <Link
               title="عرض الملف الشخصي للشهيد"
-              href={"/martyrs/1"}
+              href={"/stories/1"}
               className="flex items-center justify-center rounded-xl border border-gray_light shadow-sm p-3 "
             >
               <BsEye className="text-white" size={20} />

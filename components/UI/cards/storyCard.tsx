@@ -3,13 +3,12 @@ import Link from "next/link";
 import { GiPeaceDove } from "react-icons/gi";
 import { HiUser } from "react-icons/hi";
 import { StoryInterface } from "@/app/interfaces";
-import { FaUserCircle } from "react-icons/fa";
 
-interface MartyrCardProps {
+interface StoryCardsProps {
   data?: StoryInterface;
 }
 
-const MartyrCard = ({ data }: MartyrCardProps) => {
+const StoryCard = ({ data }: StoryCardsProps) => {
   const age =
     data?.death_date && data?.birth_date
       ? new Date(data.death_date).getFullYear() -
@@ -18,27 +17,21 @@ const MartyrCard = ({ data }: MartyrCardProps) => {
 
   return (
     <Link
-      href={`/martyrs/${data?._id}`}
+      href={`/stories/${data?._id}`}
       className="mt-4"
       title="عرض الملف الشخصي"
     >
       <div className="relative group w-full flex flex-col border bg-white rounded-2xl overflow-hidden hover:shadow-xl duration-700">
         <div className="flex items-center justify-center relative h-[270px] w-full overflow-hidden">
-          {data?.image ? (
-            <Image
-              src={data?.image}
-              alt="صورة الشهيد"
-              className="w-full rounded-2xl rounded-b-none group-hover:scale-125 duration-700 object-cover"
-              width={1000}
-              height={1000}
-              blurDataURL="https://reactnative-examples.com/wp-content/uploads/2022/02/default-loading-image.png"
-              placeholder="blur"
-            />
-          ) : (
-            <div className="p-8">
-              <FaUserCircle size={120} className="mx-auto text-gray_dark" />
-            </div>
-          )}
+          <Image
+            src={data?.image || "/notFound.png"}
+            alt="صورة الشهيد"
+            className="w-full rounded-2xl rounded-b-none group-hover:scale-125 duration-700 object-cover"
+            width={1000}
+            height={1000}
+            blurDataURL="https://reactnative-examples.com/wp-content/uploads/2022/02/default-loading-image.png"
+            placeholder="blur"
+          />
         </div>
 
         <div className="relative p-4">
@@ -81,4 +74,4 @@ const MartyrCard = ({ data }: MartyrCardProps) => {
   );
 };
 
-export default MartyrCard;
+export default StoryCard;

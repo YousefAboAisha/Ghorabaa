@@ -6,7 +6,7 @@ import { getSessionAction } from "@/app/actions/registerActions";
 import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
 import { dateConversion } from "@/conversions";
-import CommentsSection from "@/containers/martyrDetails/commentsSection";
+import CommentsSection from "@/containers/storyDetails/commentsSection";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -18,13 +18,16 @@ export default async function Page({ params }: Props) {
   const session = await getSessionAction();
   console.log("Session values", session);
 
-  const martyrResponse = await fetch(`http://localhost:3000/api/story/${id}`);
-  const martyr: StoryInterface = await martyrResponse.json();
+  const storyResponse = await fetch(`http://localhost:3000/api/story/${id}`);
+  const data: StoryInterface & { publisherName: string } =
+    await storyResponse.json();
+
+  console.log("Story Details", data);
 
   const age =
-    martyr?.death_date && martyr?.birth_date
-      ? new Date(martyr.death_date).getFullYear() -
-        new Date(martyr.birth_date).getFullYear()
+    data?.death_date && data?.birth_date
+      ? new Date(data.death_date).getFullYear() -
+        new Date(data.birth_date).getFullYear()
       : "N/A";
 
   const commentsResponse = await fetch(
@@ -41,7 +44,7 @@ export default async function Page({ params }: Props) {
 
         <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-home-landing bg-cover before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#000000d8] bg-fixed rounded-xl before:rounded-xl">
           <Image
-            src={martyr.image}
+            src={data.image || "/notFound.png"}
             alt="صورة الشهيد"
             width={350}
             height={350}
@@ -62,9 +65,9 @@ export default async function Page({ params }: Props) {
           <div className="flex flex- justify-between text-[11px]">
             <div className="flex items-center gap-2 text-gray_dark">
               <p>بواسطة: </p>
-              <p>يوسف رشاد أبو عيشة</p>
+              <p>{data.publisherName}</p>
               <p> | </p>
-              <p>{dateConversion(martyr.createdAt)}</p>
+              <p>{dateConversion(data.createdAt)}</p>
             </div>
 
             <div className="flex items-center gap-2 text-gray_dark">
@@ -74,11 +77,11 @@ export default async function Page({ params }: Props) {
           </div>
 
           <div className="flex items-center gap-8 mt-6">
-            <h4 className="text-lg font-extrabold">الشهيد | {martyr.name}</h4>
+            <h4 className="text-lg font-extrabold">الشهيد | {data.name}</h4>
             <ShareModal
               title="مشاركة صفحة الشهيد"
               // get the current URl
-              sharedLink={`https://ghorabaa.com/martyrs/${id}`}
+              sharedLink={`https://ghorabaa.com/stories/${id}`}
             />
           </div>
 
@@ -99,7 +102,7 @@ export default async function Page({ params }: Props) {
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-sm">
-                  {martyr.birth_date}
+                  {data.birth_date}
                 </td>
               </tr>
 
@@ -109,7 +112,7 @@ export default async function Page({ params }: Props) {
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-sm">
-                  {martyr.death_date}
+                  {data.death_date}
                 </td>
               </tr>
 
@@ -133,7 +136,7 @@ export default async function Page({ params }: Props) {
 
                 <td className="py-3 px-4 border-b text-right text-sm ">
                   <div className="flex items-center gap-1">
-                    <p>{martyr.city}</p>-<p>{martyr.neighborhood}</p>
+                    <p>{data.city}</p>-<p>{data.neighborhood}</p>
                   </div>
                 </td>
               </tr>
@@ -142,7 +145,7 @@ export default async function Page({ params }: Props) {
 
           <div className="mt-8">
             <h2 className="font-bold text-lg">نبذة عن الشهيد </h2>
-            <p className="font-light text-md mt-2">{martyr.bio}</p>
+            <p className="font-light text-md mt-2">{data.bio}</p>
           </div>
         </div>
       </div>

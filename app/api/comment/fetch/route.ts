@@ -6,7 +6,7 @@ import { ObjectId } from "mongodb"; // Import ObjectId from MongoDB
 export async function GET() {
   const client = await clientPromise;
   const db = client.db("ghorabaa");
-  const collection = db.collection("martyrs");
+  const collection = db.collection("stories");
 
   const session = await getSession();
   console.log("Session", session);

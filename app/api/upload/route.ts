@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const { image } = await req.json(); // base64 string or remote URL
 
     const uploadResponse = await cloudinary.uploader.upload(image, {
-      folder: "martyrs",
+      folder: "stories",
       transformation: [{ width: 500, height: 500, crop: "limit" }],
     });
 

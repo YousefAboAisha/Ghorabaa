@@ -3,8 +3,8 @@ import Link from "next/link";
 import { BsArrowLeft } from "react-icons/bs";
 import ImagesSwiper from "@/components/UI/imagesSwiper";
 
-const RecentlyAddedMartyrs = async () => {
-  const fetchRecentlyAddedMartyrs = async () => {
+const RecentlyAddedStories = async () => {
+  const fetchRecentlyAddedStories = async () => {
     const res = await fetch(`http://localhost:3000/api/story/recentlyAdded`, {
       cache: "no-store",
     });
@@ -13,7 +13,7 @@ const RecentlyAddedMartyrs = async () => {
     }
     return res.json();
   };
-  const { data } = await fetchRecentlyAddedMartyrs();
+  const { data } = await fetchRecentlyAddedStories();
 
   console.log("recentlyAdded data", data);
 
@@ -30,7 +30,7 @@ const RecentlyAddedMartyrs = async () => {
       <ImagesSwiper data={data} />
 
       <Link
-        href={"/martyrs"}
+        href={"/stories"}
         className="text-primary flex items-center gap-2 justify-center mt-6 hover:underline text-sm w-fit mx-auto"
       >
         <p>عرض المزيد</p>
@@ -40,4 +40,4 @@ const RecentlyAddedMartyrs = async () => {
   );
 };
 
-export default RecentlyAddedMartyrs;
+export default RecentlyAddedStories;

@@ -135,7 +135,7 @@ const Page = () => {
                       </p>
 
                       <Link
-                        href={"/martyrs/1"}
+                        href={"/stories/1"}
                         className="text-secondary font-bold text-[13px] cursor-pointer hover:underline"
                       >
                         (عرض ملف الشهيد)

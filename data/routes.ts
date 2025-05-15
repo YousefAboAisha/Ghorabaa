@@ -9,7 +9,7 @@ export const Routes = [
   },
   {
     title: "شهداؤنا",
-    href: "/martyrs",
+    href: "/stories",
     icon: RxLayers,
   },
   {

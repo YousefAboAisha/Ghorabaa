@@ -1,6 +1,6 @@
 "use client";
 import { StoryStatus } from "@/app/enums";
-import MartyrCard from "@/components/UI/cards/martyrCard";
+import MartyrCard from "@/components/UI/cards/storyCard";
 import MartyrPendingCard from "@/components/UI/cards/martyrPendingCard";
 import MartyrRejectedCard from "@/components/UI/cards/martyrRejectedCard";
 import React, { useState } from "react";

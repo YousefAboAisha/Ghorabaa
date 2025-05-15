@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import MartyrCard from "@/components/UI/cards/martyrCard";
+import MartyrCard from "@/components/UI/cards/storyCard";
 import Heading from "@/components/UI/typography/heading";
 import { CiImageOn } from "react-icons/ci";
 import { StoryInterface } from "../interfaces";

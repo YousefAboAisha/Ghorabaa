@@ -35,7 +35,7 @@ const TodaysMartyr = async () => {
           <p className="text-[13px]">{data.bio}</p>
         </div>
 
-        <Link href={`/martyrs/${data._id}`} className="mt-4">
+        <Link href={`/stories/${data._id}`} className="mt-4">
           <Button
             title="عرض الملف الشخصي"
             className="w-full bg-primary text-[12px] px-4"
@@ -45,9 +45,9 @@ const TodaysMartyr = async () => {
         </Link>
       </div>
 
-      <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[60vh] bg-home-landing before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#000000d8] rounded-xl before:rounded-xl">
+      <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[60vh] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#000000d8] rounded-xl before:rounded-xl">
         <Image
-          src={data.image}
+          src={data.image || "/notFound.png"}
           width={1000}
           height={1000}
           alt="Today's martyr"

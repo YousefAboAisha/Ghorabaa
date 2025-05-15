@@ -9,7 +9,7 @@ const BannedContentCard = () => {
       <div className="inline text-sm mt-1 font-light">
         تم حظر التعليق الذي قمت بكتابته على قصة الشهيد
         <Link
-          href={"/martyrs/1"}
+          href={"/stories/1"}
           className="inline-block mx-1 font-bold text-red-600 hover:underline "
         >
           [محمد عيسى أحمد]
