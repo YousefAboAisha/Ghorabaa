@@ -13,6 +13,8 @@ export async function POST(originalReq: Request) {
   // ✅ Authenticate user
   const token = await getToken({ req: nextReq, secret });
 
+  console.log("Token values [server]", token);
+
   if (!token) {
     return NextResponse.json(
       { error: "Unauthorized. Please sign in." },

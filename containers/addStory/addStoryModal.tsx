@@ -83,7 +83,6 @@ const AddStory = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.accessToken || ""}`,
         },
         body: JSON.stringify({ ...values, image: url }),
       });
