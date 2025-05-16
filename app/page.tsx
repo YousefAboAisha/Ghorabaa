@@ -9,20 +9,9 @@ import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLo
 import Heading from "@/components/UI/typography/heading";
 import Link from "next/link";
 import { BsArrowLeft } from "react-icons/bs";
+import { HomeMetadata } from "./lib/metadata";
 
-export async function generateMetadata() {
-  return {
-    title: {
-      default: "غُرباء | منصة الشهداء",
-      template: "%s",
-    },
-    description: "أكبر مكتبة ومنصة رقمية للشهداء",
-    icons: {
-      apple: "/zad-logo.svg",
-      icon: "/zad-logo.svg",
-    },
-  };
-}
+export const generateMetadata = async () => HomeMetadata;
 
 // Viewport export remains separate
 export const viewport = "width=device-width, initial-scale=1";

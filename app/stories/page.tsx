@@ -4,6 +4,9 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Suspense } from "react";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import StoriesSection from "@/containers/stories/storiesSection";
+import { StoriesMetadata } from "../lib/metadata";
+
+export const generateMetadata = async () => StoriesMetadata;
 
 export default async function Page() {
   return (

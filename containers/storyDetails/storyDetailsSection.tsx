@@ -4,6 +4,7 @@ import Image from "next/image";
 import { BsBookmark } from "react-icons/bs";
 import { FaEye } from "react-icons/fa";
 import ShareModal from "../events/shareModal";
+import PageTitles from "@/components/UI/typography/pageTitles";
 
 type Props = {
   id: string;
@@ -29,8 +30,11 @@ const StoryDetailsSection = async ({ id }: Props) => {
       : "N/A";
 
   return (
-    <div>
-      {" "}
+    <div className="mt-24">
+       <div className="flex flex-col gap-2">
+        <PageTitles storyName={data.name} />
+      </div>
+
       <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-home-landing bg-cover before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#000000d8] bg-fixed rounded-xl before:rounded-xl">
         <Image
           src={data.image || "/notFound.png"}

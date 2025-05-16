@@ -4,7 +4,6 @@ import { MdKeyboardArrowLeft } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-// Arabic labels for path segments
 const pathTranslations: Record<string, string> = {
   dashboard: "لوحة التحكم",
   addStory: "إضافة قصة جديدة",
@@ -18,19 +17,15 @@ const pathTranslations: Record<string, string> = {
   savedStories: "القصص المحفوظة",
 };
 
-const PageTitles = () => {
-  const pathname = usePathname();
+type PageTitlesProps = {
+  storyName?: string;
+};
 
-  const segments = pathname
-    .split("/")
-    .filter(Boolean)
-    .map((segment, index, arr) => {
-      const href = "/" + arr.slice(0, index + 1).join("/");
-      const title =
-        pathTranslations[segment] ||
-        decodeURIComponent(segment.replace(/-/g, " "));
-      return { title, href };
-    });
+const PageTitles = ({ storyName }: PageTitlesProps) => {
+  const pathname = usePathname();
+  const segments = pathname.split("/").filter(Boolean);
+
+  const isStoryDetailsPage = segments[0] === "stories" && segments.length === 2;
 
   return (
     <div className="flex items-center mb-2 text-sm">
@@ -42,21 +37,34 @@ const PageTitles = () => {
         {segments.length > 0 && <MdKeyboardArrowLeft size={20} />}
       </Link>
 
-      {segments.map((seg, i) => (
-        <React.Fragment key={seg.href}>
-          {i < segments.length - 1 ? (
+      {segments.map((segment, index) => {
+        const href = "/" + segments.slice(0, index + 1).join("/");
+        const isLast = index === segments.length - 1;
+
+        if (isStoryDetailsPage && index === 1) {
+          return (
+            <React.Fragment key={href}>
+              <span className="text-black">{storyName}</span>
+            </React.Fragment>
+          );
+        }
+
+        const title =
+          pathTranslations[segment] ||
+          decodeURIComponent(segment.replace(/-/g, " "));
+
+        return (
+          <React.Fragment key={href}>
             <Link
-              href={seg.href}
+              href={href}
               className="flex items-center text-gray-500 hover:underline"
             >
-              {seg.title}
-              <MdKeyboardArrowLeft size={20} />
+              {title}
             </Link>
-          ) : (
-            <p className="mr-1">{seg.title}</p>
-          )}
-        </React.Fragment>
-      ))}
+            {!isLast && <MdKeyboardArrowLeft size={20} className="text-gray-500" />}
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 };
