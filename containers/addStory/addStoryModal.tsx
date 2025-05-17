@@ -33,9 +33,9 @@ const AddStory = () => {
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
     id_number: "407709260",
-    name: "محمد عبد الله طارق حسب الله",
-    birth_date: new Date("2002-01-01").toISOString().split("T")[0],
-    death_date: new Date("2023-01-01").toISOString().split("T")[0],
+    name: "",
+    birth_date: "",
+    death_date: "",
     city: "",
     neighborhood: "",
     bio: "",
@@ -84,6 +84,7 @@ const AddStory = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include", // 👈 THIS IS CRITICAL
         body: JSON.stringify({ ...values, image: url }),
       });
 
@@ -146,8 +147,6 @@ const AddStory = () => {
                 <div>
                   <Field
                     required={false}
-                    readOnly
-                    disabled={true}
                     name="id_number"
                     as={Input}
                     type="text"
@@ -164,8 +163,6 @@ const AddStory = () => {
                 <div>
                   <Field
                     required={false}
-                    readOnly
-                    disabled={true}
                     name="name"
                     as={Input}
                     type="text"
@@ -183,8 +180,6 @@ const AddStory = () => {
                   <div>
                     <Field
                       required={false}
-                      readOnly
-                      disabled={true}
                       name="birth_date"
                       as={Input}
                       type="date"
@@ -199,8 +194,6 @@ const AddStory = () => {
                   <div>
                     <Field
                       required={false}
-                      readOnly
-                      disabled={true}
                       name="death_date"
                       as={Input}
                       type="date"

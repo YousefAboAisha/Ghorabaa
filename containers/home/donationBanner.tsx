@@ -58,9 +58,9 @@ const AddStoryBanner = () => {
       </div>
 
       <Image
-        src={"/donation.jpg"}
-        width={1000}
-        height={1000}
+        src={"/donation2.png"}
+        width={500}
+        height={500}
         alt="صورة شهيد اليوم"
         className="shadow-xl rounded-xl self-center"
       />

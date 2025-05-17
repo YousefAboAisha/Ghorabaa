@@ -50,6 +50,7 @@ const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
+                credentials: "include", // 👈 THIS IS CRITICAL
               });
 
               const data = await response.json();
