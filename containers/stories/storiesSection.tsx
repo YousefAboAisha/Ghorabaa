@@ -1,4 +1,6 @@
+import { StoryStatus } from "@/app/enums";
 import { StoryInterface } from "@/app/interfaces";
+import NetworkErrorPage from "@/components/networkErrorPage";
 import StoryCard from "@/components/UI/cards/storyCard";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -8,7 +10,7 @@ const StoriesSection = async () => {
 
   const fetchStoriesData = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/fetch`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/fetch/?status=${StoryStatus.APPROVED}`,
       {
         cache: "no-store",
       }
@@ -22,15 +24,19 @@ const StoriesSection = async () => {
   };
   const { data } = await fetchStoriesData();
 
-  console.log("recentlyAdded data", data);
+  console.log("Stories data", data);
 
   return (
-    <div className="relative min-h-[70vh] mb-12 mt-8">
-      <div className="cards-grid-4">
-        {data?.map((martyr: StoryInterface) => (
-          <StoryCard key={martyr._id as string} data={martyr} />
-        ))}
-      </div>
+    <div className="relative min-h-[70vh] mb-12 mt-4">
+      {data ? (
+        <div className="cards-grid-4">
+          {data?.map((martyr: StoryInterface) => (
+            <StoryCard key={martyr._id as string} data={martyr} />
+          ))}
+        </div>
+      ) : (
+        <NetworkErrorPage />
+      )}
     </div>
   );
 };

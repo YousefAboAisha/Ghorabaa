@@ -1,25 +1,29 @@
-import { StoryStatus } from "@/app/enums";
 import clientPromise from "@/app/lib/mongodb";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
     const collection = db.collection("stories");
 
+    const { searchParams } = new URL(req.url);
+    const status = searchParams.get("status")?.trim();
+
     // Fetch all stories from the collection with the status of APPROVED
     const stories = await collection
       .find({
-        status: StoryStatus.APPROVED,
+        status: status,
       })
       .sort({ createdAt: -1 })
       .toArray();
 
+    console.log("All Stories Types", stories);
+
     if (!stories) {
       // If no stories are found, return an error
       return NextResponse.json(
-        { error: "لم يتم العثور على أي شهداء" }, // No stories found
+        { error: "لم يتم العثور على أي قصص" }, // No stories found
         { status: 404 }
       );
     }

@@ -1,19 +1,45 @@
-import RecentCommentCard from "@/components/UI/cards/recentCommentCard";
+import { getSessionAction } from "@/app/actions/registerActions";
+import { CommentInterface } from "@/app/interfaces";
+import CommentCard from "@/components/UI/cards/commentCard";
 import Heading from "@/components/UI/typography/heading";
+import Link from "next/link";
 
-const RecentComments = () => {
+const RecentComments = async () => {
+  const session = await getSessionAction(); // Fetch the session on the server
+  const id = session?.id;
+
+  const userFetchedComments = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/comment/userComments/${id}`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      console.log("Failed to fetch data");
+    }
+
+    return res.json();
+  };
+  const { data } = await userFetchedComments();
+
+  console.log("User comments data", data);
   return (
     <div className="section">
       <Heading title="" highLightText="التعليقات الأخيرة" className="" />
-      <div className="cards-grid-2 mt-8">
-        <RecentCommentCard />
-        <RecentCommentCard />
-        <RecentCommentCard />
-        <RecentCommentCard />
-        <RecentCommentCard />
-        <RecentCommentCard />
+      <div className="cards-grid-3 mt-8">
+        {data.map((comment: CommentInterface) => {
+          return (
+            <Link
+              key={comment._id as string}
+              href={`/stories/${comment.story_id}`}
+            >
+              <CommentCard data={comment} />
+            </Link>
+          );
+        })}
       </div>
-      <p className="text-primary mx-auto w-fit hover:underline text-sm font-semibold mt-8 cursor-pointer">عرض المزيد</p>
     </div>
   );
 };

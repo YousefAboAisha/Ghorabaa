@@ -15,7 +15,7 @@ const CommentsSection = ({ session, id }: ComemntSectionProps) => {
 
   const fetchComments = async () => {
     setLoading(true);
-    const response = await fetch(`/api/comment/${id}`);
+    const response = await fetch(`/api/comment/storyComments/${id}`);
     if (!response.ok) {
       setLoading(false);
       throw new Error("Failed to fetch comments");
@@ -101,31 +101,21 @@ const CommentsSection = ({ session, id }: ComemntSectionProps) => {
     <div className="flex flex-col gap-2 mb-10 mt-8">
       <h2 className="font-bold text-lg">التعليقات</h2>
 
-      <CommentForm
-        session={session}
-        story_id={id}
-        updateComments={fetchComments}
-      />
+      <CommentForm session={session} id={id} updateComments={fetchComments} />
 
       {loading ? (
         renderLoadingSkeletons()
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-          {comments?.map((elem: Partial<CommentInterface>) => (
-            <CommentCard
-              key={elem._id as string}
-              text={elem.text as string}
-              createdAt={elem.createdAt as Date}
-              image={elem?.author_image as string}
-              name={elem?.author_name as string}
-            />
+          {comments?.map((comment: CommentInterface) => (
+            <CommentCard data={comment} key={comment._id as string} />
           ))}
         </div>
       )}
 
-      <div className="text-primary flex items-center gap-2 justify-center mt-6 hover:underline text-sm w-fit mx-auto cursor-pointer">
+      {/* <div className="text-primary flex items-center gap-2 justify-center mt-6 hover:underline text-sm w-fit mx-auto cursor-pointer">
         <p>عرض المزيد</p>
-      </div>
+      </div> */}
     </div>
   );
 };

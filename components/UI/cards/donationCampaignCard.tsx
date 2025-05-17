@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
 
-const DonationCard = () => {
+const DonationCampaignCard = () => {
   const currentAmount = 6724;
   const goalAmount = 10000;
   const progress = ((currentAmount / goalAmount) * 100).toFixed(2);
@@ -69,4 +69,4 @@ const DonationCard = () => {
   );
 };
 
-export default DonationCard;
+export default DonationCampaignCard;

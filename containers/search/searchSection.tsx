@@ -39,6 +39,7 @@ const SearchSection = () => {
 
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
+
   return (
     <div>
       {/* Search Input */}

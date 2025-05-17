@@ -1,5 +1,5 @@
+import NetworkErrorPage from "@/components/networkErrorPage";
 import Button from "@/components/UI/inputs/button";
-import Heading from "@/components/UI/typography/heading";
 import Image from "next/image";
 import Link from "next/link";
 import { BsEye } from "react-icons/bs";
@@ -20,16 +20,9 @@ const TodaysMartyr = async () => {
   };
   const { data } = await fetchTodaysMartyr();
 
-  return (
-    <div className="section grid grid-cols-1 lg:grid-cols-2 gap-8">
+  return data ? (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="flex flex-col items-start">
-        <Heading
-          title=""
-          highLightText="شهيد اليوم"
-          details="وَلَا تَقُولُوا لِمَن يُقْتَلُ فِي سَبِيلِ اللَّهِ أَمْوَاتٌ ۚ بَلْ أَحْيَاءٌ وَلَٰكِن لّا تَشْعُرُونَ"
-          highlightColor="before:bg-primary"
-        />
-
         <div className="flex flex-col gap-2 mt-4">
           <div className="flex flex-row items-center gap-4 text-[14px]">
             <h4 className="font-bold text-lg  ">{data?.name}</h4>
@@ -62,6 +55,8 @@ const TodaysMartyr = async () => {
         />
       </div>
     </div>
+  ) : (
+    <NetworkErrorPage />
   );
 };
 

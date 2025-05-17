@@ -1,3 +1,5 @@
+import { Role } from "./app/enums";
+
 export const dateConversion = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = {
     day: "numeric",
@@ -13,3 +15,16 @@ export const dateConversion = (date: Date): string => {
 
   return formattedDate;
 };
+
+export function getRoleInArabic(role: Role): string {
+  switch (role) {
+    case Role.ADMIN:
+      return "مشرف";
+    case Role.EDITOR:
+      return "محرر";
+    case Role.USER:
+      return "مستخدم عادي";
+    default:
+      return "غير معروف"; // Unknown
+  }
+}

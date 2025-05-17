@@ -96,7 +96,7 @@ function ProfilePopper({ session }: SessionProps) {
 
             <MenuItem>
               <Link
-                href={"/profile"}
+                href={`/profile/${session?.id}`}
                 className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
                 prefetch
               >

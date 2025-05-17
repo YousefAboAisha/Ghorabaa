@@ -3,7 +3,7 @@ import Landing from "@/containers/home/landing";
 import MartyrsStatistics from "@/containers/home/martyersStatistics";
 import TodaysMartyr from "@/containers/home/todaysMartyer";
 import AddStoryBanner from "@/containers/home/addStoryBanner";
-import RecentlyAddedStories from "@/containers/home/page";
+import RecentlyAddedStories from "@/containers/home/recentlyAddedStories";
 import { Suspense } from "react";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import Heading from "@/components/UI/typography/heading";
@@ -25,7 +25,13 @@ export default function Home() {
 
       <div className="container">
         {/* todays martyr */}
-        <div className="">
+        <div className="section">
+          <Heading
+            title=""
+            highLightText="شهيد اليوم"
+            details="وَلَا تَقُولُوا لِمَن يُقْتَلُ فِي سَبِيلِ اللَّهِ أَمْوَاتٌ ۚ بَلْ أَحْيَاءٌ وَلَٰكِن لّا تَشْعُرُونَ"
+            highlightColor="before:bg-primary"
+          />
           <TodaysMartyr />
         </div>
 

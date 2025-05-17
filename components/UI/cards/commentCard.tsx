@@ -1,24 +1,23 @@
 "use client";
+import { CommentInterface } from "@/app/interfaces";
 import { dateConversion } from "@/conversions";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
 import { FaQuoteLeft } from "react-icons/fa6";
 
-type FeatureCardProps = {
-  text: string;
-  name: string;
-  image: string;
-  createdAt: Date;
+type CommentCardProps = {
+  data: CommentInterface;
 };
 
-const CommentCard = ({ text, name, image, createdAt }: FeatureCardProps) => {
+const CommentCard = ({ data }: CommentCardProps) => {
+  const { author_image, author_name, text, createdAt } = data;
   return (
-    <div className="relative flex flex-col gap-4 p-5 rounded-3xl rounded-tr-none border bg-white shadow-sm w-full h-fit">
+    <div className="relative flex flex-col gap-4 p-5 rounded-3xl rounded-tr-none border bg-white shadow-sm w-full h-fit hover:shadow-md duration-200">
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1">
-          {image ? (
+        <div className="flex items-center gap-1 border rounded-full">
+          {author_image ? (
             <Image
-              src={image}
+              src={author_image}
               width={45}
               height={45}
               alt="صورة الملف الشخصي للمعلق"
@@ -32,7 +31,7 @@ const CommentCard = ({ text, name, image, createdAt }: FeatureCardProps) => {
         </div>
 
         <div className="flex flex-col gap-1">
-          <h5 className="text-[13px] font-semibold">{name}</h5>
+          <h5 className="text-[13px] font-semibold">{author_name}</h5>
           <p className="text-primary text-[10px] font-semibold">مستخدم عادي</p>
         </div>
       </div>

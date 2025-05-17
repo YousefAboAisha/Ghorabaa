@@ -1,6 +1,28 @@
+import { getSessionAction } from "@/app/actions/registerActions";
+import { dateConversion, getRoleInArabic } from "@/conversions";
 import Image from "next/image";
 
-const ProfileDetails = () => {
+const ProfileDetails = async () => {
+  const session = await getSessionAction(); // Fetch the session on the server
+  const id = session?.id;
+
+  const userDetails = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/fetch/${id}`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      console.log("Failed to fetch data");
+    }
+
+    return res.json();
+  };
+  const response = await userDetails();
+  const { name, email, image, role, createdAt } = response.data;
+
   return (
     <div className="flex-col md:flex md:flex-row gap-4 md:gap-4 mt-8">
       {/* Profile Card Details */}
@@ -14,7 +36,7 @@ const ProfileDetails = () => {
               <div className="relative flex items-center justify-center bg-secondary p-6">
                 <div className="w-[100px] h-[100px] rounded-full border-2 p-[2px]">
                   <Image
-                    src={"/me.png"}
+                    src={image || "/notFound.png"}
                     width={100}
                     height={100}
                     alt="صورة الملف الشخصي"
@@ -30,19 +52,7 @@ const ProfileDetails = () => {
               الاسم
             </td>
 
-            <td className="py-3 px-4 border-b text-right text-sm ">
-              يوسف رشاد ابو عيشة
-            </td>
-          </tr>
-
-          <tr>
-            <td className="py-3 px-4 border-b text-right text-sm border-l">
-              رقم الهوية
-            </td>
-
-            <td className="py-3 px-4 border-b text-right text-sm ">
-              407709260
-            </td>
+            <td className="py-3 px-4 border-b text-right text-sm ">{name}</td>
           </tr>
 
           <tr>
@@ -50,18 +60,16 @@ const ProfileDetails = () => {
               البريد الالكتروني
             </td>
 
-            <td className="py-3 px-4 border-b text-right text-sm ">
-              yousef.aboesha@hotmail.com
-            </td>
+            <td className="py-3 px-4 border-b text-right text-sm ">{email}</td>
           </tr>
 
           <tr>
             <td className="py-3 px-4 border-b text-right text-sm border-l">
-              رقم الهاتف
+              صلاحية الحساب
             </td>
 
             <td className="py-3 px-4 border-b text-right text-sm ">
-              0592551405
+              {getRoleInArabic(role)}
             </td>
           </tr>
 
@@ -70,8 +78,8 @@ const ProfileDetails = () => {
               تاريخ الإنشاء
             </td>
 
-            <td className="py-3 px-4 border-b text-right text-sm ">
-              25 فبراير 2025
+            <td className="py-3 px-4 border-b text-right text-sm">
+              {dateConversion(createdAt)}
             </td>
           </tr>
         </tbody>

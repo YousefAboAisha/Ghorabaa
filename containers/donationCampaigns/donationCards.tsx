@@ -1,5 +1,5 @@
 "use client";
-import DonationCard from "@/components/UI/cards/donationCard";
+import DonationCampaignCard from "@/components/UI/cards/donationCampaignCard";
 import Heading from "@/components/UI/typography/heading";
 
 const DonationCards = () => {
@@ -15,12 +15,14 @@ const DonationCards = () => {
       </div>
 
       <div className="cards-grid-3 mt-4">
-        <DonationCard />
-        <DonationCard />
-        <DonationCard />
-        <DonationCard />
-        <DonationCard />
-        <DonationCard />
+        <DonationCampaignCard />
+        <DonationCampaignCard />
+        <DonationCampaignCard />
+        <DonationCampaignCard />
+        <DonationCampaignCard />
+        <DonationCampaignCard />
+        <DonationCampaignCard />
+        <DonationCampaignCard />
       </div>
     </div>
   );

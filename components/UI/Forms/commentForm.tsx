@@ -10,15 +10,11 @@ import { CommentInterface, SessionProps } from "@/app/interfaces";
 
 type CommentFormProps = {
   session: SessionProps | null;
-  story_id: string;
+  id: string;
   updateComments?: () => void;
 };
 
-const CommentForm = ({
-  session,
-  story_id,
-  updateComments,
-}: CommentFormProps) => {
+const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentUrl =
@@ -32,7 +28,7 @@ const CommentForm = ({
   const initialValues: Partial<CommentInterface> = {
     text: "",
     user_id: session?.session?.id || "",
-    story_id: story_id,
+    story_id: id,
     author_name: session?.session?.name || "",
     author_image: session?.session?.image || "",
   };
