@@ -9,11 +9,12 @@ import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
+import { FaEye } from "react-icons/fa";
+import { FiPlus } from "react-icons/fi";
 
 const Page = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  // const [loading, setLoading] = useState<boolean>(false);
-  const loading = false;
+  const [loading, setLoading] = useState<boolean>(false);
   const [isModalopen, setIsModalopen] = useState<boolean>(false);
 
   return (
@@ -43,7 +44,7 @@ const Page = () => {
           <div className="w-2/12 md:3/12 min-w-fit ">
             <Button
               title={loading ? "جارٍ البحث" : "بحث"}
-              className="bg-secondary text-white h-[48px] w-full px-4 text-[14px]"
+              className="bg-secondary text-white px-4 h-[48px] w-full px-4 text-[14px]"
               icon={<BiSearch size={16} />}
               loading={loading}
               disabled={loading}
@@ -133,27 +134,11 @@ const Page = () => {
                       <p className="w-fit p-2 rounded-md text-[12px] bg-primary text-white">
                         مكتمل
                       </p>
-
-                      <Link
-                        href={"/stories/1"}
-                        className="text-secondary font-bold text-[13px] cursor-pointer hover:underline"
-                      >
-                        (عرض ملف الشهيد)
-                      </Link>
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
                       <p className="w-fit p-2 rounded-md text-[12px] bg-red-600 text-white">
                         غير مكتمل
-                      </p>
-                      <p
-                        title="إضافة قصة للشهيد"
-                        className="text-secondary font-semibold text-[13px] cursor-pointer hover:underline"
-                        onClick={() => {
-                          setIsModalopen(true);
-                        }}
-                      >
-                        (إضافة قصة للشهيد)
                       </p>
                     </div>
                   )}
@@ -161,12 +146,33 @@ const Page = () => {
               </tr>
             </tbody>
           </table>
+
+          <div className="w-full md:w-4/12 mx-auto mt-3">
+            {0 ? (
+              <Link href={"/stories/1"}>
+                <Button
+                  title="عرض صفحة الشهيد"
+                  className="bg-secondary text-white px-4"
+                  icon={<FaEye />}
+                />
+              </Link>
+            ) : (
+              <Button
+                onClick={() => {
+                  setIsModalopen(true);
+                }}
+                title="إضافة قصة للشهيد"
+                className="bg-secondary text-white px-4"
+                icon={<FiPlus />}
+              />
+            )}
+          </div>
         </div>
       </div>
 
-      <Modal isOpen={isModalopen} setIsOpen={setIsModalopen}>
+      <Modal isOpen={isModalopen} setIsOpen={setIsModalopen} loading={loading}>
         <SessionProvider>
-          <AddStoryModal />
+          <AddStoryModal loading setLoading={setLoading} />
         </SessionProvider>
       </Modal>
     </div>

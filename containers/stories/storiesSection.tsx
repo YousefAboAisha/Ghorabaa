@@ -23,7 +23,7 @@ const StoriesSection = () => {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/fetch/?status=${StoryStatus.APPROVED}&page=${pageToFetch}&limit=4`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/fetch/?status=${StoryStatus.APPROVED}&page=${pageToFetch}&limit=8`,
         { cache: "no-store" }
       );
 

@@ -7,6 +7,7 @@ type ModalType = {
   zIndex?: string;
   children?: React.ReactNode;
   className?: string;
+  loading?: boolean;
 };
 
 const Modal = ({
@@ -15,6 +16,7 @@ const Modal = ({
   bg = "bg-[#000000e7]",
   className,
   zIndex = "z-[50]",
+  loading = true,
   children,
 }: ModalType) => {
   return (
@@ -24,7 +26,10 @@ const Modal = ({
         className={`fixed w-screen h-screen left-0 top-0 duration-300 z-[20]  ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         } ${bg} ${zIndex} `}
-        onClick={() => setIsOpen(false)}
+        onClick={() => {
+          if (loading) return;
+          if (!loading) setIsOpen(false);
+        }}
       ></div>
 
       <div

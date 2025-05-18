@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { BiIdCard, BiSend, BiUser } from "react-icons/bi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -20,7 +20,12 @@ import { useSession } from "next-auth/react";
 import { StoryInterface } from "@/app/interfaces";
 import { StoryStatus } from "@/app/enums";
 
-const AddStory = () => {
+type AddStoryPrpos = {
+  loading?: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+};
+
+const AddStory = ({ setLoading }: AddStoryPrpos) => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
@@ -45,10 +50,41 @@ const AddStory = () => {
   };
 
   const validationSchema = Yup.object({
+    birth_date: Yup.date()
+      .required("يرجى إدخال تاريخ الميلاد")
+      .typeError("تاريخ الميلاد غير صالح"),
+
+    death_date: Yup.date()
+      .required("يرجى إدخال تاريخ الاستشهاد")
+      .typeError("تاريخ الاستشهاد غير صالح")
+      .max(new Date(), "لا يمكن أن يكون تاريخ الاستشهاد في المستقبل")
+      .test(
+        "is-after-birth",
+        "يجب أن يكون تاريخ الاستشهاد بعد تاريخ الميلاد",
+        function (value) {
+          const { birth_date } = this.parent;
+          if (!birth_date || !value) return true; // skip check if one is missing
+          return new Date(value) > new Date(birth_date);
+        }
+      ),
+
     city: Yup.string().required("يرجى اختيار المدينة"),
+
     neighborhood: Yup.string().required("يرجى اختيار الحي"),
-    bio: Yup.string().required("يرجى إدخال السيرة الذاتية"),
-    image: Yup.mixed().required("يرجى إضافة صورة"), // Validate that an image is uploaded
+
+    bio: Yup.string()
+      .required("يرجى إدخال السيرة الذاتية")
+      .test(
+        "min-words",
+        "يجب أن تحتوي السيرة الذاتية على 200 كلمة على الأقل",
+        function (value) {
+          const wordCount =
+            value?.trim().split(/\s+/).filter(Boolean).length || 0;
+          return wordCount >= 200;
+        }
+      ),
+
+    image: Yup.mixed().required("يرجى إضافة صورة"),
   });
 
   const handleSubmit = async (
@@ -59,6 +95,7 @@ const AddStory = () => {
       setSubmitting: (isSubmitting: boolean) => void;
     }
   ) => {
+    setLoading(true);
     console.log("Submit handler started!");
     setFormErrors("");
     console.log("Values", values);
@@ -70,12 +107,14 @@ const AddStory = () => {
         body: JSON.stringify({ image: values.image }), // base64 image
         headers: { "Content-Type": "application/json" },
       });
+      setLoading(false);
 
       const { url } = await imageUploadRes.json();
       console.log("Image URL:", url);
       if (!imageUploadRes.ok) {
         setFormErrors("Error uploading image");
         console.log("Image Upload Error:", url);
+        setLoading(false);
         return;
       }
 
@@ -90,18 +129,23 @@ const AddStory = () => {
 
       const data = await response.json();
       console.log("Data Object is:", data);
+      setLoading(false);
 
       if (!response.ok) {
         setFormErrors(data.error);
         console.log("Add Martyr Error:", data.error);
+        setLoading(false);
+
         return;
       }
 
       window.location.reload();
       console.log("Martyr has been added successfully!", data);
       setSubmitting(false);
+      setLoading(false);
     } catch (error) {
       setSubmitting(false);
+      setLoading(false);
       setFormErrors((error as Error).message);
       toast.error("حدث خطأ أثناء إضافة الشهيد");
       console.error("Error adding martyr", error);
@@ -189,6 +233,12 @@ const AddStory = () => {
                       aria-label="تاريخ الميلاد"
                       aria-invalid={!!errors.birth_date}
                     />
+
+                    <ErrorMessage
+                      name="birth_date"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
+                    />
                   </div>
 
                   <div>
@@ -202,6 +252,12 @@ const AddStory = () => {
                       className={`focus:border-primary`}
                       aria-label="تاريخ الاستشهاد"
                       aria-invalid={!!errors.death_date}
+                    />
+
+                    <ErrorMessage
+                      name="death_date"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
                     />
                   </div>
                 </div>
@@ -234,7 +290,7 @@ const AddStory = () => {
                   <ErrorMessage
                     name="city"
                     component="div"
-                    className="text-red-500 mt-2 font-bold text-[10px]"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
                 </div>
                 <div>
@@ -251,10 +307,11 @@ const AddStory = () => {
                   <ErrorMessage
                     name="neighborhood"
                     component="div"
-                    className="text-red-500 mt-2 font-bold text-[10px]"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
                 </div>
-                {/* Notes Field */}
+
+                {/* Notes Field with Word Counter */}
                 <div>
                   <Field
                     disabled={isSubmitting}
@@ -264,11 +321,22 @@ const AddStory = () => {
                     label="السيرة الذاتية"
                     className={`w-full focus:border-primary`}
                   />
-                  <ErrorMessage
-                    name="bio"
-                    component="div"
-                    className="text-red-500 mt-2 font-bold text-[10px]"
-                  />
+                  {/* Word Counter */}
+
+                  <div className="flex justify-between mt-1">
+                    <ErrorMessage
+                      name="bio"
+                      component="div"
+                      className="text-red-500 font-semibold text-[10px]"
+                    />
+
+                    <div className="text-[10px] text-gray-500 self-end">
+                      عدد الكلمات:{" "}
+                      {values.bio?.trim().split(/\s+/).filter(Boolean).length ||
+                        0}{" "}
+                      / 200
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -336,7 +404,7 @@ const AddStory = () => {
                   <ErrorMessage
                     name="image"
                     component="div"
-                    className="text-red-500 mt-2 font-bold text-[10px]"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
                 </div>
 

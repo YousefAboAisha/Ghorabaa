@@ -20,14 +20,14 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 items-center justify-center bg-secondary text-white p-4 border">
+      <div className="flex flex-col gap-3 items-center justify-center bg-secondary text-white p-2 border rounded-b-md">
         <div
           style={{
             lineHeight: "25px",
           }}
-          className="self-center text-center text-[13px] w-full md:w-10/12"
+          className="self-center text-center text-[12px] w-full md:w-10/12"
         >
-          هذه المنصّة صدقة جارية عن روح الشهيد المهندس محمد عبد الله حسب الله 🧡
+          هذه المنصّة صدقة جارية عن روح الشهيد المهندس/ محمد عبد الله حسب الله 🧡
         </div>
       </div>
     </footer>
