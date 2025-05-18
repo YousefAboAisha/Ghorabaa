@@ -58,7 +58,7 @@ const AddStoryBanner = () => {
       </div>
 
       <Image
-        src={"/donation2.png"}
+        src={"/donation.png"}
         width={500}
         height={500}
         alt="صورة شهيد اليوم"

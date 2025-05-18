@@ -1,3 +1,4 @@
+// /app/api/story/fetch/route.ts
 import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -9,34 +10,49 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status")?.trim();
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "10", 10);
+    const skip = (page - 1) * limit;
 
-    // Fetch all stories from the collection with the status of APPROVED
-    const stories = await collection
-      .find({
-        status: status,
-      })
-      .sort({ createdAt: -1 })
-      .toArray();
-
-    console.log("All Stories Types", stories);
-
-    if (!stories) {
-      // If no stories are found, return an error
+    if (!status) {
       return NextResponse.json(
-        { error: "لم يتم العثور على أي قصص" }, // No stories found
-        { status: 404 }
+        { error: "معامل الحالة مفقود" },
+        { status: 400 }
       );
     }
 
-    // Return the list of stories
+    const query = { status };
+
+    const stories = await collection
+      .find(query)
+      .sort({ createdAt: -1, _id: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
+    const serializedStories = stories.map((s) => ({
+      ...s,
+      _id: s._id.toString(),
+    }));
+
+    const total = await collection.countDocuments(query);
+    const hasMore = skip + stories.length < total;
+
     return NextResponse.json(
-      { message: "تم جلب البيانات بنجاح", data: stories }, // Data fetched successfully
+      {
+        message: "تم جلب البيانات بنجاح",
+        data: serializedStories,
+        hasMore,
+        total,
+        page,
+        limit,
+      },
       { status: 200 }
     );
   } catch (error) {
     console.error("Error fetching stories:", error);
     return NextResponse.json(
-      { error: "حدث خطأ أثناء جلب البيانات" }, // An error occurred while fetching data
+      { error: "حدث خطأ أثناء جلب البيانات" },
       { status: 500 }
     );
   }

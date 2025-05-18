@@ -1,50 +1,33 @@
-import Link from "next/link";
-import { Social } from "@/data/social";
 import Logo from "./UI/logo";
 import RenderredRoutes from "./renderredRoutes";
 
 const Footer = () => {
+  const date = new Date().getFullYear();
+
   return (
-    <footer className="relative container mt-24 mb-12 p-6 gap-4 border rounded-md bg-white">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="realtive flex flex-col items-center lg:items-start">
-          <h2 className="font-semibold xt-center lg:text-start">
-            أقسام الموقع
-          </h2>
-          <div className="flex flex-col gap-3 mt-4 text-center lg:text-start">
-            {<RenderredRoutes />}
+    <footer className="container flex flex-col mt-24 mb-12">
+      <div className="relative p-8 gap-4 border rounded-md rounded-b-none border-b-0 bg-white">
+        <div className="flex flex-col gap-4 items-center justify-center">
+          <Logo className="text-2xl" />
+
+          <div className="flex gap-4">
+            <RenderredRoutes />
           </div>
+
+          <p className="text-[12px] font-light">
+            جميع الحقوق محفوظة لدى يوسف رشاد أبو عيشة {date}
+          </p>
         </div>
+      </div>
 
-        <div className="flex flex-col gap-6 items-center justify-center">
-          <Logo className="text-4xl opacity-20" />
-
-          <div className="flex flex-row gap-4">
-            {Social.map(({ href, Icon }, index) => {
-              return (
-                <Link
-                  key={index}
-                  href={href}
-                  target={"_blank"}
-                  rel={"noreferrer"}
-                >
-                  <Icon size={20} />
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-
+      <div className="flex flex-col gap-3 items-center justify-center bg-secondary text-white p-4 border">
         <div
           style={{
             lineHeight: "25px",
           }}
-          className="self-center text-center text-[13px]"
+          className="self-center text-center text-[13px] w-full md:w-10/12"
         >
-          هذه المنصّة صدقة جارية عن روح الشهيد المهندس{" "}
-          <b className="text-secondary">محمد عبد الله حسب الله</b> من صديقه
-          المُخلص <b>يوسف رشاد رزق أبو عيشة</b> نسأل الله الرحمة والخلود لجميع
-          شهدائنا وأن يتقبل صالح أعمالنا، وأن يوفي أجورنا كاملةً 🧡
+          هذه المنصّة صدقة جارية عن روح الشهيد المهندس محمد عبد الله حسب الله 🧡
         </div>
       </div>
     </footer>

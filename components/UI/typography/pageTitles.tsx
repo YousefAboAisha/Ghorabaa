@@ -61,7 +61,9 @@ const PageTitles = ({ storyName }: PageTitlesProps) => {
             >
               {title}
             </Link>
-            {!isLast && <MdKeyboardArrowLeft size={20} className="text-gray-500" />}
+            {!isLast && (
+              <MdKeyboardArrowLeft size={20} className="text-gray-500" />
+            )}
           </React.Fragment>
         );
       })}
