@@ -8,7 +8,7 @@ import { FaEye } from "react-icons/fa";
 import FavoriteButton from "@/containers/storyDetails/favoriteButton";
 
 interface StoryCardsProps {
-  data?: StoryInterface;
+  data?: StoryInterface & { favorite?: boolean };
 }
 
 const StoryCard = ({ data }: StoryCardsProps) => {
@@ -85,7 +85,7 @@ const StoryCard = ({ data }: StoryCardsProps) => {
 
           <FavoriteButton
             story_id={data?._id as string}
-            initialFavorite={data?.isFavorite as boolean}
+            initialFavorite={data?.favorite as boolean}
           />
         </div>
       </div>

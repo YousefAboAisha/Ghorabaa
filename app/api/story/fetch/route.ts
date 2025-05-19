@@ -1,12 +1,16 @@
-// /app/api/story/fetch/route.ts
 import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { ObjectId } from "mongodb";
+
+const secret = process.env.NEXTAUTH_SECRET;
 
 export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
-    const collection = db.collection("stories");
+    const storiesCollection = db.collection("stories");
+    const usersCollection = db.collection("users");
 
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status")?.trim();
@@ -21,21 +25,38 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const query = { status };
+    // ✅ Get session token
+    const token = await getToken({ req, secret });
 
-    const stories = await collection
+    let favoritesArray: ObjectId[] = [];
+
+    if (token?.email) {
+      const user = await usersCollection.findOne({ email: token.email });
+      favoritesArray = user?.favoritesArray || [];
+    }
+
+    // ✅ Fetch stories with pagination
+    const query = { status };
+    const stories = await storiesCollection
       .find(query)
       .sort({ createdAt: -1, _id: -1 })
       .skip(skip)
       .limit(limit)
       .toArray();
 
-    const serializedStories = stories.map((s) => ({
-      ...s,
-      _id: s._id.toString(),
-    }));
+    const serializedStories = stories.map((s) => {
+      const isFavorited = favoritesArray.some((favId) =>
+        favId.equals ? favId.equals(s._id) : favId === s._id
+      );
 
-    const total = await collection.countDocuments(query);
+      return {
+        ...s,
+        _id: s._id.toString(),
+        favorite: isFavorited,
+      };
+    });
+
+    const total = await storiesCollection.countDocuments(query);
     const hasMore = skip + stories.length < total;
 
     return NextResponse.json(

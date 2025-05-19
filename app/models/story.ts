@@ -53,11 +53,6 @@ const storySchema = new Schema<StoryInterface>(
       default: false,
     },
 
-    isFavorite: {
-      type: Boolean,
-      default: false,
-    },
-
     status: {
       type: String,
       enum: Object.values(StoryStatus),

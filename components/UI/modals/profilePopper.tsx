@@ -12,7 +12,7 @@ import Image from "next/image";
 
 function ProfilePopper({ session }: SessionProps) {
   const [loading, setLoading] = useState<boolean>(false);
-  const profileImage = session?.image || "/me.png"; // Fallback image
+  const profileImage = session?.image || "/notFound.png"; // Fallback image
 
   const handleGoogleSignout = async () => {
     setLoading(true);
@@ -96,7 +96,7 @@ function ProfilePopper({ session }: SessionProps) {
 
             <MenuItem>
               <Link
-                href={`/profile/${session?.id}`}
+                href={`/profile`}
                 className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
                 prefetch
               >

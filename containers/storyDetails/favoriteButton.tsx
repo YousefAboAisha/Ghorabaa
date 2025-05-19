@@ -29,6 +29,8 @@ const FavoriteButton = ({ story_id, initialFavorite }: FavoriteButtonProps) => {
       });
 
       const data = await res.json();
+      console.log("Favorite Response data", data);
+      const isFavorited = data.favorited;
 
       if (!res.ok) {
         console.error("Server responded with an error:", data.message);
@@ -36,7 +38,7 @@ const FavoriteButton = ({ story_id, initialFavorite }: FavoriteButtonProps) => {
       }
 
       // Optionally check data.favorited, or just toggle locally
-      setFavorited(!favorited);
+      setFavorited(isFavorited);
     } catch (error) {
       console.error("Failed to toggle favorite:", error);
     } finally {

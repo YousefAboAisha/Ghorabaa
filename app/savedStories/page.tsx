@@ -56,10 +56,10 @@ const Page = () => {
 
         <div className="mt-4">
           {loading ? (
-            <StoryCardSkeletonLoader length={4} className="cards-grid-3" />
+            <StoryCardSkeletonLoader length={4} className="cards-grid-4" />
           ) : (
             <div className="relative">
-              {favorites.length > 0 ? (
+              {favorites?.length > 0 ? (
                 <div className="cards-grid-4">
                   {favorites.map((data) => {
                     return (

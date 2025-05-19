@@ -4,7 +4,6 @@ import Image from "next/image";
 import { FaEye } from "react-icons/fa";
 import ShareModal from "../events/shareModal";
 import PageTitles from "@/components/UI/typography/pageTitles";
-import FavoriteButton from "./favoriteButton";
 
 type Props = {
   id: string;
@@ -41,8 +40,6 @@ const StoryDetailsSection = async ({ id }: Props) => {
           priority
           quality={100}
         />
-
-        <FavoriteButton story_id={id} />
       </div>
       <div className="relative mt-1">
         <div className="flex flex- justify-between text-[11px]">

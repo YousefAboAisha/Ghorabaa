@@ -34,7 +34,6 @@ export interface StoryInterface extends Document {
   image: string;
   publisher_id: Types.ObjectId | string; // Reference to User who made the add story request.
   hasCompleteProfile: boolean;
-  isFavorite: boolean;
   createdAt: Date;
 }
 

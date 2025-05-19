@@ -75,7 +75,7 @@ const StoriesSection = () => {
   );
 
   return (
-    <div className="relative min-h-[70vh] mb-12 mt-4">
+    <div className="relative min-h-[70vh] mb-12 mt-8">
       {initialLoading ? (
         <StoryCardSkeletonLoader length={8} className="!mt-8" />
       ) : stories.length > 0 ? (
