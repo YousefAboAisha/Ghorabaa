@@ -44,7 +44,7 @@ const Page = () => {
           <div className="w-2/12 md:3/12 min-w-fit ">
             <Button
               title={loading ? "جارٍ البحث" : "بحث"}
-              className="bg-secondary text-white px-4 h-[48px] w-full px-4 text-[14px]"
+              className="bg-secondary text-white px-4 h-[48px] w-full text-[14px]"
               icon={<BiSearch size={16} />}
               loading={loading}
               disabled={loading}

@@ -60,6 +60,8 @@ export async function POST(originalReq: Request) {
       image: body.image,
       publisher_id: token.id,
       status: body.status,
+      hasCompleteProfile: false,
+      isFavorite: false,
       createdAt: new Date(),
     });
 

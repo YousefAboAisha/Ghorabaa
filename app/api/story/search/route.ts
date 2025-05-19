@@ -38,6 +38,7 @@ export async function GET(req: NextRequest) {
             bio: 1,
             birth_date: 1,
             death_date: 1,
+            isFavorite: 1,
           },
         },
       ])

@@ -1,20 +1,16 @@
 import { StoryInterface } from "@/app/interfaces";
 import { dateConversion } from "@/conversions";
 import Image from "next/image";
-import { BsBookmark } from "react-icons/bs";
 import { FaEye } from "react-icons/fa";
 import ShareModal from "../events/shareModal";
 import PageTitles from "@/components/UI/typography/pageTitles";
+import FavoriteButton from "./favoriteButton";
 
 type Props = {
   id: string;
 };
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const StoryDetailsSection = async ({ id }: Props) => {
-  await sleep(3000); // Simulate 3 seconds server delay
-
   const storyResponse = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/${id}`
   );
@@ -31,7 +27,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
 
   return (
     <div className="mt-24">
-       <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <PageTitles storyName={data.name} />
       </div>
 
@@ -46,12 +42,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
           quality={100}
         />
 
-        <div
-          title="إضافة إلى المحفوظات"
-          className="absolute top-5 right-5 backdrop-blur-sm rounded-full flex items-center justify-center p-3 bg-background_light shadow-lg cursor-pointer "
-        >
-          <BsBookmark size={16} />
-        </div>
+        <FavoriteButton story_id={id} />
       </div>
       <div className="relative mt-1">
         <div className="flex flex- justify-between text-[11px]">

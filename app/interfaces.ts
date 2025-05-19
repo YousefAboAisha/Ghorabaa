@@ -17,6 +17,7 @@ export interface UserInterface extends Document {
   password?: string;
   role: Role;
   provider: ProviderTypes;
+  favorites: StoryInterface[];
   createdAt: Date;
 }
 
@@ -32,6 +33,8 @@ export interface StoryInterface extends Document {
   status: StoryStatus;
   image: string;
   publisher_id: Types.ObjectId | string; // Reference to User who made the add story request.
+  hasCompleteProfile: boolean;
+  isFavorite: boolean;
   createdAt: Date;
 }
 

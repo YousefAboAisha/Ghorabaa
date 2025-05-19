@@ -48,6 +48,16 @@ const storySchema = new Schema<StoryInterface>(
 
     publisher_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
 
+    hasCompleteProfile: {
+      type: Boolean,
+      default: false,
+    },
+
+    isFavorite: {
+      type: Boolean,
+      default: false,
+    },
+
     status: {
       type: String,
       enum: Object.values(StoryStatus),

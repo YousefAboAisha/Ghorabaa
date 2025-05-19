@@ -29,12 +29,19 @@ const userSchema = new Schema<UserInterface>(
       type: String,
       required: [true, "Password is required and cannot be empty."],
     },
-    
+
     provider: {
       type: String,
       enum: Object.values(ProviderTypes),
       default: ProviderTypes.DEFAULT,
     },
+
+    favorites: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Story", // Must match the model name used for stories
+      },
+    ],
 
     role: {
       type: String,
