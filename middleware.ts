@@ -29,6 +29,7 @@ export const config = {
     "/profile/:path*",
     "/addStory/:path*",
     "/editProfile/:path*",
+    "/savedStories",
     "/auth/:path*",
     "/signin",
     "/signup",

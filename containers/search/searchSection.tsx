@@ -19,7 +19,9 @@ const SearchSection = () => {
     const delayDebounce = setTimeout(() => {
       if (searchQuery.length > 0) {
         setLoading(true);
-        fetch(`/api/story/search?query=${encodeURIComponent(searchQuery)}`)
+        fetch(`/api/story/search?query=${encodeURIComponent(searchQuery)}`, {
+          credentials: "include",
+        })
           .then((res) => {
             if (!res.ok) {
               throw new Error("Failed to fetch");

@@ -19,7 +19,7 @@ const StoryCard = ({ data }: StoryCardsProps) => {
       : "";
 
   return (
-    <div className="relative group w-full flex flex-col border bg-white hover:shadow-2xl duration-500 rounded-2xl overflow-hidden">
+    <div className="relative group w-full flex flex-col border bg-white hover:shadow-xl duration-500 rounded-2xl overflow-hidden">
       <Link href={`/stories/${data?._id}`} title="عرض الملف الشخصي">
         <div className="flex items-center justify-center relative h-[270px] w-full overflow-hidden">
           <Image

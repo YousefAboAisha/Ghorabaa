@@ -4,7 +4,8 @@ import { cookies } from "next/headers"; // App Router only
 
 const RecentlyAddedStories = async () => {
   const fetchRecentlyAddedStories = async () => {
-    const cookieStore = cookies(); // Access current cookies
+    const cookieStore = await cookies(); // Access current cookies
+
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/recentlyAdded/fetch`,
       {
