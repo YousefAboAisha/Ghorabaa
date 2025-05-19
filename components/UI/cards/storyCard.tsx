@@ -42,7 +42,7 @@ const StoryCard = ({ data }: StoryCardsProps) => {
           </p>
         </div>
 
-        <p className="text-gray-600 text-[13px] mt-2 line-clamp-2 h-9">
+        <p className="text-gray-600 text-[13px] mt-2 line-clamp-2 h-10">
           {data?.bio}
         </p>
       </div>

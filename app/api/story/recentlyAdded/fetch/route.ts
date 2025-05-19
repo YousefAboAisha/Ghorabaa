@@ -1,39 +1,66 @@
-import { StoryStatus } from "@/app/enums";
 import clientPromise from "@/app/lib/mongodb";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { ObjectId } from "mongodb";
+import { StoryStatus } from "@/app/enums";
 
-export async function GET() {
+const secret = process.env.NEXTAUTH_SECRET;
+
+export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
-    const collection = db.collection("stories");
+    const storiesCollection = db.collection("stories");
+    const usersCollection = db.collection("users");
 
-    // Fetch all stories from the collection with the status of APPROVED
-    const stories = await collection
-      .find({
-        status: StoryStatus.APPROVED,
-      })
-      .sort({ createdAt: -1 }) // Sort by createdAt in descending order
-      .limit(10) // Limit to the last 10 stories
-      .toArray();
+    // ✅ Get session token
+    const token = await getToken({ req, secret });
 
-    if (!stories) {
-      // If no stories are found, return an error
-      return NextResponse.json(
-        { error: "لم يتم العثور على أي شهداء" }, // No stories found
-        { status: 404 }
+    console.log("Recenlty added [token]", token);
+
+    let favoritesArray: string[] = [];
+
+    if (token?.email) {
+      const user = await usersCollection.findOne({ email: token.email });
+      favoritesArray = (user?.favoritesArray || []).map((id: ObjectId) =>
+        id.toString()
       );
     }
 
-    // Return the list of stories
+    // ✅ Fetch stories with status APPROVED (10 recent)
+    const stories = await storiesCollection
+      .find({ status: StoryStatus.APPROVED })
+      .sort({ createdAt: -1, _id: -1 })
+      .limit(10)
+      .toArray();
+
+    // ✅ Add "favorite" boolean
+    const serializedStories = stories.map((s) => {
+      const isFavorite = favoritesArray.includes(s._id.toString());
+      // Debug log: compare story id and favoritesArray
+      console.log(
+        `Story ID: ${s._id.toString()}, Is Favorite: ${isFavorite}, Favorites: ${JSON.stringify(
+          favoritesArray
+        )}`
+      );
+      return {
+        ...s,
+        _id: s._id.toString(),
+        favorite: isFavorite,
+      };
+    });
+
     return NextResponse.json(
-      { message: "تم جلب البيانات بنجاح", data: stories }, // Data fetched successfully
+      {
+        message: "تم جلب البيانات بنجاح",
+        data: serializedStories,
+      },
       { status: 200 }
     );
   } catch (error) {
     console.error("Error fetching stories:", error);
     return NextResponse.json(
-      { error: "حدث خطأ أثناء جلب البيانات" }, // An error occurred while fetching data
+      { error: "حدث خطأ أثناء جلب البيانات" },
       { status: 500 }
     );
   }

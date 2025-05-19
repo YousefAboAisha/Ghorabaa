@@ -1,27 +1,28 @@
 import NetworkErrorPage from "@/components/networkErrorPage";
 import ImagesSwiper from "@/components/UI/imagesSwiper";
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { cookies } from "next/headers"; // App Router only
 
 const RecentlyAddedStories = async () => {
-  await sleep(2000); // Simulate 3 seconds server delay
-
   const fetchRecentlyAddedStories = async () => {
+    const cookieStore = cookies(); // Access current cookies
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/recentlyAdded/fetch`,
       {
+        headers: {
+          Cookie: cookieStore.toString(), // ⬅️ Forward cookies
+        },
         cache: "no-store",
       }
     );
+
     if (!res.ok) {
       console.log("Failed to fetch data");
     }
+
     return res.json();
   };
 
   const { data } = await fetchRecentlyAddedStories();
-
-  console.log("recentlyAdded data", data);
 
   return data ? <ImagesSwiper data={data} /> : <NetworkErrorPage />;
 };
