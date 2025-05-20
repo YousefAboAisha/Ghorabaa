@@ -10,13 +10,17 @@ import Heading from "@/components/UI/typography/heading";
 import Link from "next/link";
 import { BsArrowLeft } from "react-icons/bs";
 import { HomeMetadata } from "./lib/metadata";
+import { getSessionAction } from "./actions/registerActions";
+import { SessionProps } from "./interfaces";
 
 export const generateMetadata = async () => HomeMetadata;
 
 // Viewport export remains separate
 export const viewport = "width=device-width, initial-scale=1";
 
-export default function Home() {
+export default async function Home() {
+  const session: SessionProps | undefined = (await getSessionAction()) ?? undefined;
+
   return (
     <>
       <Landing />
@@ -49,7 +53,7 @@ export default function Home() {
           <Suspense
             fallback={<StoryCardSkeletonLoader length={4} className="!mt-8" />}
           >
-            <RecentlyAddedStories />
+            <RecentlyAddedStories session={session} />
           </Suspense>
 
           <Link

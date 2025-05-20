@@ -1,5 +1,5 @@
 import "@/app/globals.css";
-import NavbarWrapper from "./navbarWrapper";
+import NavbarWrapper from "../containers/wrappers/navbarWrapper";
 import Footer from "@/components/footer";
 
 export async function generateMetadata() {

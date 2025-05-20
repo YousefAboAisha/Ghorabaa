@@ -2,16 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { GiPeaceDove } from "react-icons/gi";
 import { HiUser } from "react-icons/hi";
-import { StoryInterface } from "@/app/interfaces";
+import { SessionProps, StoryInterface } from "@/app/interfaces";
 import Button from "../inputs/button";
 import { FaEye } from "react-icons/fa";
 import FavoriteButton from "@/containers/storyDetails/favoriteButton";
 
 interface StoryCardsProps {
   data?: StoryInterface & { favorite?: boolean };
+  session: SessionProps | undefined;
 }
 
-const StoryCard = ({ data }: StoryCardsProps) => {
+const StoryCard = ({ data, session }: StoryCardsProps) => {
   const age =
     data?.death_date && data?.birth_date
       ? new Date(data.death_date).getFullYear() -
@@ -83,10 +84,12 @@ const StoryCard = ({ data }: StoryCardsProps) => {
             />
           </Link>
 
-          <FavoriteButton
-            story_id={data?._id as string}
-            initialFavorite={data?.favorite as boolean}
-          />
+          {session && (
+            <FavoriteButton
+              story_id={data?._id as string}
+              initialFavorite={data?.favorite as boolean}
+            />
+          )}
         </div>
       </div>
     </div>

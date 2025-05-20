@@ -4,10 +4,15 @@ import { Suspense } from "react";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import StoriesSection from "@/containers/stories/storiesSection";
 import { StoriesMetadata } from "../lib/metadata";
+import { getSessionAction } from "../actions/registerActions";
+import { SessionProps } from "../interfaces";
 
 export const generateMetadata = async () => StoriesMetadata;
 
 export default async function Page() {
+  const session: SessionProps | undefined =
+    (await getSessionAction()) ?? undefined;
+
   return (
     <div className="container mt-24 min-h-screen">
       <PageTitles />
@@ -22,7 +27,7 @@ export default async function Page() {
       <Suspense
         fallback={<StoryCardSkeletonLoader length={8} className="!mt-8" />}
       >
-        <StoriesSection />
+        <StoriesSection session={session} />
       </Suspense>
     </div>
   );

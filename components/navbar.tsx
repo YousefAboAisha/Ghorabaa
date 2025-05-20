@@ -13,11 +13,15 @@ import { SessionProps } from "@/app/interfaces";
 import NotificationPopper from "./UI/modals/notificationPopper";
 import { BsBookmark } from "react-icons/bs";
 
-const Navbar = ({ session }: SessionProps) => {
+type NavbarProps = {
+  session?: SessionProps;
+};
+
+const Navbar = ({ session }: NavbarProps) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const pathname = usePathname();
 
-  console.log("Session values", session);
+  console.log("Session values [Navbar]", session);
 
   // Memoize the routes to avoid unnecessary re-renders
   const renderedRoutes = useMemo(

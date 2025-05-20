@@ -1,13 +1,17 @@
 "use client";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { StoryStatus } from "@/app/enums";
-import { StoryInterface } from "@/app/interfaces";
+import { SessionProps, StoryInterface } from "@/app/interfaces";
 import StoryCard from "@/components/UI/cards/storyCard";
 import NetworkErrorPage from "@/components/networkErrorPage";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 
-const StoriesSection = () => {
+type StoriesSectionProps = {
+  session?: SessionProps;
+};
+
+const StoriesSection = ({ session }: StoriesSectionProps) => {
   const [stories, setStories] = useState<StoryInterface[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -82,7 +86,11 @@ const StoriesSection = () => {
         <>
           <div className="cards-grid-4">
             {stories.map((story: StoryInterface) => (
-              <StoryCard key={story._id as string} data={story} />
+              <StoryCard
+                key={story._id as string}
+                data={story}
+                session={session}
+              />
             ))}
           </div>
 

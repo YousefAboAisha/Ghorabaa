@@ -6,11 +6,11 @@ const Footer = () => {
 
   return (
     <footer className="container flex flex-col mt-24 mb-12">
-      <div className="relative p-8 gap-4 border rounded-md rounded-b-none border-b-0 bg-white">
+      <div className="relative p-6 gap-4 border rounded-md rounded-b-none border-b-0 bg-white">
         <div className="flex flex-col gap-4 items-center justify-center">
           <Logo className="text-2xl" />
 
-          <div className="flex gap-4">
+          <div className="flex flex-wrap justify-center gap-4">
             <RenderredRoutes />
           </div>
 

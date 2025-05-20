@@ -10,7 +10,11 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { SessionProps } from "@/app/interfaces";
 import Image from "next/image";
 
-function ProfilePopper({ session }: SessionProps) {
+type ProfilePopperProps = {
+  session?: SessionProps;
+};
+
+function ProfilePopper({ session }: ProfilePopperProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const profileImage = session?.image || "/notFound.png"; // Fallback image
 

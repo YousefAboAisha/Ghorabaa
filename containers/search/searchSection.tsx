@@ -3,12 +3,16 @@ import Input from "@/components/UI/inputs/input";
 import { BiSearch } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import MartyrCard from "@/components/UI/cards/storyCard";
 import { BsExclamationCircle } from "react-icons/bs";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
-import { StoryInterface } from "@/app/interfaces";
+import { SessionProps, StoryInterface } from "@/app/interfaces";
+import StoryCard from "@/components/UI/cards/storyCard";
 
-const SearchSection = () => {
+type SearchSectionProps = {
+  session?: SessionProps;
+};
+
+const SearchSection = ({ session }: SearchSectionProps) => {
   const [stories, setStories] = useState<StoryInterface[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -83,7 +87,7 @@ const SearchSection = () => {
               </div>
             ) : (
               stories?.map((martyr: StoryInterface, index) => (
-                <MartyrCard key={index} data={martyr} />
+                <StoryCard key={index} data={martyr} session={session} />
               ))
             )}
           </div>

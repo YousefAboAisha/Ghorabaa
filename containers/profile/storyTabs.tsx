@@ -1,7 +1,7 @@
 "use client";
 import { StoryStatus } from "@/app/enums";
 import React, { useEffect, useState } from "react";
-import { StoryInterface } from "@/app/interfaces";
+import { SessionProps, StoryInterface } from "@/app/interfaces";
 import StoryCard from "@/components/UI/cards/storyCard";
 import StoryPendingCard from "@/components/UI/cards/storyPendingCard";
 import StoryRejectedCard from "@/components/UI/cards/storyRejectedCard";
@@ -12,7 +12,11 @@ type StoryCounts = {
   [key in StoryStatus]: number;
 };
 
-const StoryTabs = () => {
+type SubmittedStoriesProps = {
+  session?: SessionProps;
+};
+
+const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   const [currentTap, setCurrentTap] = useState<StoryStatus>(
     StoryStatus.APPROVED
   );
@@ -57,7 +61,11 @@ const StoryTabs = () => {
         return (
           <div className="cards-grid-4">
             {stories?.map((story: StoryInterface) => (
-              <StoryCard key={story._id as string} data={story} />
+              <StoryCard
+                key={story._id as string}
+                data={story}
+                session={session}
+              />
             ))}
           </div>
         );

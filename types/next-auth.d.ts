@@ -3,7 +3,7 @@ import { Role } from "@/app/enums";
 import { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
-  interface Session {
+  export interface Session {
     accessToken?: string;
     user: {
       id: string;

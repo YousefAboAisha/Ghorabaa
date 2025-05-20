@@ -36,7 +36,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
           alt="صورة الشهيد"
           width={350}
           height={350}
-          className="mx-auto rounded-2xl shadow-xl z-[10]"
+          className="mx-auto rounded-2xl shadow-xl z-[10] max-h-[60vh]"
           priority
           quality={100}
         />

@@ -1,8 +1,13 @@
+import { SessionProps } from "@/app/interfaces";
 import NetworkErrorPage from "@/components/networkErrorPage";
 import ImagesSwiper from "@/components/UI/imagesSwiper";
 import { cookies } from "next/headers"; // App Router only
 
-const RecentlyAddedStories = async () => {
+type RecentlyAddedStories = {
+  session?: SessionProps;
+};
+
+const RecentlyAddedStories = async ({ session }: RecentlyAddedStories) => {
   const fetchRecentlyAddedStories = async () => {
     const cookieStore = await cookies(); // Access current cookies
 
@@ -25,7 +30,11 @@ const RecentlyAddedStories = async () => {
 
   const { data } = await fetchRecentlyAddedStories();
 
-  return data ? <ImagesSwiper data={data} /> : <NetworkErrorPage />;
+  return data ? (
+    <ImagesSwiper data={data} session={session} />
+  ) : (
+    <NetworkErrorPage />
+  );
 };
 
 export default RecentlyAddedStories;

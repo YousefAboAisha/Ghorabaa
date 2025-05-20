@@ -4,6 +4,7 @@ import { getSessionAction } from "@/app/actions/registerActions";
 import StoryDetailsSection from "@/containers/storyDetails/storyDetailsSection";
 import { Suspense } from "react";
 import { Metadata } from "next";
+import { SessionProps } from "@/app/interfaces";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -57,7 +58,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { id } = await params;
 
-  const session = await getSessionAction();
+  const session: SessionProps | undefined =
+    (await getSessionAction()) ?? undefined;
   console.log("Session values", session);
 
   return (
@@ -68,7 +70,7 @@ export default async function Page({ params }: Props) {
         </Suspense>
       </div>
 
-      <CommentsSection session={{ session }} id={id} />
+      <CommentsSection session={session} id={id} />
     </div>
   );
 }

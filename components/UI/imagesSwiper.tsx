@@ -1,19 +1,20 @@
 "use client";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import MartyrCard from "./cards/storyCard";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { StoryInterface } from "@/app/interfaces";
+import { SessionProps, StoryInterface } from "@/app/interfaces";
+import StoryCard from "./cards/storyCard";
 
 type ImagesSwiperProps = {
   data?: StoryInterface[];
+  session: SessionProps | undefined;
 };
 
-const ImagesSwiper = ({ data }: ImagesSwiperProps) => {
+const ImagesSwiper = ({ data, session }: ImagesSwiperProps) => {
   const breakboints = {
     // When window width is >= 640px
     200: {
@@ -44,7 +45,7 @@ const ImagesSwiper = ({ data }: ImagesSwiperProps) => {
       >
         {data?.map((item: StoryInterface) => (
           <SwiperSlide key={item._id as string}>
-            <MartyrCard data={item} />
+            <StoryCard data={item} session={session} />
           </SwiperSlide>
         ))}
       </Swiper>

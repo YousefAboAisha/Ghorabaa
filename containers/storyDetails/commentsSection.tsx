@@ -5,13 +5,13 @@ import CommentForm from "@/components/UI/Forms/commentForm";
 import React, { useEffect, useState } from "react";
 
 type ComemntSectionProps = {
-  session: SessionProps;
+  session?: SessionProps;
   id: string;
 };
 
 const CommentsSection = ({ session, id }: ComemntSectionProps) => {
   const [comments, setComments] = useState<CommentInterface[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchComments = async () => {
     setLoading(true);

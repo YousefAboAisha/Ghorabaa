@@ -9,7 +9,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { CommentInterface, SessionProps } from "@/app/interfaces";
 
 type CommentFormProps = {
-  session: SessionProps | null;
+  session?: SessionProps;
   id: string;
   updateComments?: () => void;
 };
@@ -27,10 +27,10 @@ const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
   // Updated initialValues to include image
   const initialValues: Partial<CommentInterface> = {
     text: "",
-    user_id: session?.session?.id || "",
+    user_id: session?.id || "",
     story_id: id,
-    author_name: session?.session?.name || "",
-    author_image: session?.session?.image || "",
+    author_name: session?.name || "",
+    author_image: session?.image || "",
   };
 
   // Updated validationSchema to include image validation (optional)
@@ -40,7 +40,7 @@ const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
 
   return (
     <div>
-      {session?.session ? (
+      {session ? (
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
