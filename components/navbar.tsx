@@ -9,12 +9,12 @@ import Button from "./UI/inputs/button";
 import ProfilePopper from "./UI/modals/profilePopper";
 import { FiUser } from "react-icons/fi";
 import Logo from "./UI/logo";
-import { SessionProps } from "@/app/interfaces";
 import NotificationPopper from "./UI/modals/notificationPopper";
 import { BsBookmark } from "react-icons/bs";
+import { Session } from "next-auth";
 
 type NavbarProps = {
-  session?: SessionProps;
+  session: Session | null;
 };
 
 const Navbar = ({ session }: NavbarProps) => {

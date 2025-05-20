@@ -6,12 +6,13 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { SessionProps, StoryInterface } from "@/app/interfaces";
+import { StoryInterface } from "@/app/interfaces";
 import StoryCard from "./cards/storyCard";
+import { Session } from "next-auth";
 
 type ImagesSwiperProps = {
   data?: StoryInterface[];
-  session: SessionProps | undefined;
+  session: Session | null;
 };
 
 const ImagesSwiper = ({ data, session }: ImagesSwiperProps) => {

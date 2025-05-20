@@ -6,10 +6,11 @@ import { FiPlus } from "react-icons/fi";
 import Button from "@/components/UI/inputs/button";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { CommentInterface, SessionProps } from "@/app/interfaces";
+import { CommentInterface } from "@/app/interfaces";
+import { Session } from "next-auth";
 
 type CommentFormProps = {
-  session?: SessionProps;
+  session: Session | null;
   id: string;
   updateComments?: () => void;
 };
@@ -27,10 +28,10 @@ const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
   // Updated initialValues to include image
   const initialValues: Partial<CommentInterface> = {
     text: "",
-    user_id: session?.id || "",
+    user_id: session?.user?.id || "",
     story_id: id,
-    author_name: session?.name || "",
-    author_image: session?.image || "",
+    author_name: session?.user?.name || "",
+    author_image: session?.user?.image || "",
   };
 
   // Updated validationSchema to include image validation (optional)
@@ -40,7 +41,7 @@ const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
 
   return (
     <div>
-      {session ? (
+      {session && session.user ? (
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}

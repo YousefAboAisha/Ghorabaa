@@ -4,24 +4,26 @@ import Image from "next/image";
 
 const ProfileDetails = async () => {
   const session = await getSessionAction(); // Fetch the session on the server
-  const id = session?.id;
+  // const id = session?.user.id;
 
-  const userDetails = async () => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/fetch/${id}`,
-      {
-        cache: "no-store",
-      }
-    );
+  // const userDetails = async () => {
+  //   const res = await fetch(
+  //     `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/fetch/${id}`,
+  //     {
+  //       cache: "no-store",
+  //     }
+  //   );
 
-    if (!res.ok) {
-      console.log("Failed to fetch data");
-    }
+  //   if (!res.ok) {
+  //     console.log("Failed to fetch data");
+  //   }
 
-    return res.json();
-  };
-  const response = await userDetails();
-  const { name, email, image, role, createdAt } = response.data;
+  //   return res.json();
+  // };
+  // const response = await userDetails();
+  // const { name, email, image, role, createdAt } = response.data;
+
+  const userSession = session?.user;
 
   return (
     <div className="flex-col md:flex md:flex-row gap-4 md:gap-4 mt-8">
@@ -36,7 +38,7 @@ const ProfileDetails = async () => {
               <div className="relative flex items-center justify-center bg-secondary p-6">
                 <div className="w-[100px] h-[100px] rounded-full border-2 p-[2px]">
                   <Image
-                    src={image || "/notFound.png"}
+                    src={userSession?.image || "/notFound.png"}
                     width={100}
                     height={100}
                     alt="صورة الملف الشخصي"
@@ -52,7 +54,9 @@ const ProfileDetails = async () => {
               الاسم
             </td>
 
-            <td className="py-3 px-4 border-b text-right text-sm ">{name}</td>
+            <td className="py-3 px-4 border-b text-right text-sm ">
+              {userSession?.name}
+            </td>
           </tr>
 
           <tr>
@@ -60,7 +64,9 @@ const ProfileDetails = async () => {
               البريد الالكتروني
             </td>
 
-            <td className="py-3 px-4 border-b text-right text-sm ">{email}</td>
+            <td className="py-3 px-4 border-b text-right text-sm ">
+              {userSession?.email}
+            </td>
           </tr>
 
           <tr>
@@ -69,7 +75,7 @@ const ProfileDetails = async () => {
             </td>
 
             <td className="py-3 px-4 border-b text-right text-sm ">
-              {getRoleInArabic(role)}
+              {userSession?.role && getRoleInArabic(userSession?.role)}
             </td>
           </tr>
 
@@ -79,7 +85,8 @@ const ProfileDetails = async () => {
             </td>
 
             <td className="py-3 px-4 border-b text-right text-sm">
-              {dateConversion(createdAt)}
+              {userSession?.createdAt &&
+                dateConversion(new Date(userSession.createdAt))}
             </td>
           </tr>
         </tbody>

@@ -7,16 +7,16 @@ import "react-toastify/dist/ReactToastify.css";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { SessionProps } from "@/app/interfaces";
 import Image from "next/image";
+import { Session } from "next-auth";
 
 type ProfilePopperProps = {
-  session?: SessionProps;
+  session: Session | null;
 };
 
 function ProfilePopper({ session }: ProfilePopperProps) {
   const [loading, setLoading] = useState<boolean>(false);
-  const profileImage = session?.image || "/notFound.png"; // Fallback image
+  const profileImage = session?.user?.image || "/notFound.png"; // Fallback image
 
   const handleGoogleSignout = async () => {
     setLoading(true);
@@ -82,7 +82,7 @@ function ProfilePopper({ session }: ProfilePopperProps) {
         >
           <MenuItem disabled>
             <span className="flex items-center gap-2 p-4 bg-gray_light text-[13px]">
-              {session?.email}
+              {session?.user?.email}
             </span>
           </MenuItem>
 

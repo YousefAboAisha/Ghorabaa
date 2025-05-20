@@ -1,6 +1,7 @@
 "use server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../lib/authOptions";
+import { Session } from "next-auth";
 
 export const loginAction = async () => {
   const session = await getServerSession(authOptions);
@@ -21,11 +22,11 @@ export const logoutAction = async () => {
   }
 };
 
-export const getSessionAction = async () => {
+export async function getSessionAction(): Promise<Session | null> {
   const session = await getServerSession(authOptions);
   if (session) {
-    return session.user;
+    return session;
   } else {
     return null;
   }
-};
+}

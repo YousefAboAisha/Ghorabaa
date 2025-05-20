@@ -11,7 +11,6 @@ import Link from "next/link";
 import { BsArrowLeft } from "react-icons/bs";
 import { HomeMetadata } from "./lib/metadata";
 import { getSessionAction } from "./actions/registerActions";
-import { SessionProps } from "./interfaces";
 
 export const generateMetadata = async () => HomeMetadata;
 
@@ -19,7 +18,7 @@ export const generateMetadata = async () => HomeMetadata;
 export const viewport = "width=device-width, initial-scale=1";
 
 export default async function Home() {
-  const session: SessionProps | undefined = (await getSessionAction()) ?? undefined;
+  const session = await getSessionAction();
 
   return (
     <>

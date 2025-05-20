@@ -1,15 +1,16 @@
 "use client";
-import { CommentInterface, SessionProps } from "@/app/interfaces";
+import { CommentInterface } from "@/app/interfaces";
 import CommentCard from "@/components/UI/cards/commentCard";
 import CommentForm from "@/components/UI/Forms/commentForm";
 import React, { useEffect, useState } from "react";
+import { Session } from "next-auth";
 
-type ComemntSectionProps = {
-  session?: SessionProps;
+type CommentSectionProps = {
+  session: Session | null;
   id: string;
 };
 
-const CommentsSection = ({ session, id }: ComemntSectionProps) => {
+const CommentsSection = ({ session, id }: CommentSectionProps) => {
   const [comments, setComments] = useState<CommentInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -105,11 +106,17 @@ const CommentsSection = ({ session, id }: ComemntSectionProps) => {
 
       {loading ? (
         renderLoadingSkeletons()
-      ) : (
+      ) : comments.length >= 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
           {comments?.map((comment: CommentInterface) => (
             <CommentCard data={comment} key={comment._id as string} />
           ))}
+        </div>
+      ) : (
+        <div className="relative h-[20vh] mt-4">
+          <p className="abs-center text-[13px]">
+            لا يوجد تعليقات، قم بإضافة تعليق!
+          </p>
         </div>
       )}
 

@@ -2,14 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { GiPeaceDove } from "react-icons/gi";
 import { HiUser } from "react-icons/hi";
-import { SessionProps, StoryInterface } from "@/app/interfaces";
+import { StoryInterface } from "@/app/interfaces";
 import Button from "../inputs/button";
 import { FaEye } from "react-icons/fa";
 import FavoriteButton from "@/containers/storyDetails/favoriteButton";
+import { Session } from "next-auth";
 
 interface StoryCardsProps {
   data?: StoryInterface & { favorite?: boolean };
-  session: SessionProps | undefined;
+  session: Session | null;
 }
 
 const StoryCard = ({ data, session }: StoryCardsProps) => {
@@ -26,7 +27,7 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
           <Image
             src={data?.image || "/notFound.png"}
             alt="صورة الشهيد"
-            className="w-full rounded-2xl rounded-b-none object-cover"
+            className="w-full rounded-2xl rounded-b-none object-cover min-h-full"
             width={1000}
             height={1000}
             blurDataURL="https://reactnative-examples.com/wp-content/uploads/2022/02/default-loading-image.png"
@@ -84,7 +85,7 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
             />
           </Link>
 
-          {session && (
+          {session && session.user && (
             <FavoriteButton
               story_id={data?._id as string}
               initialFavorite={data?.favorite as boolean}

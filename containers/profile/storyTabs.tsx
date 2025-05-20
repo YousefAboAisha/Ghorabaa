@@ -1,19 +1,20 @@
 "use client";
 import { StoryStatus } from "@/app/enums";
 import React, { useEffect, useState } from "react";
-import { SessionProps, StoryInterface } from "@/app/interfaces";
+import { StoryInterface } from "@/app/interfaces";
 import StoryCard from "@/components/UI/cards/storyCard";
 import StoryPendingCard from "@/components/UI/cards/storyPendingCard";
 import StoryRejectedCard from "@/components/UI/cards/storyRejectedCard";
 import { StoryTapsData } from "@/data/storyTapsData";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
+import { Session } from "next-auth";
 
 type StoryCounts = {
   [key in StoryStatus]: number;
 };
 
 type SubmittedStoriesProps = {
-  session?: SessionProps;
+  session: Session | null;
 };
 
 const StoryTabs = ({ session }: SubmittedStoriesProps) => {

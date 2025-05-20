@@ -8,6 +8,12 @@ export const authOptions: AuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope:
+            "openid profile email https://www.googleapis.com/auth/userinfo.profile",
+        },
+      },
     }),
   ],
 
@@ -56,21 +62,20 @@ export const authOptions: AuthOptions = {
         email: token.email,
       });
 
-      if (existingUser) {
-        token.id = existingUser._id.toString();
-        token.name = existingUser.name;
-        token.email = existingUser.email;
-        token.image = existingUser.image;
-        token.role = existingUser.role;
-        token.createdAt = existingUser.createdAt?.toISOString?.() ?? null;
-      }
+      return {
+        ...token, // 👈 preserve all default fields
 
-      // ✅ Attach the access token if available
-      if (account?.access_token) {
-        token.accessToken = account.access_token;
-      }
+        // ✅ only add/override your custom values
+        id: existingUser?._id?.toString(),
+        name: existingUser?.name,
+        email: existingUser?.email,
+        image: existingUser?.image,
+        role: existingUser?.role,
+        createdAt: existingUser?.createdAt?.toISOString?.() ?? null,
 
-      return token;
+        // ✅ keep access token from OAuth provider
+        accessToken: account?.access_token ?? token.accessToken,
+      };
     },
 
     async session({ session, token }) {
@@ -83,10 +88,8 @@ export const authOptions: AuthOptions = {
         session.user.createdAt = token.createdAt as string;
       }
 
-      // ✅ Expose access token to client
-      (
-        session as { user: typeof session.user; accessToken?: string }
-      ).accessToken = token.accessToken as string | undefined;
+      // ✅ Safely append access token
+      session.accessToken = token.accessToken;
 
       return session;
     },

@@ -1,10 +1,10 @@
-import { SessionProps } from "@/app/interfaces";
 import NetworkErrorPage from "@/components/networkErrorPage";
 import ImagesSwiper from "@/components/UI/imagesSwiper";
+import { Session } from "next-auth";
 import { cookies } from "next/headers"; // App Router only
 
 type RecentlyAddedStories = {
-  session?: SessionProps;
+  session: Session | null;
 };
 
 const RecentlyAddedStories = async ({ session }: RecentlyAddedStories) => {
