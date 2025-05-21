@@ -13,6 +13,8 @@ import {
 export interface UserInterface extends Document {
   image: string;
   name: string;
+  phone_number?: string;
+  id_number?:string;
   email: string;
   password?: string;
   role: Role;
@@ -34,6 +36,7 @@ export interface StoryInterface extends Document {
   image: string;
   publisher_id: Types.ObjectId | string; // Reference to User who made the add story request.
   hasCompleteProfile: boolean;
+  keywords: string[];
   createdAt: Date;
 }
 
@@ -92,13 +95,4 @@ export interface DonationInterface extends Document {
   donationCampaign_id: Types.ObjectId | string; // Reference to the Donation Campaign that a user has made a donation on.
   user_id: Types.ObjectId | string; // Reference to the user who made the donation.
   createdAt: Date;
-}
-
-export interface SessionProps {
-  id: string;
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
-  role: Role;
-  createdAt: string;
 }

@@ -15,6 +15,16 @@ const userSchema = new Schema<UserInterface>(
       required: [true, "User name is required and cannot be empty."],
     },
 
+    phone_number: {
+      type: String,
+      required: false,
+    },
+
+    id_number: {
+      type: String,
+      required: false,
+    },
+
     email: {
       type: String,
       unique: true,

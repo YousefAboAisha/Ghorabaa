@@ -30,7 +30,7 @@ const RecentComments = async () => {
   return (
     <div className="section">
       <Heading title="" highLightText="التعليقات الأخيرة" className="" />
-      {commentsData.length > 0 ? (
+      {commentsData?.length > 0 ? (
         <div className="cards-grid-3 mt-8">
           {commentsData?.map((comment: CommentInterface) => {
             return (

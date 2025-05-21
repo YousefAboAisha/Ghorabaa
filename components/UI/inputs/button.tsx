@@ -14,7 +14,7 @@ const Button = ({
   additionalStyles = "",
   loading,
   className = "",
-  hasShiningBar = true,
+  hasShiningBar = false,
   ...rest
 }: ButtonProps) => {
   return (
