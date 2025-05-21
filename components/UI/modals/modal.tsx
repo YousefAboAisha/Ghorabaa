@@ -16,7 +16,7 @@ const Modal = ({
   bg = "bg-[#000000e7]",
   className,
   zIndex = "z-[50]",
-  loading = true,
+  loading = false,
   children,
 }: ModalType) => {
   return (

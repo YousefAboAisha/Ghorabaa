@@ -21,6 +21,7 @@ const ProfileDetails = async () => {
 
     return res.json();
   };
+
   const response = await userDetails();
   const { id_number, name, phone_number, email, image, role, createdAt } =
     response.data;
@@ -30,11 +31,13 @@ const ProfileDetails = async () => {
       {/* Profile Card Details */}
 
       <EditProfileForm
-        data={{
-          name,
-          id_number,
-          phone_number,
-        }}
+        data={
+          response && {
+            name,
+            id_number,
+            phone_number,
+          }
+        }
       />
 
       <table className="h-full w-full md:min-w-fit md:w-fit md:mt-0 mt-8 rounded-t-lg ">

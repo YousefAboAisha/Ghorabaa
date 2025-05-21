@@ -1,9 +1,9 @@
 import { StoryInterface } from "@/app/interfaces";
 import { dateConversion } from "@/conversions";
 import Image from "next/image";
-import { FaEye } from "react-icons/fa";
 import ShareModal from "../events/shareModal";
 import PageTitles from "@/components/UI/typography/pageTitles";
+import { notFound } from "next/navigation";
 
 type Props = {
   id: string;
@@ -11,12 +11,18 @@ type Props = {
 
 const StoryDetailsSection = async ({ id }: Props) => {
   const storyResponse = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/${id}`
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/${id}`,
+    {
+      cache: "no-store", // optional but recommended if dynamic
+    }
   );
+
+  if (!storyResponse.ok) {
+    notFound(); // redirects to 404 page
+  }
+
   const data: StoryInterface & { publisherName: string } =
     await storyResponse.json();
-
-  console.log("Story Details", data);
 
   const age =
     data?.death_date && data?.birth_date
@@ -41,8 +47,9 @@ const StoryDetailsSection = async ({ id }: Props) => {
           quality={100}
         />
       </div>
+
       <div className="relative mt-1">
-        <div className="flex flex- justify-between text-[11px]">
+        <div className="flex justify-between text-[11px] mt-2">
           <div className="flex items-center gap-2 text-gray_dark">
             <p>بواسطة: </p>
             <p>{data.publisherName}</p>
@@ -50,22 +57,17 @@ const StoryDetailsSection = async ({ id }: Props) => {
             <p>{dateConversion(data.createdAt)}</p>
           </div>
 
-          <div className="flex items-center gap-2 text-gray_dark">
-            <p>232</p>
-            <FaEye size={16} />
-          </div>
-        </div>
-
-        <div className="flex items-center gap-8 mt-6">
-          <h4 className="text-lg font-extrabold">الشهيد | {data.name}</h4>
           <ShareModal
             title="مشاركة صفحة الشهيد"
-            // get the current URl
             sharedLink={`https://ghorabaa.com/stories/${id}`}
           />
         </div>
 
-        <table className="h-full w-full  border mt-8">
+        <div className="flex items-center gap-8 mt-6">
+          <h4 className="text-lg font-extrabold">الشهيد | {data.name}</h4>
+        </div>
+
+        <table className="h-full w-full border mt-8">
           <tbody className="bg-white h-full">
             <tr>
               <td
@@ -80,7 +82,6 @@ const StoryDetailsSection = async ({ id }: Props) => {
               <td className="py-3 px-4 border-b text-right text-sm border-l">
                 تاريخ الميلاد
               </td>
-
               <td className="py-3 px-4 border-b text-right text-sm">
                 {data.birth_date}
               </td>
@@ -90,7 +91,6 @@ const StoryDetailsSection = async ({ id }: Props) => {
               <td className="py-3 px-4 border-b text-right text-sm border-l">
                 تاريخ الاستشهاد
               </td>
-
               <td className="py-3 px-4 border-b text-right text-sm">
                 {data.death_date}
               </td>
@@ -100,9 +100,8 @@ const StoryDetailsSection = async ({ id }: Props) => {
               <td className="py-3 px-4 border-b text-right text-sm border-l">
                 العمر
               </td>
-
               <td className="py-3 px-4 border-b text-right text-sm">
-                <div className="flex items-center gap-1  ">
+                <div className="flex items-center gap-1">
                   <p>{age}</p>
                   <p>عاماً</p>
                 </div>
@@ -113,8 +112,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
               <td className="py-3 px-4 border-b text-right text-sm border-l">
                 مكان السكن
               </td>
-
-              <td className="py-3 px-4 border-b text-right text-sm ">
+              <td className="py-3 px-4 border-b text-right text-sm">
                 <div className="flex items-center gap-1">
                   <p>{data.city}</p>-<p>{data.neighborhood}</p>
                 </div>

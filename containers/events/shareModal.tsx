@@ -13,7 +13,8 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
-import { FiCopy, FiLink } from "react-icons/fi";
+import { FiCopy } from "react-icons/fi";
+import { MdShare } from "react-icons/md";
 
 type ShareModalProps = {
   title: string;
@@ -47,9 +48,9 @@ const ShareModal = ({ title, sharedLink }: ShareModalProps) => {
       <div
         title={title}
         onClick={() => setIsOpen(true)}
-        className=" cursor-pointer"
+        className="text-secondary bg-white border rounded-lg p-2 cursor-pointer hover:shadow-md duration-300"
       >
-        <FiLink size={18} />
+        <MdShare size={20} />
       </div>
 
       <Modal isOpen={isOpen} setIsOpen={setIsOpen}>

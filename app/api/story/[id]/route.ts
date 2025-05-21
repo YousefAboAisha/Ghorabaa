@@ -8,10 +8,21 @@ type Params = Promise<{ id: string }>;
 export async function GET(req: NextRequest, { params }: { params: Params }) {
   try {
     const { id } = await params;
+
+    // Validate id first:
+    if (!ObjectId.isValid(id)) {
+      // If id is invalid format, immediately return 404
+      return NextResponse.json(
+        { error: "معرف الشهيد غير صالح" },
+        { status: 404 }
+      );
+    }
+
     const client = await clientPromise;
     const db = client.db("ghorabaa");
     const storiesCollection = db.collection("stories");
 
+    // Check if story exists and is approved
     const result = await storiesCollection
       .aggregate([
         {
@@ -31,7 +42,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
         {
           $unwind: {
             path: "$publisher",
-            preserveNullAndEmptyArrays: true, // In case publisher is missing
+            preserveNullAndEmptyArrays: true,
           },
         },
         {
@@ -46,8 +57,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
             bio: 1,
             status: 1,
             createdAt: 1,
-            // Include all fields you want from the story
-            publisherName: "$publisher.name", // Map publisher name
+            publisherName: "$publisher.name",
           },
         },
       ])
