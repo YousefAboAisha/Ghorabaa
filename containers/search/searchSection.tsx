@@ -5,11 +5,12 @@ import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsExclamationCircle } from "react-icons/bs";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
-import { SessionProps, StoryInterface } from "@/app/interfaces";
+import { StoryInterface } from "@/app/interfaces";
 import StoryCard from "@/components/UI/cards/storyCard";
+import { Session } from "next-auth";
 
 type SearchSectionProps = {
-  session?: SessionProps;
+  session: Session | null;
 };
 
 const SearchSection = ({ session }: SearchSectionProps) => {
