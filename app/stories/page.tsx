@@ -5,13 +5,11 @@ import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLo
 import StoriesSection from "@/containers/stories/storiesSection";
 import { StoriesMetadata } from "../lib/metadata";
 import { getSessionAction } from "../actions/registerActions";
-import { SessionProps } from "../interfaces";
 
 export const generateMetadata = async () => StoriesMetadata;
 
 export default async function Page() {
-  const session: SessionProps | undefined =
-    (await getSessionAction()) ?? undefined;
+  const session = await getSessionAction();
 
   return (
     <div className="container mt-24 min-h-screen">

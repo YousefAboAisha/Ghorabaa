@@ -4,7 +4,7 @@ import Input from "@/components/UI/inputs/input";
 import Modal from "@/components/UI/modals/modal";
 import Heading from "@/components/UI/typography/heading";
 import PageTitles from "@/components/UI/typography/pageTitles";
-import AddStoryModal from "@/containers/addStory/addStoryModal";
+import AddStoryModal from "@/components/UI/modals/addStoryModal";
 import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";

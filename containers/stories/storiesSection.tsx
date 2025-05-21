@@ -1,14 +1,15 @@
 "use client";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { StoryStatus } from "@/app/enums";
-import { SessionProps, StoryInterface } from "@/app/interfaces";
+import { StoryInterface } from "@/app/interfaces";
 import StoryCard from "@/components/UI/cards/storyCard";
 import NetworkErrorPage from "@/components/networkErrorPage";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
+import { Session } from "next-auth";
 
 type StoriesSectionProps = {
-  session?: SessionProps;
+  session: Session | null;
 };
 
 const StoriesSection = ({ session }: StoriesSectionProps) => {

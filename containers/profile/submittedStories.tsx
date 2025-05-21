@@ -1,10 +1,8 @@
-import { SessionProps } from "@/app/interfaces";
 import StoryTabs from "./storyTabs";
 import { getSessionAction } from "@/app/actions/registerActions";
 
 const SubmittedStories = async () => {
-  const session: SessionProps | undefined =
-    (await getSessionAction()) ?? undefined;
+  const session = await getSessionAction();
 
   return (
     <div className="relative">

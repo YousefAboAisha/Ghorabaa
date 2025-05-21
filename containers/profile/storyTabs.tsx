@@ -33,10 +33,12 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   const fetchStories = async (status: StoryStatus) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/story/fetch?status=${status}`);
+      const res = await fetch(`/api/story/userStories/fetch?status=${status}`);
       if (!res.ok) throw new Error("Failed to fetch stories");
+
       const data = await res.json();
       const fetchedStories = data.data || [];
+
       setStories(fetchedStories);
       setStoryCounts((prev) => ({ ...prev, [status]: fetchedStories.length }));
     } catch (error) {
@@ -47,6 +49,8 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
       setLoading(false);
     }
   };
+
+  console.log("All Stories data", stories);
 
   useEffect(() => {
     fetchStories(currentTap);
