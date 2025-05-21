@@ -1,16 +1,18 @@
-import { getSessionAction } from "@/app/actions/registerActions";
 import EditProfileForm from "@/components/UI/Forms/editProfileForm";
 import { dateConversion, getRoleInArabic } from "@/conversions";
+import { cookies } from "next/headers";
 import Image from "next/image";
 
 const ProfileDetails = async () => {
-  const session = await getSessionAction(); // Fetch the session on the server
-  const id = session?.user.id;
+  const cookieStore = await cookies(); // Access current cookies
 
   const userDetails = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/fetch/${id}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/userDetails/fetch`,
       {
+        headers: {
+          Cookie: cookieStore.toString(), // ⬅️ Forward cookies
+        },
         cache: "no-store",
       }
     );

@@ -47,7 +47,7 @@ const EditProfileForm = ({ data }: EditProfileFormProps) => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={async (values, { resetForm, setSubmitting }) => {
+        onSubmit={async (values, {  setSubmitting }) => {
           try {
             const response = await fetch("/api/user/update", {
               method: "POST",
@@ -60,7 +60,7 @@ const EditProfileForm = ({ data }: EditProfileFormProps) => {
 
             if (response.ok) {
               console.log("User details updated:", data);
-              resetForm(); // ✅ This clears the form
+              window.location.reload();
             } else {
               console.error("Failed to add User details:", data.error);
             }

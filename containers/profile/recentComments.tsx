@@ -1,17 +1,19 @@
-import { getSessionAction } from "@/app/actions/registerActions";
 import { CommentInterface } from "@/app/interfaces";
 import CommentCard from "@/components/UI/cards/commentCard";
 import Heading from "@/components/UI/typography/heading";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
 const RecentComments = async () => {
-  const session = await getSessionAction(); // Fetch the session on the server
-  const id = session?.user.id;
+  const cookieStore = await cookies(); // Access current cookies
 
   const userFetchedComments = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/comment/userComments/${id}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/comment/userComments/fetch`,
       {
+        headers: {
+          Cookie: cookieStore.toString(), // ⬅️ Forward cookies
+        },
         cache: "no-store",
       }
     );

@@ -1,23 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { getToken } from "next-auth/jwt";
 
-type Params = Promise<{ id: string }>;
+const secret = process.env.NEXTAUTH_SECRET;
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Params } // params is a simple object, not a Promise
-) {
+export async function GET(req: NextRequest) {
   try {
-    const { id } = await params; // Extract id from params
+    const token = await getToken({ req, secret });
+    console.log("User comments token", token);
 
-    if (!id) {
-      return NextResponse.json({ error: "Missing story ID" }, { status: 400 });
+    if (!token || !token.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const client = await clientPromise;
     const db = client.db("ghorabaa");
     const collection = db.collection("comments");
+    const id = token.id;
 
     const comments = await collection
       .find({ user_id: new ObjectId(id) })
