@@ -2,6 +2,7 @@ import clientPromise from "@/app/lib/mongodb";
 import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import Story from "@/app/models/story";
+import { StoryStatus } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -59,7 +60,7 @@ export async function POST(originalReq: Request) {
       bio: body.bio,
       image: body.image,
       publisher_id: token.id,
-      status: body.status,
+      status: StoryStatus.PENDING,
       hasCompleteProfile: false,
       createdAt: new Date(),
     });

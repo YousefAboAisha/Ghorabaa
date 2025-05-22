@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiIdCard, BiSend, BiUser } from "react-icons/bi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@/components/UI/inputs/button";
@@ -21,24 +21,40 @@ import { StoryValidationSchema } from "@/app/validation/storySchema";
 type AddStoryPrpos = {
   loading?: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
+  data: StoryInterface;
 };
 
-const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
+const EditStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
 
+  const {
+    _id,
+    id_number,
+    name,
+    birth_date,
+    death_date,
+    city,
+    neighborhood,
+    bio,
+    image,
+    status,
+  } = data;
+
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
-    id_number: "",
-    name: "",
-    birth_date: "",
-    death_date: "",
-    city: "",
-    neighborhood: "",
-    bio: "",
-    image: "",
+    _id,
+    id_number,
+    name,
+    birth_date,
+    death_date,
+    city,
+    neighborhood,
+    bio,
+    image,
+    status,
   };
 
   const handleSubmit = async (
@@ -57,7 +73,6 @@ const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
     try {
       // 1. Upload image to Cloudinary first
       const imageUploadRes = await fetch("/api/upload", {
-        credentials: "include",
         method: "POST",
         body: JSON.stringify({ image: values.image }), // base64 image
         headers: { "Content-Type": "application/json" },
@@ -73,12 +88,12 @@ const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
         return;
       }
 
-      const response = await fetch("/api/story/create", {
-        method: "POST",
+      const response = await fetch("/api/story/update", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // 👈 THIS IS CRITICAL
+        credentials: "include", // Passing Cookies to the server
         body: JSON.stringify({ ...values, image: url }),
       });
 
@@ -93,11 +108,10 @@ const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
 
         return;
       }
-
-      window.location.reload();
-      console.log("Martyr has been added successfully!", data);
       setSubmitting(false);
       setLoading(false);
+      window.location.reload();
+      console.log("Martyr has been added successfully!", data);
     } catch (error) {
       setSubmitting(false);
       setLoading(false);
@@ -106,6 +120,25 @@ const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
       console.error("Error adding martyr", error);
     }
   };
+
+  // Inside the component, below useState
+  useEffect(() => {
+    if (image) {
+      setImages([
+        {
+          data_url: image, // URL or base64
+        },
+      ]);
+    }
+  }, [image]);
+
+  useEffect(() => {
+    if (city) {
+      const cityObj = CitiesData.find((c) => c[city as keyof typeof c]);
+
+      setCities(cityObj ? cityObj[city as keyof typeof cityObj] || [] : []);
+    }
+  }, [city]);
 
   return (
     <div className="relative flex items-center justify-center">
@@ -126,7 +159,7 @@ const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
       <div className="relative w-full border p-8 bg-white">
         <Heading
           title=""
-          highLightText="إضافة قصة"
+          highLightText="تعديل القصة"
           highlightColor="before:bg-primary"
           className="mb-8 mx-auto text-center !text-2xl"
         />
@@ -145,6 +178,7 @@ const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
                 {/* ID Number Field */}
                 <div>
                   <Field
+                    value={values.id_number}
                     required={false}
                     name="id_number"
                     as={Input}
@@ -156,7 +190,6 @@ const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
                     aria-label="رقم الهوية"
                     aria-invalid={!!errors.id_number}
                   />
-
                   <ErrorMessage
                     name="id_number"
                     component="div"
@@ -231,6 +264,7 @@ const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
                 {/* City and Neighbourhood Fields */}
                 <div>
                   <Select
+                    value={values.city}
                     disabled={isSubmitting}
                     label="المدينة"
                     options={CountriesData}
@@ -259,8 +293,10 @@ const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
                     className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
                 </div>
+
                 <div>
                   <Select
+                    value={values.neighborhood}
                     disabled={isSubmitting}
                     label="الحي"
                     options={cities}
@@ -320,7 +356,15 @@ const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
                       }}
                       maxNumber={maxNumber}
                       dataURLKey="data_url"
-                      acceptType={["jpg", "gif", "png", "JFIF", "webp"]}
+                      acceptType={[
+                        "jpg",
+                        "gif",
+                        "png",
+                        "JFIF",
+                        "webp",
+                        "heic",
+                        "mpeg",
+                      ]}
                     >
                       {({
                         onImageUpload,
@@ -399,4 +443,4 @@ const AddStoryModal = ({ setLoading }: AddStoryPrpos) => {
   );
 };
 
-export default AddStoryModal;
+export default EditStoryModal;

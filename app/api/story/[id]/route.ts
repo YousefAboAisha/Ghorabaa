@@ -48,6 +48,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
         {
           $project: {
             _id: 1,
+            id_number: 1,
             image: 1,
             name: 1,
             birth_date: 1,
@@ -57,6 +58,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
             bio: 1,
             status: 1,
             createdAt: 1,
+            publisher_id: 1,
             publisherName: "$publisher.name",
           },
         },
@@ -65,9 +67,18 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
 
     const data = result[0];
 
+    console.log("Story [id] - status  ", data.status);
+
     if (!data) {
       return NextResponse.json(
         { error: "لم يتم العثور على الشهيد" },
+        { status: 404 }
+      );
+    }
+
+    if (data.status !== StoryStatus.APPROVED) {
+      return NextResponse.json(
+        { error: "القصة قيد المراجعة حالياً، ولم يتم نشرها بعد!" },
         { status: 404 }
       );
     }

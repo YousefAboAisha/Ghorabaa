@@ -1,11 +1,10 @@
 "use client";
 import Button from "@/components/UI/inputs/button";
 import Input from "@/components/UI/inputs/input";
+import AddStoryModal from "@/components/UI/modals/addStoryModal";
 import Modal from "@/components/UI/modals/modal";
 import Heading from "@/components/UI/typography/heading";
 import PageTitles from "@/components/UI/typography/pageTitles";
-import AddStoryModal from "@/components/UI/modals/addStoryModal";
-import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
@@ -171,9 +170,7 @@ const Page = () => {
       </div>
 
       <Modal isOpen={isModalopen} setIsOpen={setIsModalopen} loading={loading}>
-        <SessionProvider>
-          <AddStoryModal loading setLoading={setLoading} />
-        </SessionProvider>
+        <AddStoryModal setLoading={setLoading} />
       </Modal>
     </div>
   );

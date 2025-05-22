@@ -4,12 +4,17 @@ import Image from "next/image";
 import ShareModal from "../events/shareModal";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { notFound } from "next/navigation";
+import EditStoryButton from "./editStoryButton";
+import { getSessionAction } from "@/app/actions/registerActions";
 
 type Props = {
   id: string;
 };
 
 const StoryDetailsSection = async ({ id }: Props) => {
+  const session = await getSessionAction();
+  const user_id = session?.user.id;
+
   const storyResponse = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/${id}`,
     {
@@ -30,6 +35,9 @@ const StoryDetailsSection = async ({ id }: Props) => {
         new Date(data.birth_date).getFullYear()
       : "N/A";
 
+  console.log("Current logged in ID", user_id);
+  console.log("Story publisher_id", data.publisher_id);
+
   return (
     <div className="mt-24">
       <div className="flex flex-col gap-2">
@@ -46,6 +54,8 @@ const StoryDetailsSection = async ({ id }: Props) => {
           priority
           quality={100}
         />
+
+        {data.publisher_id == user_id && <EditStoryButton data={data} />}
       </div>
 
       <div className="relative mt-1">

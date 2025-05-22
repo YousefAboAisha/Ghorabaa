@@ -2,7 +2,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiIdCard, BiSend, BiUser } from "react-icons/bi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import Button from "@/components/UI/inputs/button";
 import Input from "@/components/UI/inputs/input";
 import Heading from "@/components/UI/typography/heading";
@@ -17,6 +16,7 @@ import { CiImageOn } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
+import { StoryValidationSchema } from "@/app/validation/storySchema";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -56,44 +56,6 @@ const EditRejectedStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
     image,
     status,
   };
-
-  const validationSchema = Yup.object({
-    birth_date: Yup.date()
-      .required("يرجى إدخال تاريخ الميلاد")
-      .typeError("تاريخ الميلاد غير صالح"),
-
-    death_date: Yup.date()
-      .required("يرجى إدخال تاريخ الاستشهاد")
-      .typeError("تاريخ الاستشهاد غير صالح")
-      .max(new Date(), "لا يمكن أن يكون تاريخ الاستشهاد في المستقبل")
-      .test(
-        "is-after-birth",
-        "يجب أن يكون تاريخ الاستشهاد بعد تاريخ الميلاد",
-        function (value) {
-          const { birth_date } = this.parent;
-          if (!birth_date || !value) return true; // skip check if one is missing
-          return new Date(value) > new Date(birth_date);
-        }
-      ),
-
-    city: Yup.string().required("يرجى اختيار المدينة"),
-
-    neighborhood: Yup.string().required("يرجى اختيار الحي"),
-
-    bio: Yup.string()
-      .required("يرجى إدخال السيرة الذاتية")
-      .test(
-        "min-words",
-        "يجب أن تحتوي السيرة الذاتية على 200 كلمة على الأقل",
-        function (value) {
-          const wordCount =
-            value?.trim().split(/\s+/).filter(Boolean).length || 0;
-          return wordCount >= 200;
-        }
-      ),
-
-    image: Yup.mixed().required("يرجى إضافة صورة"),
-  });
 
   const handleSubmit = async (
     values: typeof initialValues,
@@ -205,7 +167,7 @@ const EditRejectedStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
 
         <Formik
           initialValues={initialValues}
-          validationSchema={validationSchema}
+          validationSchema={StoryValidationSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting, errors, values, setFieldValue }) => {
@@ -228,6 +190,12 @@ const EditRejectedStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
                     aria-label="رقم الهوية"
                     aria-invalid={!!errors.id_number}
                   />
+
+                  <ErrorMessage
+                    name="id_number"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
+                  />
                 </div>
 
                 {/* Full Name Field */}
@@ -243,6 +211,12 @@ const EditRejectedStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
                     className={`focus:border-primary`}
                     aria-label="الاسم رباعي"
                     aria-invalid={!!errors.name}
+                  />
+
+                  <ErrorMessage
+                    name="name"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
                 </div>
 
