@@ -1,3 +1,4 @@
+import { UserInterface } from "@/app/interfaces";
 import EditProfileForm from "@/components/UI/Forms/editProfileForm";
 import { dateConversion, getRoleInArabic } from "@/conversions";
 import { cookies } from "next/headers";
@@ -25,8 +26,7 @@ const ProfileDetails = async () => {
   };
 
   const response = await userDetails();
-  const { id_number, name, phone_number, email, image, role, createdAt } =
-    response.data;
+  const data: UserInterface = response?.data;
 
   return (
     <div className="flex-col md:flex md:flex-row gap-4 md:gap-4 mt-8">
@@ -35,9 +35,9 @@ const ProfileDetails = async () => {
       <EditProfileForm
         data={
           response && {
-            name,
-            id_number,
-            phone_number,
+            name: data.name,
+            id_number: data.id_number,
+            phone_number: data.phone_number,
           }
         }
       />
@@ -49,7 +49,7 @@ const ProfileDetails = async () => {
               <div className="relative flex items-center justify-center bg-secondary p-6 rounded-t-md ">
                 <div className="flex items-center justify-center w-[100px] h-[100px] rounded-full border-2 p-[2px]">
                   <Image
-                    src={image || "/notFound.png"}
+                    src={data?.image || "/notFound.png"}
                     width={100}
                     height={100}
                     alt="صورة الملف الشخصي"
@@ -66,7 +66,7 @@ const ProfileDetails = async () => {
             </td>
 
             <td className="py-3 px-4 border-b text-right text-sm ">
-              {name || "الاسم غير معرّف"}
+              {data?.name || "الاسم غير معرّف"}
             </td>
           </tr>
 
@@ -76,7 +76,7 @@ const ProfileDetails = async () => {
             </td>
 
             <td className="py-3 px-4 border-b text-right text-sm ">
-              {email || "البريد الالكتروني غير معرّف"}
+              {data?.email || "البريد الالكتروني غير معرّف"}
             </td>
           </tr>
 
@@ -86,7 +86,8 @@ const ProfileDetails = async () => {
             </td>
 
             <td className="py-3 px-4 border-b text-right text-sm ">
-              {(role && getRoleInArabic(role)) || "صلاحية الحساب غير معرّفة"}
+              {(data?.role && getRoleInArabic(data?.role)) ||
+                "صلاحية الحساب غير معرّفة"}
             </td>
           </tr>
 
@@ -96,7 +97,7 @@ const ProfileDetails = async () => {
             </td>
 
             <td className="py-3 px-4 text-right text-sm">
-              {(createdAt && dateConversion(new Date(createdAt))) ||
+              {(data?.createdAt && dateConversion(new Date(data.createdAt))) ||
                 "تاريخ الإنشاء غير معرّف"}
             </td>
           </tr>

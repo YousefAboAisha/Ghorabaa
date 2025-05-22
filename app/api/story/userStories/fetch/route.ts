@@ -14,14 +14,16 @@ export async function GET(req: NextRequest) {
 
     const token = await getToken({ req, secret });
 
-    if (!token?.email) {
-      return NextResponse.json(
-        { error: "لم يتم تسجيل الدخول" },
-        { status: 401 }
+    let favoritesArray: string[] = [];
+
+    if (token?.email) {
+      const user = await usersCollection.findOne({ email: token.email });
+      favoritesArray = (user?.favoritesArray || []).map((id: ObjectId) =>
+        id.toString()
       );
     }
 
-    const user = await usersCollection.findOne({ email: token.email });
+    const user = await usersCollection.findOne({ email: token?.email });
 
     if (!user) {
       return NextResponse.json(
@@ -46,11 +48,20 @@ export async function GET(req: NextRequest) {
       .sort({ createdAt: -1 })
       .toArray();
 
-    const serializedStories = stories.map((story) => ({
-      ...story,
-      _id: story._id.toString(),
-      publisher_id: story.publisher_id.toString(),
-    }));
+    const serializedStories = stories.map((s) => {
+      const isFavorite = favoritesArray.includes(s._id.toString());
+      // Debug log: compare story id and favoritesArray
+      console.log(
+        `Story ID: ${s._id.toString()}, Is Favorite: ${isFavorite}, Favorites: ${JSON.stringify(
+          favoritesArray
+        )}`
+      );
+      return {
+        ...s,
+        _id: s._id.toString(),
+        favorite: isFavorite,
+      };
+    });
 
     return NextResponse.json(
       { message: "تم جلب القصص بنجاح", data: serializedStories },

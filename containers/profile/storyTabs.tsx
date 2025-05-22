@@ -5,9 +5,9 @@ import { StoryInterface } from "@/app/interfaces";
 import StoryCard from "@/components/UI/cards/storyCard";
 import StoryPendingCard from "@/components/UI/cards/storyPendingCard";
 import StoryRejectedCard from "@/components/UI/cards/storyRejectedCard";
-import { StoryTapsData } from "@/data/storyTapsData";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import { Session } from "next-auth";
+import { StoryTabsData } from "@/data/storyTabsData";
 
 type StoryCounts = {
   [key in StoryStatus]: number;
@@ -58,6 +58,20 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
     fetchStories(currentTap);
   }, [currentTap]);
 
+  const getBorderColor = (status: StoryStatus) => {
+    if (status !== currentTap) return ""; // ✅ Only add color to active tab
+    switch (status) {
+      case StoryStatus.APPROVED:
+        return "border-primary";
+      case StoryStatus.PENDING:
+        return "border-orange-500";
+      case StoryStatus.REJECTED:
+        return "border-red-600";
+      default:
+        return "";
+    }
+  };
+
   const renderStoryContainer = () => {
     if (loading) return <StoryCardSkeletonLoader length={4} />;
     if (stories.length === 0)
@@ -101,13 +115,13 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
     <div className="section relative">
       {/* Tabs */}
       <div className="flex items-center gap-4 text-sm overflow-auto scrollbar-hidden">
-        {StoryTapsData.map(({ label, status, color }) => (
+        {StoryTabsData.map(({ label, status, color }) => (
           <div
             key={status}
             title={status}
-            className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit ${
-              currentTap === status ? `border-${color}` : ""
-            } select-none`}
+            className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
+              status
+            )}`}
             onClick={() => setCurrentTap(status)}
           >
             <p>{label}</p>

@@ -1,13 +1,13 @@
 import { StoryStatus } from "@/app/enums";
 
-export const StoryTapsData = [
+export const StoryTabsData = [
   {
     label: "الطلبات المقبولة",
     status: StoryStatus.APPROVED,
     color: "primary",
   },
   {
-    label: "بانتظار الموافقة",
+    label: "قيد المراجعة",
     status: StoryStatus.PENDING,
     color: "orange-500",
   },
