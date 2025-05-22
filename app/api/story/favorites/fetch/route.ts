@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import mongoose from "mongoose";
 import { getToken } from "next-auth/jwt";
+import { StoryStatus } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest) {
     );
 
     const favoriteStories = await storiesCollection
-      .find({ _id: { $in: storyIds } })
+      .find({ _id: { $in: storyIds }, status: StoryStatus.APPROVED })
       .toArray();
 
     return NextResponse.json({ data: favoriteStories });

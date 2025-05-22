@@ -1,11 +1,11 @@
 import clientPromise from "@/app/lib/mongodb";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { StoryStatus } from "@/app/enums";
 
 type Params = Promise<{ id: string }>;
 
-export async function GET(req: NextRequest, { params }: { params: Params }) {
+export async function GET({ params }: { params: Params }) {
   try {
     const { id } = await params;
 
