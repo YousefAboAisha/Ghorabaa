@@ -7,6 +7,7 @@ import Heading from "@/components/UI/typography/heading";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import Link from "next/link";
 import React, { useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BiSearch } from "react-icons/bi";
 import { FaEye } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
@@ -15,6 +16,17 @@ const Page = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalopen, setIsModalopen] = useState<boolean>(false);
+
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return;
+    setLoading(true);
+
+    // Example async search
+    setTimeout(() => {
+      console.log("Searching for:", searchQuery);
+      setLoading(false);
+    }, 1000);
+  };
 
   return (
     <div className="container lg:w-6/12 mt-24 min-h-screen">
@@ -26,29 +38,31 @@ const Page = () => {
           className="text-center"
         />
 
-        <div className="flex items-center justify-between w-full mt-8 gap-4">
-          <div className="relative w-full md:w-full">
+        <div className="relative w-full mt-8 overflow-hidden">
+          <div className="relative w-full md:w-full border-none">
             <Input
               placeholder="أدخل رقم هوية الشهيد.."
               className="bg-white w-full border focus:border-secondary"
               type="text"
               icon={<BiSearch size={20} />}
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSearch();
               }}
             />
           </div>
 
-          <div className="w-2/12 md:3/12 min-w-fit ">
-            <Button
-              title={loading ? "جارٍ البحث" : "بحث"}
-              className="bg-secondary text-white px-4 h-[48px] w-full text-[14px]"
-              icon={<BiSearch size={16} />}
-              loading={loading}
-              disabled={loading}
-              hasShiningBar={false}
-            />
+          <div
+            title="البحث عن الشهيد"
+            className="absolute left-0 top-[50%] -translate-y-[50%] h-full bg-secondary text-white p-4 flex items-center justify-center rounded-l-xl cursor-pointer"
+            onClick={handleSearch}
+          >
+            {loading ? (
+              <AiOutlineLoading3Quarters size={17} className="animate-spin" />
+            ) : (
+              <BiSearch size={17} />
+            )}
           </div>
         </div>
 
