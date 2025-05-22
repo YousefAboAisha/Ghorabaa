@@ -32,11 +32,6 @@ const StoryCardSkeletonLoader = ({
               <div className="flex flex-col items-center justify-center h-5 w-2/12 rounded-xl bg-gray-300 animate-pulse"></div>
               <div className="flex flex-col items-center justify-center h-4 w-5/12 rounded-xl bg-gray-300 animate-pulse"></div>
             </div>
-
-            <div className="flex items-center gap-2 w-full">
-              <div className="flex flex-col items-center justify-center h-5 w-2/12 rounded-xl bg-gray-300 animate-pulse"></div>
-              <div className="flex flex-col items-center justify-center h-4 w-7/12 rounded-xl bg-gray-300 animate-pulse"></div>
-            </div>
           </div>
         </div>
       ))}

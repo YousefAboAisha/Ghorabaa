@@ -8,6 +8,7 @@ import StoryRejectedCard from "@/components/UI/cards/storyRejectedCard";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import { Session } from "next-auth";
 import { StoryTabsData } from "@/data/storyTabsData";
+import RejectAndPendingCardSkeltonLoader from "@/components/UI/loaders/rejectAndPendingCardSkeltonLoader";
 
 type StoryCounts = {
   [key in StoryStatus]: number;
@@ -73,13 +74,11 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   };
 
   const renderStoryContainer = () => {
-    if (loading) return <StoryCardSkeletonLoader length={4} />;
-    if (stories.length === 0)
-      return <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>;
-
     switch (currentTap) {
       case StoryStatus.APPROVED:
-        return (
+        return loading ? (
+          <StoryCardSkeletonLoader length={4} />
+        ) : stories.length > 0 ? (
           <div className="cards-grid-4">
             {stories?.map((story: StoryInterface) => (
               <StoryCard
@@ -89,24 +88,34 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
               />
             ))}
           </div>
+        ) : (
+          <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
         );
 
       case StoryStatus.PENDING:
-        return (
+        return loading ? (
+          <RejectAndPendingCardSkeltonLoader length={3} />
+        ) : stories.length > 0 ? (
           <div className="cards-grid-3">
             {stories?.map((story: StoryInterface) => (
               <StoryPendingCard key={story._id as string} data={story} />
             ))}
           </div>
+        ) : (
+          <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
         );
 
-      case StoryStatus?.REJECTED:
-        return (
+      case StoryStatus.REJECTED:
+        return loading ? (
+          <RejectAndPendingCardSkeltonLoader length={3} />
+        ) : stories.length > 0 ? (
           <div className="cards-grid-3">
-            {stories.map((story: StoryInterface) => (
+            {stories?.map((story: StoryInterface) => (
               <StoryRejectedCard key={story._id as string} data={story} />
             ))}
           </div>
+        ) : (
+          <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
         );
     }
   };
