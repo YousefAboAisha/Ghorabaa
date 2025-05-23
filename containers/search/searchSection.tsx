@@ -24,9 +24,16 @@ const SearchSection = ({ session }: SearchSectionProps) => {
     const delayDebounce = setTimeout(() => {
       if (searchQuery.length > 0) {
         setLoading(true);
-        fetch(`/api/story/search?query=${encodeURIComponent(searchQuery)}`, {
-          credentials: "include",
-        })
+
+        // hasCompleteProfile=true query is to return the stories with complete profiles only!
+        fetch(
+          `/api/story/search?query=${encodeURIComponent(
+            searchQuery
+          )}&hasCompleteProfile=true`,
+          {
+            credentials: "include",
+          }
+        )
           .then((res) => {
             if (!res.ok) {
               throw new Error("Failed to fetch");

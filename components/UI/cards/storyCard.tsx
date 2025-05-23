@@ -44,7 +44,7 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
           </p>
         </div>
 
-        <p className="text-gray-600 text-[13px] mt-2 line-clamp-2 h-10">
+        <p className="text-gray-600 text-[13px] mt-2 line-clamp-2 h-9">
           {data?.bio}
         </p>
       </div>

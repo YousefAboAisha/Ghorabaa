@@ -62,7 +62,8 @@ module.exports = {
         shake: "shake 0.7s linear 1",
       },
       backgroundImage: {
-        "home-landing": "url('/home-landing2.jpg')",
+        "home-landing": "url('/home-landing.jpg')",
+        "home-landing2": "url('/home-landing2.jpg')",
         "donation-banner": "url('/donation_banner.jpg')",
         "event-banner": "url('/event.jpg')",
       },

@@ -10,7 +10,7 @@ import ProfilePopper from "./UI/modals/profilePopper";
 import { FiUser } from "react-icons/fi";
 import Logo from "./UI/logo";
 import NotificationPopper from "./UI/modals/notificationPopper";
-import { BsBookmark } from "react-icons/bs";
+import { BsBookmark, BsPersonAdd, BsSearch } from "react-icons/bs";
 import { Session } from "next-auth";
 
 type NavbarProps = {
@@ -64,20 +64,54 @@ const Navbar = ({ session }: NavbarProps) => {
           </div>
 
           {/* Conditionally render Sign In or Profile Icon */}
-          {!session ? (
-            <Link href={"/signin"} className="h-full outline-none" prefetch>
-              <Button
+          {session ? (
+            <div className="flex items-center gap-2">
+              <Link
+                href={"/signin"}
+                className="h-full outline-none hidden md:flex"
+                prefetch
+              >
+                <Button
+                  title="تسجيل الدخول"
+                  className="bg-primary px-4 md:px-3"
+                  icon={<FiUser />}
+                  hasShiningBar={false}
+                />
+              </Link>
+
+              <Link
                 title="تسجيل الدخول"
-                className="bg-primary px-4 md:px-3"
-                icon={<FiUser />}
-                hasShiningBar={false}
-              />
-            </Link>
+                prefetch
+                href={"/signin"}
+                className="flex md:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+              >
+                <BsPersonAdd size={22} />
+              </Link>
+
+              <Link
+                title="البحث عن الشهداء"
+                prefetch
+                href={"/search"}
+                className="flex md:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+              >
+                <BsSearch  />
+              </Link>
+            </div>
           ) : (
             <div className="flex items-center">
               <ProfilePopper session={session} />
 
               <NotificationPopper />
+
+              <Link
+                title="البحث عن الشهداء"
+                prefetch
+                href={"/search"}
+                className="flex items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+              >
+                <BsSearch />
+              </Link>
+
               <Link
                 title="القصص المحفوظة"
                 prefetch

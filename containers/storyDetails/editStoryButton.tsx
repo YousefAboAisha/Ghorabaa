@@ -16,6 +16,7 @@ const EditStoryButton = ({ data }: EditStoryButtonProps) => {
   return (
     <>
       <div
+        title="تعديل القصة"
         onClick={() => setIsOpen(true)}
         className="group absolute top-2 left-2 p-1 bg-white border rounded-md z-10 cursor-pointer"
       >

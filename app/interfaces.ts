@@ -7,6 +7,7 @@ import {
   ReportStatus,
   Role,
   StoryStatus,
+  NotificationTypes,
 } from "./enums";
 
 // Define the User interface
@@ -14,12 +15,13 @@ export interface UserInterface extends Document {
   image: string;
   name: string;
   phone_number?: string;
-  id_number?:string;
+  id_number?: string;
   email: string;
   password?: string;
   role: Role;
   provider: ProviderTypes;
   favorites: StoryInterface[];
+  notifications: NotificationInterface[];
   createdAt: Date;
 }
 
@@ -95,4 +97,21 @@ export interface DonationInterface extends Document {
   donationCampaign_id: Types.ObjectId | string; // Reference to the Donation Campaign that a user has made a donation on.
   user_id: Types.ObjectId | string; // Reference to the user who made the donation.
   createdAt: Date;
+}
+
+// Define the Notification Interface
+export interface NotificationInterface extends Document {
+  title: string;
+  user_id: Types.ObjectId | string; // Reference to the user who will recieve the notification
+  story_id: Types.ObjectId | string; // Reference to the story which the user have made comment on OR it has been [APPROVED | REJECTED ]
+  notification_type: NotificationTypes; // Comment or story update [APPROVED | REJECTED]
+  createdAt: Date;
+}
+
+// Define the StoryNotification Interface
+export interface StoryNotificationInterface extends NotificationInterface {}
+
+// Define the CommentNotification Interface
+export interface CommentNotificationInterface extends NotificationInterface {
+  author_name: string; // Reference to the user who made the action [Adding a comment]
 }

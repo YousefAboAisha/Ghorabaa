@@ -78,12 +78,12 @@ function ProfilePopper({ session }: ProfilePopperProps) {
         <MenuItems
           anchor={{ to: "bottom start", gap: "4px" }}
           transition
-          className="flex flex-col gap-2 min-w-48 bg-white z-[100000] rounded-xl border shadow-2xl origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 outline-none"
+          className="flex flex-col gap-2 w-48 bg-white z-[100000] rounded-xl border shadow-2xl origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 outline-none"
         >
-          <MenuItem disabled>
-            <span className="flex items-center gap-2 p-4 bg-gray_light text-[13px]">
-              {session?.user?.email}
-            </span>
+          <MenuItem disabled as={"div"} className="overflow-hidden">
+            <p className="flex items-center gap-2 p-4 bg-gray_light text-[13px] truncate whitespace-nowrap overflow-hidden text-ellipsis w-full">
+              {session?.user?.name}
+            </p>
           </MenuItem>
 
           <div className="p-1 flex flex-col gap-2">

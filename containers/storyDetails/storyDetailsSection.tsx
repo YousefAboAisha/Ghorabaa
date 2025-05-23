@@ -77,7 +77,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
           <h4 className="text-lg font-extrabold">الشهيد | {data.name}</h4>
         </div>
 
-        <table className="h-full w-full border mt-8">
+        <table className="h-full w-full border mt-4">
           <tbody className="bg-white h-full">
             <tr>
               <td
