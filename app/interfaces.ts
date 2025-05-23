@@ -101,17 +101,21 @@ export interface DonationInterface extends Document {
 
 // Define the Notification Interface
 export interface NotificationInterface extends Document {
-  title: string;
   user_id: Types.ObjectId | string; // Reference to the user who will recieve the notification
+  title: string;
+  notification_type: NotificationTypes;
   story_id: Types.ObjectId | string; // Reference to the story which the user have made comment on OR it has been [APPROVED | REJECTED ]
-  notification_type: NotificationTypes; // Comment or story update [APPROVED | REJECTED]
   createdAt: Date;
 }
 
 // Define the StoryNotification Interface
-export interface StoryNotificationInterface extends NotificationInterface {}
+export interface StoryNotificationInterface extends NotificationInterface {
+  notification_type: NotificationTypes.ACCEPT | NotificationTypes.REJECT;
+}
 
 // Define the CommentNotification Interface
 export interface CommentNotificationInterface extends NotificationInterface {
   author_name: string; // Reference to the user who made the action [Adding a comment]
+  author_id: Types.ObjectId | string; // Reference to the user who made the action [Adding a comment]
+  notification_type: NotificationTypes.COMMENT;
 }
