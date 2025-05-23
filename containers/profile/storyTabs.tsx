@@ -124,6 +124,8 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
     }
   };
 
+  console.log("currentTap", currentTap);
+
   return (
     <div className="section relative">
       {/* Tabs */}

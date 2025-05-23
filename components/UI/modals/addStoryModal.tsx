@@ -1,9 +1,8 @@
 "use client";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { BiIdCard, BiSend, BiUser } from "react-icons/bi";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { BiSend } from "react-icons/bi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@/components/UI/inputs/button";
-import Input from "@/components/UI/inputs/input";
 import Heading from "@/components/UI/typography/heading";
 import Select from "@/components/UI/inputs/selectInput";
 import TextArea from "@/components/UI/inputs/textArea";
@@ -21,9 +20,10 @@ type AddStoryPrpos = {
   loading?: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  story_id: string;
 };
 
-const AddStoryModal = ({ setLoading, setIsOpen }: AddStoryPrpos) => {
+const AddStoryModal = ({ setLoading, setIsOpen, story_id }: AddStoryPrpos) => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
@@ -31,10 +31,6 @@ const AddStoryModal = ({ setLoading, setIsOpen }: AddStoryPrpos) => {
 
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
-    id_number: "",
-    name: "",
-    birth_date: "",
-    death_date: "",
     city: "",
     neighborhood: "",
     bio: "",
@@ -73,13 +69,13 @@ const AddStoryModal = ({ setLoading, setIsOpen }: AddStoryPrpos) => {
         return;
       }
 
-      const response = await fetch("/api/story/create", {
+      const response = await fetch("/api/story/storyDetails/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include", // 👈 THIS IS CRITICAL
-        body: JSON.stringify({ ...values, image: url }),
+        body: JSON.stringify({ ...values, image: url, story_id }),
       });
 
       const data = await response.json();
@@ -96,6 +92,7 @@ const AddStoryModal = ({ setLoading, setIsOpen }: AddStoryPrpos) => {
       toast.success(
         "تم إرسال طلب نشر القصة بنجاح، وستتم مراجعته في أقرب وقت !"
       );
+
       setSubmitting(false);
       setLoading(false);
       setIsOpen(false);
@@ -107,12 +104,6 @@ const AddStoryModal = ({ setLoading, setIsOpen }: AddStoryPrpos) => {
       console.error("Error adding martyr", error);
     }
   };
-
-  useEffect(() => {
-    toast.success(
-      "تمت إضافة طلب نشر القصة بنجاح، وسيتم مراجعتها وإشعاركم في حال قبولها أو رفضها!"
-    );
-  });
 
   return (
     <div className="relative flex items-center justify-center">
@@ -135,92 +126,6 @@ const AddStoryModal = ({ setLoading, setIsOpen }: AddStoryPrpos) => {
 
             return (
               <Form className="flex flex-col gap-4">
-                {/* ID Number Field */}
-                <div>
-                  <Field
-                    required={false}
-                    name="id_number"
-                    as={Input}
-                    type="text"
-                    placeholder="رقم الهوية"
-                    label="رقم الهوية"
-                    icon={<BiIdCard />}
-                    className={`focus:border-primary`}
-                    aria-label="رقم الهوية"
-                    aria-invalid={!!errors.id_number}
-                  />
-
-                  <ErrorMessage
-                    name="id_number"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-                </div>
-
-                {/* Full Name Field */}
-                <div>
-                  <Field
-                    required={false}
-                    name="name"
-                    as={Input}
-                    type="text"
-                    placeholder="اسم الشهيد رباعي"
-                    label="الاسم رباعي"
-                    icon={<BiUser />}
-                    className={`focus:border-primary`}
-                    aria-label="الاسم رباعي"
-                    aria-invalid={!!errors.name}
-                  />
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-                </div>
-
-                {/* Birth Date and Death Date Fields */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  <div>
-                    <Field
-                      required={false}
-                      name="birth_date"
-                      as={Input}
-                      type="date"
-                      placeholder="تاريخ الميلاد"
-                      label="تاريخ الميلاد"
-                      className={`focus:border-primary`}
-                      aria-label="تاريخ الميلاد"
-                      aria-invalid={!!errors.birth_date}
-                    />
-
-                    <ErrorMessage
-                      name="birth_date"
-                      component="div"
-                      className="text-red-500 mt-2 font-semibold text-[10px]"
-                    />
-                  </div>
-
-                  <div>
-                    <Field
-                      required={false}
-                      name="death_date"
-                      as={Input}
-                      type="date"
-                      placeholder="تاريخ الاستشهاد"
-                      label="تاريخ الاستشهاد"
-                      className={`focus:border-primary`}
-                      aria-label="تاريخ الاستشهاد"
-                      aria-invalid={!!errors.death_date}
-                    />
-
-                    <ErrorMessage
-                      name="death_date"
-                      component="div"
-                      className="text-red-500 mt-2 font-semibold text-[10px]"
-                    />
-                  </div>
-                </div>
-
                 {/* City and Neighbourhood Fields */}
                 <div>
                   <Select

@@ -46,7 +46,13 @@ export async function PUT(req: NextRequest) {
 
     const updated = await storiesCollection.findOneAndUpdate(
       { _id: new ObjectId(_id) },
-      { $set: { status: StoryStatus.PENDING, ...updateFields } },
+      {
+        $set: {
+          ...updateFields,
+          status: StoryStatus.PENDING,
+          updatedAt: new Date(),
+        },
+      },
       { returnDocument: "after" }
     );
 

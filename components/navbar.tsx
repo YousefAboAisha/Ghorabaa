@@ -64,7 +64,7 @@ const Navbar = ({ session }: NavbarProps) => {
           </div>
 
           {/* Conditionally render Sign In or Profile Icon */}
-          {session ? (
+          {!session ? (
             <div className="flex items-center gap-2">
               <Link
                 href={"/signin"}

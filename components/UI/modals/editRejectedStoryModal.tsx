@@ -1,9 +1,8 @@
 "use client";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { BiIdCard, BiSend, BiUser } from "react-icons/bi";
+import { BiSend } from "react-icons/bi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@/components/UI/inputs/button";
-import Input from "@/components/UI/inputs/input";
 import Heading from "@/components/UI/typography/heading";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -39,10 +38,6 @@ const EditRejectedStoryModal = ({
 
   const {
     _id,
-    id_number,
-    name,
-    birth_date,
-    death_date,
     city,
     neighborhood,
     bio,
@@ -53,10 +48,6 @@ const EditRejectedStoryModal = ({
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
     _id,
-    id_number,
-    name,
-    birth_date,
-    death_date,
     city,
     neighborhood,
     bio,
@@ -172,93 +163,6 @@ const EditRejectedStoryModal = ({
 
             return (
               <Form className="flex flex-col gap-4">
-                {/* ID Number Field */}
-                <div>
-                  <Field
-                    required={false}
-                    name="id_number"
-                    as={Input}
-                    type="text"
-                    placeholder="رقم الهوية"
-                    label="رقم الهوية"
-                    icon={<BiIdCard />}
-                    className={`focus:border-primary`}
-                    aria-label="رقم الهوية"
-                    aria-invalid={!!errors.id_number}
-                  />
-
-                  <ErrorMessage
-                    name="id_number"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-                </div>
-
-                {/* Full Name Field */}
-                <div>
-                  <Field
-                    required={false}
-                    name="name"
-                    as={Input}
-                    type="text"
-                    placeholder="اسم الشهيد رباعي"
-                    label="الاسم رباعي"
-                    icon={<BiUser />}
-                    className={`focus:border-primary`}
-                    aria-label="الاسم رباعي"
-                    aria-invalid={!!errors.name}
-                  />
-
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-                </div>
-
-                {/* Birth Date and Death Date Fields */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  <div>
-                    <Field
-                      required={false}
-                      name="birth_date"
-                      as={Input}
-                      type="date"
-                      placeholder="تاريخ الميلاد"
-                      label="تاريخ الميلاد"
-                      className={`focus:border-primary`}
-                      aria-label="تاريخ الميلاد"
-                      aria-invalid={!!errors.birth_date}
-                    />
-
-                    <ErrorMessage
-                      name="birth_date"
-                      component="div"
-                      className="text-red-500 mt-2 font-semibold text-[10px]"
-                    />
-                  </div>
-
-                  <div>
-                    <Field
-                      required={false}
-                      name="death_date"
-                      as={Input}
-                      type="date"
-                      placeholder="تاريخ الاستشهاد"
-                      label="تاريخ الاستشهاد"
-                      className={`focus:border-primary`}
-                      aria-label="تاريخ الاستشهاد"
-                      aria-invalid={!!errors.death_date}
-                    />
-
-                    <ErrorMessage
-                      name="death_date"
-                      component="div"
-                      className="text-red-500 mt-2 font-semibold text-[10px]"
-                    />
-                  </div>
-                </div>
-
                 {/* City and Neighbourhood Fields */}
                 <div>
                   <Select

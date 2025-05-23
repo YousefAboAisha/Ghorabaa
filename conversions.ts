@@ -16,6 +16,19 @@ export const dateConversion = (date: Date): string => {
   return formattedDate;
 };
 
+export const arabicDateConversion = (date: Date): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  };
+
+  const dateObj = new Date(date);
+  const formattedDate = dateObj.toLocaleDateString("ar-EG", options);
+
+  return formattedDate;
+};
+
 export function getRoleInArabic(role: Role): string {
   switch (role) {
     case Role.ADMIN:

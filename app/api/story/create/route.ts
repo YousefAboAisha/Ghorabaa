@@ -51,17 +51,10 @@ export async function POST(originalReq: Request) {
     // }
 
     const story = new Story({
-      id_number: body.id_number,
-      name: body.name,
-      birth_date: body.birth_date,
-      death_date: body.death_date,
-      city: body.city,
-      neighborhood: body.neighborhood,
-      bio: body.bio,
-      image: body.image,
+      ...body,
       publisher_id: token.id,
       status: StoryStatus.PENDING,
-      hasCompleteProfile: false,
+      hasCompleteProfile: true,
       createdAt: new Date(),
     });
 

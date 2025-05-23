@@ -1,11 +1,9 @@
 "use client";
 import Button from "@/components/UI/inputs/button";
-import Input from "@/components/UI/inputs/input";
 import TableSkeletonLoader from "@/components/UI/loaders/tableSkeletonLoader";
 import AddStoryModal from "@/components/UI/modals/addStoryModal";
 import Modal from "@/components/UI/modals/modal";
 import Heading from "@/components/UI/typography/heading";
-import PageTitles from "@/components/UI/typography/pageTitles";
 import Link from "next/link";
 import React, { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -15,38 +13,55 @@ import { FiPlus } from "react-icons/fi";
 import "react-toastify/dist/ReactToastify.css";
 import { StoryInterface } from "../interfaces";
 import { ToastContainer } from "react-toastify";
+import * as Yup from "yup";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import Input from "@/components/UI/inputs/input";
+import { arabicDateConversion } from "@/conversions";
 
 const Page = () => {
-  const [searchQuery, setSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [searchData, setSearchData] = useState<StoryInterface>();
+  const [searchData, setSearchData] = useState<StoryInterface | null>();
 
-  const handleSearch = () => {
+  const initialValues = {
+    id_number: "",
+  };
+
+  const validationSchema = Yup.object({
+    id_number: Yup.string()
+      .required("يرجى إدخال رقم الهوية")
+      .matches(/^\d{9}$/, "يجب أن يتكون رقم الهوية من 9 أرقام بالضبط"),
+  });
+
+  const fetchStoryDetails = async (searchQuery: string) => {
     setLoading(true);
 
-    // hasCompleteProfile=false query is to return all the stories [including the complete and non-complete profiles]
-    fetch(
-      `/api/story/search?query=${encodeURIComponent(
-        searchQuery
-      )}&hasCompleteProfile=false`,
+    const response = await fetch(
+      `/api/story/searchByIdNumber?query=${encodeURIComponent(searchQuery)}`,
       {
         credentials: "include",
       }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setSearchData(data);
-        console.log("Data inside the useEffect", data);
-      })
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
+    );
+
+    if (!response.ok) {
+      setLoading(false);
+      setSearchData(null);
+      throw new Error("Failed to fetch comments");
+    }
+
+    const result = await response.json();
+    if (result && result.data) {
+      setSearchData(result.data);
+      setLoading(false);
+    }
+    setLoading(false);
   };
+
+  const age =
+    searchData?.death_date && searchData?.birth_date
+      ? new Date(searchData.death_date).getFullYear() -
+        new Date(searchData.birth_date).getFullYear()
+      : "N/A";
 
   return (
     <>
@@ -65,42 +80,66 @@ const Page = () => {
         className={"text-sm"}
       />
 
-      <div className="container lg:w-6/12 mt-24 min-h-screen">
-        <PageTitles />
-
-        <div className="min-h-[60vh] flex flex-col justify-center items-center">
+      <div className="container lg:w-6/12 mt-32 min-h-screen">
+        <div className="flex flex-col justify-center items-center">
           <Heading
             title="إضافة قصة جديدة"
             details="قم بالبحث عن الشهيد المُراد إضافة قصة عنه"
             className="text-center"
           />
 
-          <div className="relative w-full mt-8 overflow-hidden">
-            <div className="relative w-full md:w-full border-none">
-              <Input
-                placeholder="أدخل رقم هوية الشهيد.."
-                className="bg-white w-full border focus:border-secondary"
-                type="text"
-                icon={<BiSearch size={20} />}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSearch();
-                }}
-              />
-            </div>
-
-            <div
-              title="البحث عن الشهيد"
-              className="absolute left-0 top-[50%] -translate-y-[50%] h-full bg-secondary text-white p-4 flex items-center justify-center rounded-l-xl cursor-pointer"
-              onClick={handleSearch}
+          <div className="relative w-full overflow-hidden">
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={(values, { setSubmitting }) => {
+                fetchStoryDetails(values.id_number).finally(() =>
+                  setSubmitting(false)
+                );
+              }}
             >
-              {loading ? (
-                <AiOutlineLoading3Quarters size={17} className="animate-spin" />
-              ) : (
-                <BiSearch size={17} />
+              {({ isSubmitting, errors, handleSubmit }) => (
+                <Form onSubmit={handleSubmit} className="mt-4">
+                  <div className="relative w-full overflow-hidden">
+                    <div className="relative w-full md:w-full border-none">
+                      <Field
+                        name="id_number"
+                        placeholder="أدخل رقم هوية الشهيد.."
+                        className="bg-white w-full border focus:border-secondary"
+                        as={Input}
+                        type="text"
+                        icon={<BiSearch size={20} />}
+                        aria-label="رقم الهوية"
+                        aria-invalid={!!errors.id_number}
+                      />
+
+                      {/* Trigger Formik's validation + submit */}
+                      <button
+                        type="submit"
+                        title="البحث عن الشهيد"
+                        className="absolute left-0 top-[50%] -translate-y-[50%] h-full bg-secondary text-white p-4 flex items-center justify-center rounded-l-xl"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          <AiOutlineLoading3Quarters
+                            size={17}
+                            className="animate-spin"
+                          />
+                        ) : (
+                          <BiSearch size={17} />
+                        )}
+                      </button>
+                    </div>
+
+                    <ErrorMessage
+                      name="id_number"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
+                    />
+                  </div>
+                </Form>
               )}
-            </div>
+            </Formik>
           </div>
 
           <div className="flex flex-col gap-2 w-full h-full mt-8">
@@ -125,7 +164,7 @@ const Page = () => {
                       </td>
 
                       <td className="py-3 px-4 border-b text-right text-sm">
-                        محمد عبد الله حسب الله
+                        {searchData.name}
                       </td>
                     </tr>
 
@@ -135,7 +174,7 @@ const Page = () => {
                       </td>
 
                       <td className="py-3 px-4 border-b text-right text-sm">
-                        407709260
+                        {searchData.id_number}
                       </td>
                     </tr>
 
@@ -155,7 +194,8 @@ const Page = () => {
                       </td>
 
                       <td className="py-3 px-4 border-b text-right text-sm">
-                        25 يناير 2002
+                        {searchData.birth_date &&
+                          arabicDateConversion(new Date(searchData.birth_date))}
                       </td>
                     </tr>
 
@@ -165,7 +205,8 @@ const Page = () => {
                       </td>
 
                       <td className="py-3 px-4 border-b text-right text-sm">
-                        8 ديسمبر 2023
+                        {searchData.birth_date &&
+                          arabicDateConversion(new Date(searchData.death_date))}
                       </td>
                     </tr>
 
@@ -175,7 +216,7 @@ const Page = () => {
                       </td>
 
                       <td className="py-3 px-4 border-b text-right text-sm">
-                        21 عاماً
+                        {age} عاماً
                       </td>
                     </tr>
 
@@ -185,7 +226,7 @@ const Page = () => {
                       </td>
 
                       <td className="py-3 px-4 text-right text-sm">
-                        {0 ? (
+                        {searchData.hasCompleteProfile ? (
                           <div className="flex items-center gap-2">
                             <p className="w-fit p-2 rounded-md text-[12px] bg-primary text-white">
                               مكتمل
@@ -202,9 +243,10 @@ const Page = () => {
                     </tr>
                   </tbody>
                 </table>
+
                 <div className="w-full md:w-4/12 mx-auto mt-3">
                   {searchData?.hasCompleteProfile ? (
-                    <Link href={`/stories/${searchData?.id}`}>
+                    <Link href={`/stories/${searchData?._id}`}>
                       <Button
                         title="عرض صفحة الشهيد"
                         className="bg-secondary text-white px-4"
@@ -232,7 +274,11 @@ const Page = () => {
         </div>
 
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} loading={loading}>
-          <AddStoryModal setLoading={setLoading} setIsOpen={setIsOpen} />
+          <AddStoryModal
+            setLoading={setLoading}
+            setIsOpen={setIsOpen}
+            story_id={searchData?._id as string}
+          />
         </Modal>
       </div>
     </>
