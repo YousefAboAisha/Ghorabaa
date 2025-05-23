@@ -111,7 +111,11 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
         ) : stories.length > 0 ? (
           <div className="cards-grid-3">
             {stories?.map((story: StoryInterface) => (
-              <StoryRejectedCard key={story._id as string} data={story} />
+              <StoryRejectedCard
+                key={story._id as string}
+                data={story}
+                refetchData={() => fetchStories(StoryStatus.REJECTED)}
+              />
             ))}
           </div>
         ) : (

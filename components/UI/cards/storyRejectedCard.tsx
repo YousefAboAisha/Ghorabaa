@@ -7,9 +7,10 @@ import EditRejectedStoryModal from "../modals/editRejectedStoryModal";
 
 interface StoryCardsProps {
   data: StoryInterface;
+  refetchData: () => void;
 }
 
-const StoryRejectedCard = ({ data }: StoryCardsProps) => {
+const StoryRejectedCard = ({ data, refetchData }: StoryCardsProps) => {
   const [isOpen, setIOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -35,7 +36,12 @@ const StoryRejectedCard = ({ data }: StoryCardsProps) => {
       </div>
 
       <Modal isOpen={isOpen} setIsOpen={setIOpen} loading={loading}>
-        <EditRejectedStoryModal setLoading={setLoading} data={data} />
+        <EditRejectedStoryModal
+          setLoading={setLoading}
+          setIsOpen={setIOpen}
+          data={data}
+          refetchData={refetchData}
+        />
       </Modal>
     </>
   );

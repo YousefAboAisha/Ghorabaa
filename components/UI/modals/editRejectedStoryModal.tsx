@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@/components/UI/inputs/button";
 import Input from "@/components/UI/inputs/input";
 import Heading from "@/components/UI/typography/heading";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "@/components/UI/inputs/selectInput";
 import TextArea from "@/components/UI/inputs/textArea";
@@ -21,10 +21,17 @@ import { StoryValidationSchema } from "@/app/validation/storySchema";
 type AddStoryPrpos = {
   loading?: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   data: StoryInterface;
+  refetchData: () => void;
 };
 
-const EditRejectedStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
+const EditRejectedStoryModal = ({
+  setLoading,
+  setIsOpen,
+  data,
+  refetchData,
+}: AddStoryPrpos) => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
@@ -105,14 +112,17 @@ const EditRejectedStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
         setFormErrors(data.error);
         console.log("Add Martyr Error:", data.error);
         setLoading(false);
-
         return;
       }
-
-      window.location.reload();
-      console.log("Martyr has been added successfully!", data);
-      setSubmitting(false);
       setLoading(false);
+      setSubmitting(false);
+      setIsOpen(false);
+
+      toast.success(
+        "تمت إعادة طلب نشر القصة بنجاح، وسيتم مراجعتها في أقرب وقت !"
+      );
+      refetchData();
+      console.log("Martyr has been added successfully!", data);
     } catch (error) {
       setSubmitting(false);
       setLoading(false);
@@ -143,20 +153,6 @@ const EditRejectedStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
 
   return (
     <div className="relative flex items-center justify-center">
-      {/* Toast Container */}
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={true} // Right-to-left for Arabic
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-
       <div className="relative w-full border p-8 bg-white">
         <Heading
           title=""

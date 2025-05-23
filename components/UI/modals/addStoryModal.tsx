@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiIdCard, BiSend, BiUser } from "react-icons/bi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@/components/UI/inputs/button";
@@ -15,19 +15,15 @@ import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
 import { StoryValidationSchema } from "@/app/validation/storySchema";
+import { toast } from "react-toastify";
 
 type AddStoryPrpos = {
   loading?: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  activateToast: () => void;
 };
 
-const AddStoryModal = ({
-  setLoading,
-  setIsOpen,
-  activateToast,
-}: AddStoryPrpos) => {
+const AddStoryModal = ({ setLoading, setIsOpen }: AddStoryPrpos) => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
@@ -94,14 +90,15 @@ const AddStoryModal = ({
         setFormErrors(data.error);
         console.log("Add Martyr Error:", data.error);
         setLoading(false);
-
         return;
       }
 
+      toast.success(
+        "تم إرسال طلب نشر القصة بنجاح، وستتم مراجعته في أقرب وقت !"
+      );
       setSubmitting(false);
       setLoading(false);
       setIsOpen(false);
-      activateToast();
       console.log("Martyr has been added successfully!", data);
     } catch (error) {
       setSubmitting(false);
@@ -110,6 +107,12 @@ const AddStoryModal = ({
       console.error("Error adding martyr", error);
     }
   };
+
+  useEffect(() => {
+    toast.success(
+      "تمت إضافة طلب نشر القصة بنجاح، وسيتم مراجعتها وإشعاركم في حال قبولها أو رفضها!"
+    );
+  });
 
   return (
     <div className="relative flex items-center justify-center">

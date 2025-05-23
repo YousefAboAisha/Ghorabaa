@@ -105,11 +105,13 @@ const EditStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
         setFormErrors(data.error);
         console.log("Add Martyr Error:", data.error);
         setLoading(false);
-
         return;
       }
+
       setSubmitting(false);
-      setLoading(false);
+      toast.success(
+        "تم إرسال طلب تعديل القصة بنجاح، وستتم مراجعته في أقرب وقت !"
+      );
       window.location.reload();
       console.log("Martyr has been added successfully!", data);
     } catch (error) {
