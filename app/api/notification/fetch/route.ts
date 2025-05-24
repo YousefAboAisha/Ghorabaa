@@ -8,7 +8,6 @@ const secret = process.env.NEXTAUTH_SECRET;
 export async function GET(req: NextRequest) {
   try {
     const token = await getToken({ req, secret });
-    console.log("User comments token", token);
 
     if (!token || !token.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -16,17 +15,23 @@ export async function GET(req: NextRequest) {
 
     const client = await clientPromise;
     const db = client.db("ghorabaa");
-    const collection = db.collection("comments");
-    const id = token.id;
+    const usersCollection = db.collection("users");
 
-    const comments = await collection
-      .find({ author_id: new ObjectId(id) })
-      .sort({ createdAt: -1 }) // Optional: newest first
-      .toArray();
+    const user = await usersCollection.findOne(
+      { _id: new ObjectId(token.id) },
+      {
+        projection: {
+          notifications: 1,
+        },
+      }
+    );
 
-    return NextResponse.json({ data: comments }, { status: 200 });
+    return NextResponse.json(
+      { data: user?.notifications ?? [] },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Error fetching comments:", error);
+    console.error("Error fetching notifications:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

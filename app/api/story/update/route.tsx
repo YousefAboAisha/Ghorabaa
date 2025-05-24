@@ -5,6 +5,7 @@ import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { StoryStatus } from "@/app/enums";
+import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -16,7 +17,7 @@ export async function PUT(req: NextRequest) {
 
     const userId = token?.id;
     const body = await req.json();
-    const { _id, publisher_id, ...updateFields } = body;
+    const { _id, publisher_id, bio, ...updateFields } = body;
 
     if (!_id) {
       return NextResponse.json({ error: "Missing story ID" }, { status: 400 });
@@ -44,11 +45,22 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Not authorized!" }, { status: 403 });
     }
 
+    let keywords: string[] = [];
+    if (bio && typeof bio === "string") {
+      try {
+        keywords = await extractArabicKeywords(bio);
+      } catch (err) {
+        console.warn("Keyword extraction failed:", err);
+      }
+    }
+
     const updated = await storiesCollection.findOneAndUpdate(
       { _id: new ObjectId(_id) },
       {
         $set: {
           ...updateFields,
+          ...(bio && { bio }),
+          keywords,
           status: StoryStatus.PENDING,
           updatedAt: new Date(),
         },

@@ -1,20 +1,12 @@
 import { DOMAIN_KEYWORDS } from "@/data/domainKeywords";
 
-function normalizeArabic(text: string) {
-  return text
-    .replace(/[\u064B-\u0652]/g, "") // Remove diacritics
-    .replace(/[إأآ]/g, "ا")
-    .replace(/ة/g, "ه")
-    .replace(/ى/g, "ي")
-    .replace(/[^\w\s]/gi, "") // Remove punctuation
-    .trim();
-}
-
 export function extractArabicKeywords(bio: string): string[] {
   if (!bio || typeof bio !== "string") return [];
 
   // Normalize bio text: remove punctuation and diacritics (tashkeel)
-  const normalized = normalizeArabic(bio);
+  const normalized = bio
+    .replace(/[^\u0621-\u064A\s]/g, "") // keep only Arabic letters and spaces
+    .replace(/[\u064B-\u065F]/g, ""); // remove Arabic diacritics
 
   const words = normalized.split(/\s+/).filter(Boolean);
 

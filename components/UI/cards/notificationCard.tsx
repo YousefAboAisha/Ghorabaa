@@ -1,15 +1,22 @@
-import { BsBan, BsDot } from "react-icons/bs";
+import { BsBan } from "react-icons/bs";
 import { BiComment } from "react-icons/bi";
 import { NotificationTypes } from "@/app/enums";
 import { FaTimesCircle } from "react-icons/fa";
 import { FiCheckCircle } from "react-icons/fi";
 import { FaCoins } from "react-icons/fa6";
+import { dateConversion } from "@/conversions";
 
 type NotificationTypesProps = {
   type: NotificationTypes;
+  title: string;
+  createdAt: Date;
 };
 
-const NotificationCard = ({ type }: NotificationTypesProps) => {
+const NotificationCard = ({
+  type,
+  title,
+  createdAt,
+}: NotificationTypesProps) => {
   switch (type) {
     case NotificationTypes.DONATION:
       return (
@@ -30,9 +37,7 @@ const NotificationCard = ({ type }: NotificationTypesProps) => {
           </div>
 
           <div className="absolute bottom-1 left-3 flex items-center gap-1 text-gray_dark text-[10px]">
-            <span>15 فبراير 2025</span>
-            <BsDot />
-            <span className="">12:00 صباحاً</span>
+            {dateConversion(createdAt)}
           </div>
         </div>
       );
@@ -54,9 +59,7 @@ const NotificationCard = ({ type }: NotificationTypesProps) => {
           </div>
 
           <div className="absolute bottom-1 left-3 flex items-center gap-1 text-gray_dark text-[10px]">
-            <span>15 فبراير 2025</span>
-            <BsDot />
-            <span className="">12:00 صباحاً</span>
+            {dateConversion(createdAt)}
           </div>
         </div>
       );
@@ -78,9 +81,7 @@ const NotificationCard = ({ type }: NotificationTypesProps) => {
           </div>
 
           <div className="absolute bottom-1 left-3 flex items-center gap-1 text-gray_dark text-[10px]">
-            <span>15 فبراير 2025</span>
-            <BsDot />
-            <span className="">12:00 صباحاً</span>
+            {dateConversion(createdAt)}
           </div>
         </div>
       );
@@ -101,9 +102,7 @@ const NotificationCard = ({ type }: NotificationTypesProps) => {
           </div>
 
           <div className="absolute bottom-1 left-3 flex items-center gap-1 text-gray_dark text-[10px]">
-            <span>15 فبراير 2025</span>
-            <BsDot />
-            <span className="">12:00 صباحاً</span>
+            {dateConversion(createdAt)}
           </div>
         </div>
       );
@@ -116,18 +115,10 @@ const NotificationCard = ({ type }: NotificationTypesProps) => {
             <BiComment size={13} />
           </div>
 
-          <div className="mt-3 font-normal text-[12px] mb-2">
-            تمت إضافة تعليق من قبل
-            <span className="text-gray_dark font-semibold mx-1">
-              [محمد العشي]
-            </span>
-            على قصتك.
-          </div>
+          <div className="mt-3 font-normal text-[12px] mb-2">{title}</div>
 
           <div className="absolute bottom-1 left-3 flex items-center gap-1 text-gray_dark text-[10px]">
-            <span>15 فبراير 2025</span>
-            <BsDot />
-            <span className="">12:00 صباحاً</span>
+            {dateConversion(createdAt)}
           </div>
         </div>
       );

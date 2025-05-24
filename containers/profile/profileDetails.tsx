@@ -26,7 +26,7 @@ const ProfileDetails = async () => {
   };
 
   const response = await userDetails();
-  const data: UserInterface = response?.data;
+  const data: UserInterface = response.data;
 
   return (
     <div className="flex-col md:flex md:flex-row gap-4 md:gap-4 mt-8">
@@ -35,9 +35,9 @@ const ProfileDetails = async () => {
       <EditProfileForm
         data={
           response && {
-            name: data.name,
-            id_number: data.id_number,
-            phone_number: data.phone_number,
+            name: data?.name,
+            id_number: data?.id_number,
+            phone_number: data?.phone_number,
           }
         }
       />

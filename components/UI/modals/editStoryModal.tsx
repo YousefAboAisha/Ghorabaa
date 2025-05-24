@@ -16,6 +16,7 @@ import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
 import { StoryValidationSchema } from "@/app/validation/storySchema";
+import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -29,16 +30,19 @@ const EditStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
 
-  const { _id, city, neighborhood, bio, image } = data;
+  const { _id, publisher_id, city, neighborhood, bio, image } = data;
 
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
     _id,
+    publisher_id,
     city,
     neighborhood,
     bio,
     image,
   };
+
+  console.log("Extracted keywords from bio", extractArabicKeywords(bio));
 
   const handleSubmit = async (
     values: typeof initialValues,

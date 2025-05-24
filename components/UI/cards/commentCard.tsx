@@ -1,6 +1,6 @@
 "use client";
 import { CommentInterface } from "@/app/interfaces";
-import { dateConversion } from "@/conversions";
+import { dateConversion, getRoleInArabic } from "@/conversions";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
 import { FaQuoteLeft } from "react-icons/fa6";
@@ -10,7 +10,7 @@ type CommentCardProps = {
 };
 
 const CommentCard = ({ data }: CommentCardProps) => {
-  const { author_image, author_name, text, createdAt } = data;
+  const { author_image, author_name, text, createdAt, author_role } = data;
   return (
     <div className="relative flex flex-col gap-4 p-5 rounded-3xl rounded-tr-none border bg-white shadow-sm w-full h-fit hover:shadow-md duration-200">
       <div className="flex items-center gap-2">
@@ -32,7 +32,9 @@ const CommentCard = ({ data }: CommentCardProps) => {
 
         <div className="flex flex-col gap-1">
           <h5 className="text-[13px] font-semibold">{author_name}</h5>
-          <p className="text-primary text-[10px] font-semibold">مستخدم عادي</p>
+          <p className="text-primary text-[10px] font-semibold">
+            {getRoleInArabic(author_role)}
+          </p>
         </div>
       </div>
 

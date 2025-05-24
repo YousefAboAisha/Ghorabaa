@@ -28,10 +28,11 @@ const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
   // Updated initialValues to include image
   const initialValues: Partial<CommentInterface> = {
     text: "",
-    user_id: session?.user?.id || "",
+    author_id: session?.user?.id || "",
     story_id: id,
     author_name: session?.user?.name || "",
     author_image: session?.user?.image || "",
+    author_role: session?.user.role,
   };
 
   // Updated validationSchema to include image validation (optional)
@@ -50,7 +51,7 @@ const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
               const response = await fetch("/api/comment/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values),
+                body: JSON.stringify({ ...values }),
                 credentials: "include", // 👈 THIS IS CRITICAL
               });
 

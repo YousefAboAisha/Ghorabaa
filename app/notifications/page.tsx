@@ -1,11 +1,12 @@
-import NotificationCard from "@/components/UI/cards/notificationCard";
 import PageTitles from "@/components/UI/typography/pageTitles";
-import { NotificationTypes } from "../enums";
 import { GrNotification } from "react-icons/gr";
-import { BsEye } from "react-icons/bs";
-import Button from "@/components/UI/inputs/button";
+import { cookies } from "next/headers";
+import { NotificationInterface } from "../interfaces";
+import NotificationsList from "@/containers/notifications/notificationsList";
+import { Suspense } from "react";
+import NotificationSkeletonLoader from "@/components/UI/loaders/notificationSkeletonLoader";
 
-const Page = () => {
+const Page = async () => {
   return (
     <div className="container mt-24">
       <div className="w-full md:container">
@@ -16,22 +17,13 @@ const Page = () => {
             <GrNotification className="rotate-[30deg]" />
           </div>
 
-          <div className="flex flex-col gap-2 pb-4 mt-6">
-            <NotificationCard type={NotificationTypes.ACCEPT} />
-            <NotificationCard type={NotificationTypes.BAN} />
-            <NotificationCard type={NotificationTypes.COMMENT} />
-            <NotificationCard type={NotificationTypes.DONATION} />
-            <NotificationCard type={NotificationTypes.REJECT} />
-          </div>
-
-          <div className="w-fit mx-auto mt-4">
-            <Button
-              title="إظهار المزيد"
-              icon={<BsEye />}
-              className="bg-primary text-white px-4"
-              hasShiningBar={false}
-            />
-          </div>
+          <Suspense
+            fallback={
+              <NotificationSkeletonLoader length={3} className="mt-6 flex flex-col gap-4" />
+            }
+          >
+            <NotificationsList />
+          </Suspense>
         </div>
       </div>
     </div>

@@ -69,8 +69,6 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
 
     const data = result[0];
 
-    console.log("Story [id] - status  ", data.status);
-
     if (!data) {
       return NextResponse.json(
         { error: "لم يتم العثور على الشهيد" },

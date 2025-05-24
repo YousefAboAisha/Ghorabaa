@@ -1,6 +1,6 @@
 import { Schema, model, models } from "mongoose";
 import { UserInterface } from "../interfaces";
-import { ProviderTypes, Role } from "../enums";
+import { NotificationTypes, ProviderTypes, Role } from "../enums";
 
 // Define the Martyr schema
 const userSchema = new Schema<UserInterface>(
@@ -52,6 +52,23 @@ const userSchema = new Schema<UserInterface>(
         ref: "Story", // Must match the model name used for stories
       },
     ],
+
+    notifications: {
+      type: [
+        {
+          title: String,
+          notification_type: {
+            type: String,
+            enum: Object.values(NotificationTypes),
+          },
+          story_id: { type: Schema.Types.ObjectId, ref: "Story" },
+          author_name: String,
+          author_id: { type: Schema.Types.ObjectId, ref: "User" },
+          createdAt: Date,
+        },
+      ],
+      default: [],
+    },
 
     role: {
       type: String,

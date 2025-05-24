@@ -94,14 +94,14 @@ const Navbar = ({ session }: NavbarProps) => {
                 href={"/search"}
                 className="flex md:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
-                <BsSearch  />
+                <BsSearch />
               </Link>
             </div>
           ) : (
             <div className="flex items-center">
               <ProfilePopper session={session} />
 
-              <NotificationPopper />
+              <NotificationPopper session={session} />
 
               <Link
                 title="البحث عن الشهداء"

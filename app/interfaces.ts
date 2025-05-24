@@ -54,11 +54,12 @@ export interface ReportInterface extends Document {
 
 // Define the Comment interface
 export interface CommentInterface extends Document {
+  author_id: Types.ObjectId | string; // Reference to the user who made the comment.
   author_name?: string;
   author_image?: string;
   text: string;
-  user_id: Types.ObjectId | string; // Reference to the user who made the comment.
   story_id: Types.ObjectId | string; // Reference to the content that a user has made a comment on.
+  author_role: Role;
   createdAt: Date;
 }
 
