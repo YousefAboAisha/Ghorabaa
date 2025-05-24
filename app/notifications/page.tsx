@@ -1,7 +1,5 @@
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { GrNotification } from "react-icons/gr";
-import { cookies } from "next/headers";
-import { NotificationInterface } from "../interfaces";
 import NotificationsList from "@/containers/notifications/notificationsList";
 import { Suspense } from "react";
 import NotificationSkeletonLoader from "@/components/UI/loaders/notificationSkeletonLoader";

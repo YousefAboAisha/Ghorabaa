@@ -26,9 +26,10 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const [storyCounts, setStoryCounts] = useState<StoryCounts>({
-    APPROVED: 0,
-    PENDING: 0,
-    REJECTED: 0,
+    [StoryStatus.APPROVED]: 0,
+    [StoryStatus.PENDING]: 0,
+    [StoryStatus.REJECTED]: 0,
+    [StoryStatus.IMPORTED]: 0,
   });
 
   const fetchStories = async (status: StoryStatus) => {

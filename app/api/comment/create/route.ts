@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { getToken } from "next-auth/jwt";
-import { ObjectId } from "mongodb";
+import { ObjectId, UpdateFilter } from "mongodb";
 import { NotificationTypes } from "@/app/enums";
+import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -38,7 +39,7 @@ export async function POST(originalReq: Request) {
     const db = client.db("ghorabaa");
     const commentsCollection = db.collection("comments");
     const storiesCollection = db.collection("stories");
-    const usersCollection = db.collection("users");
+    const usersCollection = db.collection<User>("users");
     const notificationsCollection = db.collection("notifications");
 
     const newComment = {
@@ -74,18 +75,17 @@ export async function POST(originalReq: Request) {
       await notificationsCollection.insertOne(notificationPayload);
 
       // Push to user.notifications array, keeping only latest 7
-      await usersCollection.updateOne(
-        { _id: story?.publisher_id },
-        {
-          $push: {
-            notifications: {
-              $each: [notificationPayload],
-              $position: 0,
-              $slice: 7,
-            },
+      const update: UpdateFilter<User> = {
+        $push: {
+          notifications: {
+            $each: [notificationPayload],
+            $position: 0,
+            $slice: 7,
           },
-        } as any // Cast to any to satisfy TypeScript
-      );
+        },
+      };
+
+      await usersCollection.updateOne({ _id: story?.publisher_id }, update);
     }
 
     return NextResponse.json({ success: true, data: result }, { status: 201 });
