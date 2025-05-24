@@ -20,10 +20,10 @@ type AddStoryPrpos = {
   loading?: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  story_id: string;
+  id_number: string;
 };
 
-const AddStoryModal = ({ setLoading, setIsOpen, story_id }: AddStoryPrpos) => {
+const AddStoryModal = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
@@ -75,7 +75,7 @@ const AddStoryModal = ({ setLoading, setIsOpen, story_id }: AddStoryPrpos) => {
           "Content-Type": "application/json",
         },
         credentials: "include", // 👈 THIS IS CRITICAL
-        body: JSON.stringify({ ...values, image: url, story_id }),
+        body: JSON.stringify({ ...values, image: url, id_number }),
       });
 
       const data = await response.json();
@@ -89,13 +89,18 @@ const AddStoryModal = ({ setLoading, setIsOpen, story_id }: AddStoryPrpos) => {
         return;
       }
 
+      setSubmitting(false);
+      setLoading(false);
+      setIsOpen(false);
+
       toast.success(
         "تم إرسال طلب نشر القصة بنجاح، وستتم مراجعته في أقرب وقت !"
       );
 
-      setSubmitting(false);
-      setLoading(false);
-      setIsOpen(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+
       console.log("Martyr has been added successfully!", data);
     } catch (error) {
       setSubmitting(false);

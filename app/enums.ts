@@ -1,12 +1,13 @@
 // User Roles Enums
 export enum Role {
-  ADMIN = "ADMIN",
-  EDITOR = "EDITOR",
   USER = "USER",
+  EDITOR = "EDITOR",
+  ADMIN = "ADMIN",
 }
 
 // Story Status Enums
 export enum StoryStatus {
+  IMPORTED = "IMPORTED", // default for newly imported stories
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",

@@ -29,6 +29,8 @@ const StoryDetailsSection = async ({ id }: Props) => {
   const data: StoryInterface & { publisherName: string } =
     await storyResponse.json();
 
+  console.log("Story Details Data", data);
+
   const age =
     data?.death_date && data?.birth_date
       ? new Date(data.death_date).getFullYear() -
@@ -76,6 +78,21 @@ const StoryDetailsSection = async ({ id }: Props) => {
         <div className="flex items-center gap-8 mt-6">
           <h4 className="text-lg font-extrabold">الشهيد | {data.name}</h4>
         </div>
+
+        {data.keywords.length > 0 && (
+          <div className="flex items-center flex-wrap gap-2 mt-4">
+            {data?.keywords?.map((keywrod, index) => {
+              return (
+                <div
+                  key={index}
+                  className="border bg-white rounded-xl shadow-sm p-1.5 px-3 text-[12px]"
+                >
+                  #{keywrod}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         <table className="h-full w-full border mt-4">
           <tbody className="bg-white h-full">

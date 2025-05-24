@@ -58,6 +58,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
             neighborhood: 1,
             bio: 1,
             status: 1,
+            keywords: 1,
             createdAt: 1,
             publisher_id: 1,
             publisherName: "$publisher.name",

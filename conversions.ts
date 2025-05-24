@@ -41,13 +41,3 @@ export function getRoleInArabic(role: Role): string {
       return "غير معروف"; // Unknown
   }
 }
-
-export function normalizeArabic(text: string) {
-  return text
-    .replace(/[\u064B-\u0652]/g, "") // Remove diacritics
-    .replace(/[إأآ]/g, "ا")
-    .replace(/ة/g, "ه")
-    .replace(/ى/g, "ي")
-    .replace(/[^\w\s]/gi, "") // Remove punctuation
-    .trim();
-}

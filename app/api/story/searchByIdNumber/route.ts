@@ -33,7 +33,10 @@ export async function GET(req: NextRequest) {
     }
 
     const result = await storiesCollection
-      .find({ id_number: query, status: StoryStatus.APPROVED })
+      .find({
+        id_number: query,
+        status: { $in: [StoryStatus.IMPORTED, StoryStatus.APPROVED] },
+      })
       .sort({ createdAt: -1 })
       .limit(1)
       .toArray();

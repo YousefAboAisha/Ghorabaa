@@ -3,6 +3,8 @@ import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 import { StoryStatus } from "@/app/enums";
+import { StoryInterface } from "@/app/interfaces";
+import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -25,9 +27,9 @@ export async function POST(originalReq: Request) {
     const collection = db.collection("stories");
 
     const body = await originalReq.json();
-    const { story_id, ...rest } = body;
+    const { id_number, bio, ...rest } = body;
 
-    if (!story_id) {
+    if (!id_number) {
       return NextResponse.json(
         { error: "Story ID is required." },
         { status: 400 }
@@ -35,15 +37,26 @@ export async function POST(originalReq: Request) {
     }
 
     const existingStory = await collection.findOne({
-      _id: new ObjectId(story_id),
+      id_number: id_number,
     });
 
     if (!existingStory) {
       return NextResponse.json({ error: "Story not found." }, { status: 404 });
     }
 
-    const updatedFields = {
+    let keywords: string[] = [];
+    if (bio && typeof bio === "string") {
+      try {
+        keywords = await extractArabicKeywords(bio);
+      } catch (err) {
+        console.warn("Keyword extraction failed:", err);
+      }
+    }
+
+    const updatedFields: StoryInterface = {
       ...rest,
+      ...(bio && { bio }), // ensure bio is included if updated
+      keywords, // <- Add extracted keywords
       publisher_id: new ObjectId(token.id),
       status: StoryStatus.PENDING,
       hasCompleteProfile: true,
@@ -51,12 +64,12 @@ export async function POST(originalReq: Request) {
     };
 
     await collection.updateOne(
-      { _id: new ObjectId(story_id) },
+      { id_number: id_number },
       { $set: updatedFields }
     );
 
     const updatedStory = await collection.findOne({
-      _id: new ObjectId(story_id),
+      id_number: id_number,
     });
 
     return NextResponse.json(

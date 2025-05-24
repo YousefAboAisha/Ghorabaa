@@ -277,7 +277,7 @@ const Page = () => {
           <AddStoryModal
             setLoading={setLoading}
             setIsOpen={setIsOpen}
-            story_id={searchData?._id as string}
+            id_number={searchData?.id_number as string}
           />
         </Modal>
       </div>
