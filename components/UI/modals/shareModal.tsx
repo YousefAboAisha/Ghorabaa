@@ -1,9 +1,9 @@
 "use client";
-
 import Input from "@/components/UI/inputs/input";
 import Modal from "@/components/UI/modals/modal";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { CiShare2 } from "react-icons/ci";
 import {
   FaCheck,
   FaFacebook,
@@ -14,7 +14,6 @@ import {
 } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
 import { FiCopy } from "react-icons/fi";
-import { MdShare } from "react-icons/md";
 
 type ShareModalProps = {
   title: string;
@@ -48,9 +47,9 @@ const ShareModal = ({ title, sharedLink }: ShareModalProps) => {
       <div
         title={title}
         onClick={() => setIsOpen(true)}
-        className="text-secondary bg-white border rounded-lg p-2 cursor-pointer hover:shadow-md duration-300"
+        className="text-secondary bg-white border rounded-xl p-2 cursor-pointer hover:shadow-md duration-300"
       >
-        <MdShare size={20} />
+        <CiShare2 size={20} />
       </div>
 
       <Modal isOpen={isOpen} setIsOpen={setIsOpen}>

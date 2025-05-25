@@ -1,6 +1,6 @@
 "use client";
 import { CommentInterface } from "@/app/interfaces";
-import { dateConversion, getRoleInArabic } from "@/conversions";
+import { dateConversion, getRoleInArabic } from "@/utils/format";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
 import { FaQuoteLeft } from "react-icons/fa6";
@@ -45,7 +45,7 @@ const CommentCard = ({ data }: CommentCardProps) => {
       </p>
 
       {/* absolute icon */}
-      <FaQuoteLeft className="absolute top-2 left-2 opacity-5" size={50} />
+      <FaQuoteLeft className="absolute top-2 left-2 opacity-5" size={35} />
     </div>
   );
 };

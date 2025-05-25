@@ -19,3 +19,18 @@ export const StoryValidationSchema = Yup.object({
 
   image: Yup.mixed().required("يرجى إضافة صورة"),
 });
+
+export const ProfileValidationSchema = Yup.object({
+  name: Yup.string().required("يرجى كتابة الاسم"),
+
+  phone_number: Yup.string()
+    .matches(
+      /^(059|056)\d{7}$/,
+      "رقم الهاتف يجب أن يكون 10 أرقام ويبدأ بـ 059 أو 056"
+    )
+    .required("يُرجى إضافة رقم الهاتف"),
+
+  id_number: Yup.string()
+    .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام")
+    .required("يُرجى إضافة رقم الهوية"),
+});

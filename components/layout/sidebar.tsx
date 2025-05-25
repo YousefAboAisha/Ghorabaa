@@ -2,7 +2,7 @@ import { Routes } from "@/data/routes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
-import Logo from "./UI/logo";
+import Logo from "../UI/logo";
 
 type SidebarTypes = {
   isOpen: boolean;

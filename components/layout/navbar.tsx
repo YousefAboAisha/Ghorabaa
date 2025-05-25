@@ -1,15 +1,15 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import { Routes } from "../data/routes";
+import { Routes } from "../../data/routes";
 import Link from "next/link";
 import Sidebar from "./sidebar";
 import { Fade as Hamburger } from "hamburger-react";
 import { usePathname } from "next/navigation";
-import Button from "./UI/inputs/button";
-import ProfilePopper from "./UI/modals/profilePopper";
+import Button from "../UI/inputs/button";
+import ProfilePopper from "../UI/modals/profilePopper";
 import { FiUser } from "react-icons/fi";
-import Logo from "./UI/logo";
-import NotificationPopper from "./UI/modals/notificationPopper";
+import Logo from "../UI/logo";
+import NotificationPopper from "../UI/modals/notificationPopper";
 import { BsBookmark, BsPersonAdd, BsSearch } from "react-icons/bs";
 import { Session } from "next-auth";
 

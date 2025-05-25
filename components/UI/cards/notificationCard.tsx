@@ -4,7 +4,7 @@ import { NotificationTypes } from "@/app/enums";
 import { FaTimesCircle } from "react-icons/fa";
 import { FiCheckCircle } from "react-icons/fi";
 import { FaCoins } from "react-icons/fa6";
-import { dateConversion } from "@/conversions";
+import { dateConversion } from "@/utils/format";
 
 type NotificationTypesProps = {
   type: NotificationTypes;
@@ -116,7 +116,8 @@ const NotificationCard = ({
           </div>
 
           <div className="mt-3 font-normal text-[12px] mb-2">
-            قام <p className="font-semibold inline">{author_name}</p> بإضافة تعليق جديد على قصتك
+            قام <p className="font-semibold inline">{author_name}</p> بإضافة
+            تعليق جديد على قصتك
           </div>
 
           <div className="absolute bottom-1 left-3 flex items-center gap-1 text-gray_dark text-[10px]">

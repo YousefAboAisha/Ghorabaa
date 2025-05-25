@@ -3,10 +3,10 @@ import React from "react";
 import Button from "@/components/UI/inputs/button";
 import Input from "@/components/UI/inputs/input";
 import { BsSend } from "react-icons/bs";
-import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { MdNumbers } from "react-icons/md";
 import { FaPhone, FaUser } from "react-icons/fa";
+import { ProfileValidationSchema } from "@/utils/validators";
 
 type EditProfileFormProps = {
   data: {
@@ -22,23 +22,7 @@ const EditProfileForm = ({ data }: EditProfileFormProps) => {
     name: name || "",
     phone_number: phone_number || "",
     id_number: id_number || "",
-  };
-
-  // Updated validationSchema to include image validation (optional)
-  const validationSchema = Yup.object({
-    name: Yup.string().required("يرجى كتابة الاسم"),
-
-    phone_number: Yup.string()
-      .matches(
-        /^(059|056)\d{7}$/,
-        "رقم الهاتف يجب أن يكون 10 أرقام ويبدأ بـ 059 أو 056"
-      )
-      .required("يُرجى إضافة رقم الهاتف"),
-
-    id_number: Yup.string()
-      .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام")
-      .required("يُرجى إضافة رقم الهوية"),
-  });
+  };  
 
   return (
     <div className="relative w-full">
@@ -46,7 +30,7 @@ const EditProfileForm = ({ data }: EditProfileFormProps) => {
 
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
+        validationSchema={ProfileValidationSchema}
         onSubmit={async (values, {  setSubmitting }) => {
           try {
             const response = await fetch("/api/user/update", {

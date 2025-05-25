@@ -1,5 +1,5 @@
 import { StoryInterface } from "@/app/interfaces";
-import { dateConversion } from "@/conversions";
+import { dateConversion } from "@/utils/format";
 import { FaCircle } from "react-icons/fa";
 
 interface StoryCardsProps {

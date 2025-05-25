@@ -1,6 +1,6 @@
 "use client";
 import { StoryInterface } from "@/app/interfaces";
-import EditStoryModal from "@/components/UI/modals/editStoryModal";
+import EditStoryForm from "@/components/UI/Forms/editStoryForm";
 import Modal from "@/components/UI/modals/modal";
 import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
@@ -18,13 +18,13 @@ const EditStoryButton = ({ data }: EditStoryButtonProps) => {
       <div
         title="تعديل القصة"
         onClick={() => setIsOpen(true)}
-        className="group absolute top-2 left-2 p-1 bg-white border rounded-md z-10 cursor-pointer"
+        className="group absolute top-3 left-3 p-1.5 bg-white border rounded-xl z-10 cursor-pointer"
       >
-        <CiEdit size={25} className="group-hover:text-primary duration-200" />
+        <CiEdit size={25} />
       </div>
 
       <Modal isOpen={isOpen} setIsOpen={setIsOpen} loading={loading}>
-        <EditStoryModal loading setLoading={setLoading} data={data} />
+        <EditStoryForm loading setLoading={setLoading} data={data} />
       </Modal>
     </>
   );

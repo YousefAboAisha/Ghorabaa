@@ -1,4 +1,4 @@
-import Logo from "./UI/logo";
+import Logo from "../UI/logo";
 import RenderredRoutes from "./renderredRoutes";
 
 const Footer = () => {

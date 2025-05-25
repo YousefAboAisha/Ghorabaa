@@ -1,5 +1,5 @@
 import { CommentInterface } from "@/app/interfaces";
-import { dateConversion } from "@/conversions";
+import { dateConversion } from "@/utils/format";
 
 type RecentCommentCardProps = {
   data: CommentInterface;

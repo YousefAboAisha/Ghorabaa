@@ -1,6 +1,6 @@
 import "@/app/globals.css";
 import NavbarWrapper from "../containers/wrappers/navbarWrapper";
-import Footer from "@/components/footer";
+import Footer from "@/components/layout/footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

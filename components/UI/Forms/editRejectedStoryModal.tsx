@@ -14,7 +14,7 @@ import { CiImageOn } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
-import { StoryValidationSchema } from "@/app/validation/storySchema";
+import { StoryValidationSchema } from "@/utils/validators";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -24,7 +24,7 @@ type AddStoryPrpos = {
   refetchData: () => void;
 };
 
-const EditRejectedStoryModal = ({
+const EditRejectedStoryForm = ({
   setLoading,
   setIsOpen,
   data,
@@ -341,4 +341,4 @@ const EditRejectedStoryModal = ({
   );
 };
 
-export default EditRejectedStoryModal;
+export default EditRejectedStoryForm;

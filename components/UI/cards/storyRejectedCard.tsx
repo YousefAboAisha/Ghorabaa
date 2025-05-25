@@ -1,9 +1,9 @@
 import { StoryInterface } from "@/app/interfaces";
-import { dateConversion } from "@/conversions";
 import { FaCircle } from "react-icons/fa";
 import Modal from "../modals/modal";
 import { useState } from "react";
-import EditRejectedStoryModal from "../modals/editRejectedStoryModal";
+import EditRejectedStoryForm from "../Forms/editRejectedStoryModal";
+import { dateConversion } from "@/utils/format";
 
 interface StoryCardsProps {
   data: StoryInterface;
@@ -36,7 +36,7 @@ const StoryRejectedCard = ({ data, refetchData }: StoryCardsProps) => {
       </div>
 
       <Modal isOpen={isOpen} setIsOpen={setIOpen} loading={loading}>
-        <EditRejectedStoryModal
+        <EditRejectedStoryForm
           setLoading={setLoading}
           setIsOpen={setIOpen}
           data={data}

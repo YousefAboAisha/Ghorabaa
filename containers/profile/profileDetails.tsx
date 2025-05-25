@@ -1,6 +1,6 @@
 import { UserInterface } from "@/app/interfaces";
 import EditProfileForm from "@/components/UI/Forms/editProfileForm";
-import { dateConversion, getRoleInArabic } from "@/conversions";
+import { dateConversion, getRoleInArabic } from "@/utils/format";
 import { cookies } from "next/headers";
 import Image from "next/image";
 
@@ -42,7 +42,7 @@ const ProfileDetails = async () => {
         }
       />
 
-      <table className="h-full w-full md:min-w-fit md:w-fit md:mt-0 mt-8 rounded-t-lg ">
+      <table className="h-full w-full md:min-w-fit md:w-fit md:mt-0 mt-8 rounded-t-lg">
         <tbody className="bg-white h-full">
           <tr className="rounded-t-md">
             <td colSpan={2}>

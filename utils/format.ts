@@ -1,4 +1,4 @@
-import { Role } from "./app/enums";
+import { Role } from "@/app/enums";
 
 export const dateConversion = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = {

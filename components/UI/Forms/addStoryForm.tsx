@@ -13,10 +13,10 @@ import { CiImageOn } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
-import { StoryValidationSchema } from "@/app/validation/storySchema";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { StoryStatus } from "@/app/enums";
+import { StoryValidationSchema } from "@/utils/validators";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -25,7 +25,7 @@ type AddStoryPrpos = {
   id_number: string;
 };
 
-const AddStoryModal = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
+const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
@@ -305,4 +305,4 @@ const AddStoryModal = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
   );
 };
 
-export default AddStoryModal;
+export default AddStoryForm;

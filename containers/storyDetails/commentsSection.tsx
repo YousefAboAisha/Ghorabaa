@@ -4,6 +4,7 @@ import CommentCard from "@/components/UI/cards/commentCard";
 import CommentForm from "@/components/UI/Forms/commentForm";
 import React, { useEffect, useState } from "react";
 import { Session } from "next-auth";
+import CommentSkeletonLoader from "@/components/UI/loaders/commentSkeletonLoader";
 
 type CommentSectionProps = {
   session: Session | null;
@@ -48,72 +49,6 @@ const CommentsSection = ({ session, id }: CommentSectionProps) => {
     }
   }, []);
 
-  const renderLoadingSkeletons = () => (
-    <div className="cards-grid-2 mt-8">
-      <div className="relative flex flex-col gap-2 border rounded-2xl p-4">
-        <div className="flex items-center gap-2">
-          <div className="h-14 w-14 rounded-full bg-gray-300 animate-pulse"></div>
-          <div className="flex flex-col gap-1">
-            <h5 className="h-2 w-32 rounded-xl bg-gray-300 animate-pulse"></h5>
-            <p className="h-2 w-16 rounded-xl bg-gray-300 animate-pulse"></p>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="h-3 w-full rounded-xl bg-gray-300 animate-pulse"></div>
-          <div className="h-3 w-full rounded-xl bg-gray-300 animate-pulse"></div>
-          <div className="h-1 w-24 rounded-md mt-4 bg-gray-300 animate-pulse"></div>
-        </div>
-      </div>
-      <div className="relative flex flex-col gap-2 border rounded-2xl p-4">
-        <div className="flex items-center gap-2">
-          <div className="h-14 w-14 rounded-full bg-gray-300 animate-pulse"></div>
-          <div className="flex flex-col gap-1">
-            <h5 className="h-2 w-32 rounded-xl bg-gray-300 animate-pulse"></h5>
-            <p className="h-2 w-16 rounded-xl bg-gray-300 animate-pulse"></p>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="h-3 w-full rounded-xl bg-gray-300 animate-pulse"></div>
-          <div className="h-3 w-full rounded-xl bg-gray-300 animate-pulse"></div>
-          <div className="h-1 w-24 rounded-md mt-4 bg-gray-300 animate-pulse"></div>
-        </div>
-      </div>
-      <div className="relative flex flex-col gap-2 border rounded-2xl p-4">
-        <div className="flex items-center gap-2">
-          <div className="h-14 w-14 rounded-full bg-gray-300 animate-pulse"></div>
-          <div className="flex flex-col gap-1">
-            <h5 className="h-2 w-32 rounded-xl bg-gray-300 animate-pulse"></h5>
-            <p className="h-2 w-16 rounded-xl bg-gray-300 animate-pulse"></p>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="h-3 w-full rounded-xl bg-gray-300 animate-pulse"></div>
-          <div className="h-3 w-full rounded-xl bg-gray-300 animate-pulse"></div>
-          <div className="h-1 w-24 rounded-md mt-4 bg-gray-300 animate-pulse"></div>
-        </div>
-      </div>
-
-      <div className="relative flex flex-col gap-2 border rounded-2xl p-4">
-        <div className="flex items-center gap-2">
-          <div className="h-14 w-14 rounded-full bg-gray-300 animate-pulse"></div>
-          <div className="flex flex-col gap-1">
-            <h5 className="h-2 w-32 rounded-xl bg-gray-300 animate-pulse"></h5>
-            <p className="h-2 w-16 rounded-xl bg-gray-300 animate-pulse"></p>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="h-3 w-full rounded-xl bg-gray-300 animate-pulse"></div>
-          <div className="h-3 w-full rounded-xl bg-gray-300 animate-pulse"></div>
-          <div className="h-1 w-24 rounded-md mt-4 bg-gray-300 animate-pulse"></div>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <div id="COMMENT" className="flex flex-col gap-2 mb-10 mt-8">
       <h2 className="font-bold text-lg">التعليقات</h2>
@@ -121,9 +56,9 @@ const CommentsSection = ({ session, id }: CommentSectionProps) => {
       <CommentForm session={session} id={id} updateComments={fetchComments} />
 
       {loading ? (
-        renderLoadingSkeletons()
+        <CommentSkeletonLoader length={4} className="mt-8" />
       ) : comments.length >= 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
           {comments?.map((comment: CommentInterface) => (
             <CommentCard data={comment} key={comment._id as string} />
           ))}

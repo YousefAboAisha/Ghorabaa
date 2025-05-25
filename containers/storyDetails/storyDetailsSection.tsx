@@ -1,11 +1,11 @@
 import { StoryInterface } from "@/app/interfaces";
-import { dateConversion } from "@/conversions";
 import Image from "next/image";
-import ShareModal from "../events/shareModal";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { notFound } from "next/navigation";
-import EditStoryButton from "./editStoryButton";
 import { getSessionAction } from "@/app/actions/registerActions";
+import EditStoryButton from "./editStoryButton";
+import ShareModal from "../../components/UI/modals/shareModal";
+import { dateConversion } from "@/utils/format";
 
 type Props = {
   id: string;
@@ -46,13 +46,13 @@ const StoryDetailsSection = async ({ id }: Props) => {
         <PageTitles storyName={data.name} />
       </div>
 
-      <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-home-landing bg-cover before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#000000d8] bg-fixed rounded-xl before:rounded-xl">
+      <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-secondary">
         <Image
           src={data.image || "/notFound.png"}
           alt="صورة الشهيد"
           width={350}
           height={350}
-          className="mx-auto z-[10] max-h-[60vh] object-cover rounded-2xl"
+          className="mx-auto z-[10] max-h-[60vh] object-cover rounded-2xl shadow-xl"
           priority
           quality={100}
         />
