@@ -12,6 +12,10 @@ const baseSchema = new Schema<NotificationInterface>(
       enum: Object.values(NotificationTypes),
       required: true,
     },
+    is_read: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

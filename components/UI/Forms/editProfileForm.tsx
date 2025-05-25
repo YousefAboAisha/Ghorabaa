@@ -41,7 +41,7 @@ const EditProfileForm = ({ data }: EditProfileFormProps) => {
   });
 
   return (
-    <div className="relative w-full p-4">
+    <div className="relative w-full">
       <h2 className="text-xl font-semibold">تعديل البيانات</h2>
 
       <Formik
@@ -140,7 +140,7 @@ const EditProfileForm = ({ data }: EditProfileFormProps) => {
               />
             </div>
 
-            <div className="w-full md:w-6/12 lg:w-4/12 mt-2">
+            <div className="w-full md:w-6/12 lg:w-3/12 mt-2">
               <Button
                 title={"تأكيد"}
                 type="submit"

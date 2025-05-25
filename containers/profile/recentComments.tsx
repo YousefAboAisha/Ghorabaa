@@ -39,7 +39,7 @@ const RecentComments = async () => {
             return (
               <Link
                 key={comment._id as string}
-                href={`/stories/${comment.story_id}`}
+                href={`/stories/${comment.story_id}#COMMENT`}
               >
                 <CommentCard data={comment} />
               </Link>

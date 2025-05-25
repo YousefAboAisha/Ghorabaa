@@ -106,6 +106,7 @@ export interface NotificationInterface extends Document {
   title: string;
   notification_type: NotificationTypes;
   story_id: Types.ObjectId | string; // Reference to the story which the user have made comment on OR it has been [APPROVED | REJECTED ]
+  is_read: boolean;
   createdAt: Date;
 }
 

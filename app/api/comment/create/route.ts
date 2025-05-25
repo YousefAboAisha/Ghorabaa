@@ -63,6 +63,7 @@ export async function POST(originalReq: Request) {
         notification_type: NotificationTypes.COMMENT,
         author_name: user?.name,
         author_id: new ObjectId(author_id),
+        is_read: false,
         createdAt: new Date(),
       };
 

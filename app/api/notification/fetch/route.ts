@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getToken } from "next-auth/jwt";
+import { CommentNotificationInterface } from "@/app/interfaces";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -26,8 +27,13 @@ export async function GET(req: NextRequest) {
       }
     );
 
+    const notifications = user?.notifications ?? [];
+    const hasUnread = notifications.some(
+      (n: CommentNotificationInterface) => !n.is_read
+    );
+
     return NextResponse.json(
-      { data: user?.notifications ?? [] },
+      { data: notifications, hasUnread },
       { status: 200 }
     );
   } catch (error) {

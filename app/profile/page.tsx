@@ -1,18 +1,18 @@
-import BannedContent from "@/containers/profile/bannedContent";
+// import BannedContent from "@/containers/profile/bannedContent";
 import ProfileDetails from "@/containers/profile/profileDetails";
 import RecentComments from "@/containers/profile/recentComments";
 import SubmittedStories from "@/containers/profile/submittedStories";
 
 const page = () => {
   return (
-    <div className="container min-h-screen mt-24">
+    <div className="container min-h-screen mt-28">
       <ProfileDetails />
 
       <SubmittedStories />
 
       <RecentComments />
 
-      <BannedContent />
+      {/* <BannedContent /> */}
     </div>
   );
 };

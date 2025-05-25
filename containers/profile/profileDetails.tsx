@@ -29,7 +29,7 @@ const ProfileDetails = async () => {
   const data: UserInterface = response.data;
 
   return (
-    <div className="flex-col md:flex md:flex-row gap-4 md:gap-4 mt-8">
+    <div className="flex-col md:flex md:flex-row gap-4 md:gap-4">
       {/* Profile Card Details */}
 
       <EditProfileForm
