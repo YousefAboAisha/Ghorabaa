@@ -1,13 +1,11 @@
 "use client";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { GrNotification } from "react-icons/gr";
 import NotificationCard from "../cards/notificationCard";
 import Link from "next/link";
 import { Session } from "next-auth";
 import { useEffect, useState } from "react";
-import { NotificationInterface } from "@/app/interfaces";
+import { CommentNotificationInterface } from "@/app/interfaces";
 import NotificationSkeletonLoader from "../loaders/notificationSkeletonLoader";
 
 type NotificationPopperProps = {
@@ -16,7 +14,7 @@ type NotificationPopperProps = {
 
 function NotificationPopper({ session }: NotificationPopperProps) {
   const [notificationsData, setNotificationsData] = useState<
-    NotificationInterface[]
+    CommentNotificationInterface[]
   >([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -51,20 +49,6 @@ function NotificationPopper({ session }: NotificationPopperProps) {
 
   return (
     <>
-      {/* Toast Container */}
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={true} // Right-to-left for Arabic
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-
       <Menu as={"div"}>
         <MenuButton
           as={"button"}
@@ -97,11 +81,14 @@ function NotificationPopper({ session }: NotificationPopperProps) {
               notificationsData.map((elem, index) => {
                 return (
                   <MenuItem key={index}>
-                    <Link href={`/stories/${elem.story_id}`} className="w-full">
+                    <Link
+                      href={`/stories/${elem.story_id}#COMMENT`}
+                      className="w-full"
+                    >
                       <NotificationCard
                         type={elem.notification_type}
-                        title={elem.title}
                         createdAt={elem.createdAt}
+                        author_name={elem.author_name}
                       />
                     </Link>
                   </MenuItem>

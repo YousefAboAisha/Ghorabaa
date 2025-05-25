@@ -8,13 +8,13 @@ import { dateConversion } from "@/conversions";
 
 type NotificationTypesProps = {
   type: NotificationTypes;
-  title: string;
+  author_name: string;
   createdAt: Date;
 };
 
 const NotificationCard = ({
   type,
-  title,
+  author_name,
   createdAt,
 }: NotificationTypesProps) => {
   switch (type) {
@@ -115,7 +115,9 @@ const NotificationCard = ({
             <BiComment size={13} />
           </div>
 
-          <div className="mt-3 font-normal text-[12px] mb-2">{title}</div>
+          <div className="mt-3 font-normal text-[12px] mb-2">
+            قام <p className="font-semibold inline">{author_name}</p> بإضافة تعليق جديد على قصتك
+          </div>
 
           <div className="absolute bottom-1 left-3 flex items-center gap-1 text-gray_dark text-[10px]">
             {dateConversion(createdAt)}

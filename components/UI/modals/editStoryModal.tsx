@@ -4,8 +4,7 @@ import { BiSend } from "react-icons/bi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@/components/UI/inputs/button";
 import Heading from "@/components/UI/typography/heading";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import Select from "@/components/UI/inputs/selectInput";
 import TextArea from "@/components/UI/inputs/textArea";
 import { CountriesData } from "@/data/countriesData";
@@ -103,7 +102,9 @@ const EditStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
         "تم إرسال طلب تعديل القصة بنجاح، وستتم مراجعته في أقرب وقت !"
       );
 
-      router.push(`/profile#${StoryStatus.PENDING}`);
+      setTimeout(() => {
+        router.push(`/profile#${StoryStatus.PENDING}`);
+      }, 1000);
     } catch (error) {
       setSubmitting(false);
       setLoading(false);
@@ -134,20 +135,7 @@ const EditStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
 
   return (
     <div className="relative flex items-center justify-center">
-      {/* Toast Container */}
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={true} // Right-to-left for Arabic
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-
+      s{" "}
       <div className="relative w-full border p-8 bg-white">
         <Heading
           title=""

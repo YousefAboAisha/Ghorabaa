@@ -10,9 +10,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BiSearch } from "react-icons/bi";
 import { FaEye } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
-import "react-toastify/dist/ReactToastify.css";
 import { StoryInterface } from "../interfaces";
-import { ToastContainer } from "react-toastify";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Input from "@/components/UI/inputs/input";
@@ -65,20 +63,7 @@ const Page = () => {
 
   return (
     <>
-      {/* Toast Container */}
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={true} // Right-to-left for Arabic
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        className={"text-sm"}
-      />
+     
 
       <div className="container lg:w-6/12 mt-32 min-h-screen">
         <div className="flex flex-col justify-center items-center">

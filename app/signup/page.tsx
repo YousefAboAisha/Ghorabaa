@@ -8,7 +8,7 @@ import Input from "@/components/UI/inputs/input";
 import Heading from "@/components/UI/typography/heading";
 import Link from "next/link";
 import { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [formErrors, setFormErrors] = useState<string>("");
@@ -94,19 +94,6 @@ const Signup = () => {
 
   return (
     <div className="relative mb-14 flex items-center justify-center">
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={true} // Right-to-left for Arabic
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-
       <div className="w-11/12 md:w-7/12 lg:w-5/12 border p-8 rounded-3xl shadow-sm bg-white mt-40">
         <Heading
           highLightText="إنشاء حساب"

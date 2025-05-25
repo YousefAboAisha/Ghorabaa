@@ -1,6 +1,8 @@
 import "@/app/globals.css";
 import NavbarWrapper from "../containers/wrappers/navbarWrapper";
 import Footer from "@/components/footer";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export async function generateMetadata() {
   return {
@@ -31,6 +33,18 @@ export default function RootLayout({
         dir="rtl"
         className="relative h-full w-full bg-background_light"
       >
+        <ToastContainer
+          position="top-center"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={true} // Right-to-left for Arabic
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <NavbarWrapper /> {/* Use the server-side wrapper */}
         <div className="mt-[70px] min-h-screen">{children}</div>
         <Footer />

@@ -6,7 +6,7 @@ type Params = { id: string };
 
 export async function GET(req: NextRequest, { params }: { params: Params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json({ error: "Missing story ID" }, { status: 400 });

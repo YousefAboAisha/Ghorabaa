@@ -9,6 +9,7 @@ import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLo
 import { Session } from "next-auth";
 import { StoryTabsData } from "@/data/storyTabsData";
 import RejectAndPendingCardSkeltonLoader from "@/components/UI/loaders/rejectAndPendingCardSkeltonLoader";
+import NoDataMessage from "@/components/errorMessages/noDataMessage";
 
 type StoryCounts = {
   [key in StoryStatus]: number;
@@ -114,9 +115,7 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
             ))}
           </div>
         ) : (
-          <div className="relative flex flex-col gap-3 min-h-[30vh] bg-white rounded-md border">
-            <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
-          </div>
+          <NoDataMessage />
         );
 
       case StoryStatus.PENDING:
@@ -129,9 +128,7 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
             ))}
           </div>
         ) : (
-          <div className="relative flex flex-col gap-3 min-h-[30vh] bg-white rounded-md border">
-            <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
-          </div>
+          <NoDataMessage />
         );
 
       case StoryStatus.REJECTED:
@@ -148,9 +145,7 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
             ))}
           </div>
         ) : (
-          <div className="relative flex flex-col gap-3 min-h-[30vh] bg-white rounded-md border">
-            <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
-          </div>
+          <NoDataMessage />
         );
     }
   };

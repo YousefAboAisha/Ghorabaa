@@ -2,8 +2,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Link from "next/link";
 import { CiCirclePlus, CiLogout, CiUser } from "react-icons/ci";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -32,19 +30,7 @@ function ProfilePopper({ session }: ProfilePopperProps) {
 
   return (
     <>
-      {/* Toast Container */}
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={true} // Right-to-left for Arabic
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+  
 
       <Menu as={"div"}>
         <MenuButton

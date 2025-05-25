@@ -1,4 +1,5 @@
 import { CommentInterface } from "@/app/interfaces";
+import NoDataMessage from "@/components/errorMessages/noDataMessage";
 import CommentCard from "@/components/UI/cards/commentCard";
 import Heading from "@/components/UI/typography/heading";
 import { cookies } from "next/headers";
@@ -46,9 +47,7 @@ const RecentComments = async () => {
           })}
         </div>
       ) : (
-        <div className="relative h-[20vh] mt-4">
-          <p className="abs-center text-[13px]">لا يوجد تعليقات!</p>
-        </div>
+        <NoDataMessage className="mt-8" />
       )}
     </div>
   );

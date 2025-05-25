@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsBookmark } from "react-icons/bs";
+import { toast } from "react-toastify";
 
 type FavoriteButtonProps = {
   story_id: string;
@@ -34,11 +35,15 @@ const FavoriteButton = ({ story_id, initialFavorite }: FavoriteButtonProps) => {
 
       if (!res.ok) {
         console.error("Server responded with an error:", data.message);
+        toast.error("حدث خطأ أثناء إضافة القصة إلى المحفوظات");
         return; // Optional: show toast or error message to user
       }
-
-      // Optionally check data.favorited, or just toggle locally
       setFavorited(isFavorited);
+      if (isFavorited) {
+        toast.success("تمت إضافة القصة إلى قائمة المحفوظات");
+      } else {
+        toast.warn("تمت إزالة القصة من قائمة المحفوظات");
+      }
     } catch (error) {
       console.error("Failed to toggle favorite:", error);
     } finally {

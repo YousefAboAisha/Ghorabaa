@@ -5,7 +5,6 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@/components/UI/inputs/button";
 import Heading from "@/components/UI/typography/heading";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Select from "@/components/UI/inputs/selectInput";
 import TextArea from "@/components/UI/inputs/textArea";
 import { CountriesData } from "@/data/countriesData";
@@ -36,14 +35,7 @@ const EditRejectedStoryModal = ({
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
 
-  const {
-    _id,
-    city,
-    neighborhood,
-    bio,
-    image,
-    status,
-  } = data;
+  const { _id, city, neighborhood, bio, image, status } = data;
 
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
@@ -112,7 +104,11 @@ const EditRejectedStoryModal = ({
       toast.success(
         "تمت إعادة طلب نشر القصة بنجاح، وسيتم مراجعتها في أقرب وقت !"
       );
-      refetchData();
+
+      setTimeout(() => {
+        refetchData();
+      }, 1000);
+
       console.log("Martyr has been added successfully!", data);
     } catch (error) {
       setSubmitting(false);

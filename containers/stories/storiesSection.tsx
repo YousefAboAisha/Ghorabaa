@@ -3,10 +3,10 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { StoryStatus } from "@/app/enums";
 import { StoryInterface } from "@/app/interfaces";
 import StoryCard from "@/components/UI/cards/storyCard";
-import NetworkErrorPage from "@/components/networkErrorPage";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import { Session } from "next-auth";
+import NoDataMessage from "@/components/errorMessages/noDataMessage";
 
 type StoriesSectionProps = {
   session: Session | null;
@@ -80,7 +80,7 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
   );
 
   return (
-    <div className="relative min-h-[70vh] mb-12 mt-8">
+    <div className="relative mb-12 mt-8">
       {initialLoading ? (
         <StoryCardSkeletonLoader length={8} className="!mt-8" />
       ) : stories.length > 0 ? (
@@ -110,7 +110,7 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
           )}
         </>
       ) : (
-        <NetworkErrorPage />
+        <NoDataMessage className="min-h-[50vh]" />
       )}
     </div>
   );

@@ -32,6 +32,22 @@ const CommentsSection = ({ session, id }: CommentSectionProps) => {
     fetchComments();
   }, []);
 
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const element = document.querySelector(hash);
+      if (element) {
+        setTimeout(() => {
+          const yOffset = -300; // 👈 scroll 100px above the element
+          const y =
+            element.getBoundingClientRect().top + window.scrollY + yOffset;
+
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }, 1000); // Wait for content to be ready
+      }
+    }
+  }, []);
+
   const renderLoadingSkeletons = () => (
     <div className="cards-grid-2 mt-8">
       <div className="relative flex flex-col gap-2 border rounded-2xl p-4">
@@ -99,7 +115,7 @@ const CommentsSection = ({ session, id }: CommentSectionProps) => {
   );
 
   return (
-    <div className="flex flex-col gap-2 mb-10 mt-8">
+    <div id="COMMENT" className="flex flex-col gap-2 mb-10 mt-8">
       <h2 className="font-bold text-lg">التعليقات</h2>
 
       <CommentForm session={session} id={id} updateComments={fetchComments} />

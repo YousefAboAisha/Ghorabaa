@@ -15,6 +15,8 @@ import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
 import { StoryValidationSchema } from "@/app/validation/storySchema";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { StoryStatus } from "@/app/enums";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -28,6 +30,7 @@ const AddStoryModal = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
+  const router = useRouter();
 
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
@@ -98,7 +101,7 @@ const AddStoryModal = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
       );
 
       setTimeout(() => {
-        window.location.reload();
+        router.push(`/profile#${StoryStatus.PENDING}`);
       }, 1000);
 
       console.log("Martyr has been added successfully!", data);

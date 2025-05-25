@@ -14,7 +14,7 @@ const StoryCardSkeletonLoader = ({
       {Array.from({ length: length }).map((_, index) => (
         <div
           key={index}
-          className="relative flex flex-col gap-2 border rounded-2xl"
+          className="relative flex flex-col gap-2 border rounded-2xl bg-white"
         >
           <div className="flex flex-col items-center justify-center h-60 rounded-2xl rounded-b-none bg-gray-300 animate-pulse">
             <CiImageOn size={50} className="text-gray-400" />

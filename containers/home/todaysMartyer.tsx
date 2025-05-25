@@ -1,4 +1,4 @@
-import NetworkErrorPage from "@/components/networkErrorPage";
+import NetworkErrorPage from "@/components/errorMessages/networkErrorPage";
 import Button from "@/components/UI/inputs/button";
 import Image from "next/image";
 import Link from "next/link";

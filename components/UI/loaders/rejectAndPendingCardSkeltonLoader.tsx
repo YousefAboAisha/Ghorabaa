@@ -12,7 +12,7 @@ const RejectAndPendingCardSkeltonLoader = ({
       {Array.from({ length: length }).map((_, index) => (
         <div
           key={index}
-          className="relative flex flex-col gap-2 border rounded-2xl p-4"
+          className="relative flex flex-col gap-2 border rounded-2xl p-4 bg-white"
         >
           <div className="flex flex-col items-center justify-center h-5 w-8/12 rounded-xl bg-gray-300 animate-pulse"></div>
 
