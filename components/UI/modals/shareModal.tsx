@@ -26,6 +26,7 @@ const ShareModal = ({ title, sharedLink }: ShareModalProps) => {
   const [shareIcon, setShareIcon] = useState(<FiCopy size={18} />);
 
   const copyToClipboard = async () => {
+    console.log(loading);
     setLoading(true);
     setShareIcon(
       <AiOutlineLoading3Quarters size={18} className="animate-spin" />
