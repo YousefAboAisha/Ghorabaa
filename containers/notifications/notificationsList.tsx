@@ -1,4 +1,4 @@
-import { NotificationInterface } from "@/app/interfaces";
+import { CommentNotificationInterface } from "@/app/interfaces";
 import NotificationCard from "@/components/UI/cards/notificationCard";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -18,7 +18,7 @@ const NotificationsList = async () => {
   );
 
   const result = await notificationResponse.json();
-  const notificationData: NotificationInterface[] = result.data;
+  const notificationData: CommentNotificationInterface[] = result.data;
 
   console.log("notification Data", notificationData);
 
@@ -33,8 +33,8 @@ const NotificationsList = async () => {
           >
             <NotificationCard
               type={elem.notification_type}
-              title={elem.title}
               createdAt={elem.createdAt}
+              author_name={elem.author_name}
             />
           </Link>
         );
