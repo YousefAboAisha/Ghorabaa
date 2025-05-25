@@ -59,7 +59,7 @@ export interface CommentInterface extends Document {
   author_image?: string;
   text: string;
   story_id: Types.ObjectId | string; // Reference to the content that a user has made a comment on.
-  author_role: Role;
+  author_role?: Role;
   createdAt: Date;
 }
 

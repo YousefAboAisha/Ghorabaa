@@ -22,16 +22,9 @@ export async function POST(originalReq: Request) {
 
   try {
     const body = await reqForBody.json();
-    const {
-      text,
-      author_id,
-      story_id,
-      author_name,
-      author_image,
-      author_role,
-    } = body;
+    const { text, author_id, story_id } = body;
 
-    if (!text || !author_id || !story_id || !author_name) {
+    if (!text || !author_id || !story_id) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
@@ -46,9 +39,6 @@ export async function POST(originalReq: Request) {
       text,
       author_id: new ObjectId(author_id),
       story_id: new ObjectId(story_id),
-      author_name,
-      author_image,
-      author_role,
       createdAt: new Date(),
     };
 
@@ -60,14 +50,18 @@ export async function POST(originalReq: Request) {
       _id: new ObjectId(story_id),
     });
 
+    const user = await usersCollection.findOne({
+      _id: new ObjectId(author_id),
+    });
+
     if (story?.publisher_id?.toString() !== author_id) {
       // Don't notify if user commented on their own story
       const notificationPayload = {
         user_id: story?.publisher_id,
         story_id: story?._id,
-        title: `قام ${author_name} بإضافة تعليق جديد على قصتك.`,
+        title: `قام ${user?.name} بإضافة تعليق جديد على قصتك.`,
         notification_type: NotificationTypes.COMMENT,
-        author_name,
+        author_name: user?.name,
         author_id: new ObjectId(author_id),
         createdAt: new Date(),
       };

@@ -119,10 +119,6 @@ const CommentsSection = ({ session, id }: CommentSectionProps) => {
           </p>
         </div>
       )}
-
-      {/* <div className="text-primary flex items-center gap-2 justify-center mt-6 hover:underline text-sm w-fit mx-auto cursor-pointer">
-        <p>عرض المزيد</p>
-      </div> */}
     </div>
   );
 };

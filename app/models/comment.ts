@@ -13,12 +13,12 @@ const commentSchema = new Schema<CommentInterface>(
 
     author_name: {
       type: String,
-      required: [true, "Comment author name is required and cannot be empty."],
+      required: false,
     },
 
     author_image: {
       type: String,
-      required: [true, "Comment autohr image is required and cannot be empty."],
+      required: false,
     },
 
     text: {
@@ -35,7 +35,7 @@ const commentSchema = new Schema<CommentInterface>(
     author_role: {
       type: String,
       enum: Object.values(Role),
-      required: true,
+      required: false,
     },
   },
   {

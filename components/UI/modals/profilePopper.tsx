@@ -1,7 +1,7 @@
 "use client";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Link from "next/link";
-import { CiCirclePlus, CiEdit, CiLogout, CiUser } from "react-icons/ci";
+import { CiCirclePlus, CiLogout, CiUser } from "react-icons/ci";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signOut } from "next-auth/react";
@@ -106,16 +106,6 @@ function ProfilePopper({ session }: ProfilePopperProps) {
               >
                 <CiUser size={20} />
                 <span>الملف الشخصي</span>
-              </Link>
-            </MenuItem>
-
-            <MenuItem>
-              <Link
-                href={"/editProfile"}
-                className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
-              >
-                <CiEdit size={20} />
-                <span>إعدادات الحساب</span>
               </Link>
             </MenuItem>
 

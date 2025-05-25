@@ -27,12 +27,9 @@ const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
 
   // Updated initialValues to include image
   const initialValues: Partial<CommentInterface> = {
-    text: "",
     author_id: session?.user?.id || "",
     story_id: id,
-    author_name: session?.user?.name || "",
-    author_image: session?.user?.image || "",
-    author_role: session?.user.role,
+    text: "",
   };
 
   // Updated validationSchema to include image validation (optional)

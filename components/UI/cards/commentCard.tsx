@@ -33,7 +33,7 @@ const CommentCard = ({ data }: CommentCardProps) => {
         <div className="flex flex-col gap-1">
           <h5 className="text-[13px] font-semibold">{author_name}</h5>
           <p className="text-primary text-[10px] font-semibold">
-            {getRoleInArabic(author_role)}
+            {getRoleInArabic(author_role!)}
           </p>
         </div>
       </div>
