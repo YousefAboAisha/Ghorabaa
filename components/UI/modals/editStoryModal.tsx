@@ -17,6 +17,8 @@ import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
 import { StoryValidationSchema } from "@/app/validation/storySchema";
 import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
+import { useRouter } from "next/navigation";
+import { StoryStatus } from "@/app/enums";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -29,6 +31,7 @@ const EditStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
+  const router = useRouter();
 
   const { _id, publisher_id, city, neighborhood, bio, image } = data;
 
@@ -99,8 +102,8 @@ const EditStoryModal = ({ setLoading, data }: AddStoryPrpos) => {
       toast.success(
         "تم إرسال طلب تعديل القصة بنجاح، وستتم مراجعته في أقرب وقت !"
       );
-      window.location.reload();
-      console.log("Martyr has been added successfully!", data);
+
+      router.push(`/profile#${StoryStatus.PENDING}`);
     } catch (error) {
       setSubmitting(false);
       setLoading(false);

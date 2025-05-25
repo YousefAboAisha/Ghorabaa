@@ -22,6 +22,14 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   const [currentTap, setCurrentTap] = useState<StoryStatus>(
     StoryStatus.APPROVED
   );
+
+  useEffect(() => {
+    const hash = window.location.hash?.replace("#", "") as StoryStatus;
+    if (Object.values(StoryStatus).includes(hash)) {
+      setCurrentTap(hash);
+    }
+  }, []);
+
   const [stories, setStories] = useState<StoryInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -60,6 +68,22 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
     fetchStories(currentTap);
   }, [currentTap]);
 
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const element = document.querySelector(hash);
+      if (element) {
+        setTimeout(() => {
+          const yOffset = -300; // 👈 scroll 100px above the element
+          const y =
+            element.getBoundingClientRect().top + window.scrollY + yOffset;
+
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }, 1000); // Wait for content to be ready
+      }
+    }
+  }, []);
+
   const getBorderColor = (status: StoryStatus) => {
     if (status !== currentTap) return ""; // ✅ Only add color to active tab
     switch (status) {
@@ -90,7 +114,9 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
             ))}
           </div>
         ) : (
-          <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
+          <div className="relative flex flex-col gap-3 min-h-[30vh] bg-white rounded-md border">
+            <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
+          </div>
         );
 
       case StoryStatus.PENDING:
@@ -103,7 +129,9 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
             ))}
           </div>
         ) : (
-          <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
+          <div className="relative flex flex-col gap-3 min-h-[30vh] bg-white rounded-md border">
+            <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
+          </div>
         );
 
       case StoryStatus.REJECTED:
@@ -120,7 +148,9 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
             ))}
           </div>
         ) : (
-          <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
+          <div className="relative flex flex-col gap-3 min-h-[30vh] bg-white rounded-md border">
+            <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
+          </div>
         );
     }
   };
@@ -128,7 +158,7 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   console.log("currentTap", currentTap);
 
   return (
-    <div className="section relative">
+    <div id={StoryStatus.PENDING} className="section relative">
       {/* Tabs */}
       <div className="flex items-center gap-4 text-sm overflow-auto scrollbar-hidden">
         {StoryTabsData.map(({ label, status, color }) => (
@@ -153,7 +183,7 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
       </div>
 
       {/* Content */}
-      <div className="relative flex flex-col gap-3 mt-8 min-h-[40vh]">
+      <div className="relative flex flex-col gap-3 mt-8 min-h-[30vh]">
         {renderStoryContainer()}
       </div>
     </div>

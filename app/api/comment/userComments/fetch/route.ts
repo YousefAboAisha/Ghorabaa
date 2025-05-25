@@ -16,15 +16,42 @@ export async function GET(req: NextRequest) {
 
     const client = await clientPromise;
     const db = client.db("ghorabaa");
-    const collection = db.collection("comments");
-    const id = token.id;
+    const commentsCollection = db.collection("comments");
+    const user_id = token.id;
 
-    const comments = await collection
-      .find({ author_id: new ObjectId(id) })
-      .sort({ createdAt: -1 }) // Optional: newest first
+    const commentsWithAuthor = await commentsCollection
+      .aggregate([
+        { $match: { author_id: new ObjectId(user_id) } },
+        { $sort: { createdAt: -1 } }, // newest first
+        {
+          $lookup: {
+            from: "users",
+            localField: "author_id",
+            foreignField: "_id",
+            as: "authorInfo",
+          },
+        },
+        {
+          $unwind: {
+            path: "$authorInfo",
+            preserveNullAndEmptyArrays: true, // Optional
+          },
+        },
+        {
+          $project: {
+            text: 1,
+            createdAt: 1,
+            story_id: 1,
+            author_id: 1,
+            author_name: "$authorInfo.name",
+            author_image: "$authorInfo.image",
+            author_role: "$authorInfo.role",
+          },
+        },
+      ])
       .toArray();
 
-    return NextResponse.json({ data: comments }, { status: 200 });
+    return NextResponse.json({ data: commentsWithAuthor }, { status: 200 });
   } catch (error) {
     console.error("Error fetching comments:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
