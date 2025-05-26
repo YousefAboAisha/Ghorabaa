@@ -8,13 +8,15 @@ import { dateConversion } from "@/utils/format";
 
 type NotificationTypesProps = {
   type: NotificationTypes;
-  author_name: string;
+  author_name?: string;
+  name?: string;
   createdAt: Date;
 };
 
 const NotificationCard = ({
   type,
   author_name,
+  name,
   createdAt,
 }: NotificationTypesProps) => {
   switch (type) {
@@ -95,10 +97,9 @@ const NotificationCard = ({
           </div>
 
           <div className="mt-3 font-normal text-[12px] mb-2">
-            تم قبول طلبك لإضافة القصة بعنوان
-            <span className="text-primary font-semibold mx-1">
-              [محمد عبد الله حسب الله]
-            </span>
+            تم قبول طلب إضافة القصة بعنوان
+            <span className="text-primary font-semibold mx-1">{" "} {name} {" "}</span>
+            بنجاح.
           </div>
 
           <div className="absolute bottom-1 left-3 flex items-center gap-1 text-gray_dark text-[10px]">

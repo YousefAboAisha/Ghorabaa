@@ -1,5 +1,5 @@
 import { CommentInterface } from "@/app/interfaces";
-import NoDataMessage from "@/components/errorMessages/noDataMessage";
+import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import CommentCard from "@/components/UI/cards/commentCard";
 import Heading from "@/components/UI/typography/heading";
 import { cookies } from "next/headers";

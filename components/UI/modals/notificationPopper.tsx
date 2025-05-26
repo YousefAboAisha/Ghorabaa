@@ -5,17 +5,23 @@ import NotificationCard from "../cards/notificationCard";
 import Link from "next/link";
 import { Session } from "next-auth";
 import { useEffect, useState, useCallback } from "react";
-import { CommentNotificationInterface } from "@/app/interfaces";
+import {
+  CommentNotificationInterface,
+  StoryNotificationInterface,
+} from "@/app/interfaces";
 import NotificationSkeletonLoader from "../loaders/notificationSkeletonLoader";
+import { NotificationTypes } from "@/app/enums";
 
 type NotificationPopperProps = {
   session: Session | null;
 };
 
+type MixedNotification =
+  | StoryNotificationInterface
+  | CommentNotificationInterface;
+
 function NotificationPopper({ session }: NotificationPopperProps) {
-  const [notifications, setNotifications] = useState<
-    CommentNotificationInterface[]
-  >([]);
+  const [notifications, setNotifications] = useState<MixedNotification[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
 
@@ -94,13 +100,22 @@ function NotificationPopper({ session }: NotificationPopperProps) {
             notifications.map((notification, index) => (
               <MenuItem key={index}>
                 <Link
-                  href={`/stories/${notification.story_id}#COMMENT`}
+                  href={`/stories/${notification.story_id}${
+                    notification.notification_type === NotificationTypes.COMMENT
+                      ? `#comment`
+                      : ""
+                  }`}
                   className="w-full"
                 >
                   <NotificationCard
                     type={notification.notification_type}
                     createdAt={notification.createdAt}
-                    author_name={notification.author_name}
+                    author_name={
+                      "author_name" in notification
+                        ? notification.author_name
+                        : ""
+                    }
+                    name={"name" in notification ? notification.name : ""}
                   />
                 </Link>
               </MenuItem>

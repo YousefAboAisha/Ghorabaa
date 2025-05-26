@@ -18,7 +18,7 @@ const EditStoryButton = ({ data }: EditStoryButtonProps) => {
       <div
         title="تعديل القصة"
         onClick={() => setIsOpen(true)}
-        className="group absolute top-3 left-3 p-1.5 bg-white border rounded-xl z-10 cursor-pointer"
+        className="group absolute top-5 left-5 p-1.5 bg-white border rounded-xl z-10 cursor-pointer"
       >
         <CiEdit size={25} />
       </div>

@@ -1,8 +1,17 @@
+"use client";
+import { usePathname } from "next/navigation";
 import Logo from "../UI/logo";
 import RenderredRoutes from "./renderredRoutes";
 
 const Footer = () => {
   const date = new Date().getFullYear();
+
+  const pathname = usePathname();
+
+  // Only render the navbar if it's not an admin page
+  if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) {
+    return null;
+  }
 
   return (
     <footer className="container flex flex-col mt-24 mb-12">
@@ -27,7 +36,8 @@ const Footer = () => {
           }}
           className="self-center text-center text-[12px] w-full md:w-10/12"
         >
-          هذه المنصّة صدقة جارية عن روح الشهيد المهندس/ محمد عبد الله حسب الله 🧡
+          هذه المنصّة صدقة جارية عن روح الشهيد المهندس/ محمد عبد الله حسب الله
+          🧡
         </div>
       </div>
     </footer>

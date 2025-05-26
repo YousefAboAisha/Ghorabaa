@@ -9,7 +9,7 @@ import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLo
 import { Session } from "next-auth";
 import { StoryTabsData } from "@/data/storyTabsData";
 import RejectAndPendingCardSkeltonLoader from "@/components/UI/loaders/rejectAndPendingCardSkeltonLoader";
-import NoDataMessage from "@/components/errorMessages/noDataMessage";
+import NoDataMessage from "@/components/responseMessages/noDataMessage";
 
 type StoryCounts = {
   [key in StoryStatus]: number;

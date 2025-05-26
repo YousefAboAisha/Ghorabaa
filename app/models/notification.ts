@@ -12,19 +12,15 @@ const baseSchema = new Schema<NotificationInterface>(
       enum: Object.values(NotificationTypes),
       required: true,
     },
-    is_read: {
-      type: Boolean,
-      default: false,
-    },
+    is_read: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
-// Ensure base model is only created once
 const NotificationModel =
   models.Notification || model("Notification", baseSchema);
 
-// Avoid redefining discriminators
+// COMMENT notification discriminator
 const CommentNotificationSchema = new Schema({
   author_name: { type: String, required: true },
   author_id: { type: Schema.Types.ObjectId, required: true, ref: "User" },
@@ -39,6 +35,24 @@ if (!NotificationModel.discriminators?.[NotificationTypes.COMMENT]) {
 } else {
   CommentNotificationModel =
     NotificationModel.discriminators[NotificationTypes.COMMENT];
+}
+
+// STORY (ACCEPT/REJECT) notification discriminator
+const StoryNotificationSchema = new Schema({
+  name: { type: String, required: true },
+});
+
+if (!NotificationModel.discriminators?.[NotificationTypes.ACCEPT]) {
+  NotificationModel.discriminator(
+    NotificationTypes.ACCEPT,
+    StoryNotificationSchema
+  );
+}
+if (!NotificationModel.discriminators?.[NotificationTypes.REJECT]) {
+  NotificationModel.discriminator(
+    NotificationTypes.REJECT,
+    StoryNotificationSchema
+  );
 }
 
 export { NotificationModel, CommentNotificationModel };

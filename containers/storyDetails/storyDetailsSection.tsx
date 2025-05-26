@@ -46,7 +46,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
         <PageTitles storyName={data.name} />
       </div>
 
-      <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-secondary">
+      <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-secondary rounded-2xl">
         <Image
           src={data.image || "/notFound.png"}
           alt="صورة الشهيد"

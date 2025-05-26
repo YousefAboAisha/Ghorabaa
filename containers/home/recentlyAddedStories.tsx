@@ -1,4 +1,4 @@
-import NetworkErrorPage from "@/components/errorMessages/networkErrorPage";
+import NetworkErrorPage from "@/components/responseMessages/networkErrorPage";
 import ImagesSwiper from "@/components/UI/imagesSwiper";
 import { Session } from "next-auth";
 import { cookies } from "next/headers"; // App Router only

@@ -113,6 +113,7 @@ export interface NotificationInterface extends Document {
 // Define the StoryNotification Interface
 export interface StoryNotificationInterface extends NotificationInterface {
   notification_type: NotificationTypes.ACCEPT | NotificationTypes.REJECT;
+  name: string; // Name of the story that has been [APPROVED | REJECTED]
 }
 
 // Define the CommentNotification Interface
@@ -121,3 +122,5 @@ export interface CommentNotificationInterface extends NotificationInterface {
   author_id: Types.ObjectId | string; // Reference to the user who made the action [Adding a comment]
   notification_type: NotificationTypes.COMMENT;
 }
+
+

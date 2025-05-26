@@ -6,7 +6,7 @@ import StoryCard from "@/components/UI/cards/storyCard";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import { Session } from "next-auth";
-import NoDataMessage from "@/components/errorMessages/noDataMessage";
+import NoDataMessage from "@/components/responseMessages/noDataMessage";
 
 type StoriesSectionProps = {
   session: Session | null;
