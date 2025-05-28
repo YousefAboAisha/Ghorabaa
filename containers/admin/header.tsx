@@ -1,26 +1,20 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import logo from "@/public/zad-logo.svg";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { IoIosArrowDown } from "react-icons/io";
 import { CiEdit, CiLogout, CiUser } from "react-icons/ci";
+import Logo from "@/components/UI/logo";
 
 const Header = () => {
   return (
     <nav
-      className={`fixed h-[70px] top-0 w-full z-10 items-center bg-white text-black duration-500 border-b shadow-sm px-8`}
+      className={`fixed h-[70px] top-0 w-[83%] mr-[17%] z-10 items-center bg-white text-black duration-500 shadow-sm `}
     >
-      <div className="flex flex-row justify-between items-center h-full">
+      <div className="flex flex-row justify-between items-center h-full px-8">
         <Menu as={"div"} className={"relative"}>
           <MenuButton as={"div"} className="cursor-pointer">
-            {({ active }) => (
+            {() => (
               <div className="flex items-center gap-1">
-                <IoIosArrowDown
-                  className={`${active && "rotate-180"} duration-200`}
-                  size={14}
-                />
                 <p className="flex items-center justify-center w-12 h-12 bg-primary text-white rounded-full cursor-pointer text-lg shadow-md capitalize">
                   Z
                 </p>
@@ -64,16 +58,7 @@ const Header = () => {
           </MenuItems>
         </Menu>
 
-        {/* Logo */}
-        <Link href={"/"}>
-          <Image
-            src={logo}
-            width={25}
-            alt="Zad logo"
-            className="h-auto"
-            priority // Optimize for above-the-fold images
-          />
-        </Link>
+        <Logo />
       </div>
     </nav>
   );

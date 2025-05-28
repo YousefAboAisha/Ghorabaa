@@ -18,16 +18,23 @@ export async function GET(req: NextRequest) {
     const db = client.db("ghorabaa");
     const usersCollection = db.collection("users");
 
-    const user = await usersCollection.findOne(
-      { _id: new ObjectId(token.id) },
-      {
-        projection: {
-          notifications: 1,
+    const user = await usersCollection
+      .aggregate([
+        { $match: { _id: new ObjectId(token.id) } },
+        {
+          $project: {
+            notifications: {
+              $sortArray: {
+                input: "$notifications",
+                sortBy: { createdAt: -1 },
+              },
+            },
+          },
         },
-      }
-    );
+      ])
+      .toArray();
 
-    const notifications = user?.notifications ?? [];
+    const notifications = user[0]?.notifications ?? [];
     const hasUnread = notifications.some(
       (n: CommentNotificationInterface) => !n.is_read
     );

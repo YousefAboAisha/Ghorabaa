@@ -8,6 +8,7 @@ type ModalType = {
   children?: React.ReactNode;
   className?: string;
   loading?: boolean;
+  containerClassName?: string;
 };
 
 const Modal = ({
@@ -18,6 +19,7 @@ const Modal = ({
   zIndex = "z-[50]",
   loading = false,
   children,
+  containerClassName = "",
 }: ModalType) => {
   // Hide body scroll when modal is open
   useEffect(() => {
@@ -56,7 +58,7 @@ const Modal = ({
       <div
         className={`abs-center fixed bg-white max-h-[90%] z-[1000] w-11/12 md:w-7/12 lg:w-5/12 overflow-y-auto rounded-xl ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        } duration-300 ${className}`}
+        } duration-300 ${className} ${containerClassName}`}
       >
         {children}
       </div>

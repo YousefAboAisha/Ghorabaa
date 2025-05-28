@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import ShowDetailsButton from "../showDetailsButton";
 import { StoryInterface } from "@/app/interfaces";
 import TableLoader from "./tableLoader";
 import Image from "next/image";
@@ -8,8 +7,10 @@ import { StoryStatus } from "@/app/enums";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
-import StoryPreview from "../storyPreview";
-// import UserPreview from "./userPreview";
+import { HiCheck } from "react-icons/hi";
+import { MdOutlineClose } from "react-icons/md";
+import PreviewStory from "../tableActions/previewStory";
+import RejectStory from "../tableActions/rejectStory";
 
 const StoryRequestsTable = () => {
   const [tableData, setTableData] = useState<
@@ -18,8 +19,7 @@ const StoryRequestsTable = () => {
   const [tableLoading, setTableLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isOpenStoryPreview, setIsOpenStoryPreview] = useState<boolean>(false);
-  // const [isOpenUserPreview, setIsOpenUserPreview] = useState<boolean>(false);
-  // const [userData, setUserData] = useState<UserInterface>();
+  const [isOpenStoryReject, setIsOpenStoryReject] = useState<boolean>(false);
   const [storyData, setStoryData] = useState<
     StoryInterface & { publisher_name: string }
   >();
@@ -109,16 +109,6 @@ const StoryRequestsTable = () => {
           <tbody>
             {tableData?.map((story) => (
               <tr key={story._id as string} className="hover:bg-gray-50">
-                {/* <td
-                  onClick={() => {
-                    setIsOpenUserPreview(true);
-                    setIsOpenStoryPreview(false);
-                  }}
-                  className="py-3 px-4 border-b text-right text-sm text-gray-700 hover:underline cursor-pointer"
-                >
-                  {story.publisher_name}
-                </td> */}
-
                 <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
                   {story.name}
                 </td>
@@ -165,13 +155,26 @@ const StoryRequestsTable = () => {
                 </td>
 
                 <td className="py-3 px-4 border-b text-right">
-                  <div
-                    onClick={() => {
-                      setIsOpenStoryPreview(true);
-                      setStoryData(story);
-                    }}
-                  >
-                    <ShowDetailsButton story_id={story._id as string} />
+                  <div className="flex items-center gap-2.5">
+                    <HiCheck
+                      title="قبول القصة"
+                      className="cursor-pointer text-[green]"
+                      onClick={() => {
+                        setIsOpenStoryPreview(true);
+                        setStoryData(story);
+                      }}
+                      size={22}
+                    />
+
+                    <MdOutlineClose
+                      title="رفض القصة"
+                      className="text-[red] cursor-pointer"
+                      onClick={() => {
+                        setIsOpenStoryReject(true);
+                        setStoryData(story);
+                      }}
+                      size={22}
+                    />
                   </div>
                 </td>
               </tr>
@@ -185,17 +188,28 @@ const StoryRequestsTable = () => {
   return (
     <>
       <div className="overflow-x-auto">{renderTableContent()}</div>
+
+      {/* Preview Story Modal */}
       <Modal isOpen={isOpenStoryPreview} setIsOpen={setIsOpenStoryPreview}>
-        <StoryPreview
+        <PreviewStory
           data={storyData!}
           refetchData={fetchTableData}
           setIsOpen={setIsOpenStoryPreview}
         />
       </Modal>
 
-      {/* <Modal isOpen={isOpenUserPreview} setIsOpen={setIsOpenUserPreview}>
-        <UserPreview />
-      </Modal> */}
+      {/* Reject Story Modal */}
+      <Modal
+        isOpen={isOpenStoryReject}
+        setIsOpen={setIsOpenStoryReject}
+        containerClassName="w-11/12 md:w-7/12 !lg:w-[20%]"
+      >
+        <RejectStory
+          data={storyData!}
+          refetchData={fetchTableData}
+          setIsOpen={setIsOpenStoryReject}
+        />
+      </Modal>
     </>
   );
 };

@@ -28,10 +28,7 @@ export async function POST(originalReq: Request) {
     const { story_id, status, ...fieldsToUpdate } = body;
 
     // Validate required inputs
-    if (
-      !story_id ||
-      ![StoryStatus.APPROVED, StoryStatus.REJECTED].includes(status)
-    ) {
+    if (!story_id || status !== StoryStatus.APPROVED) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
@@ -70,37 +67,34 @@ export async function POST(originalReq: Request) {
       }
     );
 
-    // Create notification
-    const notificationPayload = {
-      user_id: story.publisher_id,
-      story_id: story._id,
-      title:
-        status === StoryStatus.APPROVED
-          ? "تمت الموافقة على قصتك."
-          : "تم رفض قصتك من قبل الإدارة.",
-      notification_type:
-        status === StoryStatus.APPROVED
-          ? NotificationTypes.ACCEPT
-          : NotificationTypes.REJECT,
-      name: story.name,
-      createdAt: new Date(),
-      is_read: false,
-    };
+    // && story.publisher_id?.toString() !== author_id - TO prevent sending notifications to the same user who accepted it.
+    if (story) {
+      // Create notification
+      const storyNotificationPayload = {
+        user_id: story.publisher_id,
+        story_id: story._id,
+        title: "تمت الموافقة على قصتك من قِبل المشرف",
+        notification_type: NotificationTypes.ACCEPT,
+        story_name: story.name,
+        createdAt: new Date(),
+        is_read: false,
+      };
 
-    await notificationsCollection.insertOne(notificationPayload);
+      await notificationsCollection.insertOne(storyNotificationPayload);
 
-    // Push notification to user's array (max 7)
-    const update: UpdateFilter<User> = {
-      $push: {
-        notifications: {
-          $each: [notificationPayload],
-          $position: 0,
-          $slice: 7,
+      // Push notification to user's array (max 7)
+      const update: UpdateFilter<User> = {
+        $push: {
+          notifications: {
+            $each: [storyNotificationPayload],
+            $position: 0,
+            $slice: 7,
+          },
         },
-      },
-    };
+      };
 
-    await usersCollection.updateOne({ _id: story.publisher_id }, update);
+      await usersCollection.updateOne({ _id: story.publisher_id }, update);
+    }
 
     return NextResponse.json(
       { message: `Story ${status.toLowerCase()}` },

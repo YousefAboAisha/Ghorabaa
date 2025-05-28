@@ -153,7 +153,7 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   console.log("currentTap", currentTap);
 
   return (
-    <div id={StoryStatus.PENDING} className="section relative">
+    <div id={"STORY"} className="section relative">
       {/* Tabs */}
       <div className="flex items-center gap-4 text-sm overflow-auto scrollbar-hidden">
         {StoryTabsData.map(({ label, status, color }) => (

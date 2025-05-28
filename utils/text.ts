@@ -1,4 +1,4 @@
-import { StoryStatus } from "@/app/enums";
+import { NotificationTypes, StoryStatus } from "@/app/enums";
 
 export const convertStoryStatusToArabic = (status: StoryStatus): string => {
   switch (status) {
@@ -12,5 +12,25 @@ export const convertStoryStatusToArabic = (status: StoryStatus): string => {
       return "مرفوضة";
     default:
       return "غير معروف";
+  }
+};
+
+export const getNotificationHrefPath = (type: NotificationTypes, story_id: string) => {
+  switch (type) {
+    case NotificationTypes.COMMENT:
+      return `/stories/${story_id}#comment`;
+      break;
+
+    case NotificationTypes.ACCEPT:
+      return `/stories/${story_id}`;
+      break;
+
+    case NotificationTypes.REJECT:
+      return `/profile#STORY`;
+      break;
+
+    default:
+      return `/stories/${story_id}`;
+      break;
   }
 };

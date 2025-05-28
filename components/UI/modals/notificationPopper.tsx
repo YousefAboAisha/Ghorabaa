@@ -10,7 +10,7 @@ import {
   StoryNotificationInterface,
 } from "@/app/interfaces";
 import NotificationSkeletonLoader from "../loaders/notificationSkeletonLoader";
-import { NotificationTypes } from "@/app/enums";
+import { getNotificationHrefPath } from "@/utils/text";
 
 type NotificationPopperProps = {
   session: Session | null;
@@ -97,16 +97,13 @@ function NotificationPopper({ session }: NotificationPopperProps) {
           {loading ? (
             <NotificationSkeletonLoader length={1} />
           ) : notifications.length > 0 ? (
-            notifications.map((notification, index) => (
-              <MenuItem key={index}>
-                <Link
-                  href={`/stories/${notification.story_id}${
-                    notification.notification_type === NotificationTypes.COMMENT
-                      ? `#comment`
-                      : ""
-                  }`}
-                  className="w-full"
-                >
+            notifications.map((notification, index) => {
+              const hrefPath = getNotificationHrefPath(
+                notification.notification_type,
+                notification.story_id as string
+              );
+              return (
+                <MenuItem key={index} as={Link} href={hrefPath as string}>
                   <NotificationCard
                     type={notification.notification_type}
                     createdAt={notification.createdAt}
@@ -115,11 +112,16 @@ function NotificationPopper({ session }: NotificationPopperProps) {
                         ? notification.author_name
                         : ""
                     }
-                    name={"name" in notification ? notification.name : ""}
+                    story_name={
+                      "story_name" in notification
+                        ? notification.story_name
+                        : ""
+                    }
+                    is_read={notification.is_read}
                   />
-                </Link>
-              </MenuItem>
-            ))
+                </MenuItem>
+              );
+            })
           ) : (
             <div className="w-full h-32 bg-white flex items-center justify-center p-2 rounded-lg border">
               <p className="text-[11px]">لا توجد إشعارات جديدة!</p>

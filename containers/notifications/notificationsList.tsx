@@ -1,5 +1,6 @@
 import { CommentNotificationInterface } from "@/app/interfaces";
 import NotificationCard from "@/components/UI/cards/notificationCard";
+import { getNotificationHrefPath } from "@/utils/text";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
@@ -24,17 +25,23 @@ const NotificationsList = async () => {
 
   return (
     <div className="flex flex-col gap-2 pb-4 mt-6">
-      {notificationData?.map((elem, index) => {
+      {notificationData.map((notification, index) => {
+        const hrefPath = getNotificationHrefPath(
+          notification.notification_type,
+          notification.story_id as string
+        );
         return (
-          <Link
-            key={index}
-            href={`/stories/${elem.story_id}`}
-            className="w-full"
-          >
+          <Link key={index} href={hrefPath as string}>
             <NotificationCard
-              type={elem.notification_type}
-              createdAt={elem.createdAt}
-              author_name={elem.author_name}
+              type={notification.notification_type}
+              createdAt={notification.createdAt}
+              author_name={
+                "author_name" in notification ? notification.author_name : ""
+              }
+              story_name={
+                "story_name" in notification ? notification.story_name : ""
+              }
+              is_read={notification.is_read}
             />
           </Link>
         );

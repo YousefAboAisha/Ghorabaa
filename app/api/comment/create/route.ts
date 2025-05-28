@@ -54,14 +54,15 @@ export async function POST(originalReq: Request) {
       _id: new ObjectId(author_id),
     });
 
-    if (story?.publisher_id?.toString() !== author_id) {
+    if (story && story.publisher_id?.toString() !== author_id && user) {
       // Don't notify if user commented on their own story
       const notificationPayload = {
-        user_id: story?.publisher_id,
-        story_id: story?._id,
-        title: `قام ${user?.name} بإضافة تعليق جديد على قصتك.`,
+        user_id: story.publisher_id,
+        story_id: story._id,
+        story_name: story.name,
+        title: `قام ${user.name} بإضافة تعليق جديد على قصتك.`,
         notification_type: NotificationTypes.COMMENT,
-        author_name: user?.name,
+        author_name: user.name,
         author_id: new ObjectId(author_id),
         is_read: false,
         createdAt: new Date(),

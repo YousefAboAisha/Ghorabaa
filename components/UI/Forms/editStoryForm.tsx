@@ -16,7 +16,6 @@ import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
 import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
 import { useRouter } from "next/navigation";
-import { StoryStatus } from "@/app/enums";
 import { StoryValidationSchema } from "@/utils/validators";
 
 type AddStoryPrpos = {
@@ -103,7 +102,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
       );
 
       setTimeout(() => {
-        router.push(`/profile#${StoryStatus.PENDING}`);
+        router.push(`/profile#STORY`);
       }, 1000);
     } catch (error) {
       setSubmitting(false);

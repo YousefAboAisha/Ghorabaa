@@ -39,7 +39,7 @@ if (!NotificationModel.discriminators?.[NotificationTypes.COMMENT]) {
 
 // STORY (ACCEPT/REJECT) notification discriminator
 const StoryNotificationSchema = new Schema({
-  name: { type: String, required: true },
+  story_name: { type: String, required: true },
 });
 
 if (!NotificationModel.discriminators?.[NotificationTypes.ACCEPT]) {

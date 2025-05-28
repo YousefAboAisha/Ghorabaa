@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
 
     const notifications = await notificationsCollection
       .find({ user_id: new ObjectId(token.id) })
+      .sort({ createdAt: -1 }) // 👈 Sort by createdAt DESC (most recent first)
       .toArray();
 
     return NextResponse.json({ data: notifications ?? [] }, { status: 200 });

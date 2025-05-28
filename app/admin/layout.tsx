@@ -7,7 +7,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative w-full flex !mt-0">
+    <div className="relative w-full">
       <Header />
       <div className="w-full min-h-screen">{children}</div>
     </div>

@@ -38,7 +38,7 @@ const CommentCard = ({ data }: CommentCardProps) => {
         </div>
       </div>
 
-      <p className="text-[14px] mb-4 text-wrap font-normal">{text}</p>
+      <p className="text-[14px] mb-4 text-wrap font-light">{text}</p>
 
       <p className="text-gray-500 text-[11px] absolute bottom-2 left-6">
         {createdAt ? dateConversion(createdAt) : "تاريخ غير متوفر"}

@@ -39,6 +39,7 @@ export interface StoryInterface extends Document {
   publisher_id: Types.ObjectId | string; // Reference to User who made the add story request.
   hasCompleteProfile: boolean;
   keywords: string[];
+  rejectReason?: string; // ✅ Optional field for rejected stories
   createdAt: Date;
 }
 
@@ -106,6 +107,7 @@ export interface NotificationInterface extends Document {
   title: string;
   notification_type: NotificationTypes;
   story_id: Types.ObjectId | string; // Reference to the story which the user have made comment on OR it has been [APPROVED | REJECTED ]
+  story_name: string; // Name of the story that has been [APPROVED | REJECTED]
   is_read: boolean;
   createdAt: Date;
 }
@@ -113,7 +115,6 @@ export interface NotificationInterface extends Document {
 // Define the StoryNotification Interface
 export interface StoryNotificationInterface extends NotificationInterface {
   notification_type: NotificationTypes.ACCEPT | NotificationTypes.REJECT;
-  name: string; // Name of the story that has been [APPROVED | REJECTED]
 }
 
 // Define the CommentNotification Interface
@@ -122,5 +123,3 @@ export interface CommentNotificationInterface extends NotificationInterface {
   author_id: Types.ObjectId | string; // Reference to the user who made the action [Adding a comment]
   notification_type: NotificationTypes.COMMENT;
 }
-
-

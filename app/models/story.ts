@@ -53,6 +53,12 @@ const storySchema = new Schema<StoryInterface>(
       default: false,
     },
 
+    rejectReason: {
+      type: String,
+      required: false,
+      default: "",
+    },
+
     status: {
       type: String,
       enum: Object.values(StoryStatus),

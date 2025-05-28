@@ -35,7 +35,7 @@ export default function RootLayout({
       >
         <ToastContainer
           position="top-center"
-          autoClose={2000}
+          autoClose={1000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -46,7 +46,7 @@ export default function RootLayout({
           theme="light"
         />
         <NavbarWrapper /> {/* Use the server-side wrapper */}
-        <div className="mt-[70px] min-h-screen">{children}</div>
+        <div className="min-h-screen">{children}</div>
         <Footer />
       </body>
     </html>

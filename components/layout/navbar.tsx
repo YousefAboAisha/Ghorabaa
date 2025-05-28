@@ -129,7 +129,9 @@ const Navbar = ({ session }: NavbarProps) => {
         </div>
 
         {/* Logo */}
-        <Logo className="text-xl" />
+        <Link href={"/"} className="text-xl">
+          <Logo />
+        </Link>
       </div>
 
       {/* Sidebar */}

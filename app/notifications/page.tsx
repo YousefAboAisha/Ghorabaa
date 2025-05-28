@@ -17,7 +17,10 @@ const Page = async () => {
 
           <Suspense
             fallback={
-              <NotificationSkeletonLoader length={3} className="mt-6 flex flex-col gap-4" />
+              <NotificationSkeletonLoader
+                length={3}
+                className="mt-6 flex flex-col gap-4"
+              />
             }
           >
             <NotificationsList />

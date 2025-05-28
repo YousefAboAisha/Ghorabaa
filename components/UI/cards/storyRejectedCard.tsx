@@ -24,10 +24,10 @@ const StoryRejectedCard = ({ data, refetchData }: StoryCardsProps) => {
 
         <h2 className="truncate">الشهيد/ {data?.name}</h2>
 
-        <p className="font-light text-[13px] mb-5 line-clamp-3">{data?.bio}</p>
+        <p className="font-light text-[13px] mb-2 line-clamp-3">{data?.bio}</p>
 
-        <p className=" text-red-600 rounded-sm w-fit font-semibold text-[12px] my-1">
-          البيانات المرفقة غير صحيحة
+        <p className=" text-red-600 rounded-sm w-fit font-semibold text-[11px] mb-4">
+          {data?.rejectReason}
         </p>
 
         <span className="absolute bottom-2 left-2 text-[10px] text-gray_dark mt-2">
