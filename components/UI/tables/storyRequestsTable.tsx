@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { StoryInterface } from "@/app/interfaces";
-import TableLoader from "./tableLoader";
 import Image from "next/image";
 import { StoryStatus } from "@/app/enums";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
@@ -9,8 +8,9 @@ import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
 import { HiCheck } from "react-icons/hi";
 import { MdOutlineClose } from "react-icons/md";
-import PreviewStory from "../tableActions/previewStory";
-import RejectStory from "../tableActions/rejectStory";
+import TableSkeletonLoader from "../loaders/tableSkeletonLoader";
+import PreviewStory from "@/containers/dashboard/actions/previewStory";
+import RejectStory from "@/containers/dashboard/actions/rejectStory";
 
 const StoryRequestsTable = () => {
   const [tableData, setTableData] = useState<
@@ -56,7 +56,7 @@ const StoryRequestsTable = () => {
 
   const renderTableContent = () => {
     if (tableLoading) {
-      return <TableLoader />;
+      return <TableSkeletonLoader />;
     }
 
     if (error) {

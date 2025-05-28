@@ -1,6 +1,7 @@
-import StoryRequestsTable from "@/components/UI/tables/storyRequestsTable";
+import UsersTable from "@/components/UI/tables/usersTable";
+import React from "react";
 
-const Dashboard = () => {
+const Users = () => {
   return (
     <div className="relative">
       {!1 ? (
@@ -39,10 +40,10 @@ const Dashboard = () => {
       )}
 
       <div className="mt-12">
-        <StoryRequestsTable />
+        <UsersTable />
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default Users;

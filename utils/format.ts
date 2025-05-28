@@ -32,11 +32,11 @@ export const arabicDateConversion = (date: Date): string => {
 export function getRoleInArabic(role: Role): string {
   switch (role) {
     case Role.ADMIN:
-      return "مشرف";
+      return "مُشرف";
     case Role.EDITOR:
-      return "محرر";
+      return "مُحرر";
     case Role.USER:
-      return "مستخدم عادي";
+      return "مُستخدم" ;
     default:
       return "غير معروف"; // Unknown
   }

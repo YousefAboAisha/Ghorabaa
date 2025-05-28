@@ -6,23 +6,25 @@ import { usePathname } from "next/navigation"; // Import usePathname
 import { BiComment } from "react-icons/bi";
 import { FiGitPullRequest, FiHome, FiUsers } from "react-icons/fi";
 
-type SidebarProps = {
+type DashboardSidebarProps = {
   session: Session | null;
 };
-const Sidebar = ({ session }: SidebarProps) => {
+const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
   const pathname = usePathname(); // Get the current route
   const image = session?.user.image;
 
   return (
     <div className="bg-white shadow-sm h-full fixed w-[17%] z-10">
       <div className="mt-24">
-        <Image
-          src={image || "/notFound.png"}
-          width={80}
-          height={80}
-          alt="صورة الملف الشخصي"
-          className="rounded-full mx-auto"
-        />
+        <div>
+          <Image
+            src={image || "/notFound.png"}
+            width={70}
+            height={70}
+            alt="صورة الملف الشخصي"
+            className="rounded-full mx-auto"
+          />
+        </div>
 
         <ul className="flex flex-col gap-3 w-full p-4 mt-8">
           <Link href={"/admin/dashboard"}>
@@ -82,4 +84,4 @@ const Sidebar = ({ session }: SidebarProps) => {
   );
 };
 
-export default Sidebar;
+export default DashboardSidebar;
