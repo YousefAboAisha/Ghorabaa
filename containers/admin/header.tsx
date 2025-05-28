@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { Menu, MenuItem, MenuItems } from "@headlessui/react";
 import { CiEdit, CiLogout, CiUser } from "react-icons/ci";
 import Logo from "@/components/UI/logo";
 
@@ -12,7 +12,7 @@ const Header = () => {
     >
       <div className="flex flex-row justify-between items-center h-full px-8">
         <Menu as={"div"} className={"relative"}>
-          <MenuButton as={"div"} className="cursor-pointer">
+          {/* <MenuButton as={"div"} className="cursor-pointer">
             {() => (
               <div className="flex items-center gap-1">
                 <p className="flex items-center justify-center w-12 h-12 bg-primary text-white rounded-full cursor-pointer text-lg shadow-md capitalize">
@@ -20,7 +20,7 @@ const Header = () => {
                 </p>
               </div>
             )}
-          </MenuButton>
+          </MenuButton> */}
 
           <MenuItems
             anchor={{ to: "bottom start", gap: "4px" }}
