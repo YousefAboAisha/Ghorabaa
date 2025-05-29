@@ -4,6 +4,7 @@ import { StoryInterface } from "@/app/interfaces";
 import Button from "@/components/UI/inputs/button";
 import Select from "@/components/UI/inputs/selectInput";
 import TextArea from "@/components/UI/inputs/textArea";
+import Heading from "@/components/UI/typography/heading";
 import { CitiesData } from "@/data/citiesData";
 import { CountriesData } from "@/data/countriesData";
 import { dateConversion } from "@/utils/format";
@@ -44,6 +45,8 @@ const PreviewStory = ({ data, refetchData, setIsOpen }: PreviewStoryProps) => {
 
   return (
     <div className="relative p-8 flex flex-col gap-2">
+      <Heading title="قبول/تعديل القصة" className="mb-4 mx-auto !text-2xl" />
+
       <div className="relative flex flex-col justify-center items-start w-full min-h-[50vh] bg-secondary rounded-2xl">
         <Image
           src={data?.image || "/notFound.png"}

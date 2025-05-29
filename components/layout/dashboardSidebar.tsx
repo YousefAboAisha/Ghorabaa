@@ -36,14 +36,14 @@ const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
               }`}
             >
               <FiHome size={18} />
-              <p className="hidden lg:block text-[13px] "> الرئيسية</p>
+              <p className="hidden lg:block text-[13px] ">كافة القصص</p>
             </li>
           </Link>
 
-          <Link href={"/admin/dashboard/addStory_requests"}>
+          <Link href={"/admin/dashboard/story_requests"}>
             <li
               className={`list-none cursor-pointer duration-100 p-4 w-full rounded-lg flex items-center lg:justify-normal justify-center gap-2 ${
-                pathname === "/admin/dashboard/addStory_requests"
+                pathname === "/admin/dashboard/story_requests"
                   ? "bg-primary text-white"
                   : "bg-gray-100"
               }`}

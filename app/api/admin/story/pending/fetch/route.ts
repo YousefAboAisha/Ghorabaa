@@ -1,8 +1,7 @@
-// app/api/stories/all/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { getToken } from "next-auth/jwt";
-import { Role } from "@/app/enums";
+import { Role, StoryStatus } from "@/app/enums"; // make sure StoryStatus is imported
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -23,6 +22,9 @@ export async function GET(req: NextRequest) {
       .collection("stories")
       .aggregate([
         {
+          $match: { status: StoryStatus.PENDING }, // ✅ Only pending stories
+        },
+        {
           $lookup: {
             from: "users",
             localField: "publisher_id",
@@ -31,7 +33,7 @@ export async function GET(req: NextRequest) {
           },
         },
         {
-          $unwind: "$publisher", // assume each story has exactly one publisher
+          $unwind: "$publisher",
         },
         {
           $project: {
@@ -43,7 +45,7 @@ export async function GET(req: NextRequest) {
             city: 1,
             neighborhood: 1,
             publisher_id: 1,
-            publisher_name: "$publisher.name", // include only the name from the user
+            publisher_name: "$publisher.name",
             createdAt: 1,
           },
         },

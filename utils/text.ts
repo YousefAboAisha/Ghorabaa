@@ -15,7 +15,10 @@ export const convertStoryStatusToArabic = (status: StoryStatus): string => {
   }
 };
 
-export const getNotificationHrefPath = (type: NotificationTypes, story_id: string) => {
+export const getNotificationHrefPath = (
+  type: NotificationTypes,
+  story_id: string
+) => {
   switch (type) {
     case NotificationTypes.COMMENT:
       return `/stories/${story_id}#comment`;

@@ -134,7 +134,6 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
 
   return (
     <div className="relative flex items-center justify-center">
-      s{" "}
       <div className="relative w-full border p-8 bg-white">
         <Heading
           title=""

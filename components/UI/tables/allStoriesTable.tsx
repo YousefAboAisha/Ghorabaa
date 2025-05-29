@@ -12,8 +12,9 @@ import TableSkeletonLoader from "../loaders/tableSkeletonLoader";
 import PreviewStory from "@/containers/dashboard/actions/previewStory";
 import RejectStory from "@/containers/dashboard/actions/rejectStory";
 import Link from "next/link";
+import { StoryTabsData } from "@/data/storyTabsData";
 
-const StoryRequestsTable = () => {
+const AllStoriesTable = () => {
   const [tableData, setTableData] = useState<
     (StoryInterface & { publisher_name: string })[]
   >([]);
@@ -24,12 +25,15 @@ const StoryRequestsTable = () => {
   const [storyData, setStoryData] = useState<
     StoryInterface & { publisher_name: string }
   >();
+  const [currentTap, setCurrentTap] = useState<StoryStatus>(
+    StoryStatus.APPROVED
+  );
 
   const fetchTableData = async () => {
     setTableLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/story/pending/fetch`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/story/all-stories/fetch?status=${currentTap}`
       );
       const res = await response.json();
       console.log("[ADMIN] All Stories Data", res);
@@ -53,7 +57,21 @@ const StoryRequestsTable = () => {
 
   useEffect(() => {
     fetchTableData();
-  }, []);
+  }, [currentTap]);
+
+  const getBorderColor = (status: StoryStatus) => {
+    if (status !== currentTap) return ""; // ✅ Only add color to active tab
+    switch (status) {
+      case StoryStatus.APPROVED:
+        return "border-primary";
+      case StoryStatus.PENDING:
+        return "border-orange-500";
+      case StoryStatus.REJECTED:
+        return "border-red-600";
+      default:
+        return "";
+    }
+  };
 
   const renderTableContent = () => {
     if (tableLoading) {
@@ -199,6 +217,21 @@ const StoryRequestsTable = () => {
 
   return (
     <>
+      <div className="flex items-center gap-4 text-sm overflow-auto scrollbar-hidden mb-8">
+        {StoryTabsData.map(({ label, status }) => (
+          <div
+            key={status}
+            title={label}
+            className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
+              status
+            )}`}
+            onClick={() => setCurrentTap(status)}
+          >
+            <p>{label}</p>
+          </div>
+        ))}
+      </div>
+
       <div className="overflow-x-auto">{renderTableContent()}</div>
 
       {/* Preview Story Modal */}
@@ -226,4 +259,4 @@ const StoryRequestsTable = () => {
   );
 };
 
-export default StoryRequestsTable;
+export default AllStoriesTable;
