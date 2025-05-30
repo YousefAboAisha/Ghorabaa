@@ -1,52 +1,99 @@
 "use client";
 import { CommentInterface } from "@/app/interfaces";
-import { dateConversion, getRoleInArabic } from "@/utils/format";
+import { dateConversion } from "@/utils/format";
+import { getRoleInArabic } from "@/utils/text";
 import Image from "next/image";
+import { useState } from "react";
+import { BsTrash } from "react-icons/bs";
 import { FaUserCircle } from "react-icons/fa";
-import { FaQuoteLeft } from "react-icons/fa6";
+import Modal from "../modals/modal";
+import DeleteComment from "../modals/deleteComment";
+import { Session } from "next-auth";
+import { Role } from "@/app/enums";
 
 type CommentCardProps = {
   data: CommentInterface;
+  session: Session | null;
+  refetchData: () => void;
 };
 
-const CommentCard = ({ data }: CommentCardProps) => {
-  const { author_image, author_name, text, createdAt, author_role } = data;
+const CommentCard = ({ data, refetchData, session }: CommentCardProps) => {
+  const { author_id, author_image, author_name, text, createdAt, author_role } =
+    data;
+
+  const current_user_id = session?.user.id;
+  const current_user_role = session?.user.role;
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isOpenDeleteComment, setIsOpenDeleteComment] =
+    useState<boolean>(false);
+
+  console.log("author_id", author_id);
+  console.log("user_id", current_user_id);
+
+  const isCommentOwner = author_id === current_user_id;
+  const isAdmin = current_user_role === Role.ADMIN;
+
   return (
-    <div className="relative flex flex-col gap-4 p-5 rounded-3xl rounded-tr-none border bg-white shadow-sm w-full h-fit hover:shadow-md duration-200">
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1 border rounded-full">
-          {author_image ? (
-            <Image
-              src={author_image}
-              width={45}
-              height={45}
-              alt="صورة الملف الشخصي للمعلق"
-              className="rounded-full"
-            />
-          ) : (
-            <div className="p-8">
-              <FaUserCircle size={14} className="mx-auto text-gray_dark" />
-            </div>
-          )}
+    <>
+      <div className="group relative flex flex-col gap-4 p-5 rounded-3xl rounded-tr-none border bg-white shadow-sm w-full h-fit hover:shadow-md duration-200">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 border rounded-full">
+            {author_image ? (
+              <Image
+                src={author_image}
+                width={45}
+                height={45}
+                alt="صورة الملف الشخصي للمعلق"
+                className="rounded-full"
+              />
+            ) : (
+              <div className="p-8">
+                <FaUserCircle size={14} className="mx-auto text-gray_dark" />
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <h5 className="text-[13px] font-semibold">{author_name}</h5>
+            <p className="text-primary text-[10px] font-semibold">
+              {getRoleInArabic(author_role!)}
+            </p>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-1">
-          <h5 className="text-[13px] font-semibold">{author_name}</h5>
-          <p className="text-primary text-[10px] font-semibold">
-            {getRoleInArabic(author_role!)}
-          </p>
-        </div>
+        <p className="text-[14px] mb-4 text-wrap font-light">{text}</p>
+
+        <p className="text-gray-500 text-[11px] absolute bottom-2 left-6">
+          {createdAt ? dateConversion(createdAt) : "تاريخ غير متوفر"}
+        </p>
+
+        {(isCommentOwner || isAdmin) && (
+          <div
+            onClick={() => setIsOpenDeleteComment(true)}
+            title="حذف التعليق"
+            className="opacity-0 group-hover:opacity-100 absolute top-2 left-2 items-center justify-center p-2 text-[red] hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+          >
+            <BsTrash size={17} />
+          </div>
+        )}
       </div>
 
-      <p className="text-[14px] mb-4 text-wrap font-light">{text}</p>
-
-      <p className="text-gray-500 text-[11px] absolute bottom-2 left-6">
-        {createdAt ? dateConversion(createdAt) : "تاريخ غير متوفر"}
-      </p>
-
-      {/* absolute icon */}
-      <FaQuoteLeft className="absolute top-2 left-2 opacity-5" size={35} />
-    </div>
+      <Modal
+        isOpen={isOpenDeleteComment}
+        setIsOpen={setIsOpenDeleteComment}
+        containerClassName="w-11/12 md:w-7/12 lg:w-3/12 "
+        loading={loading}
+      >
+        <DeleteComment
+          refetchData={refetchData}
+          setIsOpen={setIsOpenDeleteComment}
+          setLoading={setLoading}
+          loading={loading}
+          comment_id={data._id as string}
+        />
+      </Modal>
+    </>
   );
 };
 

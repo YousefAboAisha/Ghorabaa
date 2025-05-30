@@ -5,10 +5,10 @@ import Image from "next/image";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
-import { getRoleInArabic } from "@/utils/format";
 import EditUser from "@/containers/dashboard/actions/editUser";
 import { Role } from "@/app/enums";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
+import { getRoleInArabic } from "@/utils/text";
 
 const UsersTable = () => {
   const [tableData, setTableData] = useState<UserInterface[]>([]);

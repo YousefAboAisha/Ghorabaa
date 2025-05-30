@@ -1,4 +1,4 @@
-import { NotificationTypes, StoryStatus } from "@/app/enums";
+import { NotificationTypes, Role, StoryStatus } from "@/app/enums";
 
 export const convertStoryStatusToArabic = (status: StoryStatus): string => {
   switch (status) {
@@ -14,6 +14,21 @@ export const convertStoryStatusToArabic = (status: StoryStatus): string => {
       return "غير معروف";
   }
 };
+
+export function getRoleInArabic(role: Role): string {
+  switch (role) {
+    case Role.EXTRAORDINARY:
+      return "مستخدم استثنائي";
+    case Role.ADMIN:
+      return "مشرف";
+    case Role.EDITOR:
+      return "محرر";
+    case Role.USER:
+      return "مستخدم";
+    default:
+      return "غير معروف"; // Unknown
+  }
+}
 
 export const getNotificationHrefPath = (
   type: NotificationTypes,

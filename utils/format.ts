@@ -28,16 +28,3 @@ export const arabicDateConversion = (date: Date): string => {
 
   return formattedDate;
 };
-
-export function getRoleInArabic(role: Role): string {
-  switch (role) {
-    case Role.ADMIN:
-      return "مشرف";
-    case Role.EDITOR:
-      return "محرر";
-    case Role.USER:
-      return "مستخدم" ;
-    default:
-      return "غير معروف"; // Unknown
-  }
-}

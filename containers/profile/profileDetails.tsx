@@ -1,6 +1,7 @@
 import { UserInterface } from "@/app/interfaces";
 import EditProfileForm from "@/components/UI/Forms/editProfileForm";
-import { dateConversion, getRoleInArabic } from "@/utils/format";
+import { dateConversion } from "@/utils/format";
+import { getRoleInArabic } from "@/utils/text";
 import { cookies } from "next/headers";
 import Image from "next/image";
 

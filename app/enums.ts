@@ -1,5 +1,6 @@
 // User Roles Enums
 export enum Role {
+  EXTRAORDINARY = "EXTRAORDINARY", // for exclusive users
   USER = "USER",
   EDITOR = "EDITOR",
   ADMIN = "ADMIN",

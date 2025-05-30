@@ -8,7 +8,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { BiInfoCircle } from "react-icons/bi";
 import { toast } from "react-toastify";
 
-type PreviewStoryProps = {
+type RejectStoryProps = {
   data: StoryInterface & { publisher_name: string };
   refetchData: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -18,7 +18,7 @@ export const RejectStory = ({
   data,
   refetchData,
   setIsOpen,
-}: PreviewStoryProps) => {
+}: RejectStoryProps) => {
   const initialValues = {
     rejectReason: "",
   };

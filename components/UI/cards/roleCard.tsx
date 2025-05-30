@@ -1,5 +1,5 @@
 import { Role } from "@/app/enums";
-import { getRoleInArabic } from "@/utils/format";
+import { getRoleInArabic } from "@/utils/text";
 import React from "react";
 
 type RoleCardProps = {

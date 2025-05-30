@@ -1,3 +1,4 @@
+import { getSessionAction } from "@/app/actions/registerActions";
 import { CommentInterface } from "@/app/interfaces";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import CommentCard from "@/components/UI/cards/commentCard";
@@ -7,6 +8,8 @@ import Link from "next/link";
 
 const RecentComments = async () => {
   const cookieStore = await cookies(); // Access current cookies
+  const session = await getSessionAction();
+  const user_id = session?.user.id;
 
   const userFetchedComments = async () => {
     const res = await fetch(
@@ -41,7 +44,7 @@ const RecentComments = async () => {
                 key={comment._id as string}
                 href={`/stories/${comment.story_id}#COMMENT`}
               >
-                <CommentCard data={comment} />
+                <CommentCard data={comment} user_id={user_id as string} />
               </Link>
             );
           })}
