@@ -6,13 +6,13 @@ import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
 import EditUser from "@/containers/dashboard/actions/editUser";
-import { Role } from "@/app/enums";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
-import { getRoleInArabic } from "@/utils/text";
+import { getRoleColor, getRoleInArabic } from "@/utils/text";
 
 const UsersTable = () => {
   const [tableData, setTableData] = useState<UserInterface[]>([]);
   const [tableLoading, setTableLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpenEditUser, setIsOpenEditUser] = useState<boolean>(false);
   const [userData, setuserData] = useState<UserInterface>();
@@ -130,11 +130,9 @@ const UsersTable = () => {
 
                 <td className={`py-3 px-4 border-b text-right text-[12px]`}>
                   <p
-                    className={`w-fit p-1.5 px-2.5 rounded-md ${
-                      user.role == Role.ADMIN
-                        ? "bg-primary text-white"
-                        : "bg-secondary text-white"
-                    }`}
+                    className={`w-fit p-1.5 px-2.5 rounded-md text-white ${getRoleColor(
+                      user.role
+                    )}`}
                   >
                     {getRoleInArabic(user.role)}
                   </p>
@@ -168,11 +166,13 @@ const UsersTable = () => {
         isOpen={isOpenEditUser}
         setIsOpen={setIsOpenEditUser}
         containerClassName="w-11/12 md:w-7/12 lg:w-4/12"
+        loading={loading}
       >
         <EditUser
           data={userData!}
           refetchData={fetchTableData}
           setIsOpen={setIsOpenEditUser}
+          setLoading={setLoading}
         />
       </Modal>
     </>

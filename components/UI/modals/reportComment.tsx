@@ -1,44 +1,37 @@
-'use client';
-import { StoryStatus } from "@/app/enums";
-import { StoryInterface } from "@/app/interfaces";
-import Button from "@/components/UI/inputs/button";
-import TextArea from "@/components/UI/inputs/textArea";
-import { StoryRejectValidationSchema } from "@/utils/validators";
-import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { Dispatch, SetStateAction } from "react";
 import { BiInfoCircle } from "react-icons/bi";
 import { toast } from "react-toastify";
+import Button from "../inputs/button";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { StoryRejectValidationSchema } from "@/utils/validators";
+import TextArea from "../inputs/textArea";
+import { CommentInterface } from "@/app/interfaces";
 
-type RejectStoryProps = {
-  data: StoryInterface & { publisher_name: string };
-  refetchData: () => void;
+type ReportCommentProps = {
+  data: CommentInterface;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
 };
 
-export const RejectStory = ({
-  data,
-  refetchData,
-  setIsOpen,
-}: RejectStoryProps) => {
+export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
+  const comment_id = data._id;
+
   const initialValues = {
     rejectReason: "",
   };
 
   return (
-    <div className="relative flex flex-col bg-white p-8">
+    <div className="flex flex-col bg-white p-8">
       <div className="flex items-center gap-2">
         <BiInfoCircle size={25} />
-        <h2 className="text-xl font-bold">رفض القصة</h2>
+        <h2 className="text-xl font-bold">إبلاغ عن التعليق</h2>
       </div>
 
       <hr className="mt-4" />
 
-      <p className="mt-6 text-[15px] font-light">
-        سيترتب على هذا الإجراء رفض طلب إضافة قصة الشهيد{" "}
-        <span className="inline text-[red] font-semibold">{data?.name}</span>{" "}
-        المقدمة من قِبل المستخدم{" "}
-        <span className="font-semibold inline">{data?.publisher_name}</span>. هل
-        أنت متأكد من رغبتك في المتابعة؟
+      <p className="mt-6 text-[15px]">
+        هل أنت متأكد من رغبتك في حذف هذا التعليق؟
       </p>
 
       <Formik
@@ -50,15 +43,12 @@ export const RejectStory = ({
 
           try {
             const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/story/status/reject`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/comment/report/${comment_id}`,
               {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  story_id: data._id,
-                  status: StoryStatus.REJECTED,
                   rejectReason: values.rejectReason,
-                  author_id: data.publisher_id, // if needed
                 }),
               }
             );
@@ -69,9 +59,8 @@ export const RejectStory = ({
 
             const result = await response.json();
             console.log("✅ Story updated:", result);
-            resetForm(); // ✅ Clear form values
-            setIsOpen(false); // Close the preview modal
-            refetchData?.(); // Refetch the data after successful update
+            resetForm();
+            setIsOpen(false);
             toast.warn("تم رفض طلب إضافة القصة");
           } catch (error) {
             console.error("❌ Error updating story:", error);
@@ -116,7 +105,7 @@ export const RejectStory = ({
 
               <Button
                 type="submit"
-                title="رفض القصة"
+                title="إبلاغ الآن"
                 className="bg-[red] mt-4"
                 disabled={isSubmitting}
                 loading={isSubmitting}
@@ -129,4 +118,4 @@ export const RejectStory = ({
   );
 };
 
-export default RejectStory;
+export default ReportComment;

@@ -6,6 +6,7 @@ import { getSessionAction } from "@/app/actions/registerActions";
 import EditStoryButton from "./editStoryButton";
 import ShareModal from "../../components/UI/modals/shareModal";
 import { dateConversion } from "@/utils/format";
+import { Role } from "@/app/enums";
 
 type Props = {
   id: string;
@@ -40,6 +41,12 @@ const StoryDetailsSection = async ({ id }: Props) => {
   console.log("Current logged in ID", user_id);
   console.log("Story publisher_id", data.publisher_id);
 
+  const current_user_id = session?.user.id;
+  const current_user_role = session?.user.role;
+
+  const isCommentOwner = data.publisher_id === current_user_id;
+  const isAdmin = current_user_role === Role.ADMIN;
+
   return (
     <div className="mt-24">
       <div className="flex flex-col gap-2">
@@ -57,7 +64,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
           quality={100}
         />
 
-        {data.publisher_id == user_id && <EditStoryButton data={data} />}
+        {(isCommentOwner || isAdmin) && <EditStoryButton data={data} />}
       </div>
 
       <div className="relative mt-1">

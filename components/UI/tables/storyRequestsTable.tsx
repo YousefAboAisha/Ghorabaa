@@ -210,7 +210,7 @@ const StoryRequestsTable = () => {
       <Modal
         isOpen={isOpenStoryReject}
         setIsOpen={setIsOpenStoryReject}
-        containerClassName="w-11/12 md:w-7/12 lg:w-3/12 "
+        containerClassName="!lg:w-3/12 "
       >
         <RejectStory
           data={storyData!}

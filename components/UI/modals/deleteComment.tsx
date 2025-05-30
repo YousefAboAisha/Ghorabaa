@@ -2,9 +2,10 @@ import React, { Dispatch, SetStateAction } from "react";
 import { BiInfoCircle } from "react-icons/bi";
 import { toast } from "react-toastify";
 import Button from "../inputs/button";
+import { CommentInterface } from "@/app/interfaces";
 
 type DeleteCommentProps = {
-  comment_id: string;
+  data: CommentInterface;
   refetchData: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
@@ -12,12 +13,14 @@ type DeleteCommentProps = {
 };
 
 export const DeleteComment = ({
+  data,
   refetchData,
   setIsOpen,
   setLoading,
   loading,
-  comment_id,
 }: DeleteCommentProps) => {
+  const comment_id = data._id;
+
   const deleteCommentHandler = async () => {
     setLoading(true);
     try {

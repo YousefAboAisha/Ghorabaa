@@ -47,6 +47,7 @@ export enum NotificationTypes {
   REJECT = "REJECT",
   ACCEPT = "ACCEPT",
   COMMENT = "COMMENT",
+  DELETE = "DELETE",
 }
 
 // Account Providers Enums

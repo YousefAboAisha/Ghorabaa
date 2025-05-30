@@ -14,7 +14,7 @@ const Modal = ({
   setIsOpen,
   isOpen,
   bg = "bg-[#000000e7]",
-  containerClassName = "w-11/12 md:w-7/12 lg:w-5/12 ",
+  containerClassName = "",
   zIndex = "z-[50]",
   loading = false,
   children,
@@ -58,7 +58,7 @@ const Modal = ({
         {...rest}
         className={`abs-center fixed bg-white max-h-[90%] z-[1000] overflow-y-auto rounded-xl ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        } duration-300 ${containerClassName}`}
+        } duration-300 w-11/12 md:w-7/12 lg:w-5/12 ${containerClassName}`}
       >
         {children}
       </div>

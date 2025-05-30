@@ -1,5 +1,4 @@
 "use client";
-import { StoryStatus } from "@/app/enums";
 import { UserInterface } from "@/app/interfaces";
 import RoleCard from "@/components/UI/cards/roleCard";
 import Button from "@/components/UI/inputs/button";
@@ -17,9 +16,15 @@ type EditUserProps = {
   data: UserInterface;
   refetchData?: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setLoading?: Dispatch<SetStateAction<boolean>>;
 };
 
-const EditUser = ({ data, refetchData, setIsOpen }: EditUserProps) => {
+const EditUser = ({
+  data,
+  refetchData,
+  setIsOpen,
+  setLoading,
+}: EditUserProps) => {
   const initialValues = {
     name: data?.name || "",
     phone_number: data?.phone_number || "",
@@ -32,25 +37,23 @@ const EditUser = ({ data, refetchData, setIsOpen }: EditUserProps) => {
       <Image
         src={data?.image || "/notFound.png"}
         alt="صورة الشهيد"
-        width={90}
-        height={90}
-        className="mx-auto z-[10] object-cover rounded-full"
+        width={100}
+        height={100}
+        className="mx-auto z-[10] object-cover rounded-full border shadow-md"
         priority
         quality={100}
       />
 
       <div className="flex flex-col gap-2 mt-4">
-        <h2 className="font-semibold">{data?.name}</h2>
         <Formik
           initialValues={initialValues}
           enableReinitialize={true}
           validationSchema={EditUserValidationSchema}
           onSubmit={async (values, { setSubmitting }) => {
-            setSubmitting(true);
-
             try {
+              setLoading?.(true); // Set loading state to true before starting the request
               const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/story/status/approve`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/user/update`,
                 {
                   method: "POST",
                   headers: {
@@ -59,7 +62,7 @@ const EditUser = ({ data, refetchData, setIsOpen }: EditUserProps) => {
                   },
                   body: JSON.stringify({
                     ...values,
-                    status: StoryStatus.APPROVED,
+                    _id: data._id, // Send user ID for backend to find the user
                   }),
                 }
               );
@@ -70,14 +73,21 @@ const EditUser = ({ data, refetchData, setIsOpen }: EditUserProps) => {
 
               const result = await res.json();
               console.log("✅ Story updated:", result);
+              setLoading?.(false); // Set loading state to false
               setIsOpen(false); // Close the preview modal
-              refetchData?.(); // Refetch the data after successful update
-              toast.success("تم تحديث ونشر القصة بنجاح!");
+              toast.success("تم تحديث بيانات المستخدم بنجاح!");
+
+              setTimeout(() => {
+                refetchData?.(); // Refetch data after successful update
+              }, 500); // Delay to allow the modal to close before refetching
+
               // Optionally show a toast or redirect
             } catch (error) {
               console.error("❌ Error updating story:", error);
             } finally {
               setSubmitting(false);
+              setLoading?.(false); // Ensure loading state is false even on error
+              setIsOpen(false); // Close the preview modal
             }
           }}
         >

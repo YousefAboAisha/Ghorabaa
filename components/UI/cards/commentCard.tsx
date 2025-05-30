@@ -10,6 +10,8 @@ import Modal from "../modals/modal";
 import DeleteComment from "../modals/deleteComment";
 import { Session } from "next-auth";
 import { Role } from "@/app/enums";
+import { MdOutlineReport } from "react-icons/md";
+import ReportComment from "../modals/reportComment";
 
 type CommentCardProps = {
   data: CommentInterface;
@@ -26,6 +28,9 @@ const CommentCard = ({ data, refetchData, session }: CommentCardProps) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpenDeleteComment, setIsOpenDeleteComment] =
+    useState<boolean>(false);
+
+  const [isOpenReportComment, setIsOpenReportComment] =
     useState<boolean>(false);
 
   console.log("author_id", author_id);
@@ -68,29 +73,54 @@ const CommentCard = ({ data, refetchData, session }: CommentCardProps) => {
           {createdAt ? dateConversion(createdAt) : "تاريخ غير متوفر"}
         </p>
 
-        {(isCommentOwner || isAdmin) && (
-          <div
-            onClick={() => setIsOpenDeleteComment(true)}
-            title="حذف التعليق"
-            className="opacity-0 group-hover:opacity-100 absolute top-2 left-2 items-center justify-center p-2 text-[red] hover:bg-gray_light duration-200 rounded-full cursor-pointer"
-          >
-            <BsTrash size={17} />
-          </div>
-        )}
+        <div className="absolute top-2 left-2 flex flex-col gap-0.5 ">
+          {(isCommentOwner || isAdmin) && (
+            <div
+              onClick={() => setIsOpenDeleteComment(true)}
+              title="حذف التعليق"
+              className="opacity-0 group-hover:opacity-100 items-center justify-center p-2 text-[red] hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+            >
+              <BsTrash size={17} />
+            </div>
+          )}
+
+          {session && (
+            <div
+              onClick={() => setIsOpenReportComment(true)}
+              title="إبلاغ عن التعليق"
+              className="opacity-0 group-hover:opacity-100 items-center justify-center p-2 text-gray_dark hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+            >
+              <MdOutlineReport size={17} />
+            </div>
+          )}
+        </div>
       </div>
 
       <Modal
         isOpen={isOpenDeleteComment}
         setIsOpen={setIsOpenDeleteComment}
-        containerClassName="w-11/12 md:w-7/12 lg:w-3/12 "
         loading={loading}
+        containerClassName="lg:w-[440px] w-full"
       >
         <DeleteComment
           refetchData={refetchData}
           setIsOpen={setIsOpenDeleteComment}
           setLoading={setLoading}
           loading={loading}
-          comment_id={data._id as string}
+          data={data}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={isOpenReportComment}
+        setIsOpen={setIsOpenReportComment}
+        loading={loading}
+      >
+        <ReportComment
+          setIsOpen={setIsOpenReportComment}
+          setLoading={setLoading}
+          loading={loading}
+          data={data}
         />
       </Modal>
     </>

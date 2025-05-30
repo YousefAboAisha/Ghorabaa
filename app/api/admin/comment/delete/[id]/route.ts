@@ -2,7 +2,7 @@ import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { getToken } from "next-auth/jwt";
-import { Role } from "@/app/enums";
+import { NotificationTypes, Role } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -20,16 +20,17 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     }
 
     const token = await getToken({ req, secret });
-
     if (!token || !token.id) {
       return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
     }
 
     const client = await clientPromise;
     const db = client.db("ghorabaa");
-    const commentsCollection = db.collection("comments");
 
-    // Get the comment to verify its author
+    const commentsCollection = db.collection("comments");
+    const notificationsCollection = db.collection("notifications");
+    const storiesCollection = db.collection("stories");
+
     const comment = await commentsCollection.findOne({ _id: new ObjectId(id) });
 
     if (!comment) {
@@ -39,9 +40,8 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
       );
     }
 
-    // Only allow deletion if the requester is the comment's author or an admin
     const isOwner = comment.author_id?.toString() === token.id;
-    const isAdmin = token.role === Role.ADMIN; // Adjust if your roles differ
+    const isAdmin = token.role === Role.ADMIN;
 
     if (!isOwner && !isAdmin) {
       return NextResponse.json(
@@ -50,13 +50,33 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
       );
     }
 
-    // Proceed to delete
     const result = await commentsCollection.deleteOne({
       _id: new ObjectId(id),
     });
 
+    // ✅ Fetch story name via projection
+    const story = await storiesCollection.findOne(
+      { _id: comment.story_id },
+      { projection: { name: 1 } }
+    );
+
+    // 🔔 Add notification if admin deleted another user's comment
+    if (isAdmin && !isOwner && comment.author_id) {
+      await notificationsCollection.insertOne({
+        user_id: comment.author_id,
+        type: NotificationTypes.DELETE,
+        message: `تم حذف تعليقك من قصة "${
+          story?.name ?? "غير معروفة"
+        }" بواسطة المشرف.`,
+        story_id: comment.story_id,
+        story_name: story?.name,
+        is_read: false,
+        created_at: new Date(),
+      });
+    }
+
     return NextResponse.json(
-      { message: "تم حذف التعليق", result },
+      { message: "تم حذف التعليق", data: result },
       { status: 200 }
     );
   } catch (error) {

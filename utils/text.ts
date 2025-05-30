@@ -52,3 +52,18 @@ export const getNotificationHrefPath = (
       break;
   }
 };
+
+export const getRoleColor = (role: Role) => {
+  switch (role) {
+    case Role.ADMIN:
+      return "bg-primary";
+    case Role.EDITOR:
+      return "bg-blue";
+    case Role.USER:
+      return "bg-secondary";
+    case Role.EXTRAORDINARY:
+      return "bg-[red]";
+    default:
+      return "";
+  }
+};
