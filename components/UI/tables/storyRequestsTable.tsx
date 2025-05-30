@@ -73,10 +73,6 @@ const StoryRequestsTable = () => {
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
-              {/* <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                الناشر
-              </th> */}
-
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
                 اسم الشهيد
               </th>
@@ -214,7 +210,7 @@ const StoryRequestsTable = () => {
       <Modal
         isOpen={isOpenStoryReject}
         setIsOpen={setIsOpenStoryReject}
-        containerClassName="w-11/12 md:w-7/12 !lg:w-[20%]"
+        containerClassName="w-11/12 md:w-7/12 lg:w-3/12 "
       >
         <RejectStory
           data={storyData!}

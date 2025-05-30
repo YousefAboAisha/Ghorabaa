@@ -167,7 +167,7 @@ const UsersTable = () => {
       <Modal
         isOpen={isOpenEditUser}
         setIsOpen={setIsOpenEditUser}
-        containerClassName="w-11/12 md:w-7/12 !lg:w-[20%]"
+        containerClassName="w-11/12 md:w-7/12 lg:w-4/12"
       >
         <EditUser
           data={userData!}
