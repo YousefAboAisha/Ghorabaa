@@ -8,10 +8,10 @@ import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
 import { HiCheck } from "react-icons/hi";
 import { MdOutlineClose } from "react-icons/md";
-import TableSkeletonLoader from "../loaders/tableSkeletonLoader";
 import PreviewStory from "@/containers/dashboard/actions/previewStory";
 import RejectStory from "@/containers/dashboard/actions/rejectStory";
 import Link from "next/link";
+import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 
 const StoryRequestsTable = () => {
   const [tableData, setTableData] = useState<
@@ -57,7 +57,7 @@ const StoryRequestsTable = () => {
 
   const renderTableContent = () => {
     if (tableLoading) {
-      return <TableSkeletonLoader />;
+      return <DashboardTableSkeletonLoader />;
     }
 
     if (error) {

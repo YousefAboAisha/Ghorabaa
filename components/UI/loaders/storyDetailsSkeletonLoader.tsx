@@ -42,6 +42,7 @@ const StoryDetailsSkeletonLoader = () => {
           </tr>
         </tbody>
       </table>
+      
       <div className="h-4 w-5/12 rounded-xl bg-gray-300 animate-pulse mt-6 mb-4"></div>
       <div className="h-2 w-full rounded-xl bg-gray-300 animate-pulse mt-2"></div>
       <div className="h-2 w-full rounded-xl bg-gray-300 animate-pulse mt-2"></div>
