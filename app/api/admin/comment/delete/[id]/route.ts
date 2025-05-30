@@ -1,8 +1,9 @@
 import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import { ObjectId } from "mongodb";
+import { ObjectId, UpdateFilter } from "mongodb";
 import { getToken } from "next-auth/jwt";
 import { NotificationTypes, Role } from "@/app/enums";
+import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -30,6 +31,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     const commentsCollection = db.collection("comments");
     const notificationsCollection = db.collection("notifications");
     const storiesCollection = db.collection("stories");
+    const usersCollection = db.collection<User>("users");
 
     const comment = await commentsCollection.findOne({ _id: new ObjectId(id) });
 
@@ -62,17 +64,29 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
 
     // 🔔 Add notification if admin deleted another user's comment
     if (isAdmin && !isOwner && comment.author_id) {
-      await notificationsCollection.insertOne({
+      const storyNotificationPayload = {
         user_id: comment.author_id,
-        type: NotificationTypes.DELETE,
-        message: `تم حذف تعليقك من قصة "${
-          story?.name ?? "غير معروفة"
-        }" بواسطة المشرف.`,
+        notification_type: NotificationTypes.DELETE,
+        title: `<p>تم حذف تعليقك على قصة الشهيد <strong>${story?.name}</strong> بسبب مخالفته معايير المنصة</p>`,
         story_id: comment.story_id,
         story_name: story?.name,
         is_read: false,
-        created_at: new Date(),
-      });
+        createdAt: new Date(),
+      };
+      await notificationsCollection.insertOne(storyNotificationPayload);
+
+      // Push notification to user's array (max 7)[]
+      const update: UpdateFilter<User> = {
+        $push: {
+          notifications: {
+            $each: [storyNotificationPayload],
+            $position: 0,
+            $slice: 7,
+          },
+        },
+      };
+
+      await usersCollection.updateOne({ _id: comment.author_id }, update);
     }
 
     return NextResponse.json(

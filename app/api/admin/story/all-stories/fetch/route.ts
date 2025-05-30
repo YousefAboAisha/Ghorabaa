@@ -60,6 +60,8 @@ export async function GET(req: NextRequest) {
       .aggregate(pipeline)
       .toArray();
 
+    console.log("Fetched stories:", stories);
+
     return NextResponse.json({ data: stories }, { status: 200 });
   } catch (error) {
     console.error("Error fetching stories:", error);

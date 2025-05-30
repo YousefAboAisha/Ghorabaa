@@ -6,12 +6,10 @@ import Link from "next/link";
 
 const NotificationsList = async () => {
   const cookieStore = await cookies(); // Access current cookies
-  await new Promise((res) => setTimeout(res, 3000)); // simulate 3 sec delay
 
   const notificationResponse = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/notification/fetchAll`,
     {
-      cache: "no-store", // optional but recommended if dynamic
       headers: {
         Cookie: cookieStore.toString(), // ⬅️ Forward cookies
       },
