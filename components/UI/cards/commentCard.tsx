@@ -16,7 +16,7 @@ import ReportComment from "../modals/reportComment";
 type CommentCardProps = {
   data: CommentInterface;
   session: Session | null;
-  refetchData: () => void;
+  refetchData?: () => void;
 };
 
 const CommentCard = ({ data, refetchData, session }: CommentCardProps) => {
@@ -103,7 +103,7 @@ const CommentCard = ({ data, refetchData, session }: CommentCardProps) => {
         containerClassName="lg:w-[440px] w-full"
       >
         <DeleteComment
-          refetchData={refetchData}
+          refetchData={refetchData!}
           setIsOpen={setIsOpenDeleteComment}
           setLoading={setLoading}
           loading={loading}

@@ -6,7 +6,7 @@ import { CommentInterface } from "@/app/interfaces";
 
 type DeleteCommentProps = {
   data: CommentInterface;
-  refetchData: () => void;
+  refetchData?: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
@@ -40,7 +40,7 @@ export const DeleteComment = ({
       console.log("✅ Story updated:", result);
       setIsOpen(false); // Close the preview modal
       setLoading(false);
-      refetchData(); // Refetch the data after successful update
+      refetchData?.(); // Refetch the data after successful update
       toast.warn("تم حذف التعليق بنجاح!");
     } catch (error) {
       console.error("❌ Error updating story:", error);

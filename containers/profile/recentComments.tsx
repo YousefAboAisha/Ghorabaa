@@ -9,7 +9,6 @@ import Link from "next/link";
 const RecentComments = async () => {
   const cookieStore = await cookies(); // Access current cookies
   const session = await getSessionAction();
-  const user_id = session?.user.id;
 
   const userFetchedComments = async () => {
     const res = await fetch(
@@ -44,7 +43,7 @@ const RecentComments = async () => {
                 key={comment._id as string}
                 href={`/stories/${comment.story_id}#COMMENT`}
               >
-                <CommentCard data={comment} user_id={user_id as string} />
+                <CommentCard data={comment} session={session} />
               </Link>
             );
           })}

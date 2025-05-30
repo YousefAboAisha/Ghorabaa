@@ -14,7 +14,7 @@ const SuccessMessage = () => {
 
   return (
     <Modal
-      className="w-11/12 md:w-7/12 lg:w-4/12 p-10"
+      containerClassName="w-11/12 md:w-7/12 lg:w-4/12 p-10"
       isOpen={isOpen}
       setIsOpen={modalHandler}
       zIndex="z-[1001]"
