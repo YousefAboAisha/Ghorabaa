@@ -17,9 +17,15 @@ type CommentCardProps = {
   data: CommentInterface;
   session: Session | null;
   refetchData?: () => void;
+  showActionButtons?: boolean;
 };
 
-const CommentCard = ({ data, refetchData, session }: CommentCardProps) => {
+const CommentCard = ({
+  data,
+  refetchData,
+  session,
+  showActionButtons = false,
+}: CommentCardProps) => {
   const { author_id, author_image, author_name, text, createdAt, author_role } =
     data;
 
@@ -73,34 +79,36 @@ const CommentCard = ({ data, refetchData, session }: CommentCardProps) => {
           {createdAt ? dateConversion(createdAt) : "تاريخ غير متوفر"}
         </p>
 
-        <div className="absolute top-2 left-2 flex flex-col gap-0.5 ">
-          {(isCommentOwner || isAdmin) && (
-            <div
-              onClick={() => setIsOpenDeleteComment(true)}
-              title="حذف التعليق"
-              className="opacity-0 group-hover:opacity-100 items-center justify-center p-2 text-[red] hover:bg-gray_light duration-200 rounded-full cursor-pointer"
-            >
-              <BsTrash size={17} />
-            </div>
-          )}
+        {showActionButtons && (
+          <div className="absolute top-2 left-2 flex flex-col gap-0.5">
+            {(isCommentOwner || isAdmin) && (
+              <div
+                onClick={() => setIsOpenDeleteComment(true)}
+                title="حذف التعليق"
+                className="opacity-0 group-hover:opacity-100 items-center justify-center p-2 text-[red] hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+              >
+                <BsTrash size={17} />
+              </div>
+            )}
 
-          {session && (
-            <div
-              onClick={() => setIsOpenReportComment(true)}
-              title="إبلاغ عن التعليق"
-              className="opacity-0 group-hover:opacity-100 items-center justify-center p-2 text-gray_dark hover:bg-gray_light duration-200 rounded-full cursor-pointer"
-            >
-              <MdOutlineReport size={17} />
-            </div>
-          )}
-        </div>
+            {session && (
+              <div
+                onClick={() => setIsOpenReportComment(true)}
+                title="إبلاغ عن التعليق"
+                className="opacity-0 group-hover:opacity-100 items-center justify-center p-2 text-gray_dark hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+              >
+                <MdOutlineReport size={17} />
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <Modal
         isOpen={isOpenDeleteComment}
         setIsOpen={setIsOpenDeleteComment}
         loading={loading}
-        containerClassName="lg:w-[440px] w-full"
+        containerClassName="lg:w-[440px]"
       >
         <DeleteComment
           refetchData={refetchData!}
@@ -115,6 +123,7 @@ const CommentCard = ({ data, refetchData, session }: CommentCardProps) => {
         isOpen={isOpenReportComment}
         setIsOpen={setIsOpenReportComment}
         loading={loading}
+        containerClassName="lg:w-[33%]"
       >
         <ReportComment
           setIsOpen={setIsOpenReportComment}

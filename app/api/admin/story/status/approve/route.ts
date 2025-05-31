@@ -72,10 +72,9 @@ export async function POST(originalReq: Request) {
       // Create notification
       const storyNotificationPayload = {
         user_id: story.publisher_id,
-        story_id: story._id,
-        title: "تمت الموافقة على قصتك من قِبل المشرف",
+        message: "تمت الموافقة على طلب إضافة قصتك من قِبِل المشرف",
+        href: `/stories/${story._id}`,
         notification_type: NotificationTypes.ACCEPT,
-        story_name: story.name,
         createdAt: new Date(),
         is_read: false,
       };

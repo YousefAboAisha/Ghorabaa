@@ -65,6 +65,7 @@ const CommentsSection = ({ session, id }: CommentSectionProps) => {
               key={comment._id as string}
               session={session}
               refetchData={fetchComments}
+              showActionButtons={true}
             />
           ))}
         </div>

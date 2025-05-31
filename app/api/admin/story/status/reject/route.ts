@@ -59,10 +59,9 @@ export async function PUT(originalReq: Request) {
       // Create notification
       const storyNotificationPayload = {
         user_id: story.publisher_id,
-        story_id: story._id,
-        title: "تم رفض قصتك من قبل المشرف.",
+        message: "تم رفض قصتك من قبل المشرف.",
+        href: `/profile#STORY`,
         notification_type: NotificationTypes.REJECT,
-        story_name: story.name,
         createdAt: new Date(),
         is_read: false,
       };

@@ -1,27 +1,31 @@
 "use client";
 import { useEffect, useState } from "react";
-import { UserInterface } from "@/app/interfaces";
-import Image from "next/image";
+import { ReportInterface } from "@/app/interfaces";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
-import EditUser from "@/containers/dashboard/actions/editUser";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
-import { getRoleColor, getRoleInArabic } from "@/utils/text";
+import {
+  getContentColor,
+  getContentTypeInArabic,
+  getReportColor,
+  getReportReasonLabel,
+  getReportStatusInArabic,
+} from "@/utils/text";
 
-const UsersTable = () => {
-  const [tableData, setTableData] = useState<UserInterface[]>([]);
+const ReportsTable = () => {
+  const [tableData, setTableData] = useState<ReportInterface[]>([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpenEditUser, setIsOpenEditUser] = useState<boolean>(false);
-  const [userData, setuserData] = useState<UserInterface>();
+  const [userData, setuserData] = useState<ReportInterface>();
 
   const fetchTableData = async () => {
     setTableLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/user/fetchAll`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/report/fetchAll`
       );
       const res = await response.json();
       console.log("[ADMIN] All Stories Data", res);
@@ -66,27 +70,23 @@ const UsersTable = () => {
           <thead>
             <tr className="bg-gray-100">
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                الصورة
+                عنوان القصة
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                اسم المستخدم
+                سبب الإبلاغ
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                البريد الالكتروني
+                تاريخ الإبلاغ
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                رقم الهاتف
+                نوع المحتوى
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                تاريخ الإنشاء
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                نوع الحساب
+                الحالة
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
@@ -96,45 +96,41 @@ const UsersTable = () => {
           </thead>
 
           <tbody>
-            {tableData?.map((user) => (
-              <tr key={user._id as string} className="hover:bg-gray-50">
-                <td className="py-3 px-4 border-b text-right">
-                  <Image
-                    src={user.image}
-                    alt={user.name}
-                    width={50}
-                    height={50}
-                    className="rounded-full border"
-                  />
+            {tableData?.map((report) => (
+              <tr key={report._id as string} className="hover:bg-gray-50">
+                <td className="py-3 px-4 border-b text-sm text-right">
+                  {report.content_name || "مستخدم غير معروف"}
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {user.name}
+                  {getReportReasonLabel(report.reason)}
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {user.email || "غير محدد"}
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {user.phone_number || "غير محدد"}
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {new Date(user.createdAt).toLocaleDateString("ar-EG", {
+                  {new Date(report.createdAt).toLocaleDateString("ar-EG", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                   })}
                 </td>
 
-                <td className={`py-3 px-4 border-b text-right text-[12px]`}>
+                <td className={`py-3 px-4 border-b text-right`}>
                   <p
-                    className={`w-fit p-1.5 px-2.5 rounded-sm text-white ${getRoleColor(
-                      user.role
+                    className={`w-fit p-1.5 px-2.5 rounded-sm text-white text-[12px] ${getContentColor(
+                      report.content_type
                     )}`}
                   >
-                    {getRoleInArabic(user.role)}
+                    {getContentTypeInArabic(report.content_type)}
+                  </p>
+                </td>
+
+                <td className={`py-3 px-4 border-b text-right text-[12px]`}>
+                  <p
+                    className={`w-fit p-1.5 px-2.5 rounded-sm text-white ${getReportColor(
+                      report.status
+                    )}`}
+                  >
+                    {getReportStatusInArabic(report.status)}
                   </p>
                 </td>
 
@@ -142,11 +138,11 @@ const UsersTable = () => {
                   <p
                     onClick={() => {
                       setIsOpenEditUser(true);
-                      setuserData(user);
+                      setuserData(report);
                     }}
                     className="hover:underline cursor-pointer"
                   >
-                    تعديل البيانات
+                    مُراجعة الإبلاغ
                   </p>
                 </td>
               </tr>
@@ -167,16 +163,9 @@ const UsersTable = () => {
         setIsOpen={setIsOpenEditUser}
         containerClassName="lg:w-[35%]"
         loading={loading}
-      >
-        <EditUser
-          data={userData!}
-          refetchData={fetchTableData}
-          setIsOpen={setIsOpenEditUser}
-          setLoading={setLoading}
-        />
-      </Modal>
+      ></Modal>
     </>
   );
 };
 
-export default UsersTable;
+export default ReportsTable;

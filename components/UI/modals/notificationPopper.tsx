@@ -10,7 +10,6 @@ import {
   StoryNotificationInterface,
 } from "@/app/interfaces";
 import NotificationSkeletonLoader from "../loaders/notificationSkeletonLoader";
-import { getNotificationHrefPath } from "@/utils/text";
 
 type NotificationPopperProps = {
   session: Session | null;
@@ -98,26 +97,13 @@ function NotificationPopper({ session }: NotificationPopperProps) {
             <NotificationSkeletonLoader length={1} />
           ) : notifications.length > 0 ? (
             notifications.map((notification, index) => {
-              const hrefPath = getNotificationHrefPath(
-                notification.notification_type,
-                notification.story_id as string
-              );
               return (
-                <MenuItem key={index} as={Link} href={hrefPath as string}>
+                <MenuItem key={index} as={Link} href={notification.href || "#"}>
                   <NotificationCard
                     type={notification.notification_type}
                     createdAt={notification.createdAt}
-                    author_name={
-                      "author_name" in notification
-                        ? notification.author_name
-                        : ""
-                    }
-                    story_name={
-                      "story_name" in notification
-                        ? notification.story_name
-                        : ""
-                    }
                     is_read={notification.is_read}
+                    message={notification.message}
                   />
                 </MenuItem>
               );

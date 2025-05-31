@@ -1,9 +1,14 @@
 // User Roles Enums
 export enum Role {
-  EXTRAORDINARY = "EXTRAORDINARY", // for exclusive users
-  USER = "USER",
-  EDITOR = "EDITOR",
   ADMIN = "ADMIN",
+  EDITOR = "EDITOR",
+  USER = "USER",
+}
+
+// Conntent Types Enums
+export enum ContentType {
+  STORY = "STORY", // for stories
+  COMMENT = "COMMENT", // for comments
 }
 
 // Story Status Enums
@@ -36,18 +41,29 @@ export enum DonationCampaignStatus {
 
 // Reort Reasons Enums
 export enum ReportReasons {
-  INCORRECT_INFORMATION = "INCORRECT_INFORMATION",
-  MISSING_INFORMATION = "MISSING_INFORMATION",
+  DISRESPECT = "DISRESPECT",
+  HATE_SPEECH = "HATE_SPEECH",
+  MISINFORMATION = "MISINFORMATION",
+  VIOLENCE = "VIOLENCE",
+  HARASSMENT = "HARASSMENT",
+  POLITICAL_PROVOCATION = "POLITICAL_PROVOCATION",
+  EXTREMISM = "EXTREMISM",
+  SEXUAL_CONTENT = "SEXUAL_CONTENT",
+  IMPERSONATION = "IMPERSONATION",
+  PRIVACY_VIOLATION = "PRIVACY_VIOLATION",
+  SPAM = "SPAM",
+  OTHER = "OTHER",
 }
 
 // Notification Types Enums
 export enum NotificationTypes {
+  ACCEPT = "ACCEPT",
+  REJECT = "REJECT",
+  DELETE = "DELETE",
+  UPDATE = "UPDATE",
+  COMMENT = "COMMENT",
   DONATION = "DONATION",
   BAN = "BAN",
-  REJECT = "REJECT",
-  ACCEPT = "ACCEPT",
-  COMMENT = "COMMENT",
-  DELETE = "DELETE",
 }
 
 // Account Providers Enums

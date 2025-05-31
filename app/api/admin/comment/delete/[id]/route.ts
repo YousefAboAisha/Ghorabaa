@@ -66,10 +66,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     if (isAdmin && !isOwner && comment.author_id) {
       const storyNotificationPayload = {
         user_id: comment.author_id,
+        message: `تم حذف تعلقيك على قصة الشهيد ${story?.name} بسبب مخالفته لمعايير المنصة`,
+        href: `/stories/${comment.story_id}`,
         notification_type: NotificationTypes.DELETE,
-        title: `<p>تم حذف تعليقك على قصة الشهيد <strong>${story?.name}</strong> بسبب مخالفته معايير المنصة</p>`,
-        story_id: comment.story_id,
-        story_name: story?.name,
         is_read: false,
         createdAt: new Date(),
       };

@@ -58,12 +58,9 @@ export async function POST(originalReq: Request) {
       // Don't notify if user commented on their own story
       const notificationPayload = {
         user_id: story.publisher_id,
-        story_id: story._id,
-        story_name: story.name,
-        title: `قام ${user.name} بإضافة تعليق جديد على قصتك.`,
+        message: `قام ${user.name} بإضافة تعليق جديد على قصتك.`,
+        href: `/stories/${story_id}`,
         notification_type: NotificationTypes.COMMENT,
-        author_name: user.name,
-        author_id: new ObjectId(author_id),
         is_read: false,
         createdAt: new Date(),
       };

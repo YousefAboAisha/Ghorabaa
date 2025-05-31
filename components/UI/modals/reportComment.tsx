@@ -3,9 +3,11 @@ import { BiInfoCircle } from "react-icons/bi";
 import { toast } from "react-toastify";
 import Button from "../inputs/button";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { StoryRejectValidationSchema } from "@/utils/validators";
 import TextArea from "../inputs/textArea";
 import { CommentInterface } from "@/app/interfaces";
+import Select from "../inputs/selectInput";
+import { ReportReasonsData } from "@/data/reportReasonsData";
+import { ReportValidationSchema } from "@/utils/validators";
 
 type ReportCommentProps = {
   data: CommentInterface;
@@ -19,6 +21,7 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
 
   const initialValues = {
     rejectReason: "",
+    rejectDetails: "",
   };
 
   return (
@@ -30,25 +33,24 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
 
       <hr className="mt-4" />
 
-      <p className="mt-6 text-[15px]">
-        هل أنت متأكد من رغبتك في حذف هذا التعليق؟
-      </p>
-
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
-        validationSchema={StoryRejectValidationSchema}
+        validationSchema={ReportValidationSchema}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
           setSubmitting(true);
+          console.log("Submitting report with values:", values);
 
           try {
             const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/comment/report/${comment_id}`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/report/create`,
               {
-                method: "PUT",
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                  comment_id,
                   rejectReason: values.rejectReason,
+                  rejectDetails: values.rejectDetails,
                 }),
               }
             );
@@ -61,7 +63,7 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
             console.log("✅ Story updated:", result);
             resetForm();
             setIsOpen(false);
-            toast.warn("تم رفض طلب إضافة القصة");
+            toast.warn("تم إرسال البلاغ بنجاح");
           } catch (error) {
             console.error("❌ Error updating story:", error);
           } finally {
@@ -69,34 +71,53 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
           }
         }}
       >
-        {({ isSubmitting, errors, values }) => {
+        {({ isSubmitting, errors, values, setFieldValue }) => {
           console.log("Errors:", errors);
           console.log("Form Values", values);
 
           return (
             <Form className="flex flex-col gap-4 mt-6">
+              <div>
+                <Select
+                  name="rejectReason"
+                  disabled={isSubmitting}
+                  title="قم باختيار سبب الإبلاغ..."
+                  options={ReportReasonsData}
+                  label="سبب الإبلاغ"
+                  onChange={(e) =>
+                    setFieldValue("rejectReason", e.target.value)
+                  }
+                  className={`focus:border-primary`}
+                />
+                <ErrorMessage
+                  name="rejectReason"
+                  component="div"
+                  className="text-red-500 mt-2 font-semibold text-[10px]"
+                />
+              </div>
+
               {/* Notes Field with Word Counter */}
               <div>
                 <Field
                   disabled={isSubmitting}
-                  name="rejectReason"
+                  name="rejectDetails"
                   as={TextArea}
-                  placeholder="قم بكتابة سبب الرفض"
-                  label="سبب الرفض"
-                  className={`w-full focus:border-primary text-sm font-light`}
+                  placeholder="مزيد من التفاصيل حول سبب الرفض (اختياري)"
+                  label="تفاصيل إضافية (اختياري)"
+                  className={`w-full focus:border-primary text-[13px] font-light`}
                 />
 
                 {/* Word Counter */}
                 <div className="flex justify-between mt-1">
                   <ErrorMessage
-                    name="rejectReason"
+                    name="rejectDetails"
                     component="div"
                     className="text-red-500 font-semibold text-[10px]"
                   />
 
                   <div className="text-[10px] text-gray-500 self-end">
                     عدد الكلمات:{" "}
-                    {values.rejectReason?.trim().split(/\s+/).filter(Boolean)
+                    {values.rejectDetails?.trim().split(/\s+/).filter(Boolean)
                       .length || 0}{" "}
                     / 5
                   </div>

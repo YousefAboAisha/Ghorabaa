@@ -1,6 +1,6 @@
 import { CommentNotificationInterface } from "@/app/interfaces";
+import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import NotificationCard from "@/components/UI/cards/notificationCard";
-import { getNotificationHrefPath } from "@/utils/text";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
@@ -23,27 +23,22 @@ const NotificationsList = async () => {
 
   return (
     <div className="flex flex-col gap-2 pb-4 mt-6">
-      {notificationData.map((notification, index) => {
-        const hrefPath = getNotificationHrefPath(
-          notification.notification_type,
-          notification.story_id as string
-        );
-        return (
-          <Link key={index} href={hrefPath as string}>
-            <NotificationCard
-              type={notification.notification_type}
-              createdAt={notification.createdAt}
-              author_name={
-                "author_name" in notification ? notification.author_name : ""
-              }
-              story_name={
-                "story_name" in notification ? notification.story_name : ""
-              }
-              is_read={notification.is_read}
-            />
-          </Link>
-        );
-      })}
+      {notificationData.length > 0 ? (
+        notificationData.map((notification, index) => {
+          return (
+            <Link key={index} href={notification.href || "#"}>
+              <NotificationCard
+                type={notification.notification_type}
+                createdAt={notification.createdAt}
+                is_read={notification.is_read}
+                message={notification.message}
+              />
+            </Link>
+          );
+        })
+      ) : (
+        <NoDataMessage className="h-[60vh]" />
+      )}
     </div>
   );
 };
