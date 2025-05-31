@@ -62,11 +62,11 @@ export const getNotificationHrefPath = (
 export const getRoleColor = (role: Role) => {
   switch (role) {
     case Role.ADMIN:
-      return "bg-primary";
+      return "#5B913B";
     case Role.EDITOR:
-      return "bg-[orange] ";
+      return "#2980b9";
     case Role.USER:
-      return "bg-secondary";
+      return "#1e272e"; // Dark color for stories
     default:
       return "";
   }
@@ -116,11 +116,11 @@ export const getReportColor = (status: ReportStatus): string => {
 };
 
 export const getContentColor = (content_type: ContentType): string => {
-  switch (content_type) {
+  switch (content_type.toUpperCase()) {
     case ContentType.COMMENT:
-      return "bg-gray_dark text-white";
+      return "#828282"; // Gray color for comments
     case ContentType.STORY:
-      return "bg-secondary text-white";
+      return "#1e272e"; // Dark color for stories
     default:
       return "bg-gray-100 text-gray-800"; // Default color for unknown content type
   }

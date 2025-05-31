@@ -19,7 +19,7 @@ const ReportsTable = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpenEditUser, setIsOpenEditUser] = useState<boolean>(false);
-  const [userData, setuserData] = useState<ReportInterface>();
+  const [reportData, setReportData] = useState<ReportInterface>();
 
   const fetchTableData = async () => {
     setTableLoading(true);
@@ -69,27 +69,27 @@ const ReportsTable = () => {
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
+              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
                 عنوان القصة
               </th>
 
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
+              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
                 سبب الإبلاغ
               </th>
 
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
+              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
                 تاريخ الإبلاغ
               </th>
 
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
+              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
                 نوع المحتوى
               </th>
 
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
+              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
                 الحالة
               </th>
 
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
+              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
                 العمليات
               </th>
             </tr>
@@ -98,15 +98,15 @@ const ReportsTable = () => {
           <tbody>
             {tableData?.map((report) => (
               <tr key={report._id as string} className="hover:bg-gray-50">
-                <td className="py-3 px-4 border-b text-sm text-right">
+                <td className="py-3 px-4 border-b text-[13px] text-right">
                   {report.content_name || "مستخدم غير معروف"}
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                <td className="py-3 px-4 border-b text-right text-[13px]">
                   {getReportReasonLabel(report.reason)}
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                <td className="py-3 px-4 border-b text-right text-[13px]">
                   {new Date(report.createdAt).toLocaleDateString("ar-EG", {
                     year: "numeric",
                     month: "long",
@@ -114,17 +114,20 @@ const ReportsTable = () => {
                   })}
                 </td>
 
-                <td className={`py-3 px-4 border-b text-right`}>
-                  <p
-                    className={`w-fit p-1.5 px-2.5 rounded-sm text-white text-[12px] ${getContentColor(
-                      report.content_type
-                    )}`}
-                  >
-                    {getContentTypeInArabic(report.content_type)}
-                  </p>
+                <td className={`py-3 px-4 border-b text-right text-[13px]`}>
+                  {report.content_type && (
+                    <p
+                      style={{
+                        backgroundColor: getContentColor(report.content_type),
+                      }}
+                      className={`w-fit p-1.5 px-2.5 rounded-sm text-white`}
+                    >
+                      {getContentTypeInArabic(report.content_type)}
+                    </p>
+                  )}
                 </td>
 
-                <td className={`py-3 px-4 border-b text-right text-[12px]`}>
+                <td className={`py-3 px-4 border-b text-right text-[13px]`}>
                   <p
                     className={`w-fit p-1.5 px-2.5 rounded-sm text-white ${getReportColor(
                       report.status
@@ -134,11 +137,11 @@ const ReportsTable = () => {
                   </p>
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-[12px]">
+                <td className="py-3 px-4 border-b text-right text-[13px]">
                   <p
                     onClick={() => {
                       setIsOpenEditUser(true);
-                      setuserData(report);
+                      setReportData(report);
                     }}
                     className="hover:underline cursor-pointer"
                   >

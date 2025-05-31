@@ -130,9 +130,10 @@ const UsersTable = () => {
 
                 <td className={`py-3 px-4 border-b text-right text-[12px]`}>
                   <p
-                    className={`w-fit p-1.5 px-2.5 rounded-sm text-white ${getRoleColor(
-                      user.role
-                    )}`}
+                    style={{
+                      backgroundColor: getRoleColor(user.role),
+                    }}
+                    className={`w-fit p-1.5 px-2.5 rounded-sm text-white`}
                   >
                     {getRoleInArabic(user.role)}
                   </p>
