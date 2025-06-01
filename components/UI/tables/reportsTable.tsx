@@ -12,13 +12,15 @@ import {
   getReportReasonLabel,
   getReportStatusInArabic,
 } from "@/utils/text";
+import ReportPreview from "../modals/reporPreview";
 
 const ReportsTable = () => {
   const [tableData, setTableData] = useState<ReportInterface[]>([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [isOpenEditUser, setIsOpenEditUser] = useState<boolean>(false);
+  const [isOpenReportPreview, setIsOpenReportPreview] =
+    useState<boolean>(false);
   const [reportData, setReportData] = useState<ReportInterface>();
 
   const fetchTableData = async () => {
@@ -140,7 +142,7 @@ const ReportsTable = () => {
                 <td className="py-3 px-4 border-b text-right text-[13px]">
                   <p
                     onClick={() => {
-                      setIsOpenEditUser(true);
+                      setIsOpenReportPreview(true);
                       setReportData(report);
                     }}
                     className="hover:underline cursor-pointer"
@@ -162,11 +164,17 @@ const ReportsTable = () => {
 
       {/* Edit user Modal */}
       <Modal
-        isOpen={isOpenEditUser}
-        setIsOpen={setIsOpenEditUser}
+        isOpen={isOpenReportPreview}
+        setIsOpen={setIsOpenReportPreview}
         containerClassName="lg:w-[35%]"
         loading={loading}
-      ></Modal>
+      >
+        <ReportPreview
+          setIsOpen={setIsOpenReportPreview}
+          data={reportData!}
+          setLoading={setLoading}
+        />
+      </Modal>
     </>
   );
 };

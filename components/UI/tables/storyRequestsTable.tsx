@@ -8,8 +8,8 @@ import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
 import { HiCheck } from "react-icons/hi";
 import { MdOutlineClose } from "react-icons/md";
-import PreviewStory from "@/containers/dashboard/actions/previewStory";
-import RejectStory from "@/containers/dashboard/actions/rejectStory";
+import PreviewStory from "@/components/UI/modals/previewStory";
+import RejectStory from "@/components/UI/modals/rejectStory";
 import Link from "next/link";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 

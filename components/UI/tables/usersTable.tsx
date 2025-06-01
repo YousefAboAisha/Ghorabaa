@@ -5,7 +5,7 @@ import Image from "next/image";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
-import EditUser from "@/containers/dashboard/actions/editUser";
+import EditUser from "@/components/UI/modals/editUser";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import { getRoleColor, getRoleInArabic } from "@/utils/text";
 
