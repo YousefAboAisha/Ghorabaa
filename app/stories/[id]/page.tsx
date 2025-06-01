@@ -61,14 +61,13 @@ export default async function Page({ params }: Props) {
   console.log("[Story Details] Session values", session);
 
   return (
-    <div className="container lg:w-6/12 mt-[70px] min-h-screen">
-      <div className="mt-24">
+    <div className="mt-[70px] min-h-screen">
+      <div className="container lg:w-6/12 mt-24">
         <Suspense fallback={<StoryDetailsSkeletonLoader />}>
           <StoryDetailsSection id={id} />
         </Suspense>
+        <CommentsSection session={session} id={id} />
       </div>
-
-      <CommentsSection session={session} id={id} />
     </div>
   );
 }

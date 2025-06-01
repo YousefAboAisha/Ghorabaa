@@ -31,7 +31,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
   const maxNumber = 1; // Allow only one image
   const router = useRouter();
 
-  const { _id, publisher_id, city, neighborhood, bio, image } = data;
+  const { _id, name, publisher_id, city, neighborhood, bio, image } = data;
 
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
@@ -139,8 +139,12 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
           title=""
           highLightText="تعديل القصة"
           highlightColor="before:bg-primary"
-          className="mb-8 mx-auto text-center !text-2xl"
+          className="mx-auto text-center !text-2xl"
         />
+
+        <p className="mx-auto text-center text-gray_dark text-[12px] mt-2">
+          الشهيد/ {name || "عنوان القصة غير معرّف"}
+        </p>
 
         <Formik
           initialValues={initialValues}
@@ -152,9 +156,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
             console.log("Form Values", values);
 
             return (
-              <Form className="flex flex-col gap-4">
-                {/* ID Number Field */}
-
+              <Form className="flex flex-col gap-4 mt-6">
                 {/* City and Neighbourhood Fields */}
                 <div>
                   <Select

@@ -7,7 +7,6 @@ module.exports = {
     "./containers/**/*.{js,ts,jsx,tsx}",
     "./layout/**/*.{js,ts,jsx,tsx}",
   ],
-  
 
   darkMode: "class",
 
@@ -16,7 +15,7 @@ module.exports = {
       colors: {
         primary: "#5B913B",
         secondary: "#1e272e",
-        
+        blueColor: "#2980b9",
         gray_light: "#f3f3f3",
         gray_dark: "#828282",
 

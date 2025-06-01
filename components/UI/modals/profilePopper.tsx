@@ -7,6 +7,8 @@ import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Image from "next/image";
 import { Session } from "next-auth";
+import { Role } from "@/app/enums";
+import { PiGearLight } from "react-icons/pi";
 
 type ProfilePopperProps = {
   session: Session | null;
@@ -67,6 +69,19 @@ function ProfilePopper({ session }: ProfilePopperProps) {
         </MenuItem>
 
         <div className="p-1 flex flex-col gap-2">
+          {session?.user?.role === Role.ADMIN && (
+            <MenuItem>
+              <Link
+                href={"/admin/dashboard"}
+                className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
+                prefetch
+              >
+                <PiGearLight size={20} />
+                <span>لوحة التحكم</span>
+              </Link>
+            </MenuItem>
+          )}
+
           <MenuItem>
             <Link
               href={"/addStory"}

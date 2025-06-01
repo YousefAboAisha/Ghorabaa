@@ -23,6 +23,7 @@ const Landing = () => {
               title="اعرفهم الآن"
               className="bg-primary text-white px-2"
               icon={<FaSearch />}
+              hasShiningBar={true}
             />
           </Link>
         </div>

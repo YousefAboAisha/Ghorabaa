@@ -3,10 +3,8 @@ import Image from "next/image";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { notFound } from "next/navigation";
 import { getSessionAction } from "@/app/actions/registerActions";
-import EditStoryButton from "./editStoryButton";
-import ShareModal from "../../components/UI/modals/shareModal";
 import { dateConversion } from "@/utils/format";
-import { Role } from "@/app/enums";
+import StoryActions from "../stories/storyActions";
 
 type Props = {
   id: string;
@@ -41,14 +39,11 @@ const StoryDetailsSection = async ({ id }: Props) => {
   console.log("Current logged in ID", user_id);
   console.log("Story publisher_id", data.publisher_id);
 
-  const current_user_id = session?.user.id;
-  const current_user_role = session?.user.role;
-
-  const isCommentOwner = data.publisher_id === current_user_id;
-  const isAdmin = current_user_role === Role.ADMIN;
-
   return (
     <div className="mt-24">
+      {/* Story Actions Component [Edit | Share  | Report | Delete ] */}
+      <StoryActions data={data} session={session} />
+
       <div className="flex flex-col gap-2">
         <PageTitles storyName={data.name} />
       </div>
@@ -63,8 +58,6 @@ const StoryDetailsSection = async ({ id }: Props) => {
           priority
           quality={100}
         />
-
-        {(isCommentOwner || isAdmin) && <EditStoryButton data={data} />}
       </div>
 
       <div className="relative mt-1">
@@ -75,11 +68,6 @@ const StoryDetailsSection = async ({ id }: Props) => {
             <p> | </p>
             <p>{dateConversion(data.createdAt)}</p>
           </div>
-
-          <ShareModal
-            title="مشاركة صفحة الشهيد"
-            sharedLink={`https://ghorabaa.com/stories/${id}`}
-          />
         </div>
 
         <div className="flex items-center gap-8 mt-6">

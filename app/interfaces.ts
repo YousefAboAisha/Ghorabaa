@@ -41,6 +41,7 @@ export interface StoryInterface extends Document {
   hasCompleteProfile: boolean;
   keywords: string[];
   rejectReason?: string; // ✅ Optional field for rejected stories
+  reports?: ReportInterface[];
   createdAt: Date;
 }
 

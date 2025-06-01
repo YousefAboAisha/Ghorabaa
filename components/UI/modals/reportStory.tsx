@@ -4,20 +4,21 @@ import { toast } from "react-toastify";
 import Button from "../inputs/button";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import TextArea from "../inputs/textArea";
-import { CommentInterface } from "@/app/interfaces";
+import { StoryInterface } from "@/app/interfaces";
 import Select from "../inputs/selectInput";
 import { ReportReasonsData } from "@/data/reportReasonsData";
 import { ReportValidationSchema } from "@/utils/validators";
 
-type ReportCommentProps = {
-  data: CommentInterface;
+type ReportStoryProps = {
+  data: StoryInterface;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
 };
 
-export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
-  const comment_id = data._id;
+export const ReportStory = ({ setIsOpen, data }: ReportStoryProps) => {
+  const story_id = data._id;
+  const story_title = data.name;
 
   const initialValues = {
     rejectReason: "",
@@ -26,9 +27,15 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
 
   return (
     <div className="flex flex-col bg-white p-8">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4">
         <BiInfoCircle size={25} />
-        <h2 className="text-xl font-bold">إبلاغ عن التعليق</h2>
+        <div className="flex items-center gap-2">
+          <h2 className="text-xl font-semibold min-w-fit">إبلاغ عن القصة</h2>
+
+          <p className="mx-auto text-center text-gray_dark text-[12px] mt-2">
+            الشهيد/ {story_title || "عنوان القصة غير معرّف"}
+          </p>
+        </div>
       </div>
 
       <hr className="mt-4" />
@@ -43,12 +50,12 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
 
           try {
             const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/comment/report/create`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/report/create`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  comment_id,
+                  story_id,
                   rejectReason: values.rejectReason,
                   rejectDetails: values.rejectDetails,
                 }),
@@ -63,7 +70,7 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
             console.log("✅ Story updated:", result);
             resetForm();
             setIsOpen(false);
-            toast.warn("تم إرسال البلاغ بنجاح");
+            toast.warn("تم إرسال الإبلاغ بنجاح");
           } catch (error) {
             console.error("❌ Error updating story:", error);
           } finally {
@@ -139,4 +146,4 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
   );
 };
 
-export default ReportComment;
+export default ReportStory;

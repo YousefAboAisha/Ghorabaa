@@ -91,7 +91,7 @@ const CommentCard = ({
               </div>
             )}
 
-            {session && (
+            {session && !isCommentOwner && (
               <div
                 onClick={() => setIsOpenReportComment(true)}
                 title="إبلاغ عن التعليق"

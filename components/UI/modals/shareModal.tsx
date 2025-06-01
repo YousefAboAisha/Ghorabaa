@@ -47,10 +47,10 @@ const ShareModal = ({ title, sharedLink }: ShareModalProps) => {
     <>
       <div
         title={title}
-        onClick={() => setIsOpen(true)}
-        className="text-secondary bg-white border rounded-xl p-2 cursor-pointer hover:shadow-md duration-300"
+        className="flex items-center justify-center border bg-white p-2 text-secondary hover:text-primary duration-100 cursor-pointer rounded-lg shadow-sm"
+        onClick={()=>setIsOpen(true)}
       >
-        <CiShare2 size={20} />
+        <CiShare2 size={25} />
       </div>
 
       <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
