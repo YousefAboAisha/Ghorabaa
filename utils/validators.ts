@@ -1,7 +1,6 @@
 import * as Yup from "yup";
 
 export const StoryValidationSchema = Yup.object({
-  nickname: Yup.string().required("يرجى إدخال لقب الشهيد"),
   city: Yup.string().required("يرجى اختيار المدينة"),
 
   neighborhood: Yup.string().required("يرجى اختيار الحي"),

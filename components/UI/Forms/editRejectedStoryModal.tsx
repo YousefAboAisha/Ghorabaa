@@ -163,6 +163,7 @@ const EditRejectedStoryForm = ({
               <Form className="flex flex-col gap-4">
                 <div>
                   <Field
+                    value={values.nickname || ""}
                     disabled={isSubmitting}
                     name="nickname"
                     as={Input}
@@ -172,13 +173,6 @@ const EditRejectedStoryForm = ({
                     icon={<BiUser />}
                     className={`focus:border-primary`}
                     aria-label="لقب الشهيد"
-                    aria-invalid={!!errors.nickname}
-                  />
-
-                  <ErrorMessage
-                    name="nickname"
-                    component="div"
-                    className="text-red-500 mt-2 font-bold text-[10px]"
                   />
                 </div>
 

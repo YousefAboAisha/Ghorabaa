@@ -6,7 +6,6 @@ import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import NotificationCard from "@/components/UI/cards/notificationCard";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { GrNotification } from "react-icons/gr";
 
 const NotificationsList = async () => {
   const cookieStore = await cookies(); // Access current cookies
@@ -28,10 +27,7 @@ const NotificationsList = async () => {
   return (
     <div className="flex flex-col gap-2 pb-4 mt-6">
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <h2 className="text-xl font-semibold">كافة الإشعارات</h2>
-          <GrNotification className="rotate-[30deg]" />
-        </div>
+        <h2 className="text-xl font-semibold">كافة الإشعارات</h2>
 
         <div className="flex items-center gap-2">
           <p className="text-gray_dark text-sm">عدد الإشعارات:</p>

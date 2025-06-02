@@ -1,9 +1,9 @@
 import Image from "next/image";
 import image from "@/public/event.jpg";
 import { FiCalendar, FiMapPin } from "react-icons/fi";
-import ShareModal from "@/components/UI/modals/shareModal";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { FaEye } from "react-icons/fa";
+import ShareStory from "@/components/UI/modals/shareStory";
 
 export async function generateMetadata() {
   return {
@@ -52,10 +52,7 @@ const page = () => {
 
           <div className="flex items-center gap-8 mt-6">
             <h4 className="text-lg font-bold">فعالية يوم الشهيد</h4>
-            <ShareModal
-              title="مشاركة الفعالية"
-              sharedLink="http://localhost:3000/events/1"
-            />
+            <ShareStory story_title="" />
           </div>
 
           <div className="flex flex-col gap-2 mt-4 text-sm">

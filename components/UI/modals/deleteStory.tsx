@@ -6,7 +6,6 @@ import { StoryInterface } from "@/app/interfaces";
 
 type DeleteStory = {
   data: StoryInterface;
-  refetchData?: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
@@ -14,7 +13,6 @@ type DeleteStory = {
 
 export const DeleteStory = ({
   data,
-  refetchData,
   setIsOpen,
   setLoading,
   loading,
@@ -28,6 +26,7 @@ export const DeleteStory = ({
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/delete/${story_id}`,
         {
+          credentials: "include",
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
         }
@@ -41,14 +40,18 @@ export const DeleteStory = ({
       console.log("✅ Story updated:", result);
       setIsOpen(false); // Close the preview modal
       setLoading(false);
-      refetchData?.(); // Refetch the data after successful update
-      toast.warn("تم حذف التعليق بنجاح!");
+      toast.success("تم حذف القصة بنجاح!");
+
+      setTimeout(() => {
+        window.location.href = "/stories"; // Redirect to the stories page
+      }, 1000); // Reload the page after a short delay
     } catch (error) {
       console.error("❌ Error updating story:", error);
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="flex flex-col bg-white p-8">
       <div className="flex items-center gap-2">

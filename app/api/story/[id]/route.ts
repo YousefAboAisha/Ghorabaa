@@ -3,14 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { StoryStatus } from "@/app/enums";
 
-type Params = Promise<{ id: string }>;
+type Params = Promise<{ story_id: string }>;
 
 export async function GET(req: NextRequest, { params }: { params: Params }) {
   try {
-    const { id } = await params;
+    const { story_id } = await params;
 
     // Validate id first:
-    if (!ObjectId.isValid(id)) {
+    if (!ObjectId.isValid(story_id)) {
       // If id is invalid format, immediately return 404
       return NextResponse.json(
         { error: "معرف الشهيد غير صالح" },
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
       .aggregate([
         {
           $match: {
-            _id: new ObjectId(id),
+            _id: new ObjectId(story_id),
             status: StoryStatus.APPROVED,
             hasCompleteProfile: true,
           },
