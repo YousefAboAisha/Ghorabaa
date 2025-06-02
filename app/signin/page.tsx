@@ -1,4 +1,4 @@
-import SigninForm from "@/components/UI/forms/signinForm";
+import SigninForm from "@/components/UI/Forms/signinForm";
 import { getSessionAction } from "../actions/registerActions";
 
 const Signin = async () => {

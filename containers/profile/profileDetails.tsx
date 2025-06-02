@@ -1,5 +1,5 @@
 import { UserInterface } from "@/app/interfaces";
-import EditProfileForm from "@/components/UI/forms/editProfileForm";
+import EditProfileForm from "@/components/UI/Forms/editProfileForm";
 import { dateConversion } from "@/utils/format";
 import { getRoleColor, getRoleInArabic } from "@/utils/text";
 import { cookies } from "next/headers";
