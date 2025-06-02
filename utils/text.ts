@@ -154,7 +154,7 @@ export const getNotificationColor = (type: NotificationTypes) => {
     case NotificationTypes.UPDATE:
       return "bg-[orange] text-white";
     case NotificationTypes.COMMENT:
-      return "bg-gray_dark text-white";
+      return "bg-secondary text-white";
     default:
       return "bg-gray-300 text-gray-800"; // Default color for unknown notification type
   }

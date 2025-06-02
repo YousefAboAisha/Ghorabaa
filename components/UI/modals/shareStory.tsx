@@ -1,6 +1,6 @@
 "use client";
 import Input from "@/components/UI/inputs/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
   FaFacebook,
@@ -19,6 +19,7 @@ type ShareModalProps = {
 const ShareStory = ({ story_title }: ShareModalProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [shareIcon, setShareIcon] = useState(<FiCopy size={18} />);
+  const [sharedLink, setSharedLink] = useState("");
 
   const copyToClipboard = async () => {
     console.log(loading);
@@ -29,16 +30,19 @@ const ShareStory = ({ story_title }: ShareModalProps) => {
     await navigator.clipboard.writeText(location.href).then(() => {
       setTimeout(() => {
         setShareIcon(<FiCheck size={22} className="text-[green]" />);
-      }, 1000);
+      }, 500);
 
       setTimeout(() => {
         setLoading(false);
         setShareIcon(<FiCopy size={22} />);
-      }, 2500);
+      }, 1200);
     });
   };
 
-  const sharedLink = location.href;
+  useEffect(() => {
+    // This runs only on the client
+    setSharedLink(window.location.href);
+  }, []);
 
   return (
     <div className="relative flex flex-col gap-2 p-6">

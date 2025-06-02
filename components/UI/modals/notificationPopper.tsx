@@ -90,7 +90,7 @@ function NotificationPopper({ session }: NotificationPopperProps) {
       <MenuItems
         anchor={{ to: "bottom start", gap: "4px" }}
         transition
-        className="flex flex-col gap-2 min-w-[400px] bg-background_light z-[100000] rounded-xl border shadow-2xl origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 outline-none pb-4"
+        className="flex flex-col gap-2 w-10/12 md:w-[450px] bg-background_light z-[100000] rounded-xl border shadow-2xl origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 outline-none pb-4"
       >
         <div className="flex flex-col gap-1 p-1.5 max-h-[50vh] overflow-y-auto">
           {loading ? (

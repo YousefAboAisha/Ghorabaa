@@ -162,7 +162,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
               <Form className="flex flex-col gap-4 mt-6">
                 <div>
                   <Field
-                    value={values.nickname}
+                    value={values.nickname || ""}
                     disabled={isSubmitting}
                     name="nickname"
                     as={Input}

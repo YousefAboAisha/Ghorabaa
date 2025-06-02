@@ -9,6 +9,7 @@ const NotificationSkeletonLoader = ({
 }: NotificationSkeletonLoaderProps) => {
   return (
     <div {...rest} className={`${className}`}>
+      
       {Array.from({ length: length }).map((_, index) => (
         <div
           key={index}
