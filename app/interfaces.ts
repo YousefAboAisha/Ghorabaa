@@ -50,11 +50,11 @@ export interface StoryInterface extends Document {
 export interface ReportInterface extends Document {
   reason: ReportReasons;
   details: string;
-  status: ReportStatus;
   content_id: Types.ObjectId | string; // Reference to the content that a user has reported.
   content_type: ContentType; // Type of content that has been reported.
   user_id: Types.ObjectId | string; // Reference to the user who made the report.
   user_name?: string; // Name of the user who made the report.
+  status: ReportStatus;
   createdAt: Date;
 }
 
