@@ -1,3 +1,5 @@
+import { GrNotification } from "react-icons/gr";
+
 type NotificationSkeletonLoaderProps = {
   length: number;
 } & React.ComponentProps<"div">;
@@ -9,7 +11,15 @@ const NotificationSkeletonLoader = ({
 }: NotificationSkeletonLoaderProps) => {
   return (
     <div {...rest} className={`${className}`}>
-      
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-xl font-semibold">كافة الإشعارات</h2>
+          <GrNotification className="rotate-[30deg]" />
+        </div>
+
+        <div className="h-6 w-20 rounded-full bg-gray-300 animate-pulse"></div>
+      </div>
+
       {Array.from({ length: length }).map((_, index) => (
         <div
           key={index}

@@ -7,6 +7,9 @@ import {
   StoryStatus,
 } from "@/app/enums";
 import { ReportReasonsData } from "@/data/reportReasonsData";
+import { BiBell, BiCheckCircle, BiComment, BiTrash } from "react-icons/bi";
+import { MdOutlineClose } from "react-icons/md";
+import { RxUpdate } from "react-icons/rx";
 
 export const convertStoryStatusToArabic = (status: StoryStatus): string => {
   switch (status) {
@@ -146,16 +149,49 @@ export const getNotificationInArabic = (type: NotificationTypes) => {
 export const getNotificationColor = (type: NotificationTypes) => {
   switch (type.toUpperCase()) {
     case NotificationTypes.ACCEPT:
-      return "bg-primary text-white";
+      return "#111"; // Green color for accept;
     case NotificationTypes.REJECT:
-      return "bg-red-500 text-white";
+      return "#e74c3c"; // Red color for reject;
     case NotificationTypes.DELETE:
-      return "bg-gray-500 text-white";
+      return "#1e272e";
     case NotificationTypes.UPDATE:
-      return "bg-[orange] text-white";
+      return "#2980b9";
     case NotificationTypes.COMMENT:
-      return "bg-secondary text-white";
+      return "#828282";
+  }
+};
+
+export const getNotificationIcon = (type: NotificationTypes) => {
+  switch (type.toUpperCase()) {
+    case NotificationTypes.ACCEPT:
+      return {
+        Icon: BiCheckCircle,
+        className: "text-[green]",
+      }; // Accept
+    case NotificationTypes.REJECT:
+      return {
+        Icon: MdOutlineClose,
+        className: "text-[red] ",
+      }; // Reject
+    case NotificationTypes.DELETE:
+      return {
+        Icon: BiTrash,
+        className: "text-[red]",
+      }; // Delete
+    case NotificationTypes.UPDATE:
+      return {
+        Icon: RxUpdate,
+        className: "text-[orange]",
+      }; // Update
+    case NotificationTypes.COMMENT:
+      return {
+        Icon: BiComment,
+        className: "text-blueColor",
+      }; // Comment
     default:
-      return "bg-gray-300 text-gray-800"; // Default color for unknown notification type
+      return {
+        Icon: BiBell,
+        className: "text-yellow-600",
+      }; // Default
   }
 };
