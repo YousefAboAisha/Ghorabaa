@@ -70,8 +70,9 @@ const StoryDetailsSection = async ({ id }: Props) => {
           </div>
         </div>
 
-        <div className="flex items-center gap-8 mt-6">
+        <div className="flex items-center gap-2 mt-6">
           <h4 className="text-lg font-extrabold">الشهيد | {data.name}</h4>
+          <p className="text-gray_dark"> &quot; {data.nickname} &quot; </p>
         </div>
 
         {data.keywords.length > 0 && (

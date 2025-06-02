@@ -101,7 +101,7 @@ const ReportsTable = () => {
             {tableData?.map((report) => (
               <tr key={report._id as string} className="hover:bg-gray-50">
                 <td className="py-3 px-4 border-b text-[13px] text-right">
-                  {report.content_name || "مستخدم غير معروف"}
+                  {report.user_name || "مستخدم غير معروف"}
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-[13px]">

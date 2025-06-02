@@ -1,7 +1,7 @@
 "use client";
 import { Role } from "@/app/enums";
 import { StoryInterface } from "@/app/interfaces";
-import EditStoryForm from "@/components/UI/Forms/editStoryForm";
+import EditStoryForm from "@/components/UI/forms/editStoryForm";
 import { DeleteStory } from "@/components/UI/modals/deleteStory";
 import Modal from "@/components/UI/modals/modal";
 import ReportStory from "@/components/UI/modals/reportStory";

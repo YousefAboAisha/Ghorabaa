@@ -13,10 +13,10 @@ import {
 
 // Define the User interface
 export interface UserInterface extends Document {
-  image: string;
-  name: string;
-  phone_number?: string;
   id_number?: string;
+  name: string;
+  image: string;
+  phone_number?: string;
   email: string;
   password?: string;
   role: Role;
@@ -30,6 +30,7 @@ export interface UserInterface extends Document {
 export interface StoryInterface extends Document {
   id_number: string;
   name: string;
+  nickname?: string;
   birth_date: string;
   death_date: string;
   city: string;
@@ -53,7 +54,7 @@ export interface ReportInterface extends Document {
   content_id: Types.ObjectId | string; // Reference to the content that a user has reported.
   content_type: ContentType; // Type of content that has been reported.
   user_id: Types.ObjectId | string; // Reference to the user who made the report.
-  content_name?: string; // Name of the user who made the report.
+  user_name?: string; // Name of the user who made the report.
   createdAt: Date;
 }
 

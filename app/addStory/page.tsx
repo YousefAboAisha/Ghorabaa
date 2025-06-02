@@ -14,7 +14,7 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Input from "@/components/UI/inputs/input";
 import { arabicDateConversion } from "@/utils/format";
-import AddStoryForm from "@/components/UI/Forms/addStoryForm";
+import AddStoryForm from "@/components/UI/forms/addStoryForm";
 
 const Page = () => {
   const [loading, setLoading] = useState<boolean>(false);

@@ -1,6 +1,6 @@
 "use client";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { BiSend } from "react-icons/bi";
+import { BiSend, BiUser } from "react-icons/bi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@/components/UI/inputs/button";
 import Heading from "@/components/UI/typography/heading";
@@ -15,6 +15,7 @@ import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
 import { StoryValidationSchema } from "@/utils/validators";
+import Input from "../inputs/input";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -35,12 +36,13 @@ const EditRejectedStoryForm = ({
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
 
-  const { _id, city, neighborhood, bio, image, status } = data;
+  const { _id, nickname, city, neighborhood, bio, image, status } = data;
 
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
     _id,
     city,
+    nickname,
     neighborhood,
     bio,
     image,
@@ -159,6 +161,27 @@ const EditRejectedStoryForm = ({
 
             return (
               <Form className="flex flex-col gap-4">
+                <div>
+                  <Field
+                    disabled={isSubmitting}
+                    name="nickname"
+                    as={Input}
+                    type="text"
+                    placeholder="لقب الشهيد (اختياري)"
+                    label="لقب الشهيد"
+                    icon={<BiUser />}
+                    className={`focus:border-primary`}
+                    aria-label="لقب الشهيد"
+                    aria-invalid={!!errors.nickname}
+                  />
+
+                  <ErrorMessage
+                    name="nickname"
+                    component="div"
+                    className="text-red-500 mt-2 font-bold text-[10px]"
+                  />
+                </div>
+
                 {/* City and Neighbourhood Fields */}
                 <div>
                   <Select

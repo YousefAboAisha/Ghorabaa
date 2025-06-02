@@ -1,6 +1,6 @@
 "use client";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { BiSend } from "react-icons/bi";
+import { BiSend, BiUser } from "react-icons/bi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@/components/UI/inputs/button";
 import Heading from "@/components/UI/typography/heading";
@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { StoryStatus } from "@/app/enums";
 import { StoryValidationSchema } from "@/utils/validators";
+import Input from "../inputs/input";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -34,6 +35,7 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
 
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
+    nickname: "",
     city: "",
     neighborhood: "",
     bio: "",
@@ -134,6 +136,28 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
 
             return (
               <Form className="flex flex-col gap-4">
+                {/* Nickname Field */}
+                <div>
+                  <Field
+                    disabled={isSubmitting}
+                    name="nickname"
+                    as={Input}
+                    type="text"
+                    placeholder="لقب الشهيد (اختياري)"
+                    label="لقب الشهيد"
+                    icon={<BiUser />}
+                    className={`focus:border-primary`}
+                    aria-label="لقب الشهيد"
+                    aria-invalid={!!errors.nickname}
+                  />
+
+                  <ErrorMessage
+                    name="nickname"
+                    component="div"
+                    className="text-red-500 mt-2 font-bold text-[10px]"
+                  />
+                </div>
+
                 {/* City and Neighbourhood Fields */}
                 <div>
                   <Select

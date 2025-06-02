@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt"; // Requires next-auth >=4.10.0
+import { getToken } from "next-auth/jwt";
 import { Role } from "./app/enums";
 
 const ADMIN_PATH = "/admin";
@@ -28,14 +28,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Authenticated user on auth pages
-  if (isAuthPage) {
-    return NextResponse.redirect(new URL("/profile", request.url));
+  // Authenticated user visiting an auth page — redirect based on role
+  if (isAuthPage || pathname === "/") {
+    const redirectUrl =
+      token.role === Role.ADMIN ? "/admin/dashboard" : "/profile";
+
+    return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 
   // Authenticated but not admin trying to access admin route
   if (isAdminRoute && token.role !== Role.ADMIN) {
-    return NextResponse.redirect(new URL("/unauthorized", request.url)); // You can customize this page
+    return NextResponse.redirect(new URL("/unauthorized", request.url));
   }
 
   return NextResponse.next();
@@ -43,6 +46,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/", // Add root route for role-based redirection
     "/profile/:path*",
     "/addStory/:path*",
     "/savedStories",
@@ -50,6 +54,6 @@ export const config = {
     "/notifications",
     "/signin",
     "/signup",
-    "/admin/:path*", // Add admin path
+    "/admin/:path*",
   ],
 };

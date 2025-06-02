@@ -52,6 +52,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
             id_number: 1,
             image: 1,
             name: 1,
+            nickname: 1,
             birth_date: 1,
             death_date: 1,
             city: 1,

@@ -26,11 +26,13 @@ const PreviewStory = ({ data, refetchData, setIsOpen }: PreviewStoryProps) => {
   const neighborhood = data?.neighborhood;
   const bio = data?.bio;
   const story_id = data?._id;
+  const nickname = data?.nickname;
 
   const initialValues = {
     bio: bio || "",
     city: city || "",
     neighborhood: neighborhood || "",
+    nickname: nickname || "",
   };
 
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
@@ -67,7 +69,10 @@ const PreviewStory = ({ data, refetchData, setIsOpen }: PreviewStoryProps) => {
       </div>
 
       <div className="flex flex-col gap-2 mt-4">
-        <h2 className="font-semibold">{data?.name}</h2>
+        <div className="flex items-center gap-2">
+          <h2 className="font-semibold">{data?.name}</h2>
+          <p className="text-gray_dark"> &quot; {data?.nickname} &quot; </p>
+        </div>
         <Formik
           initialValues={initialValues}
           enableReinitialize={true}

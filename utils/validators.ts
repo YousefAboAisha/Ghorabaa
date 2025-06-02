@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 
 export const StoryValidationSchema = Yup.object({
+  nickname: Yup.string().required("يرجى إدخال لقب الشهيد"),
   city: Yup.string().required("يرجى اختيار المدينة"),
 
   neighborhood: Yup.string().required("يرجى اختيار الحي"),
@@ -68,21 +69,23 @@ export const StoryRejectValidationSchema = Yup.object({
 });
 
 export const ReportValidationSchema = Yup.object({
-  rejectReason: Yup.string().required("يرجى اختيار سبب الإبلاغ").oneOf(
-    [
-      "DISRESPECT",
-      "HATE_SPEECH",
-      "MISINFORMATION",
-      "VIOLENCE",
-      "HARASSMENT",
-      "POLITICAL_PROVOCATION",
-      "IMPERSONATION",
-      "PRIVACY_VIOLATION",
-      "SPAM",
-      "OTHER",
-    ],
-    "يرجى اختيار سبب الإبلاغ من القائمة"
-  ),
+  rejectReason: Yup.string()
+    .required("يرجى اختيار سبب الإبلاغ")
+    .oneOf(
+      [
+        "DISRESPECT",
+        "HATE_SPEECH",
+        "MISINFORMATION",
+        "VIOLENCE",
+        "HARASSMENT",
+        "POLITICAL_PROVOCATION",
+        "IMPERSONATION",
+        "PRIVACY_VIOLATION",
+        "SPAM",
+        "OTHER",
+      ],
+      "يرجى اختيار سبب الإبلاغ من القائمة"
+    ),
   rejectDetails: Yup.string()
     .required("يُرجى إدخال سبب الرفض")
     .test(

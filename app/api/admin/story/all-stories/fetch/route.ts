@@ -43,6 +43,7 @@ export async function GET(req: NextRequest) {
         $project: {
           _id: 1,
           name: 1,
+          nickname: 1,
           bio: 1,
           image: 1,
           status: 1,
