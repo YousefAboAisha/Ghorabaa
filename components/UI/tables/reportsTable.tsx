@@ -1,27 +1,26 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ReportInterface } from "@/app/interfaces";
+import { ReportWithUserDataInterface } from "@/app/interfaces";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import {
-  getContentColor,
-  getContentTypeInArabic,
   getReportColor,
   getReportReasonLabel,
   getReportStatusInArabic,
 } from "@/utils/text";
-import ReportPreview from "../modals/reporPreview";
+import ReportPreview from "../modals/reportPreview";
 
 const ReportsTable = () => {
-  const [tableData, setTableData] = useState<ReportInterface[]>([]);
+  const [tableData, setTableData] = useState<ReportWithUserDataInterface[]>([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpenReportPreview, setIsOpenReportPreview] =
     useState<boolean>(false);
-  const [reportData, setReportData] = useState<ReportInterface>();
+
+  const [reportData, setReportData] = useState<ReportWithUserDataInterface>();
 
   const fetchTableData = async () => {
     setTableLoading(true);
@@ -30,7 +29,7 @@ const ReportsTable = () => {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/report/fetchAll`
       );
       const res = await response.json();
-      console.log("[ADMIN] All Stories Data", res);
+      console.log("[ADMIN] Reports Data", res);
 
       if (response.ok && Array.isArray(res.data)) {
         setTableData(res.data);
@@ -72,7 +71,7 @@ const ReportsTable = () => {
           <thead>
             <tr className="bg-gray-100">
               <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
-                عنوان القصة
+                بواسطة
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
@@ -81,10 +80,6 @@ const ReportsTable = () => {
 
               <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
                 تاريخ الإبلاغ
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
-                نوع المحتوى
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
@@ -101,7 +96,7 @@ const ReportsTable = () => {
             {tableData?.map((report) => (
               <tr key={report._id as string} className="hover:bg-gray-50">
                 <td className="py-3 px-4 border-b text-[13px] text-right">
-                  {report.user_name || "مستخدم غير معروف"}
+                  {report.reporter_name || "مستخدم غير معروف"}
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-[13px]">
@@ -116,22 +111,9 @@ const ReportsTable = () => {
                   })}
                 </td>
 
-                <td className={`py-3 px-4 border-b text-right text-[13px]`}>
-                  {report.content_type && (
-                    <p
-                      style={{
-                        backgroundColor: getContentColor(report.content_type),
-                      }}
-                      className={`w-fit p-1.5 px-2.5 rounded-sm text-white`}
-                    >
-                      {getContentTypeInArabic(report.content_type)}
-                    </p>
-                  )}
-                </td>
-
-                <td className={`py-3 px-4 border-b text-right text-[13px]`}>
+                <td className={`py-3 px-4 border-b text-right text-[11px]`}>
                   <p
-                    className={`w-fit p-1.5 px-2.5 rounded-sm text-white ${getReportColor(
+                    className={`w-fit p-1.5 px-2 rounded-sm text-white ${getReportColor(
                       report.status
                     )}`}
                   >
@@ -145,9 +127,9 @@ const ReportsTable = () => {
                       setIsOpenReportPreview(true);
                       setReportData(report);
                     }}
-                    className="hover:underline cursor-pointer"
+                    className="hover:underline cursor-pointer "
                   >
-                    مُراجعة الإبلاغ
+                    مراجعة الإبلاغ
                   </p>
                 </td>
               </tr>
@@ -162,7 +144,7 @@ const ReportsTable = () => {
     <>
       <div className="overflow-x-auto">{renderTableContent()}</div>
 
-      {/* Edit user Modal */}
+      {/* Preview Report Modal */}
       <Modal
         isOpen={isOpenReportPreview}
         setIsOpen={setIsOpenReportPreview}
@@ -173,6 +155,8 @@ const ReportsTable = () => {
           setIsOpen={setIsOpenReportPreview}
           data={reportData!}
           setLoading={setLoading}
+          loading={loading}
+          refetchData={fetchTableData}
         />
       </Modal>
     </>

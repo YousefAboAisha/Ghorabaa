@@ -8,7 +8,7 @@ import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
 import { HiCheck } from "react-icons/hi";
 import { MdOutlineClose } from "react-icons/md";
-import PreviewStory from "@/components/UI/modals/previewStory";
+import PreviewStory from "@/components/UI/modals/storyPreview";
 import RejectStory from "@/components/UI/modals/rejectStory";
 import Link from "next/link";
 import { StoryTabsData } from "@/data/storyTabsData";

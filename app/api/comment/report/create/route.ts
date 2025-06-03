@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
     const db = client.db("ghorabaa");
     const reportsCollection = db.collection("reports");
     const commentsCollection = db.collection("comments");
+    const usersCollection = db.collection("users");
 
     const body = await req.json();
     const { comment_id, rejectReason, rejectDetails } = body;
@@ -43,13 +44,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // ✅ Get reporter info from token
+    const reporter = await usersCollection.findOne(
+      { _id: new ObjectId(token.id) },
+      { projection: { name: 1 } }
+    );
+
     const newReport = {
       reason: rejectReason,
       details: rejectDetails,
       status: ReportStatus.PENDING,
-      content_id: existingComment._id,
+      content: existingComment,
       content_type: ContentType.COMMENT,
-      user_id: new ObjectId(token.id),
+      content_id: existingComment._id, // 👈 Important: reference to reported content
+      user_id: new ObjectId(token.id), // 👈 Correct field for reporter
+      user_name: reporter?.name || "مجهول", // 👈 Correct reporter name
       createdAt: new Date(),
     };
 

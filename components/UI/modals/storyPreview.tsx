@@ -15,13 +15,13 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { MdPostAdd } from "react-icons/md";
 import { toast } from "react-toastify";
 
-type PreviewStoryProps = {
+type StoryPreviewProps = {
   data: StoryInterface & { publisher_name: string };
   refetchData?: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const PreviewStory = ({ data, refetchData, setIsOpen }: PreviewStoryProps) => {
+const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
   const city = data?.city;
   const neighborhood = data?.neighborhood;
   const bio = data?.bio;
@@ -223,4 +223,4 @@ const PreviewStory = ({ data, refetchData, setIsOpen }: PreviewStoryProps) => {
   );
 };
 
-export default PreviewStory;
+export default StoryPreview;

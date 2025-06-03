@@ -1,4 +1,4 @@
-// import { StoryStatus } from "@/app/enums";
+import { StoryStatus } from "@/app/enums";
 import clientPromise from "@/app/lib/mongodb";
 import { NextResponse } from "next/server";
 
@@ -8,16 +8,24 @@ export async function GET() {
     const db = client.db("ghorabaa");
     const collection = db.collection("stories");
 
-    // Use aggregation to sample a single random user
+    // Filter first, then randomly sample one story
     const [randomStory] = await collection
-      .aggregate([{ $sample: { size: 1 } }])
+      .aggregate([
+        {
+          $match: {
+            status: StoryStatus.APPROVED,
+            hasCompleteProfile: true,
+          },
+        },
+        { $sample: { size: 1 } },
+      ])
       .toArray();
 
-    console.log("Random User:", randomStory);
+    console.log("Random Approved Story:", randomStory);
 
     if (!randomStory) {
       return NextResponse.json(
-        { error: "لم يتم العثور على مستخدمين" },
+        { error: "لم يتم العثور على قصة عشوائية" },
         { status: 404 }
       );
     }
@@ -27,7 +35,7 @@ export async function GET() {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching random user story:", error);
+    console.error("Error fetching random approved story:", error);
     return NextResponse.json(
       { error: "حدث خطأ أثناء جلب البيانات" },
       { status: 500 }

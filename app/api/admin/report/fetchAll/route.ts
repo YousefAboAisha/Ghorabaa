@@ -1,4 +1,3 @@
-// app/api/stories/all/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { getToken } from "next-auth/jwt";
@@ -22,30 +21,64 @@ export async function GET(req: NextRequest) {
 
     const reports = await reportsCollection
       .aggregate([
+        // First, lookup the reporter info
         {
           $lookup: {
-            from: "stories",
+            from: "users",
             localField: "user_id",
-            foreignField: "publisher_id",
-            as: "story",
+            foreignField: "_id",
+            as: "reporter",
           },
         },
         {
           $unwind: {
-            path: "$story",
+            path: "$reporter",
             preserveNullAndEmptyArrays: true,
           },
         },
+
+        // Second, lookup the reported user via content.author_id
+        {
+          $lookup: {
+            from: "users",
+            let: { authorId: "$content.author_id" },
+            pipeline: [
+              { $match: { $expr: { $eq: ["$_id", "$$authorId"] } } },
+              { $project: { name: 1, image: 1, role: 1 } },
+            ],
+            as: "reported_user",
+          },
+        },
+        {
+          $unwind: {
+            path: "$reported_user",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+
+        // Final projection
         {
           $project: {
             _id: 1,
             reason: 1,
             details: 1,
             status: 1,
-            content_id: 1,
+            content: 1,
             content_type: 1,
             createdAt: 1,
-            content_name: "$story.name",
+            user_id: 1,
+            content_id: 1,
+
+            // Reporter
+            reporter_name: "$reporter.name",
+            reporter_image: "$reporter.image",
+            reporter_role: "$reporter.role",
+
+            // Reported user (author of comment)
+            reported_user_id: "$content.author_id",
+            reported_user_name: "$reported_user.name",
+            reported_user_image: "$reported_user.image",
+            reported_user_role: "$reported_user.role",
           },
         },
       ])

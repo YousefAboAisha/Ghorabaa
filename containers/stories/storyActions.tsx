@@ -4,12 +4,10 @@ import { StoryInterface } from "@/app/interfaces";
 import EditStoryForm from "@/components/UI/Forms/editStoryForm";
 import { DeleteStory } from "@/components/UI/modals/deleteStory";
 import Modal from "@/components/UI/modals/modal";
-import ReportStory from "@/components/UI/modals/reportStory";
 import ShareStory from "@/components/UI/modals/shareStory";
 import { Session } from "next-auth";
 import { useState } from "react";
 import { CiEdit, CiShare2, CiTrash } from "react-icons/ci";
-import { MdOutlineReport } from "react-icons/md";
 
 type StoryActionsProps = {
   data: StoryInterface;
@@ -23,10 +21,6 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
   // Edit Story Modal state variables
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
-
-  // Edit Story Modal state variables
-  const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-  const [isReportLoading, setIsReportLoading] = useState<boolean>(false);
 
   // Delete Story Modal state variables
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -69,16 +63,6 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
               <CiTrash size={30} />
             </div>
           )}
-
-          {session && !isStoryOwner && (
-            <div
-              title="إبلاغ عن القصة"
-              className="flex items-center justify-center border bg-white text-secondary p-2 hover:text-orange-600 duration-100 cursor-pointer rounded-lg shadow-sm"
-              onClick={() => setIsReportModalOpen(true)}
-            >
-              <MdOutlineReport size={30} />
-            </div>
-          )}
         </div>
       </div>
 
@@ -98,16 +82,6 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
         containerClassName="lg:w-[35%]"
       >
         <ShareStory story_title={data.name} />
-      </Modal>
-
-      {/* Report Story Modal */}
-      <Modal isOpen={isReportModalOpen} setIsOpen={setIsReportModalOpen}>
-        <ReportStory
-          setLoading={setIsReportLoading}
-          loading={isReportLoading}
-          data={data}
-          setIsOpen={setIsReportModalOpen}
-        />
       </Modal>
 
       {/* Delete Story Modal */}

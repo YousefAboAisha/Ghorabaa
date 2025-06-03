@@ -22,7 +22,7 @@ export enum StoryStatus {
 // Report Status Enums
 export enum ReportStatus {
   PENDING = "PENDING",
-  APPROVED = "APPROVED",
+  RESOLVED = "RESOLVED",
   REJECTED = "REJECTED",
 }
 

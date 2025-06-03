@@ -96,8 +96,8 @@ export const getReportStatusInArabic = (status: ReportStatus): string => {
   switch (status) {
     case ReportStatus.PENDING:
       return "قيد المراجعة";
-    case ReportStatus.APPROVED:
-      return "مقبولة";
+    case ReportStatus.RESOLVED:
+      return "تم التحقق";
     case ReportStatus.REJECTED:
       return "مرفوضة";
     default:
@@ -109,7 +109,7 @@ export const getReportColor = (status: ReportStatus): string => {
   switch (status) {
     case ReportStatus.PENDING:
       return "bg-yellow-500";
-    case ReportStatus.APPROVED:
+    case ReportStatus.RESOLVED:
       return "bg-primary";
     case ReportStatus.REJECTED:
       return "bg-red-500";

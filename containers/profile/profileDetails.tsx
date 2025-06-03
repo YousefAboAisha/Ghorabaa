@@ -89,11 +89,11 @@ const ProfileDetails = async () => {
             <td className="py-3 px-4 border-b text-right">
               <p
                 style={{
-                  backgroundColor: getRoleColor(data.role),
+                  backgroundColor: getRoleColor(data?.role),
                 }}
                 className={`w-fit p-1.5 px-2.5 rounded-sm text-white text-[13px]`}
               >
-                {getRoleInArabic(data.role)}
+                {getRoleInArabic(data?.role)}
               </p>
             </td>
           </tr>
