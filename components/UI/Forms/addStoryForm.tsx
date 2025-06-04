@@ -57,7 +57,7 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
 
     try {
       // 1. Upload image to Cloudinary first
-      const imageUploadRes = await fetch("/api/upload", {
+      const imageUploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`, {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({ image: values.image }), // base64 image
@@ -74,7 +74,7 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
         return;
       }
 
-      const response = await fetch("/api/story/storyDetails/create", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/storyDetails/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

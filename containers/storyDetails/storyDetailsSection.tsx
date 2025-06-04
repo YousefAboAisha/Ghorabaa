@@ -15,7 +15,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
   const user_id = session?.user.id;
 
   const storyResponse = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/${id}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/${id}`,
     {
       cache: "no-store", // optional but recommended if dynamic
     }

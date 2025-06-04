@@ -44,9 +44,12 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   const fetchStories = async (status: StoryStatus) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/story/userStories/fetch?status=${status}`, {
-        credentials: "include", // 👈 THIS IS CRITICAL
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/userStories/fetch?status=${status}`,
+        {
+          credentials: "include", // 👈 THIS IS CRITICAL
+        }
+      );
       if (!res.ok) throw new Error("Failed to fetch stories");
 
       const data = await res.json();

@@ -50,7 +50,7 @@ export const RejectStory = ({
 
           try {
             const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/story/status/reject`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/status/reject`,
               {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },

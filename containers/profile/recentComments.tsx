@@ -12,7 +12,7 @@ const RecentComments = async () => {
 
   const userFetchedComments = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/comment/userComments/fetch`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/comments/userComments/fetch`,
       {
         headers: {
           Cookie: cookieStore.toString(), // ⬅️ Forward cookies

@@ -63,7 +63,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
 
     try {
       // 1. Upload image to Cloudinary first
-      const imageUploadRes = await fetch("/api/upload", {
+      const imageUploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`, {
         method: "POST",
         body: JSON.stringify({ image: values.image }), // base64 image
         headers: { "Content-Type": "application/json" },
@@ -79,7 +79,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
         return;
       }
 
-      const response = await fetch("/api/story/update", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/story/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

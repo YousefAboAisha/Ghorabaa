@@ -46,19 +46,15 @@ export const getNotificationHrefPath = (
   switch (type) {
     case NotificationTypes.COMMENT:
       return `/stories/${story_id}#comment`;
-      break;
 
     case NotificationTypes.ACCEPT:
       return `/stories/${story_id}`;
-      break;
 
     case NotificationTypes.REJECT:
       return `/profile#STORY`;
-      break;
 
     default:
       return `/stories/${story_id}`;
-      break;
   }
 };
 
@@ -117,6 +113,22 @@ export const getReportColor = (status: ReportStatus): string => {
       return "bg-gray-500"; // Default color for unknown status
   }
 };
+
+export const getStatusBorderColor = (status: StoryStatus): string => {
+  switch (status) {
+    case StoryStatus.PENDING:
+      return "bg-yellow-500";
+    case StoryStatus.APPROVED:
+      return "bg-primary";
+    case StoryStatus.REJECTED:
+      return "bg-red-500";
+    default:
+      return "bg-gray-500"; // Default color for unknown status
+  }
+};
+
+
+
 
 export const getContentColor = (content_type: ContentType): string => {
   switch (content_type.toUpperCase()) {
@@ -193,5 +205,18 @@ export const getNotificationIcon = (type: NotificationTypes) => {
         Icon: BiBell,
         className: "text-yellow-600",
       }; // Default
+  }
+};
+
+export const getResponseMessage = (status: number) => {
+  switch (status) {
+    case 302:
+      return "أنت غير مصرح لك";
+    case 404:
+      return "لم يتم العثور على أية بيانات";
+    case 500:
+      return "خطأ في السيرفر";
+    default:
+      return "حدث خطأ أثناء جلب البيانات!";
   }
 };

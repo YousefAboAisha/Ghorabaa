@@ -58,7 +58,7 @@ const SigninForm = ({ session }: SigninFormProps) => {
     setFormErrors("");
 
     try {
-      const response = await fetch(`/api/user/signin`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

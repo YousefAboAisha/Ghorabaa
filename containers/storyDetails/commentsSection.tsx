@@ -17,7 +17,7 @@ const CommentsSection = ({ session, id }: CommentSectionProps) => {
 
   const fetchComments = async () => {
     setLoading(true);
-    const response = await fetch(`/api/comment/storyComments/${id}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/comments/storyComments/${id}`);
     if (!response.ok) {
       setLoading(false);
       throw new Error("Failed to fetch comments");

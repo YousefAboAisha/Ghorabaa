@@ -43,7 +43,7 @@ const ReportPreview = ({
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/report/accept/${data?._id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/reports/accept/${data?._id}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },

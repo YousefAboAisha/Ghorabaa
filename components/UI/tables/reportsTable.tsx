@@ -24,28 +24,26 @@ const ReportsTable = () => {
 
   const fetchTableData = async () => {
     setTableLoading(true);
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/report/fetchAll`
-      );
-      const res = await response.json();
-      console.log("[ADMIN] Reports Data", res);
+    setError(null);
 
-      if (response.ok && Array.isArray(res.data)) {
-        setTableData(res.data);
-      } else {
-        console.error("Unexpected response structure:", res);
-        setTableData([]);
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
+    await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/reports/fetch`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("حدث خطأ أثناء جلب البيانات");
+        }
+
+        return res.json();
+      })
+      .then((data) => {
+        if (data && Array.isArray(data)) setTableData(data);
+        else setTableData([]);
+      })
+      .catch((error) => {
         setError(error.message);
-      } else {
-        setError(String(error));
-      }
-    } finally {
-      setTableLoading(false);
-    }
+      })
+      .finally(() => {
+        setTableLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -58,10 +56,10 @@ const ReportsTable = () => {
     }
 
     if (error) {
-      return <ErrorMessage message={error as string} />;
+      return <ErrorMessage error={error as string} />;
     }
 
-    if (tableData.length === 0) {
+    if (tableData.length <= 0) {
       return <NoDataMessage />;
     }
 

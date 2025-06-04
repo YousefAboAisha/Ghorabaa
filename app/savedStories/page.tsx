@@ -13,7 +13,7 @@ const Page = () => {
   const fetchFavoriteStories = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/story/favorites/fetch", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/favorites/fetch`, {
         credentials: "include", // needed for session auth
       });
 

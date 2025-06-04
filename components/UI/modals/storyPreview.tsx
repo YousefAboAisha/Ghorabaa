@@ -82,7 +82,7 @@ const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
 
             try {
               const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/story/status/approve`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/status/approve`,
                 {
                   method: "POST",
                   headers: {

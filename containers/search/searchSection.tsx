@@ -8,6 +8,7 @@ import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLo
 import { StoryInterface } from "@/app/interfaces";
 import StoryCard from "@/components/UI/cards/storyCard";
 import { Session } from "next-auth";
+import ErrorMessage from "@/components/responseMessages/errorMessage";
 
 type SearchSectionProps = {
   session: Session | null;
@@ -16,6 +17,7 @@ type SearchSectionProps = {
 const SearchSection = ({ session }: SearchSectionProps) => {
   const [stories, setStories] = useState<StoryInterface[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   console.log("Stories", stories);
@@ -24,10 +26,11 @@ const SearchSection = ({ session }: SearchSectionProps) => {
     const delayDebounce = setTimeout(() => {
       if (searchQuery.length > 0) {
         setLoading(true);
+        setError(null);
 
         // hasCompleteProfile=true query is to return the stories with complete profiles only!
         fetch(
-          `/api/story/search?query=${encodeURIComponent(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/search?query=${encodeURIComponent(
             searchQuery
           )}&hasCompleteProfile=true`,
           {
@@ -35,16 +38,21 @@ const SearchSection = ({ session }: SearchSectionProps) => {
           }
         )
           .then((res) => {
+            console.log("respones object: ", res);
             if (!res.ok) {
-              throw new Error("Failed to fetch");
+              throw new Error("حدث خطأ أثناء جلب البيانات");
             }
             return res.json();
           })
           .then((data) => {
+            console.log("data object: ", data);
             setStories(data);
             console.log("Data inside the useEffect", data);
           })
-          .catch((err) => console.error(err))
+          .catch((error) => {
+            console.error("This is error: ", error);
+            setError(error.message);
+          })
           .finally(() => setLoading(false));
       } else {
         setStories([]);
@@ -53,6 +61,28 @@ const SearchSection = ({ session }: SearchSectionProps) => {
 
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
+
+  const renderContent = () => {
+    if (error) return <ErrorMessage error={error as string} />;
+
+    if (loading) return <StoryCardSkeletonLoader length={8} />;
+
+    if (stories)
+      return (
+        <div className="cards-grid-4">
+          {stories && stories?.length <= 0 ? (
+            <div className="flex items-center gap-2 abs-center text-sm">
+              <p>لا توجد نتائج للبحث</p>
+              <BsExclamationCircle size={20} />
+            </div>
+          ) : (
+            stories?.map((martyr: StoryInterface, index) => (
+              <StoryCard key={index} data={martyr} session={session} />
+            ))
+          )}
+        </div>
+      );
+  };
 
   return (
     <div>
@@ -83,24 +113,7 @@ const SearchSection = ({ session }: SearchSectionProps) => {
         </div>
       </div>
 
-      <div className="relative mt-6 min-h-[60vh]">
-        {loading ? (
-          <StoryCardSkeletonLoader length={8} />
-        ) : (
-          <div className="cards-grid-4">
-            {stories && stories?.length <= 0 ? (
-              <div className="flex items-center gap-2 abs-center text-sm">
-                <p>لا توجد نتائج للبحث</p>
-                <BsExclamationCircle size={20} />
-              </div>
-            ) : (
-              stories?.map((martyr: StoryInterface, index) => (
-                <StoryCard key={index} data={martyr} session={session} />
-              ))
-            )}
-          </div>
-        )}
-      </div>
+      <div className="relative min-h-[60vh] mt-8">{renderContent()}</div>
     </div>
   );
 };

@@ -53,7 +53,7 @@ const EditUser = ({
             try {
               setLoading?.(true); // Set loading state to true before starting the request
               const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/user/update`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/users/update`,
                 {
                   method: "POST",
                   headers: {

@@ -55,7 +55,7 @@ const Signup = () => {
       // Log the form values to verify they are correct
       console.log("Form Values:", values);
 
-      const response = await fetch(`/api/user/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

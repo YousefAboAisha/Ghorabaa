@@ -33,7 +33,7 @@ const EditProfileForm = ({ data }: EditProfileFormProps) => {
         validationSchema={ProfileValidationSchema}
         onSubmit={async (values, {  setSubmitting }) => {
           try {
-            const response = await fetch("/api/user/update", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/update`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(values),

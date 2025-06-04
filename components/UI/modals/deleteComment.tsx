@@ -25,7 +25,7 @@ export const DeleteComment = ({
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/comment/delete/${comment_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/comments/delete/${comment_id}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },

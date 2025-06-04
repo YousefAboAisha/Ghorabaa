@@ -26,7 +26,7 @@ export const AcceptReport = ({
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/report/accept/${report_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/reports/accept/${report_id}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },

@@ -20,6 +20,7 @@ const Page = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [searchData, setSearchData] = useState<StoryInterface | null>();
+  const [error, setError] = useState<string>();
 
   const initialValues = {
     id_number: "",
@@ -33,26 +34,37 @@ const Page = () => {
 
   const fetchStoryDetails = async (searchQuery: string) => {
     setLoading(true);
+    setSearchData(null);
 
-    const response = await fetch(
-      `/api/story/searchByIdNumber?query=${encodeURIComponent(searchQuery)}`,
-      {
-        credentials: "include",
+    try {
+      const response = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/user/stories/searchByIdNumber?query=${encodeURIComponent(
+          searchQuery
+        )}`,
+        {
+          credentials: "include",
+        }
+      );
+
+      console.log("Data search respones", response.statusText);
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result && result.data) {
+          setSearchData(result.data);
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+        setSearchData(null);
+        setError(response.statusText);
       }
-    );
-
-    if (!response.ok) {
-      setLoading(false);
-      setSearchData(null);
-      throw new Error("Failed to fetch comments");
-    }
-
-    const result = await response.json();
-    if (result && result.data) {
-      setSearchData(result.data);
+    } catch (error) {
+      console.error("Failed to search data:", error);
       setLoading(false);
     }
-    setLoading(false);
   };
 
   const age =
@@ -118,6 +130,10 @@ const Page = () => {
                     component="div"
                     className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
+                </div>
+
+                <div className="gap-1 text-[red] bg-red-200 w-fit p-1.5 px-2.5 rounded-md text-[12px] mt-2">
+                  {error}
                 </div>
               </Form>
             )}

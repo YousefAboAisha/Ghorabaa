@@ -28,7 +28,7 @@ function NotificationPopper({ session }: NotificationPopperProps) {
     if (!session?.user?.id) return;
     try {
       setLoading(true);
-      const res = await fetch("/api/notification/fetch", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/notifications/fetch`, {
         credentials: "include",
       });
       const result = await res.json();
@@ -48,7 +48,7 @@ function NotificationPopper({ session }: NotificationPopperProps) {
 
   const markAsRead = async () => {
     try {
-      await fetch("/api/notification/patch", {
+      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/notifications/patch`, {
         method: "PATCH",
         credentials: "include",
       });

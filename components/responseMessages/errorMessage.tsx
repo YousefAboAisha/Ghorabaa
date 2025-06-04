@@ -1,20 +1,21 @@
 import React from "react";
+import { BiErrorCircle } from "react-icons/bi";
 
 interface ErrorMessageProps {
   className?: string;
-  message?: string;
+  error?: string;
 }
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({
   className = "",
-  message,
+  error,
 }) => {
   return (
     <div
-      className={`relative flex flex-col gap-3 min-h-[30vh] bg-white rounded-md border ${className}`}
+      className={`relative flex flex-col justify-center items-center gap-3 min-h-[50vh] bg-white rounded-md border ${className}`}
     >
-      <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
-      <p>{message}</p>
+      <BiErrorCircle size={30} className="text-[red]" />
+      <p className="text-sm">{error}</p>
     </div>
   );
 };

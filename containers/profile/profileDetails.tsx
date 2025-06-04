@@ -10,7 +10,7 @@ const ProfileDetails = async () => {
 
   const userDetails = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/userDetails/fetch`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/userDetails/fetch`,
       {
         headers: {
           Cookie: cookieStore.toString(), // ⬅️ Forward cookies

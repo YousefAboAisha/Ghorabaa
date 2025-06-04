@@ -1,4 +1,4 @@
-import NetworkErrorPage from "@/components/responseMessages/networkErrorPage";
+import ErrorMessage from "@/components/responseMessages/errorMessage";
 import ImagesSwiper from "@/components/UI/imagesSwiper";
 import { Session } from "next-auth";
 import { cookies } from "next/headers"; // App Router only
@@ -8,11 +8,12 @@ type RecentlyAddedStories = {
 };
 
 const RecentlyAddedStories = async ({ session }: RecentlyAddedStories) => {
+  // Fetch the data of recently added stories
   const fetchRecentlyAddedStories = async () => {
     const cookieStore = await cookies(); // Access current cookies
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/recentlyAdded/fetch`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/recentlyAdded/fetch`,
       {
         headers: {
           Cookie: cookieStore.toString(), // ⬅️ Forward cookies
@@ -28,13 +29,15 @@ const RecentlyAddedStories = async ({ session }: RecentlyAddedStories) => {
     return res.json();
   };
 
-  const { data } = await fetchRecentlyAddedStories();
+  const { data, error } = await fetchRecentlyAddedStories();
 
-  return data ? (
-    <ImagesSwiper data={data} session={session} />
-  ) : (
-    <NetworkErrorPage />
-  );
+  if (error) {
+    return <ErrorMessage error={error} className="mt-4" />;
+  }
+
+  if (data) {
+    return <ImagesSwiper data={data} session={session} />;
+  }
 };
 
 export default RecentlyAddedStories;

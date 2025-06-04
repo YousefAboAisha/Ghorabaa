@@ -11,7 +11,7 @@ const NotificationsList = async () => {
   const cookieStore = await cookies(); // Access current cookies
 
   const notificationResponse = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/notification/fetchAll`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/notifications/fetchAll`,
     {
       headers: {
         Cookie: cookieStore.toString(), // ⬅️ Forward cookies

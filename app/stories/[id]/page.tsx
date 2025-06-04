@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/${id}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/stories/${id}`,
     {
       cache: "force-cache",
     }

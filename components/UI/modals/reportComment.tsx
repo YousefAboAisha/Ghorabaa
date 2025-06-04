@@ -43,7 +43,7 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
 
           try {
             const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/comment/report/create`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/reports/create`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

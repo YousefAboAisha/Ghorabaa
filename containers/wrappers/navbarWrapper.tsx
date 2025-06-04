@@ -6,5 +6,5 @@ export default async function NavbarWrapper() {
 
   console.log("session [sever]", session);
 
-  return <Navbar session={session} />; // Pass the session as a prop
+  return <Navbar session={session!} />; // Pass the session as a prop
 }

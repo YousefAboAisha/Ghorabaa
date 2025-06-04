@@ -45,12 +45,15 @@ const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm, setSubmitting }) => {
             try {
-              const response = await fetch("/api/comment/create", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...values }),
-                credentials: "include", // 👈 THIS IS CRITICAL
-              });
+              const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/comments/create`,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ ...values }),
+                  credentials: "include", // 👈 THIS IS CRITICAL
+                }
+              );
 
               const data = await response.json();
 

@@ -24,7 +24,7 @@ export const DeleteStory = ({
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/delete/${story_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/stories/delete/${story_id}`,
         {
           credentials: "include",
           method: "DELETE",

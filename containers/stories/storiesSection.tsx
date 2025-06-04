@@ -7,6 +7,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import { Session } from "next-auth";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
+import ErrorMessage from "@/components/responseMessages/errorMessage";
 
 type StoriesSectionProps = {
   session: Session | null;
@@ -14,6 +15,7 @@ type StoriesSectionProps = {
 
 const StoriesSection = ({ session }: StoriesSectionProps) => {
   const [stories, setStories] = useState<StoryInterface[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -24,40 +26,45 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
     if (!hasMore || fetching.current) return;
 
     fetching.current = true;
+    setError(null);
     console.log("Fetching page", pageToFetch);
 
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/story/fetch/?status=${StoryStatus.APPROVED}&page=${pageToFetch}&limit=8`,
-        { cache: "no-store" }
-      );
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/fetch/?status=${StoryStatus.APPROVED}&page=${pageToFetch}&limit=8`,
+      { cache: "no-store" }
+    )
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("حدث خطأ أثناء جلب البيانات");
+        }
 
-      if (!res.ok) throw new Error("Network error");
+        return res.json();
+      })
+      .then((data) => {
+        setStories((prev) => {
+          const existingIds = new Set(prev.map((s) => s._id));
+          const unique = data.filter(
+            (s: StoryInterface) => !existingIds.has(s._id)
+          );
+          return [...prev, ...unique];
+        });
 
-      const json = await res.json();
-
-      setStories((prev) => {
-        const existingIds = new Set(prev.map((s) => s._id));
-        const unique = json.data.filter(
-          (s: StoryInterface) => !existingIds.has(s._id)
-        );
-        return [...prev, ...unique];
+        setHasMore(data.hasMore);
+        setPage((prev) => prev + 1); // ✅ increment after success
+      })
+      .catch((error) => {
+        setError(error.message);
+        fetching.current = false;
+        setInitialLoading(false);
       });
-
-      setHasMore(json.hasMore);
-      setPage((prev) => prev + 1); // ✅ increment after success
-    } catch (err) {
-      console.error(err);
-    } finally {
-      fetching.current = false;
-      setInitialLoading(false);
-    }
   };
 
   // Initial load (page 1)
   useEffect(() => {
     fetchStories(1);
   }, []);
+
+  console.log("Error", error);
 
   const lastElementRef = useCallback(
     (node: HTMLDivElement) => {
@@ -78,6 +85,10 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
     },
     [hasMore, initialLoading, page]
   );
+
+  if (error) {
+    return <ErrorMessage error={error} className="mt-8" />;
+  }
 
   return (
     <div className="relative mb-12 mt-8">
