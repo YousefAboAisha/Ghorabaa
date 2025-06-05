@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Routes } from "../../data/routes";
 import Link from "next/link";
 import Sidebar from "./sidebar";
@@ -12,6 +12,8 @@ import Logo from "../UI/logo";
 import NotificationPopper from "../UI/modals/notificationPopper";
 import { BsBookmark, BsPersonAdd, BsSearch } from "react-icons/bs";
 import { Session } from "next-auth";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useFavoriteStore } from "@/stores/favoriteStore";
 
 type NavbarProps = {
   session: Session | null;
@@ -19,7 +21,11 @@ type NavbarProps = {
 
 const Navbar = ({ session }: NavbarProps) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
   const pathname = usePathname();
+
+  const { count, fetchAndUpdateCount } = useFavoriteStore();
 
   console.log("Session values [Navbar]", session);
 
@@ -42,6 +48,12 @@ const Navbar = ({ session }: NavbarProps) => {
       )),
     [pathname]
   );
+
+  useEffect(() => {
+    setLoading(true);
+    fetchAndUpdateCount();
+    setLoading(false);
+  }, []);
 
   // Only render the navbar if it's not an admin page
   if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) {
@@ -99,10 +111,13 @@ const Navbar = ({ session }: NavbarProps) => {
             </div>
           ) : (
             <div className="flex items-center">
+              {/* Profile popper */}
               <ProfilePopper session={session} />
 
+              {/* Notifications popper */}
               <NotificationPopper session={session} />
 
+              {/* Search page */}
               <Link
                 title="البحث عن الشهداء"
                 prefetch
@@ -112,13 +127,22 @@ const Navbar = ({ session }: NavbarProps) => {
                 <BsSearch />
               </Link>
 
+              {/* Saved Stories page */}
               <Link
                 title="القصص المحفوظة"
                 prefetch
                 href={"/savedStories"}
-                className="flex items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+                className="relative flex items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
-                <BsBookmark />
+                <p className="absolute -top-0.5 -right-0.5 w-[17px] h-[17px] p-1 bg-primary text-white  flex items-center justify-center rounded-full text-[10px]">
+                  {count}
+                </p>
+
+                {loading ? (
+                  <AiOutlineLoading3Quarters className="animate-spin" />
+                ) : (
+                  <BsBookmark />
+                )}
               </Link>
               <span className="hidden md:flex">|</span>
             </div>

@@ -23,7 +23,10 @@ export async function GET(req: NextRequest) {
     const user = await usersCollection.findOne({ email: token.email });
 
     if (!user || !user.favoritesArray) {
-      return NextResponse.json({ favorites: [] });
+      return NextResponse.json(
+        { error: "لم يتم العثور على المستخدم!" },
+        { status: 404 }
+      );
     }
 
     // Ensure all IDs are ObjectId

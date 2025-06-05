@@ -1,4 +1,5 @@
 "use client";
+import { useFavoriteStore } from "@/stores/favoriteStore";
 import React, { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsBookmark } from "react-icons/bs";
@@ -12,22 +13,26 @@ type FavoriteButtonProps = {
 const FavoriteButton = ({ story_id, initialFavorite }: FavoriteButtonProps) => {
   const [favorited, setFavorited] = useState(initialFavorite);
   const [loading, setLoading] = useState<boolean>(false);
+  const { fetchAndUpdateCount } = useFavoriteStore();
 
   const toggleFavorite = async () => {
     try {
       setLoading(true);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/updateFavorite`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Required for NextAuth session cookies
-        body: JSON.stringify({
-          story_id,
-          isFavorite: !favorited, // Toggle the current value
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/updateFavorite`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Required for NextAuth session cookies
+          body: JSON.stringify({
+            story_id,
+            isFavorite: !favorited, // Toggle the current value
+          }),
+        }
+      );
 
       const data = await res.json();
       console.log("Favorite Response data", data);
@@ -39,6 +44,7 @@ const FavoriteButton = ({ story_id, initialFavorite }: FavoriteButtonProps) => {
         return; // Optional: show toast or error message to user
       }
       setFavorited(isFavorited);
+      fetchAndUpdateCount();
       if (isFavorited) {
         toast.success("تمت إضافة القصة إلى قائمة المحفوظات");
       } else {

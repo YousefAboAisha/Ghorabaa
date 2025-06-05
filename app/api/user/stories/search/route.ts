@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
       favorite: favoritesArray.includes(story._id.toString()),
     }));
 
-    return NextResponse.json(serialized, { status: 200 });
+    return NextResponse.json({ data: serialized }, { status: 200 });
   } catch (error) {
     console.error("Search error:", error);
     return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });

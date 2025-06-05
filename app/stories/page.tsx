@@ -15,12 +15,14 @@ export default async function Page() {
     <div className="container mt-24 min-h-screen">
       <PageTitles />
 
-      <Heading
-        title=""
-        highLightText="شهداؤنا الأبرار"
-        details="وَلَئِن قُتِلْتُمْ فِي سَبِيلِ اللَّهِ أَوْ مُتُّمْ لَمَغْفِرَةٌ مِّنَ اللَّهِ وَرَحْمَةٌ خَيْرٌ مِّمَّا يَجْمَعُونَ"
-        className="w-fit mt-8"
-      />
+      <div className="flex items-center gap-4">
+        <Heading
+          title=""
+          highLightText="شهداؤنا الأبرار"
+          details="وَلَئِن قُتِلْتُمْ فِي سَبِيلِ اللَّهِ أَوْ مُتُّمْ لَمَغْفِرَةٌ مِّنَ اللَّهِ وَرَحْمَةٌ خَيْرٌ مِّمَّا يَجْمَعُونَ"
+          className="w-fit mt-8"
+        />
+      </div>
 
       <Suspense
         fallback={<StoryCardSkeletonLoader length={8} className="!mt-8" />}

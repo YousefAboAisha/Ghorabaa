@@ -29,7 +29,7 @@ const UsersTable = () => {
 
         return res.json();
       })
-      .then((data) => {
+      .then(({data}) => {
         if (data && Array.isArray(data)) setTableData(data);
         else setTableData([]);
       })

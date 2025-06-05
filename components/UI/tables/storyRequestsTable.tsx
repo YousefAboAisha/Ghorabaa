@@ -39,7 +39,7 @@ const StoryRequestsTable = () => {
 
         return res.json();
       })
-      .then((data) => {
+      .then(({data}) => {
         if (data && Array.isArray(data)) setTableData(data);
         else setTableData([]);
       })

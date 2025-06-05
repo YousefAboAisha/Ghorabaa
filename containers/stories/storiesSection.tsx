@@ -7,6 +7,8 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import { Session } from "next-auth";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
+import Modal from "@/components/UI/modals/modal";
+import SearchFilters from "@/components/UI/modals/searchFilters";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 
 type StoriesSectionProps = {
@@ -21,6 +23,8 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
   const [initialLoading, setInitialLoading] = useState(true);
   const observer = useRef<IntersectionObserver | null>(null);
   const fetching = useRef(false); // ✅ prevent double-fetching
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const fetchStories = async (pageToFetch: number) => {
     if (!hasMore || fetching.current) return;
@@ -40,7 +44,8 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
 
         return res.json();
       })
-      .then((data) => {
+      .then(({ data }) => {
+        setInitialLoading(false);
         setStories((prev) => {
           const existingIds = new Set(prev.map((s) => s._id));
           const unique = data.filter(
@@ -91,39 +96,51 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
   }
 
   return (
-    <div className="relative mb-12 mt-8">
-      {initialLoading ? (
-        <StoryCardSkeletonLoader length={8} className="!mt-8" />
-      ) : stories.length > 0 ? (
-        <>
-          <div className="cards-grid-4">
-            {stories.map((story: StoryInterface) => (
-              <StoryCard
-                key={story._id as string}
-                data={story}
-                session={session}
-              />
-            ))}
-          </div>
+    <>
+      <Modal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        containerClassName="lg:w-[32%]"
+      >
+        <SearchFilters />
+      </Modal>
 
-          {/* Observed loader div for infinite scroll */}
-          <div ref={lastElementRef} className="h-10 mt-10 bg-transparent" />
+      <div onClick={() => setIsOpen(true)}>Open Modal</div>
 
-          {!hasMore ? (
-            <p className="text-center text-sm text-gray-500">
-              لا توجد قصص إضافية!
-            </p>
-          ) : (
-            <div className="mt-4 flex justify-center gap-2 text-gray_dark text-[14px]">
-              جارٍ جلب البيانات
-              <AiOutlineLoading3Quarters size={16} className="animate-spin" />
+      <div className="relative mb-12 mt-8">
+        {initialLoading ? (
+          <StoryCardSkeletonLoader length={8} className="!mt-8" />
+        ) : stories.length > 0 ? (
+          <>
+            <div className="cards-grid-4">
+              {stories.map((story: StoryInterface) => (
+                <StoryCard
+                  key={story._id as string}
+                  data={story}
+                  session={session}
+                />
+              ))}
             </div>
-          )}
-        </>
-      ) : (
-        <NoDataMessage className="min-h-[50vh]" />
-      )}
-    </div>
+
+            {/* Observed loader div for infinite scroll */}
+            <div ref={lastElementRef} className="h-10 mt-10 bg-transparent" />
+
+            {!hasMore ? (
+              <p className="text-center text-sm text-gray-500">
+                لا توجد قصص إضافية!
+              </p>
+            ) : (
+              <div className="mt-4 flex justify-center gap-2 text-gray_dark text-[14px]">
+                جارٍ جلب البيانات
+                <AiOutlineLoading3Quarters size={16} className="animate-spin" />
+              </div>
+            )}
+          </>
+        ) : (
+          <NoDataMessage className="min-h-[50vh]" />
+        )}
+      </div>
+    </>
   );
 };
 

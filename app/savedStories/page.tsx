@@ -5,33 +5,64 @@ import PageTitles from "@/components/UI/typography/pageTitles";
 import { useEffect, useState } from "react";
 import { StoryInterface } from "../interfaces";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
+import ErrorMessage from "@/components/responseMessages/errorMessage";
+import NoDataMessage from "@/components/responseMessages/noDataMessage";
 
 const Page = () => {
   const [favorites, setFavorites] = useState<StoryInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchFavoriteStories = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/favorites/fetch`, {
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/favorites/fetch`,
+      {
         credentials: "include", // needed for session auth
-      });
-
-      const response = await res.json();
-
-      if (!res.ok) {
-        setLoading(false);
-        console.error("Error:", response.error);
-        return [];
       }
+    )
+      .then((res) => {
+        if (!res.ok) {
+          setLoading(false);
+          throw new Error("حدث خطأ أثناء جلب البيانات");
+        }
 
-      setFavorites(response.data);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error("Failed to fetch favorite stories:", error);
-      return [];
-    }
+        return res.json();
+      })
+      .then(({ data }) => {
+        setFavorites(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message as string);
+        setLoading(false);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const renderContent = () => {
+    if (loading)
+      return <StoryCardSkeletonLoader length={4} className="cards-grid-4" />;
+
+    if (error) return <ErrorMessage error={error} />;
+
+    if (favorites)
+      return favorites.length > 0 ? (
+        <div className="cards-grid-4">
+          {favorites.map((data) => {
+            return (
+              <FavoriteCard
+                key={data._id as string}
+                data={data}
+                refetchData={fetchFavoriteStories}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <NoDataMessage />
+      );
   };
 
   useEffect(() => {
@@ -54,31 +85,7 @@ const Page = () => {
           </div>
         </div>
 
-        <div className="mt-4">
-          {loading ? (
-            <StoryCardSkeletonLoader length={4} className="cards-grid-4" />
-          ) : (
-            <div className="relative">
-              {favorites?.length > 0 ? (
-                <div className="cards-grid-4">
-                  {favorites.map((data) => {
-                    return (
-                      <FavoriteCard
-                        key={data._id as string}
-                        data={data}
-                        refetchData={fetchFavoriteStories}
-                      />
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="relative w-full bg-white border rounded-md h-[50vh]">
-                  <p className="abs-center text-sm">لا يوجد قصص محفوظة</p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+        <div className="mt-4">{renderContent()}</div>
       </div>
     </div>
   );

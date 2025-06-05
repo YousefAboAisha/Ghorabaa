@@ -35,7 +35,7 @@ const NotificationsList = async () => {
         </div>
       </div>
 
-      <div className="relative mt-4">
+      <div className="relative flex flex-col gap-2 mt-4">
         {notificationData.length > 0 ? (
           notificationData.map((notification: NotificationInterface, index) => {
             return (

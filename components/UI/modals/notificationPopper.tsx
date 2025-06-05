@@ -26,32 +26,41 @@ function NotificationPopper({ session }: NotificationPopperProps) {
 
   const fetchNotifications = useCallback(async () => {
     if (!session?.user?.id) return;
-    try {
-      setLoading(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/notifications/fetch`, {
-        credentials: "include",
-      });
-      const result = await res.json();
+    setLoading(true);
 
-      if (res.ok) {
-        setNotifications(result.data || []);
-        setHasUnread(result.hasUnread);
-      } else {
-        console.error("Failed to fetch notifications:", result.error);
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/notifications/fetch`,
+      {
+        credentials: "include",
       }
-    } catch (err) {
-      console.error("Fetch error:", err);
-    } finally {
-      setLoading(false);
-    }
+    )
+      .then((res) => {
+        if (!res.ok) {
+          setLoading(false);
+          throw new Error("حدث خطأ أثناء جلب البيانات");
+        }
+        return res.json();
+      })
+      .then(({ data }) => {
+        setLoading(false);
+        setNotifications(data || []);
+        setHasUnread(data.hasUnread);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log("Notification error", error);
+      });
   }, [session?.user?.id]);
 
   const markAsRead = async () => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/notifications/patch`, {
-        method: "PATCH",
-        credentials: "include",
-      });
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/notifications/patch`,
+        {
+          method: "PATCH",
+          credentials: "include",
+        }
+      );
       setHasUnread(false);
     } catch (err) {
       console.error("Failed to mark notifications as read:", err);
@@ -78,6 +87,7 @@ function NotificationPopper({ session }: NotificationPopperProps) {
                 active && "bg-gray_light"
               }`}
             >
+              <span></span>
               <GrNotification size={17} />
               {hasUnread && !active && (
                 <span className="absolute top-2 left-2 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />

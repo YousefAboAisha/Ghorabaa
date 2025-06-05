@@ -71,3 +71,8 @@ export enum ProviderTypes {
   GOOGLE = "google",
   DEFAULT = "default",
 }
+
+export enum Gender {
+  MALE = "MALE",
+  FEMALE = "FEMALE",
+}

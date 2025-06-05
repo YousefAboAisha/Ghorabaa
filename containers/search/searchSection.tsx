@@ -30,9 +30,9 @@ const SearchSection = ({ session }: SearchSectionProps) => {
 
         // hasCompleteProfile=true query is to return the stories with complete profiles only!
         fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/search?query=${encodeURIComponent(
-            searchQuery
-          )}&hasCompleteProfile=true`,
+          `${
+            process.env.NEXT_PUBLIC_API_BASE_URL
+          }/user/stories/search?query=${encodeURIComponent(searchQuery)}`,
           {
             credentials: "include",
           }
@@ -42,9 +42,11 @@ const SearchSection = ({ session }: SearchSectionProps) => {
             if (!res.ok) {
               throw new Error("حدث خطأ أثناء جلب البيانات");
             }
+            console.log("Response is ok, parsing JSON", res);
+
             return res.json();
           })
-          .then((data) => {
+          .then(({ data }) => {
             console.log("data object: ", data);
             setStories(data);
             console.log("Data inside the useEffect", data);
@@ -70,7 +72,7 @@ const SearchSection = ({ session }: SearchSectionProps) => {
     if (stories)
       return (
         <div className="cards-grid-4">
-          {stories && stories?.length <= 0 ? (
+          {stories?.length <= 0 ? (
             <div className="flex items-center gap-2 abs-center text-sm">
               <p>لا توجد نتائج للبحث</p>
               <BsExclamationCircle size={20} />
