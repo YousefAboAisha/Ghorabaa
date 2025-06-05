@@ -8,6 +8,7 @@ import {
   Role,
   StoryStatus,
   NotificationTypes,
+  Gender,
 } from "./enums";
 
 // Define the User interface
@@ -30,10 +31,12 @@ export interface UserInterface extends Document {
 export interface StoryInterface extends Document {
   _id: Types.ObjectId | string; // Unique identifier for the report.
   id_number: string;
+  gender: Gender;
   name: string;
   nickname?: string;
   birth_date: string;
   death_date: string;
+  age: number;
   city: string;
   neighborhood: string;
   bio: string;

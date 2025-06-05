@@ -18,6 +18,27 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
+    // ✅ Filters
+    const gender = searchParams.get("gender")?.trim();
+    const ageFrom = parseInt(searchParams.get("ageFrom") || "", 10);
+    const ageTo = parseInt(searchParams.get("ageTo") || "", 10);
+    const city = searchParams.get("city")?.trim();
+    const neighborhood = searchParams.get("neighborhood")?.trim();
+
+    // Base query
+    const query: Record<string, unknown> = { status };
+
+    // ✅ Add filters if present
+    if (gender) query["gender"] = gender;
+    if (!isNaN(ageFrom)) {
+      query["age"] = { ...(query["age"] || {}), $gte: ageFrom };
+    }
+    if (!isNaN(ageTo)) {
+      query["age"] = { ...(query["age"] || {}), $lte: ageTo };
+    }
+    if (city) query["city"] = city;
+    if (neighborhood) query["neighborhood"] = neighborhood;
+
     if (!status) {
       return NextResponse.json({ error: "معرف الحالة مفقود" }, { status: 400 });
     }
@@ -33,7 +54,6 @@ export async function GET(req: NextRequest) {
     }
 
     // ✅ Fetch stories with pagination
-    const query = { status };
     const stories = await storiesCollection
       .find(query)
       .sort({ createdAt: -1, _id: -1 })

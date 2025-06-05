@@ -7,9 +7,8 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import { Session } from "next-auth";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
-import Modal from "@/components/UI/modals/modal";
-import SearchFilters from "@/components/UI/modals/searchFilters";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
+import { useSearchParams } from "next/navigation";
 
 type StoriesSectionProps = {
   session: Session | null;
@@ -23,51 +22,82 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
   const [initialLoading, setInitialLoading] = useState(true);
   const observer = useRef<IntersectionObserver | null>(null);
   const fetching = useRef(false); // ✅ prevent double-fetching
+  const searchParams = useSearchParams();
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const gender = searchParams.get("gender");
+  const ageFrom = searchParams.get("ageFrom");
+  const ageTo = searchParams.get("ageTo");
+  const city = searchParams.get("city");
+  const neighborhood = searchParams.get("neighborhood");
 
   const fetchStories = async (pageToFetch: number) => {
+    console.log("hasMore: ", hasMore);
+    console.log("fetching.current: ", fetching.current);
+
     if (!hasMore || fetching.current) return;
 
     fetching.current = true;
     setError(null);
-    console.log("Fetching page", pageToFetch);
 
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/fetch/?status=${StoryStatus.APPROVED}&page=${pageToFetch}&limit=8`,
-      { cache: "no-store" }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("حدث خطأ أثناء جلب البيانات");
-        }
+    const params = new URLSearchParams({
+      status: StoryStatus.APPROVED,
+      page: pageToFetch.toString(),
+      limit: "8",
+    });
 
-        return res.json();
-      })
-      .then(({ data }) => {
-        setInitialLoading(false);
-        setStories((prev) => {
-          const existingIds = new Set(prev.map((s) => s._id));
-          const unique = data.filter(
-            (s: StoryInterface) => !existingIds.has(s._id)
-          );
-          return [...prev, ...unique];
-        });
+    // ✅ Append filter params if present
+    if (gender) params.set("gender", gender);
+    if (ageFrom) params.set("ageFrom", ageFrom);
+    if (ageTo) params.set("ageTo", ageTo);
+    if (city) params.set("city", city);
+    if (neighborhood) params.set("neighborhood", neighborhood);
 
-        setHasMore(data.hasMore);
-        setPage((prev) => prev + 1); // ✅ increment after success
-      })
-      .catch((error) => {
-        setError(error.message);
-        fetching.current = false;
-        setInitialLoading(false);
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/user/stories/fetch?${params.toString()}`,
+        { cache: "no-store" }
+      );
+
+      if (!res.ok) {
+        throw new Error("حدث خطأ أثناء جلب البيانات");
+      }
+
+      const { data, hasMore } = await res.json();
+
+      setInitialLoading(false);
+      setStories((prev) => {
+        const existingIds = new Set(prev.map((s) => s._id));
+        const unique = data.filter(
+          (s: StoryInterface) => !existingIds.has(s._id)
+        );
+        return [...prev, ...unique];
       });
+
+      setHasMore(hasMore);
+      setPage((prev) => prev + 1);
+    } catch (error) {
+      setError((error as Error).message);
+      setInitialLoading(false);
+    } finally {
+      fetching.current = false;
+    }
   };
 
   // Initial load (page 1)
   useEffect(() => {
-    fetchStories(1);
-  }, []);
+    setStories([]);
+    setPage(1);
+    setHasMore(true);
+    setInitialLoading(true);
+  }, [searchParams.toString()]);
+
+  useEffect(() => {
+    if (page === 1 && initialLoading) {
+      fetchStories(1);
+    }
+  }, [page, initialLoading]);
 
   console.log("Error", error);
 
@@ -97,16 +127,6 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
 
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        containerClassName="lg:w-[32%]"
-      >
-        <SearchFilters />
-      </Modal>
-
-      <div onClick={() => setIsOpen(true)}>Open Modal</div>
-
       <div className="relative mb-12 mt-8">
         {initialLoading ? (
           <StoryCardSkeletonLoader length={8} className="!mt-8" />

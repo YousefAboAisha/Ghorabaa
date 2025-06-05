@@ -5,6 +5,7 @@ import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLo
 import StoriesSection from "@/containers/stories/storiesSection";
 import { StoriesMetadata } from "../lib/metadata";
 import { getSessionAction } from "../actions/registerActions";
+import FilterButton from "@/containers/stories/filterButton";
 
 export const generateMetadata = async () => StoriesMetadata;
 
@@ -15,13 +16,15 @@ export default async function Page() {
     <div className="container mt-24 min-h-screen">
       <PageTitles />
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between gap-4">
         <Heading
           title=""
           highLightText="شهداؤنا الأبرار"
           details="وَلَئِن قُتِلْتُمْ فِي سَبِيلِ اللَّهِ أَوْ مُتُّمْ لَمَغْفِرَةٌ مِّنَ اللَّهِ وَرَحْمَةٌ خَيْرٌ مِّمَّا يَجْمَعُونَ"
           className="w-fit mt-8"
         />
+
+        <FilterButton />
       </div>
 
       <Suspense

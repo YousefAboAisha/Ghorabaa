@@ -27,7 +27,7 @@ export async function POST(originalReq: Request) {
     const collection = db.collection("stories");
 
     const body = await originalReq.json();
-    const { id_number, bio, ...rest } = body;
+    const { id_number, birth_date, death_date, bio, ...rest } = body;
 
     if (!id_number) {
       return NextResponse.json(
@@ -60,6 +60,8 @@ export async function POST(originalReq: Request) {
       publisher_id: new ObjectId(token.id),
       status: StoryStatus.PENDING,
       hasCompleteProfile: true,
+      age:
+        new Date(death_date).getFullYear() - new Date(birth_date).getFullYear(),
       updatedAt: new Date(),
     };
 

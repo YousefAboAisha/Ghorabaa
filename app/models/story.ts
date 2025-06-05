@@ -1,6 +1,6 @@
 import { Schema, model, models } from "mongoose";
 import { StoryInterface } from "../interfaces";
-import { StoryStatus } from "../enums";
+import { Gender, StoryStatus } from "../enums";
 
 // Define the Martyr schema
 const storySchema = new Schema<StoryInterface>(
@@ -9,6 +9,12 @@ const storySchema = new Schema<StoryInterface>(
       type: String,
       required: [true, "ID number is required and cannot be empty."],
       unique: true, // Ensure ID number is unique
+    },
+
+    gender: {
+      type: String,
+      enum: Object.values(Gender),
+      required: true,
     },
 
     name: {
@@ -24,6 +30,11 @@ const storySchema = new Schema<StoryInterface>(
     death_date: {
       type: String,
       required: [true, "Death date is required and cannot be empty."],
+    },
+
+    age: {
+      type: Number,
+      required: [true, "Age is required and cannot be empty."],
     },
 
     city: {
