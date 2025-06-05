@@ -15,6 +15,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import Input from "@/components/UI/inputs/input";
 import { arabicDateConversion } from "@/utils/format";
 import AddStoryForm from "@/components/UI/Forms/addStoryForm";
+import { getGenderLabel } from "@/utils/text";
 
 const Page = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -66,12 +67,6 @@ const Page = () => {
       setLoading(false);
     }
   };
-
-  const age =
-    searchData?.death_date && searchData?.birth_date
-      ? new Date(searchData.death_date).getFullYear() -
-        new Date(searchData.birth_date).getFullYear()
-      : "N/A";
 
   return (
     <div className="container lg:w-6/12 mt-32 min-h-screen">
@@ -132,9 +127,11 @@ const Page = () => {
                   />
                 </div>
 
-                <div className="gap-1 text-[red] bg-red-200 w-fit p-1.5 px-2.5 rounded-md text-[12px] mt-2">
-                  {error}
-                </div>
+                {error && (
+                  <div className="gap-1 text-[red] bg-red-200 w-fit p-1.5 px-2.5 rounded-md text-[12px] mt-2">
+                    {error}
+                  </div>
+                )}
               </Form>
             )}
           </Formik>
@@ -182,7 +179,7 @@ const Page = () => {
                     </td>
 
                     <td className="py-3 px-4 border-b text-right text-sm">
-                      ذكر
+                      {getGenderLabel(searchData.gender)}
                     </td>
                   </tr>
 
@@ -214,7 +211,7 @@ const Page = () => {
                     </td>
 
                     <td className="py-3 px-4 border-b text-right text-sm">
-                      {age} عاماً
+                      {searchData.age} عاماً
                     </td>
                   </tr>
 

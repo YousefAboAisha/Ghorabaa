@@ -61,7 +61,7 @@ const Page = () => {
           })}
         </div>
       ) : (
-        <NoDataMessage />
+        <NoDataMessage className="min-h-[60vh]" />
       );
   };
 

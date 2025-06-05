@@ -1,5 +1,6 @@
 import {
   ContentType,
+  Gender,
   NotificationTypes,
   ReportReasons,
   ReportStatus,
@@ -127,8 +128,14 @@ export const getStatusBorderColor = (status: StoryStatus): string => {
   }
 };
 
-
-
+export const getGenderLabel = (gender: Gender) => {
+  switch (gender) {
+    case Gender.MALE:
+      return "ذكر";
+    case Gender.FEMALE:
+      return "أنثى";
+  }
+};
 
 export const getContentColor = (content_type: ContentType): string => {
   switch (content_type.toUpperCase()) {
