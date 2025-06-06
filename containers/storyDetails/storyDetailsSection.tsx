@@ -67,7 +67,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
         </div>
 
         <div className="flex items-center gap-2 mt-6">
-          <h4 className="text-lg font-extrabold">الشهيد | {data.name}</h4>
+          <h4 className="text-lg font-semibold">الشهيد | {data.name}</h4>
           {data.nickname && (
             <p className="text-gray_dark"> &quot; {data.nickname} &quot; </p>
           )}

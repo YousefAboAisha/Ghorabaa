@@ -2,14 +2,8 @@
 import Input from "@/components/UI/inputs/input";
 import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaLinkedin,
-  FaTelegram,
-  FaWhatsapp,
-} from "react-icons/fa";
-import { FaX } from "react-icons/fa6";
+import { FaFacebook, FaLinkedin, FaTelegram, FaWhatsapp } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { FiCheck, FiCopy } from "react-icons/fi";
 
 type ShareModalProps = {
@@ -44,10 +38,13 @@ const ShareStory = ({ story_title }: ShareModalProps) => {
     setSharedLink(window.location.href);
   }, []);
 
+  const openShareWindow = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="relative flex flex-col gap-2 p-6">
       <div className="flex items-center gap-4">
-        <FiCopy size={22} />
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-semibold min-w-fit">مشاركة القصة</h2>
 
@@ -83,22 +80,64 @@ const ShareStory = ({ story_title }: ShareModalProps) => {
       <div className="relative mt-4 flex flex-col gap-2">
         <h4 className="text-md font-light">مشاركة عبر</h4>
         <div className="flex flex-row items-center gap-3 mt-2 text-secondary">
-          <div className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200">
+          <div
+            className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200"
+            onClick={() =>
+              openShareWindow(
+                `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                  sharedLink
+                )}`
+              )
+            }
+          >
             <FaFacebook size={25} />
           </div>
-          <div className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200">
-            <FaInstagram size={25} />
+          <div
+            className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200"
+            onClick={() =>
+              openShareWindow(
+                `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                  sharedLink
+                )}&text=${encodeURIComponent("الشهيد/ " + story_title)}`
+              )
+            }
+          >
+            <FaXTwitter size={25} />
           </div>
-          <div className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200">
-            <FaX size={25} />
-          </div>
-          <div className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200">
+          <div
+            className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200"
+            onClick={() =>
+              openShareWindow(
+                `https://www.linkedin.com/shareArticle?url=${encodeURIComponent(
+                  sharedLink
+                )}&title=${encodeURIComponent("الشهيد/ " + story_title)}`
+              )
+            }
+          >
             <FaLinkedin size={25} />
           </div>
-          <div className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200">
+          <div
+            className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200"
+            onClick={() =>
+              openShareWindow(
+                `https://wa.me/?text=${encodeURIComponent(
+                  "الشهيد/ " + story_title + " " + sharedLink
+                )}`
+              )
+            }
+          >
             <FaWhatsapp size={25} />
           </div>
-          <div className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200">
+          <div
+            className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200"
+            onClick={() =>
+              openShareWindow(
+                `https://t.me/share/url?url=${encodeURIComponent(
+                  sharedLink
+                )}&text=${encodeURIComponent("الشهيد/ " + story_title)}`
+              )
+            }
+          >
             <FaTelegram size={25} />
           </div>
         </div>
