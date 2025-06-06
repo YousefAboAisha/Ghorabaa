@@ -79,9 +79,9 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
         <div>
           <Button
             onClick={handleClearFilters}
-            title="مسح معايير البحث"
-            className="bg-[red] white w-fit px-4"
-            icon={<GrClearOption size={16} />}
+            title="مسح المحددات"
+            className="bg-white !border-gray_light !text-[red] shadow-none hover:shadow-sm duration-150 w-fit px-4 !text-[10px]"
+            icon={<GrClearOption size={12} />}
           />
         </div>
       </div>
@@ -89,25 +89,29 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
       <hr className="my-4" />
 
       {/* Gender selection */}
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        <div
-          onClick={() => setGender(Gender.MALE)}
-          className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
-            gender === Gender.MALE && "bg-secondary text-white"
-          }`}
-        >
-          <GiMale size={30} />
-          <h2>ذكر</h2>
-        </div>
 
-        <div
-          onClick={() => setGender(Gender.FEMALE)}
-          className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
-            gender === Gender.FEMALE && "bg-secondary text-white"
-          }`}
-        >
-          <GiFemale size={30} />
-          <h2>أنثى</h2>
+      <div className="mt-4">
+        <p className="text-[12px] mb-1.5">الجنس</p>
+        <div className="grid grid-cols-2 gap-4">
+          <div
+            onClick={() => setGender(Gender.MALE)}
+            className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
+              gender === Gender.MALE && "bg-secondary text-white"
+            }`}
+          >
+            <GiMale size={30} />
+            <h2>ذكر</h2>
+          </div>
+
+          <div
+            onClick={() => setGender(Gender.FEMALE)}
+            className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
+              gender === Gender.FEMALE && "bg-secondary text-white"
+            }`}
+          >
+            <GiFemale size={30} />
+            <h2>أنثى</h2>
+          </div>
         </div>
       </div>
 

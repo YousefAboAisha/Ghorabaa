@@ -18,8 +18,9 @@ const FilterButton = () => {
       </Modal>
 
       <div
+        title="عوامل التصفية"
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 text-sm rounded-md bg-white border shadow-sm p-3 w-fit cursor-pointer hover:text-primary duration-200 "
+        className="flex items-center gap-2 text-sm rounded-md bg-white border p-3 w-fit cursor-pointer hover:shadow-md duration-300"
       >
         <p className="hidden md:block">عوامل التصفية</p>
         <CiFilter size={22} />

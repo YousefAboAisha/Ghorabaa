@@ -34,7 +34,7 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
 
   return (
     <>
-      <div className="fixed left-2 md:right-10 lg:right-10  top-[50%] -translate-y-[50%] z-10 w-fit">
+      <div className="fixed left-2 md:right-10 lg:right-10  top-[50%] -translate-y-[50%] z-[11] w-fit">
         <div className="flex flex-col gap-4">
           <div
             title="مشاركة قصة الشهيد"

@@ -30,8 +30,6 @@ const StoryDetailsSection = async ({ id }: Props) => {
 
   console.log("Story Details Data", data);
 
- 
-
   console.log("Current logged in ID", user_id);
   console.log("Story publisher_id", data.publisher_id);
 

@@ -26,7 +26,7 @@ const Input = ({
       {label && (
         <div className="flex items-center gap-1">
           {required && <span className="text-[red]">*</span>}
-          <p className="text-[12px] mb-1">{label}</p>
+          <p className="text-[12px] mb-1.5">{label}</p>
         </div>
       )}
 
