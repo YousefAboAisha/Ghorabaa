@@ -8,30 +8,18 @@ import Button from "@/components/UI/inputs/button";
 import Input from "@/components/UI/inputs/input";
 import Heading from "@/components/UI/typography/heading";
 import Link from "next/link";
-import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Session } from "next-auth";
-import { Role } from "@/app/enums";
+import { useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 
-type SigninFormProps = {
-  session: Session | null; // Adjust type as needed
-};
 
-const SigninForm = ({ session }: SigninFormProps) => {
+const SigninForm = () => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
-  const isAdmin = session?.user?.role == Role.ADMIN;
-  const defaultRedirect = isAdmin ? "/admin/dashboard" : "/profile";
-  const router = useRouter();
-
-  console.log("Session Data:", session);
-
-  // Use searchParams to get callbackUrl or fallback to default
-  const callbackUrl = searchParams.get("callbackUrl") || defaultRedirect; // default fallback
+  const callbackUrl = searchParams.get("callbackUrl") || "/auth-redirect";
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -58,13 +46,16 @@ const SigninForm = ({ session }: SigninFormProps) => {
     setFormErrors("");
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/signin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...values }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/signin`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...values }),
+        }
+      );
 
       const data = await response.json();
       console.log("Data Object is:", data);
@@ -97,28 +88,11 @@ const SigninForm = ({ session }: SigninFormProps) => {
 
   const handleGoogleLogin = async () => {
     setLoading(true);
-
     try {
-      const result = await signIn("google", {
+      await signIn("google", {
         callbackUrl: callbackUrl,
-        redirect: false,
+        redirect: true, // Let NextAuth handle the redirection
       });
-
-      if (result?.ok) {
-        // Show success toast
-        toast.success("تم تسجيل الدخول بواسطة جوجل بنجاح!");
-
-        // Redirect to profile after a short delay
-        setTimeout(() => {
-          if (session?.user?.role === Role.ADMIN) {
-            router.push("/admin/dashboard");
-          } else {
-            router.push("/profile");
-          }
-        }, 1000);
-      } else {
-        setLoading(false); // fallback if signIn fails
-      }
     } catch (error) {
       console.error("Google sign-in failed:", error);
       setLoading(false);

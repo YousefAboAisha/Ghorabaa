@@ -70,7 +70,7 @@ export const authOptions: AuthOptions = {
         name: existingUser?.name,
         email: existingUser?.email,
         image: existingUser?.image,
-        role: existingUser?.role,
+        role: existingUser?.role || Role.USER,
         createdAt: existingUser?.createdAt?.toISOString?.() ?? null,
 
         // ✅ keep access token from OAuth provider
