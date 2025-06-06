@@ -36,13 +36,27 @@ const EditRejectedStoryForm = ({
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
 
-  const { _id, nickname, city, neighborhood, bio, image, status } = data;
+  const {
+    _id,
+    nickname,
+    city,
+    social_media,
+    neighborhood,
+    bio,
+    image,
+    status,
+  } = data;
 
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
     _id,
     city,
     nickname,
+    social_media: {
+      instagram: social_media?.instagram || "",
+      facebook: social_media?.facebook || "",
+      x: social_media?.x || "",
+    },
     neighborhood,
     bio,
     image,
@@ -64,11 +78,14 @@ const EditRejectedStoryForm = ({
 
     try {
       // 1. Upload image to Cloudinary first
-      const imageUploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`, {
-        method: "POST",
-        body: JSON.stringify({ image: values.image }), // base64 image
-        headers: { "Content-Type": "application/json" },
-      });
+      const imageUploadRes = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
+        {
+          method: "POST",
+          body: JSON.stringify({ image: values.image }), // base64 image
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       setLoading(false);
 
       const { url } = await imageUploadRes.json();
@@ -80,14 +97,17 @@ const EditRejectedStoryForm = ({
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/update`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // 👈 THIS IS CRITICAL
-        body: JSON.stringify({ ...values, image: url }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/update`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // 👈 THIS IS CRITICAL
+          body: JSON.stringify({ ...values, image: url }),
+        }
+      );
 
       const data = await response.json();
       console.log("Data Object is:", data);
@@ -173,6 +193,64 @@ const EditRejectedStoryForm = ({
                     icon={<BiUser />}
                     className={`focus:border-primary`}
                     aria-label="لقب الشهيد"
+                  />
+                </div>
+
+                {/* Social Media Fields */}
+                <div>
+                  <Field
+                    value={values.social_media?.instagram}
+                    disabled={isSubmitting}
+                    name="social_media.instagram"
+                    as={Input}
+                    type="text"
+                    placeholder="رابط إنستجرام"
+                    label="إنستجرام"
+                    className={`focus:border-primary`}
+                    required={false}
+                  />
+                  <ErrorMessage
+                    name="social_media.instagram"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
+                  />
+                </div>
+
+                <div>
+                  <Field
+                    value={values.social_media?.facebook}
+                    disabled={isSubmitting}
+                    name="social_media.facebook"
+                    as={Input}
+                    type="text"
+                    placeholder="رابط فيسبوك"
+                    label="فيسبوك"
+                    className={`focus:border-primary`}
+                    required={false}
+                  />
+                  <ErrorMessage
+                    name="social_media.facebook"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
+                  />
+                </div>
+
+                <div>
+                  <Field
+                    value={values.social_media?.x}
+                    disabled={isSubmitting}
+                    name="social_media.x"
+                    as={Input}
+                    type="text"
+                    placeholder="رابط تويتر (X)"
+                    label="تويتر (X)"
+                    className={`focus:border-primary`}
+                    required={false}
+                  />
+                  <ErrorMessage
+                    name="social_media.x"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
                 </div>
 

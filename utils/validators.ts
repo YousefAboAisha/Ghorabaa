@@ -18,6 +18,36 @@ export const StoryValidationSchema = Yup.object({
     ),
 
   image: Yup.mixed().required("يرجى إضافة صورة"),
+  social_media: Yup.object({
+    facebook: Yup.string()
+      .nullable()
+      .notRequired()
+      .url("يرجى إدخال رابط فيسبوك صحيح")
+      .test(
+        "is-facebook-url",
+        "يجب أن يكون الرابط من فيسبوك",
+        (value) => !value || value.includes("facebook.com")
+      ),
+    instagram: Yup.string()
+      .nullable()
+      .notRequired()
+      .url("يرجى إدخال رابط انستغرام صحيح")
+      .test(
+        "is-instagram-url",
+        "يجب أن يكون الرابط من انستغرام",
+        (value) => !value || value.includes("instagram.com")
+      ),
+    x: Yup.string()
+      .nullable()
+      .notRequired()
+      .url("يرجى إدخال رابط إكس صحيح")
+      .test(
+        "is-x-url",
+        "يجب أن يكون الرابط من X (تويتر سابقًا)",
+        (value) =>
+          !value || value.includes("x.com") || value.includes("twitter.com") // some users might paste old Twitter links
+      ),
+  }),
 });
 
 export const ProfileValidationSchema = Yup.object({

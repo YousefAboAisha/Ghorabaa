@@ -67,7 +67,6 @@ export const HomeMetadata = {
     description: baseDescription,
   },
   icons: baseIcons,
-  themeColor: "#ffffff",
 };
 
 // [ Search metadata ]

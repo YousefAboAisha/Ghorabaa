@@ -52,6 +52,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
             id_number: 1,
             image: 1,
             name: 1,
+            social_media: 1,
             nickname: 1,
             birth_date: 1,
             death_date: 1,
@@ -87,9 +88,6 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.error("Error in aggregation:", error);
-    return NextResponse.json(
-      { error: "خطأ في السيرفر" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
   }
 }

@@ -5,7 +5,7 @@ const Signin = async () => {
   const session = await getSessionAction();
 
   return (
-    <div className="relative min-h-screen w-full mt-[70px] flex items-center justify-center">
+    <div className="relative min-h-screen flex items-center justify-center">
       <SigninForm session={session} />
     </div>
   );

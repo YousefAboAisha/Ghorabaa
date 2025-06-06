@@ -28,11 +28,18 @@ export interface UserInterface extends Document {
 }
 
 // Define the Story interface
+export interface SocialMediaLinks {
+  instagram?: string;
+  facebook?: string;
+  x?: string;
+}
+
 export interface StoryInterface extends Document {
-  _id: Types.ObjectId | string; // Unique identifier for the report.
+  _id: Types.ObjectId | string;
   id_number: string;
   gender: Gender;
   name: string;
+  social_media?: SocialMediaLinks;
   nickname?: string;
   birth_date: string;
   death_date: string;
@@ -42,10 +49,10 @@ export interface StoryInterface extends Document {
   bio: string;
   status: StoryStatus;
   image: string;
-  publisher_id: Types.ObjectId | string; // Reference to User who made the add story request.
+  publisher_id: Types.ObjectId | string;
   hasCompleteProfile: boolean;
   keywords: string[];
-  rejectReason?: string; // ✅ Optional field for rejected stories
+  rejectReason?: string;
   reports?: ReportInterface[];
   createdAt: Date;
 }

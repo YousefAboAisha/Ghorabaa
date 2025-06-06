@@ -36,6 +36,11 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
     nickname: "",
+    social_media: {
+      instagram: "",
+      facebook: "",
+      x: "",
+    },
     city: "",
     neighborhood: "",
     bio: "",
@@ -57,12 +62,15 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
 
     try {
       // 1. Upload image to Cloudinary first
-      const imageUploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`, {
-        credentials: "include",
-        method: "POST",
-        body: JSON.stringify({ image: values.image }), // base64 image
-        headers: { "Content-Type": "application/json" },
-      });
+      const imageUploadRes = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
+        {
+          credentials: "include",
+          method: "POST",
+          body: JSON.stringify({ image: values.image }), // base64 image
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       setLoading(false);
 
       const { url } = await imageUploadRes.json();
@@ -74,14 +82,17 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/storyDetails/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // 👈 THIS IS CRITICAL
-        body: JSON.stringify({ ...values, image: url, id_number }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/storyDetails/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // 👈 THIS IS CRITICAL
+          body: JSON.stringify({ ...values, image: url, id_number }),
+        }
+      );
 
       const data = await response.json();
       console.log("Data Object is:", data);
@@ -151,53 +162,111 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
                   />
                 </div>
 
-                {/* City and Neighbourhood Fields */}
+                {/* Social Media Fields */}
                 <div>
-                  <Select
+                  <Field
                     disabled={isSubmitting}
-                    label="المدينة"
-                    options={CountriesData}
-                    title="اختر المدينة"
-                    onChange={(e) => {
-                      const selectedCity = e.target.value;
-                      setFieldValue("city", selectedCity);
-
-                      // Find the city object that contains the selected city
-                      const cityObj = CitiesData.find(
-                        (city) => city[selectedCity as keyof typeof city]
-                      );
-
-                      // If found, update the cities state
-                      setCities(
-                        cityObj
-                          ? cityObj[selectedCity as keyof typeof cityObj] || []
-                          : []
-                      );
-                    }}
+                    name="social_media.instagram"
+                    as={Input}
+                    type="text"
+                    placeholder="رابط إنستجرام"
+                    label="إنستجرام"
                     className={`focus:border-primary`}
+                    required={false}
                   />
                   <ErrorMessage
-                    name="city"
+                    name="social_media.instagram"
                     component="div"
                     className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
                 </div>
+
                 <div>
-                  <Select
+                  <Field
                     disabled={isSubmitting}
-                    label="الحي"
-                    options={cities}
-                    title="اختر الحي"
-                    onChange={(e) =>
-                      setFieldValue("neighborhood", e.target.value)
-                    }
+                    name="social_media.facebook"
+                    as={Input}
+                    type="text"
+                    placeholder="رابط فيسبوك"
+                    label="فيسبوك"
                     className={`focus:border-primary`}
+                    required={false}
                   />
                   <ErrorMessage
-                    name="neighborhood"
+                    name="social_media.facebook"
                     component="div"
                     className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
+                </div>
+
+                <div>
+                  <Field
+                    disabled={isSubmitting}
+                    name="social_media.x"
+                    as={Input}
+                    type="text"
+                    placeholder="رابط تويتر (X)"
+                    label="تويتر (X)"
+                    className={`focus:border-primary`}
+                    required={false}
+                  />
+                  <ErrorMessage
+                    name="social_media.x"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* City and Neighbourhood Fields */}
+                  <div>
+                    <Select
+                      disabled={isSubmitting}
+                      label="المدينة"
+                      options={CountriesData}
+                      title="اختر المدينة"
+                      onChange={(e) => {
+                        const selectedCity = e.target.value;
+                        setFieldValue("city", selectedCity);
+
+                        // Find the city object that contains the selected city
+                        const cityObj = CitiesData.find(
+                          (city) => city[selectedCity as keyof typeof city]
+                        );
+
+                        // If found, update the cities state
+                        setCities(
+                          cityObj
+                            ? cityObj[selectedCity as keyof typeof cityObj] ||
+                                []
+                            : []
+                        );
+                      }}
+                      className={`focus:border-primary`}
+                    />
+                    <ErrorMessage
+                      name="city"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
+                    />
+                  </div>
+                  <div>
+                    <Select
+                      disabled={isSubmitting}
+                      label="الحي"
+                      options={cities}
+                      title="اختر الحي"
+                      onChange={(e) =>
+                        setFieldValue("neighborhood", e.target.value)
+                      }
+                      className={`focus:border-primary`}
+                    />
+                    <ErrorMessage
+                      name="neighborhood"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
+                    />
+                  </div>
                 </div>
 
                 {/* Notes Field with Word Counter */}

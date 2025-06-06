@@ -134,9 +134,11 @@ const Navbar = ({ session }: NavbarProps) => {
                 href={"/savedStories"}
                 className="relative flex items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
-                <p className="absolute -top-0.5 -right-0.5 w-[17px] h-[17px] p-1 bg-primary text-white  flex items-center justify-center rounded-full text-[10px]">
-                  {count}
-                </p>
+                {count > 0 && (
+                  <p className="absolute -top-0.5 -right-0.5 w-[17px] h-[17px] p-1 bg-primary text-white  flex items-center justify-center rounded-full text-[10px]">
+                    {count}
+                  </p>
+                )}
 
                 {loading ? (
                   <AiOutlineLoading3Quarters className="animate-spin" />

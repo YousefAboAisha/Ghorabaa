@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { getSessionAction } from "@/app/actions/registerActions";
 import { dateConversion } from "@/utils/format";
 import StoryActions from "../stories/storyActions";
+import Link from "next/link";
+import { FaFacebook, FaInstagram, FaXTwitter } from "react-icons/fa6";
 
 type Props = {
   id: string;
@@ -137,6 +139,48 @@ const StoryDetailsSection = async ({ id }: Props) => {
                 </div>
               </td>
             </tr>
+
+            {data.social_media && (
+              <tr>
+                <td className="py-3 px-4 border-b text-right text-sm border-l">
+                  مواقع التواصل الاجتماعي
+                </td>
+
+                <td className="py-3 px-4 border-b text-right text-sm">
+                  <div className="flex items-center gap-4">
+                    {data.social_media?.facebook && (
+                      <Link
+                        href={data.social_media.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaFacebook size={20} className="text-blue-500" />
+                      </Link>
+                    )}
+
+                    {data.social_media?.x && (
+                      <Link
+                        href={data.social_media.x}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaXTwitter size={20} />
+                      </Link>
+                    )}
+
+                    {data.social_media?.instagram && (
+                      <Link
+                        href={data.social_media.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaInstagram size={20} className="text-[#a3244f]" />
+                      </Link>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
 

@@ -1,8 +1,18 @@
 import { Schema, model, models } from "mongoose";
-import { StoryInterface } from "../interfaces";
+import { SocialMediaLinks, StoryInterface } from "../interfaces";
 import { Gender, StoryStatus } from "../enums";
 
-// Define the Martyr schema
+// Define the Social Media Links Schema
+const SocialMediaSchema = new Schema<SocialMediaLinks>(
+  {
+    instagram: { type: String, required: true },
+    facebook: { type: String, required: true },
+    x: { type: String, required: true },
+  },
+  { _id: false }
+); // _id: false prevents Mongoose from generating a separate _id for the subdocument
+
+// Define The Story Interface Schema
 const storySchema = new Schema<StoryInterface>(
   {
     id_number: {
@@ -21,6 +31,8 @@ const storySchema = new Schema<StoryInterface>(
       type: String,
       required: [true, "First name is required and cannot be empty."],
     },
+
+    social_media: { type: SocialMediaSchema, required: false },
 
     birth_date: {
       type: String,

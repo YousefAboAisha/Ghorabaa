@@ -44,6 +44,7 @@ export async function GET(req: NextRequest) {
           _id: 1,
           name: 1,
           nickname: 1,
+          social_media: 1,
           bio: 1,
           image: 1,
           status: 1,

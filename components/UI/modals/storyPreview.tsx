@@ -4,14 +4,16 @@ import { StoryInterface } from "@/app/interfaces";
 import Button from "@/components/UI/inputs/button";
 import Select from "@/components/UI/inputs/selectInput";
 import TextArea from "@/components/UI/inputs/textArea";
-import Heading from "@/components/UI/typography/heading";
 import { CitiesData } from "@/data/citiesData";
 import { CountriesData } from "@/data/countriesData";
 import { dateConversion } from "@/utils/format";
 import { StoryPreviewValidationSchema } from "@/utils/validators";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Image from "next/image";
+import Link from "next/link";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { MdPostAdd } from "react-icons/md";
 import { toast } from "react-toastify";
 
@@ -47,7 +49,7 @@ const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
 
   return (
     <div className="relative p-8 flex flex-col gap-2">
-      <Heading title="قبول/تعديل القصة" className="mb-4 mx-auto !text-2xl" />
+      {/* <Heading title="قبول/تعديل القصة" className="mb-4 mx-auto !text-2xl" /> */}
 
       <div className="relative flex flex-col justify-center items-start w-full min-h-[50vh] bg-secondary rounded-2xl">
         <Image
@@ -68,11 +70,49 @@ const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
         <p>{dateConversion(data?.createdAt)}</p>
       </div>
 
-      <div className="flex flex-col gap-2 mt-4">
-        <div className="flex items-center gap-2">
-          <h2 className="font-semibold">{data?.name}</h2>
-          <p className="text-gray_dark"> &quot; {data?.nickname} &quot; </p>
+      <div className="flex flex-col gap-2 mt-2">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="font-semibold flex items-center gap-2 flex-wrap">
+              {data?.name}{" "}
+              <p className="text-gray_dark text-sm"> [ {data?.nickname} ] </p>
+            </h2>
+
+            {/* Social Media Links */}
+            <div className="flex items-center gap-2">
+              {data?.social_media?.facebook && (
+                <Link
+                  href={data.social_media.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaFacebook size={14} className="text-blue-500" />
+                </Link>
+              )}
+
+              {data?.social_media?.x && (
+                <Link
+                  href={data.social_media.x}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaXTwitter size={14} />
+                </Link>
+              )}
+
+              {data?.social_media?.instagram && (
+                <Link
+                  href={data.social_media.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaInstagram size={14} className="text-[#a3244f]" />
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
+
         <Formik
           initialValues={initialValues}
           enableReinitialize={true}
