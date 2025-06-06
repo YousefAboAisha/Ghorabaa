@@ -30,11 +30,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
 
   console.log("Story Details Data", data);
 
-  const age =
-    data?.death_date && data?.birth_date
-      ? new Date(data.death_date).getFullYear() -
-        new Date(data.birth_date).getFullYear()
-      : "N/A";
+ 
 
   console.log("Current logged in ID", user_id);
   console.log("Story publisher_id", data.publisher_id);
@@ -127,7 +123,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
               </td>
               <td className="py-3 px-4 border-b text-right text-sm">
                 <div className="flex items-center gap-1">
-                  <p>{age}</p>
+                  <p>{data.age}</p>
                   <p>عاماً</p>
                 </div>
               </td>
