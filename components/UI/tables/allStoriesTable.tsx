@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StoryInterface } from "@/app/interfaces";
 import Image from "next/image";
 import { StoryStatus } from "@/app/enums";
@@ -16,7 +16,11 @@ import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoade
 import Input from "../inputs/input";
 import { CiSearch } from "react-icons/ci";
 
-const AllStoriesTable = () => {
+type allStoriesTable = {
+  refetchData: () => void;
+};
+
+const AllStoriesTable = ({ refetchData }: allStoriesTable) => {
   const [tableData, setTableData] = useState<
     (StoryInterface & { publisher_name: string })[]
   >([]);
@@ -30,6 +34,8 @@ const AllStoriesTable = () => {
   const [currentTap, setCurrentTap] = useState<StoryStatus>(
     StoryStatus.APPROVED
   );
+
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const fetchTableData = async () => {
     setTableLoading(true);
@@ -65,15 +71,21 @@ const AllStoriesTable = () => {
     if (status !== currentTap) return ""; // ✅ Only add color to active tab
     switch (status) {
       case StoryStatus.APPROVED:
-        return "border-primary";
+        return "border-approved";
       case StoryStatus.PENDING:
-        return "border-orange-500";
+        return "border-pending";
       case StoryStatus.REJECTED:
-        return "border-red-600";
+        return "border-rejected";
       default:
         return "";
     }
   };
+
+  const filteredData = useMemo(() => {
+    return tableData.filter((story) =>
+      story.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, tableData]);
 
   const renderTableContent = () => {
     if (tableLoading) {
@@ -84,19 +96,15 @@ const AllStoriesTable = () => {
       return <ErrorMessage error={error as string} />;
     }
 
-    if (tableData.length === 0) {
+    if (filteredData.length === 0) {
       return <NoDataMessage />;
     }
 
-    if (tableData && tableData.length > 0) {
+    if (filteredData && filteredData.length > 0) {
       return (
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
-              {/* <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                الناشر
-              </th> */}
-
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
                 اسم الشهيد
               </th>
@@ -128,7 +136,7 @@ const AllStoriesTable = () => {
           </thead>
 
           <tbody>
-            {tableData?.map((story) => (
+            {filteredData?.map((story) => (
               <tr key={story._id as string} className="hover:bg-gray-50">
                 <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
                   {story.status == StoryStatus.APPROVED ? (
@@ -227,7 +235,10 @@ const AllStoriesTable = () => {
             className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
               status
             )}`}
-            onClick={() => setCurrentTap(status)}
+            onClick={() => {
+              setCurrentTap(status);
+              setSearchQuery("");
+            }}
           >
             <p>{label}</p>
           </div>
@@ -237,8 +248,15 @@ const AllStoriesTable = () => {
       <div className="w-full md:w-6/12 lg:w-5/12">
         <Input
           placeholder="ابحث عن اسم الشهيد.."
-          className="bg-white border focus:border-secondary "
+          className="bg-white border focus:border-secondary"
           icon={<CiSearch size={20} className="text-secondary" />}
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            tableData.filter((story) =>
+              story.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+          }}
         />
       </div>
 

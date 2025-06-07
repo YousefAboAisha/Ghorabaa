@@ -4,12 +4,15 @@ import ErrorMessage from "@/components/responseMessages/errorMessage";
 import StatisticCard from "@/components/UI/cards/statisticCard";
 import StatisticsCardSkeletonLoader from "@/components/UI/loaders/statisticsCardSkeletonLoader";
 import AllStoriesTable from "@/components/UI/tables/allStoriesTable";
+import { useStatisticsStore } from "@/stores/storiesTableStore";
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
-  const [data, setData] = useState<allStoriesStatisticsInterface>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, loading, error, fetchStatistics } = useStatisticsStore();
+
+  useEffect(() => {
+    fetchStatistics();
+  }, [fetchStatistics]);
 
   const statusColors: Record<string, string> = {
     APPROVED: "#16a34a", // Green
@@ -22,44 +25,6 @@ const Dashboard = () => {
     PENDING: "القصص قيد المراجعة",
     REJECTED: "القصص المرفوضة",
   };
-
-  const fetchStatistics = async () => {
-    setLoading(true);
-    setError(null); // Reset error state before fetching
-    console.log("Fetching statistics...");
-
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/statistics/allStories/fetch`,
-      {
-        cache: "no-store",
-      }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          setLoading(false);
-          throw new Error("حدث خطأ أثناء جلب الإحصائيات");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Statistics data:", data);
-        setData(data);
-        setError(null);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error.message);
-        console.error("Error fetching statistics:", error);
-        setLoading(false);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    fetchStatistics();
-  }, []);
 
   const renderContent = () => {
     if (loading) {
@@ -90,7 +55,7 @@ const Dashboard = () => {
       {renderContent()}
 
       <div className="mt-12">
-        <AllStoriesTable />
+        <AllStoriesTable refetchData={fetchStatistics} />
       </div>
     </div>
   );

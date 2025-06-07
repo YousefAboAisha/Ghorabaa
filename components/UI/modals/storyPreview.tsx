@@ -6,6 +6,7 @@ import Select from "@/components/UI/inputs/selectInput";
 import TextArea from "@/components/UI/inputs/textArea";
 import { CitiesData } from "@/data/citiesData";
 import { CountriesData } from "@/data/countriesData";
+import { useStatisticsStore } from "@/stores/storiesTableStore";
 import { dateConversion } from "@/utils/format";
 import { StoryPreviewValidationSchema } from "@/utils/validators";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -24,6 +25,8 @@ type StoryPreviewProps = {
 };
 
 const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
+  const { fetchStatistics } = useStatisticsStore();
+
   const city = data?.city;
   const neighborhood = data?.neighborhood;
   const bio = data?.bio;
@@ -145,6 +148,7 @@ const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
               console.log("✅ Story updated:", result);
               setIsOpen(false); // Close the preview modal
               refetchData?.(); // Refetch the data after successful update
+              fetchStatistics();
               toast.success("تم تحديث ونشر القصة بنجاح!");
               // Optionally show a toast or redirect
             } catch (error) {

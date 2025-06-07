@@ -16,6 +16,11 @@ module.exports = {
         primary: "#5B913B",
         secondary: "#1e272e",
         blueColor: "#2980b9",
+
+        pending: "#f39c12",
+        approved: "#44bd32",
+        rejected: "#c23616",
+
         gray_light: "#f3f3f3",
         gray_dark: "#828282",
 

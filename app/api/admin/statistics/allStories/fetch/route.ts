@@ -1,5 +1,4 @@
 // app/api/stories/statistics/route.ts
-
 import { NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { StoryStatus } from "@/app/enums";

@@ -1,8 +1,9 @@
-'use client';
+"use client";
 import { StoryStatus } from "@/app/enums";
 import { StoryInterface } from "@/app/interfaces";
 import Button from "@/components/UI/inputs/button";
 import TextArea from "@/components/UI/inputs/textArea";
+import { useStatisticsStore } from "@/stores/storiesTableStore";
 import { StoryRejectValidationSchema } from "@/utils/validators";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { Dispatch, SetStateAction } from "react";
@@ -20,6 +21,8 @@ export const RejectStory = ({
   refetchData,
   setIsOpen,
 }: RejectStoryProps) => {
+  const { fetchStatistics } = useStatisticsStore();
+
   const initialValues = {
     rejectReason: "",
   };
@@ -72,6 +75,7 @@ export const RejectStory = ({
             resetForm(); // ✅ Clear form values
             setIsOpen(false); // Close the preview modal
             refetchData?.(); // Refetch the data after successful update
+            fetchStatistics();
             toast.warn("تم رفض طلب إضافة القصة");
           } catch (error) {
             console.error("❌ Error updating story:", error);
