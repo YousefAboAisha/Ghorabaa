@@ -16,11 +16,7 @@ import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoade
 import Input from "../inputs/input";
 import { CiSearch } from "react-icons/ci";
 
-type allStoriesTable = {
-  refetchData: () => void;
-};
-
-const AllStoriesTable = ({ refetchData }: allStoriesTable) => {
+const AllStoriesTable = () => {
   const [tableData, setTableData] = useState<
     (StoryInterface & { publisher_name: string })[]
   >([]);

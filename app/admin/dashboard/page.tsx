@@ -1,11 +1,10 @@
 "use client";
-import { allStoriesStatisticsInterface } from "@/app/interfaces";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import StatisticCard from "@/components/UI/cards/statisticCard";
 import StatisticsCardSkeletonLoader from "@/components/UI/loaders/statisticsCardSkeletonLoader";
 import AllStoriesTable from "@/components/UI/tables/allStoriesTable";
 import { useStatisticsStore } from "@/stores/storiesTableStore";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const Dashboard = () => {
   const { data, loading, error, fetchStatistics } = useStatisticsStore();
@@ -55,7 +54,7 @@ const Dashboard = () => {
       {renderContent()}
 
       <div className="mt-12">
-        <AllStoriesTable refetchData={fetchStatistics} />
+        <AllStoriesTable />
       </div>
     </div>
   );

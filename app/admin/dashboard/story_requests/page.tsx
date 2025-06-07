@@ -8,6 +8,6 @@ const StoryRequests = async () => {
       </div>
     </div>
   );
-};[]
+};
 
 export default StoryRequests;
