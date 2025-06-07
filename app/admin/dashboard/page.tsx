@@ -1,42 +1,93 @@
+"use client";
+import { allStoriesStatisticsInterface } from "@/app/interfaces";
+import ErrorMessage from "@/components/responseMessages/errorMessage";
+import StatisticCard from "@/components/UI/cards/statisticCard";
+import StatisticsCardSkeletonLoader from "@/components/UI/loaders/statisticsCardSkeletonLoader";
 import AllStoriesTable from "@/components/UI/tables/allStoriesTable";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  const [data, setData] = useState<allStoriesStatisticsInterface>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const statusColors: Record<string, string> = {
+    APPROVED: "#16a34a", // Green
+    PENDING: "#f59e0b", // Yellow
+    REJECTED: "#ef4444", // Red
+  };
+
+  const statusLabels: Record<string, string> = {
+    APPROVED: "القصص المقبولة",
+    PENDING: "القصص قيد المراجعة",
+    REJECTED: "القصص المرفوضة",
+  };
+
+  const fetchStatistics = async () => {
+    setLoading(true);
+    setError(null); // Reset error state before fetching
+    console.log("Fetching statistics...");
+
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/statistics/allStories/fetch`,
+      {
+        cache: "no-store",
+      }
+    )
+      .then((res) => {
+        if (!res.ok) {
+          setLoading(false);
+          throw new Error("حدث خطأ أثناء جلب الإحصائيات");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Statistics data:", data);
+        setData(data);
+        setError(null);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.error("Error fetching statistics:", error);
+        setLoading(false);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchStatistics();
+  }, []);
+
+  const renderContent = () => {
+    if (loading) {
+      return <StatisticsCardSkeletonLoader length={3} className="mt-6" />;
+    }
+
+    if (error) {
+      return <ErrorMessage error={error} />;
+    }
+
+    if (data)
+      return (
+        <div className="cards-grid-3 mt-6 gap-4">
+          {Object.entries(data).map(([status, data]) => (
+            <StatisticCard
+              key={status}
+              label={statusLabels[status] || status}
+              color={statusColors[status] || "#000"}
+              data={data}
+            />
+          ))}
+        </div>
+      );
+  };
+
   return (
     <div className="relative">
-      {!1 ? (
-        <div className="cards-grid-4">
-          <div className="h-40 bg-gray-300 animate-pulse rounded-lg"></div>
-          <div className="h-40 bg-gray-300 animate-pulse rounded-lg"></div>
-          <div className="h-40 bg-gray-300 animate-pulse rounded-lg"></div>
-          <div className="h-40 bg-gray-300 animate-pulse rounded-lg"></div>
-        </div>
-      ) : (
-        <div>
-          <div className="cards-grid-4 mt-6">
-            <div className="relative p-8 bg-[orange] rounded-xl flex flex-col items-center justify-center gap-4">
-              <h4 className="text-xl text-white font-semibold">
-                طلبات الإضافة
-              </h4>
-              <h2 className="text-7xl text-white font-semibold">4</h2>
-            </div>
-
-            <div className="relative p-8 bg-[green] rounded-xl flex flex-col items-center justify-center gap-4">
-              <h4 className="text-xl text-white font-semibold">تم القبول</h4>
-              <h2 className="text-7xl text-white font-semibold">5</h2>
-            </div>
-
-            <div className="relative p-8 bg-[red] rounded-xl flex flex-col items-center justify-center gap-4">
-              <h4 className="text-xl text-white font-semibold">تم الرفض</h4>
-              <h2 className="text-7xl text-white font-semibold">10</h2>
-            </div>
-
-            <div className="relative p-8 bg-secondary rounded-xl flex flex-col items-center justify-center gap-4">
-              <h4 className="text-xl text-white">كافة القصص</h4>
-              <h2 className="text-7xl text-white font-semibold">19</h2>
-            </div>
-          </div>
-        </div>
-      )}
+      {renderContent()}
 
       <div className="mt-12">
         <AllStoriesTable />

@@ -6,7 +6,10 @@ type SpinnerProps = {
 
 const Spinner = ({ additionalStyles }: SpinnerProps) => {
   return (
-    <div role="status" className={`abs-center fixed w-screen h-screen  z-[100000] bg-[white] ${additionalStyles}`}>
+    <div
+      role="status"
+      className={`abs-center fixed w-screen h-screen  z-[100000] bg-[white] ${additionalStyles}`}
+    >
       <Logo className="animate-pulse text-lg abs-center" />
     </div>
   );

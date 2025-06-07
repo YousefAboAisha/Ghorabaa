@@ -1,6 +1,7 @@
 // app/auth-redirect/page.tsx
 import { redirect } from "next/navigation";
 import { getSessionAction } from "../actions/registerActions";
+import Logo from "@/components/UI/logo";
 
 export default async function AuthRedirect() {
   const session = await getSessionAction();
@@ -12,11 +13,11 @@ export default async function AuthRedirect() {
 
   // Show loading state while middleware processes
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
-        <p>Redirecting you to the appropriate dashboard...</p>
-      </div>
+    <div
+      role="status"
+      className={`abs-center fixed w-screen h-screen z-[100000] bg-[white]`}
+    >
+      <Logo className="animate-pulse text-lg abs-center" />
     </div>
   );
 }

@@ -13,6 +13,8 @@ import RejectStory from "@/components/UI/modals/rejectStory";
 import Link from "next/link";
 import { StoryTabsData } from "@/data/storyTabsData";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
+import Input from "../inputs/input";
+import { CiSearch } from "react-icons/ci";
 
 const AllStoriesTable = () => {
   const [tableData, setTableData] = useState<
@@ -232,7 +234,17 @@ const AllStoriesTable = () => {
         ))}
       </div>
 
-      <div className="overflow-x-auto">{renderTableContent()}</div>
+      <div className="w-full md:w-6/12 lg:w-5/12">
+        <Input
+          placeholder="ابحث عن اسم الشهيد.."
+          className="bg-white border focus:border-secondary "
+          icon={<CiSearch size={20} className="text-secondary" />}
+        />
+      </div>
+
+      <div className="relative mt-8 overflow-x-auto">
+        {renderTableContent()}
+      </div>
 
       {/* Preview Story Modal */}
       <Modal isOpen={isOpenStoryPreview} setIsOpen={setIsOpenStoryPreview}>

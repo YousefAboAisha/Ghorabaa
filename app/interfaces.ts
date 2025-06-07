@@ -158,3 +158,27 @@ export interface CommentNotificationInterface extends NotificationInterface {
   author_id: Types.ObjectId | string; // Reference to the user who made the action [Adding a comment]
   notification_type: NotificationTypes.COMMENT;
 }
+
+// Define the storyStatistics interface
+export interface allStoriesStatisticsInterface {
+  [StoryStatus.APPROVED]: {
+    today: number;
+    week: number;
+    month: number;
+    total: number;
+  };
+
+  [StoryStatus.PENDING]: {
+    today: number;
+    week: number;
+    month: number;
+    total: number;
+  };
+
+  [StoryStatus.REJECTED]: {
+    today: number;
+    week: number;
+    month: number;
+    total: number;
+  };
+}

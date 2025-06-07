@@ -8,6 +8,8 @@ import Modal from "@/components/UI/modals/modal";
 import EditUser from "@/components/UI/modals/editUser";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import { getRoleColor, getRoleInArabic } from "@/utils/text";
+import Input from "../inputs/input";
+import { CiSearch } from "react-icons/ci";
 
 const UsersTable = () => {
   const [tableData, setTableData] = useState<UserInterface[]>([]);
@@ -29,7 +31,7 @@ const UsersTable = () => {
 
         return res.json();
       })
-      .then(({data}) => {
+      .then(({ data }) => {
         if (data && Array.isArray(data)) setTableData(data);
         else setTableData([]);
       })
@@ -158,7 +160,17 @@ const UsersTable = () => {
 
   return (
     <>
-      <div className="overflow-x-auto">{renderTableContent()}</div>
+      <div className="w-full md:w-6/12 lg:w-5/12">
+        <Input
+          placeholder="ابحث عن اسم المستخدم.."
+          className="bg-white border focus:border-secondary "
+          icon={<CiSearch size={20} className="text-secondary" />}
+        />
+      </div>
+
+      <div className="relative mt-8 overflow-x-auto">
+        {renderTableContent()}
+      </div>
 
       {/* Edit user Modal */}
       <Modal
