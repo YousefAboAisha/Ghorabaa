@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { UserInterface } from "@/app/interfaces";
 import Image from "next/image";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
@@ -18,6 +18,7 @@ const UsersTable = () => {
   const [error, setError] = useState<string | null>(null);
   const [isOpenEditUser, setIsOpenEditUser] = useState<boolean>(false);
   const [userData, setuserData] = useState<UserInterface>();
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const fetchTableData = async () => {
     setTableLoading(true);
@@ -47,6 +48,12 @@ const UsersTable = () => {
     fetchTableData();
   }, []);
 
+  const filteredData = useMemo(() => {
+    return tableData.filter((user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, tableData]);
+
   const renderTableContent = () => {
     if (tableLoading) {
       return <DashboardTableSkeletonLoader />;
@@ -56,11 +63,11 @@ const UsersTable = () => {
       return <ErrorMessage error={error as string} />;
     }
 
-    if (tableData.length <= 0) {
+    if (filteredData.length <= 0) {
       return <NoDataMessage />;
     }
 
-    if (tableData && tableData.length > 0) {
+    if (filteredData && filteredData.length > 0) {
       return (
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
@@ -165,6 +172,12 @@ const UsersTable = () => {
           placeholder="ابحث عن اسم المستخدم.."
           className="bg-white border focus:border-secondary "
           icon={<CiSearch size={20} className="text-secondary" />}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            tableData.filter((user: UserInterface) =>
+              user.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+          }}
         />
       </div>
 

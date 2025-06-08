@@ -1,15 +1,21 @@
 import React from "react";
+import { BsExclamationCircle } from "react-icons/bs";
 
 interface NoDataMessageProps {
   className?: string;
+  message?: string;
 }
 
-const NoDataMessage: React.FC<NoDataMessageProps> = ({ className = "" }) => {
+const NoDataMessage: React.FC<NoDataMessageProps> = ({
+  message = "لا يوجد بيانات لعرضها",
+  className = "",
+}) => {
   return (
     <div
-      className={`relative flex flex-col gap-3 min-h-[30vh] bg-white rounded-md border ${className}`}
+      className={`relative flex flex-col justify-center items-center gap-3 min-h-[50vh] bg-white rounded-md border text-sm ${className}`}
     >
-      <p className="abs-center text-sm">لا يوجد بيانات لعرضها!</p>
+      <BsExclamationCircle size={20} />
+      <p>{message}</p>
     </div>
   );
 };

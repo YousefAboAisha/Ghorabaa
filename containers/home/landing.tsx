@@ -18,7 +18,7 @@ const Landing = () => {
             className="text-white mb-4 !text-3xl"
             detailsStyles="mt-4"
           />
-          <Link href={"/search"} className="w-8/12 lg:w-6/12 ">
+          <Link href={"/stories"} className="w-8/12 lg:w-6/12 ">
             <Button
               title="اعرفهم الآن"
               className="bg-primary text-white px-2"

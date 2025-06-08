@@ -3,12 +3,12 @@ import Input from "@/components/UI/inputs/input";
 import { BiSearch } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { BsExclamationCircle } from "react-icons/bs";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import { StoryInterface } from "@/app/interfaces";
 import StoryCard from "@/components/UI/cards/storyCard";
 import { Session } from "next-auth";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
+import NoDataMessage from "@/components/responseMessages/noDataMessage";
 
 type SearchSectionProps = {
   session: Session | null;
@@ -70,18 +70,13 @@ const SearchSection = ({ session }: SearchSectionProps) => {
     if (loading) return <StoryCardSkeletonLoader length={8} />;
 
     if (stories)
-      return (
+      return stories?.length <= 0 ? (
+        <NoDataMessage message="لا توجد نتائج للبحث" />
+      ) : (
         <div className="cards-grid-4">
-          {stories?.length <= 0 ? (
-            <div className="flex items-center gap-2 abs-center text-sm">
-              <p>لا توجد نتائج للبحث</p>
-              <BsExclamationCircle size={20} />
-            </div>
-          ) : (
-            stories?.map((martyr: StoryInterface, index) => (
-              <StoryCard key={index} data={martyr} session={session} />
-            ))
-          )}
+          {stories?.map((martyr: StoryInterface, index) => (
+            <StoryCard key={index} data={martyr} session={session} />
+          ))}
         </div>
       );
   };

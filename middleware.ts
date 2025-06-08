@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Authenticated user visiting an auth page — redirect based on role
-  if (isAuthPage || pathname === "/") {
+  if (isAuthPage) {
     const redirectUrl =
       token.role === Role.ADMIN ? "/admin/dashboard" : "/profile";
 

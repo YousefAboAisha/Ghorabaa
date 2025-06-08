@@ -249,7 +249,7 @@ const AllStoriesTable = () => {
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
-            tableData.filter((story) =>
+            tableData.filter((story: StoryInterface) =>
               story.name.toLowerCase().includes(searchQuery.toLowerCase())
             );
           }}
