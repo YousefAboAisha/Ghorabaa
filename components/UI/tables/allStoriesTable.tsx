@@ -83,6 +83,53 @@ const AllStoriesTable = () => {
     );
   }, [searchQuery, tableData]);
 
+  const renderTableActions = (
+    story: StoryInterface & { publisher_name: string }
+  ) => {
+    const status = story.status;
+
+    if (status == StoryStatus.APPROVED) return;
+    if (status == StoryStatus.PENDING) {
+      return (
+        <>
+          <HiCheck
+            title="قبول القصة"
+            className="cursor-pointer text-[green]"
+            onClick={() => {
+              setIsOpenStoryPreview(true);
+              setStoryData(story);
+            }}
+            size={22}
+          />
+
+          <MdOutlineClose
+            title="رفض القصة"
+            className="text-[red] cursor-pointer"
+            onClick={() => {
+              setIsOpenStoryReject(true);
+              setStoryData(story);
+            }}
+            size={22}
+          />
+        </>
+      );
+    }
+
+    if (status == StoryStatus.REJECTED) {
+      return (
+        <HiCheck
+          title="قبول القصة"
+          className="cursor-pointer text-[green]"
+          onClick={() => {
+            setIsOpenStoryPreview(true);
+            setStoryData(story);
+          }}
+          size={22}
+        />
+      );
+    }
+  };
+
   const renderTableContent = () => {
     if (tableLoading) {
       return <DashboardTableSkeletonLoader />;
@@ -176,15 +223,15 @@ const AllStoriesTable = () => {
 
                 <td className="py-3 px-4 border-b text-right text-[12px]">
                   {story.status === StoryStatus.PENDING ? (
-                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-yellow-500">
+                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-pending">
                       قيد المراجعة
                     </span>
                   ) : story.status === StoryStatus.APPROVED ? (
-                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-primary">
+                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-approved">
                       مقبول
                     </span>
                   ) : (
-                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-red-500">
+                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-rejected">
                       مرفوض
                     </span>
                   )}
@@ -192,25 +239,7 @@ const AllStoriesTable = () => {
 
                 <td className="py-3 px-4 border-b text-right">
                   <div className="flex items-center gap-2.5">
-                    <HiCheck
-                      title="قبول القصة"
-                      className="cursor-pointer text-[green]"
-                      onClick={() => {
-                        setIsOpenStoryPreview(true);
-                        setStoryData(story);
-                      }}
-                      size={22}
-                    />
-
-                    <MdOutlineClose
-                      title="رفض القصة"
-                      className="text-[red] cursor-pointer"
-                      onClick={() => {
-                        setIsOpenStoryReject(true);
-                        setStoryData(story);
-                      }}
-                      size={22}
-                    />
+                    {renderTableActions(story)}
                   </div>
                 </td>
               </tr>
@@ -258,6 +287,10 @@ const AllStoriesTable = () => {
 
       <div className="relative mt-8 overflow-x-auto">
         {renderTableContent()}
+      </div>
+
+      <div className="h-10 bg-[red] w-full mt-6 text-white">
+        This is pagination
       </div>
 
       {/* Preview Story Modal */}
