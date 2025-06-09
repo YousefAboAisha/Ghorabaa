@@ -3,10 +3,11 @@
 import { getToken } from "next-auth/jwt";
 import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import { ObjectId } from "mongodb";
-import { StoryStatus } from "@/app/enums";
+import { ObjectId, UpdateFilter } from "mongodb";
+import { NotificationTypes, StoryStatus } from "@/app/enums";
 import { Role } from "@/app/enums"; // ✅ Import Role enum
 import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
+import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -31,6 +32,8 @@ export async function PUT(req: NextRequest) {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
     const storiesCollection = db.collection("stories");
+    const notificationsCollection = db.collection("notifications");
+    const usersCollection = db.collection<User>("users");
 
     const existingStory = await storiesCollection.findOne({
       _id: new ObjectId(_id),
@@ -57,7 +60,7 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    const updated = await storiesCollection.findOneAndUpdate(
+    const updatedStory = await storiesCollection.findOneAndUpdate(
       { _id: new ObjectId(_id) },
       {
         $set: {
@@ -72,7 +75,37 @@ export async function PUT(req: NextRequest) {
       { returnDocument: "after" }
     );
 
-    if (!updated) {
+    if (updatedStory) {
+      // Create notification
+      const storyNotificationPayload = {
+        user_id: updatedStory.publisher_id,
+        message: `تمت إضافة طلبك لتعديل قصة الشهيد ${updatedStory.name} بنجاح، وستتم مراجعة الطلب في أسرع وقت!`,
+        href: `/stories/${updatedStory._id}`,
+        notification_type: NotificationTypes.REQUEST,
+        createdAt: new Date(),
+        is_read: false,
+      };
+
+      await notificationsCollection.insertOne(storyNotificationPayload);
+
+      // Push notification to user's array (max 7)
+      const update: UpdateFilter<User> = {
+        $push: {
+          notifications: {
+            $each: [storyNotificationPayload],
+            $position: 0,
+            $slice: 7,
+          },
+        },
+      };
+
+      await usersCollection.updateOne(
+        { _id: updatedStory.publisher_id },
+        update
+      );
+    }
+
+    if (!updatedStory) {
       return NextResponse.json(
         { error: "فشل في تحديث القصة" },
         { status: 500 }
@@ -81,7 +114,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({
       message: "Story updated successfully",
-      data: updated.value,
+      data: updatedStory.value,
     });
   } catch (error) {
     console.error("Update Error:", error);

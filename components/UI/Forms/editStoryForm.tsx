@@ -15,9 +15,9 @@ import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
 import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
-import { useRouter } from "next/navigation";
 import { StoryValidationSchema } from "@/utils/validators";
 import Input from "../inputs/input";
+import { useNotificationStore } from "@/stores/notificationStore";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -30,7 +30,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
-  const router = useRouter();
+  const { fetchNotifications } = useNotificationStore();
 
   const {
     _id,
@@ -97,7 +97,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
       }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/story/update`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/update`,
         {
           method: "PUT",
           headers: {
@@ -125,13 +125,13 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
       );
 
       setTimeout(() => {
-        router.push(`/profile#STORY`);
-      }, 1000);
+        window.location.reload();
+      }, 100);
     } catch (error) {
       setSubmitting(false);
       setLoading(false);
       setFormErrors((error as Error).message);
-      toast.error("حدث خطأ أثناء إضافة الشهيد");
+      toast.error("حدث خطأ أثناء تعديل قصة الشهيد");
       console.error("Error adding martyr", error);
     }
   };
@@ -192,6 +192,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
                     icon={<BiUser />}
                     className={`focus:border-primary`}
                     aria-label="لقب الشهيد"
+                    required={false}
                   />
                 </div>
 
@@ -202,7 +203,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
                     disabled={isSubmitting}
                     name="social_media.instagram"
                     as={Input}
-                    type="text"
+                    type="url"
                     placeholder="رابط إنستجرام"
                     label="إنستجرام"
                     className={`focus:border-primary`}
@@ -221,7 +222,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
                     disabled={isSubmitting}
                     name="social_media.facebook"
                     as={Input}
-                    type="text"
+                    type="url"
                     placeholder="رابط فيسبوك"
                     label="فيسبوك"
                     className={`focus:border-primary`}
@@ -240,7 +241,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
                     disabled={isSubmitting}
                     name="social_media.x"
                     as={Input}
-                    type="text"
+                    type="url"
                     placeholder="رابط تويتر (X)"
                     label="تويتر (X)"
                     className={`focus:border-primary`}

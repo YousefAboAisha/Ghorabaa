@@ -21,7 +21,7 @@ const Page = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [searchData, setSearchData] = useState<StoryInterface | null>();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<string | null>(null);
 
   const initialValues = {
     id_number: "",
@@ -51,19 +51,22 @@ const Page = () => {
 
       console.log("Data search respones", response.statusText);
 
-      if (response.ok) {
-        const result = await response.json();
-        if (result && result.data) {
-          setSearchData(result.data);
-          setLoading(false);
-        }
-      } else {
+      if (!response.ok) {
+        throw new Error("لم يتم العثور على نتائج!");
+      }
+
+      const result = await response.json();
+      if (result && result.data) {
+        setSearchData(result.data);
         setLoading(false);
-        setSearchData(null);
-        setError(response.statusText);
       }
     } catch (error) {
       console.error("Failed to search data:", error);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("حدث خطأ غير متوقع!");
+      }
       setLoading(false);
     }
   };
@@ -126,12 +129,6 @@ const Page = () => {
                     className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
                 </div>
-
-                {error && (
-                  <div className="gap-1 text-[red] bg-red-200 w-fit p-1.5 px-2.5 rounded-md text-[12px] mt-2">
-                    {error}
-                  </div>
-                )}
               </Form>
             )}
           </Formik>

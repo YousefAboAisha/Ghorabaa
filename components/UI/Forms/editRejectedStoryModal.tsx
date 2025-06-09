@@ -22,14 +22,12 @@ type AddStoryPrpos = {
   setLoading: Dispatch<SetStateAction<boolean>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   data: StoryInterface;
-  refetchData: () => void;
 };
 
 const EditRejectedStoryForm = ({
   setLoading,
   setIsOpen,
   data,
-  refetchData,
 }: AddStoryPrpos) => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
@@ -128,8 +126,8 @@ const EditRejectedStoryForm = ({
       );
 
       setTimeout(() => {
-        refetchData();
-      }, 1000);
+        window.location.reload();
+      }, 500);
 
       console.log("Martyr has been added successfully!", data);
     } catch (error) {
@@ -193,6 +191,7 @@ const EditRejectedStoryForm = ({
                     icon={<BiUser />}
                     className={`focus:border-primary`}
                     aria-label="لقب الشهيد"
+                    required={false}
                   />
                 </div>
 
@@ -203,7 +202,7 @@ const EditRejectedStoryForm = ({
                     disabled={isSubmitting}
                     name="social_media.instagram"
                     as={Input}
-                    type="text"
+                    type="url"
                     placeholder="رابط إنستجرام"
                     label="إنستجرام"
                     className={`focus:border-primary`}
@@ -222,7 +221,7 @@ const EditRejectedStoryForm = ({
                     disabled={isSubmitting}
                     name="social_media.facebook"
                     as={Input}
-                    type="text"
+                    type="url"
                     placeholder="رابط فيسبوك"
                     label="فيسبوك"
                     className={`focus:border-primary`}
@@ -241,7 +240,7 @@ const EditRejectedStoryForm = ({
                     disabled={isSubmitting}
                     name="social_media.x"
                     as={Input}
-                    type="text"
+                    type="url"
                     placeholder="رابط تويتر (X)"
                     label="تويتر (X)"
                     className={`focus:border-primary`}

@@ -1,7 +1,6 @@
 import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
-import { StoryStatus } from "@/app/enums";
 
 type Params = Promise<{ id: string }>;
 
@@ -28,7 +27,6 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
         {
           $match: {
             _id: new ObjectId(id),
-            status: StoryStatus.APPROVED,
             hasCompleteProfile: true,
           },
         },
@@ -74,13 +72,6 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     if (!data) {
       return NextResponse.json(
         { error: "لم يتم العثور على الشهيد" },
-        { status: 404 }
-      );
-    }
-
-    if (data.status !== StoryStatus.APPROVED) {
-      return NextResponse.json(
-        { error: "القصة قيد المراجعة حالياً، ولم يتم نشرها بعد!" },
         { status: 404 }
       );
     }

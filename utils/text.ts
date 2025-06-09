@@ -9,6 +9,7 @@ import {
 } from "@/app/enums";
 import { ReportReasonsData } from "@/data/reportReasonsData";
 import { BiBell, BiCheckCircle, BiComment, BiTrash } from "react-icons/bi";
+import { BsSend } from "react-icons/bs";
 import { MdOutlineClose } from "react-icons/md";
 import { RxUpdate } from "react-icons/rx";
 
@@ -182,6 +183,11 @@ export const getNotificationColor = (type: NotificationTypes) => {
 
 export const getNotificationIcon = (type: NotificationTypes) => {
   switch (type.toUpperCase()) {
+    case NotificationTypes.REQUEST:
+      return {
+        Icon: BsSend,
+        className: "text-[orange]",
+      }; // request
     case NotificationTypes.ACCEPT:
       return {
         Icon: BiCheckCircle,

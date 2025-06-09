@@ -57,6 +57,7 @@ export enum ReportReasons {
 
 // Notification Types Enums
 export enum NotificationTypes {
+  REQUEST = "REQUEST",
   ACCEPT = "ACCEPT",
   REJECT = "REJECT",
   DELETE = "DELETE",

@@ -7,10 +7,9 @@ import { dateConversion } from "@/utils/format";
 
 interface StoryCardsProps {
   data: StoryInterface;
-  refetchData: () => void;
 }
 
-const StoryRejectedCard = ({ data, refetchData }: StoryCardsProps) => {
+const StoryRejectedCard = ({ data }: StoryCardsProps) => {
   const [isOpen, setIOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -40,7 +39,6 @@ const StoryRejectedCard = ({ data, refetchData }: StoryCardsProps) => {
           setLoading={setLoading}
           setIsOpen={setIOpen}
           data={data}
-          refetchData={refetchData}
         />
       </Modal>
     </>

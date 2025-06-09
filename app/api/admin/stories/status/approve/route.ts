@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import clientPromise from "@/app/lib/mongodb";
 import { ObjectId, UpdateFilter } from "mongodb";
-import { StoryStatus, NotificationTypes } from "@/app/enums";
+import { StoryStatus, NotificationTypes, Role } from "@/app/enums";
 import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
@@ -13,7 +13,7 @@ export async function POST(originalReq: Request) {
 
   const token = await getToken({ req: nextReq, secret });
 
-  if (!token || token.role !== "ADMIN") {
+  if (!token || token.role !== Role.ADMIN) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -72,7 +72,7 @@ export async function POST(originalReq: Request) {
       // Create notification
       const storyNotificationPayload = {
         user_id: story.publisher_id,
-        message: "تمت الموافقة على طلب إضافة قصتك من قِبِل المشرف",
+        message: `تمت الموافقة على طلب إضافة قصة الشهيد ${story?.name} من قِبِل المشرف`,
         href: `/stories/${story._id}`,
         notification_type: NotificationTypes.ACCEPT,
         createdAt: new Date(),

@@ -1,4 +1,5 @@
 import ErrorMessage from "@/components/responseMessages/errorMessage";
+import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ImagesSwiper from "@/components/UI/imagesSwiper";
 import { Session } from "next-auth";
 import { cookies } from "next/headers"; // App Router only
@@ -33,6 +34,10 @@ const RecentlyAddedStories = async ({ session }: RecentlyAddedStories) => {
 
   if (error) {
     return <ErrorMessage error={error} className="mt-4" />;
+  }
+
+  if (data.length == 0) {
+    return <NoDataMessage className="mt-8" />;
   }
 
   if (data) {

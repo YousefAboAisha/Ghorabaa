@@ -1,5 +1,5 @@
 import React from "react";
-import { BsExclamationCircle } from "react-icons/bs";
+import { BiErrorCircle } from "react-icons/bi";
 
 interface NoDataMessageProps {
   className?: string;
@@ -14,7 +14,7 @@ const NoDataMessage: React.FC<NoDataMessageProps> = ({
     <div
       className={`relative flex flex-col justify-center items-center gap-3 min-h-[50vh] bg-white rounded-md border text-sm ${className}`}
     >
-      <BsExclamationCircle size={20} />
+      <BiErrorCircle size={30} className="text-[red] font-bold" />
       <p>{message}</p>
     </div>
   );

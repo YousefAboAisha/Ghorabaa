@@ -1,9 +1,9 @@
-import CommentsSection from "@/containers/storyDetails/commentsSection";
 import StoryDetailsSkeletonLoader from "@/components/UI/loaders/storyDetailsSkeletonLoader";
 import { getSessionAction } from "@/app/actions/registerActions";
 import StoryDetailsSection from "@/containers/storyDetails/storyDetailsSection";
 import { Suspense } from "react";
 import { Metadata } from "next";
+import { StoryStatus } from "@/app/enums";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -27,6 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const data = await res.json();
+
+  if (data.status !== StoryStatus.APPROVED) return {};
 
   return {
     title: `الشهيد ${data.name} | منصة الشهداء`,
@@ -66,7 +68,6 @@ export default async function Page({ params }: Props) {
         <Suspense fallback={<StoryDetailsSkeletonLoader />}>
           <StoryDetailsSection id={id} />
         </Suspense>
-        <CommentsSection session={session} id={id} />
       </div>
     </div>
   );

@@ -4,71 +4,28 @@ import { GrNotification } from "react-icons/gr";
 import NotificationCard from "../cards/notificationCard";
 import Link from "next/link";
 import { Session } from "next-auth";
-import { useEffect, useState, useCallback } from "react";
-import {
-  CommentNotificationInterface,
-  StoryNotificationInterface,
-} from "@/app/interfaces";
+import { useEffect } from "react";
+
 import NotificationSkeletonLoader from "../loaders/notificationSkeletonLoader";
+import { useNotificationStore } from "@/stores/notificationStore";
 
 type NotificationPopperProps = {
   session: Session | null;
 };
 
-type MixedNotification =
-  | StoryNotificationInterface
-  | CommentNotificationInterface;
-
 function NotificationPopper({ session }: NotificationPopperProps) {
-  const [notifications, setNotifications] = useState<MixedNotification[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [hasUnread, setHasUnread] = useState(false);
+  const user_id = session?.user?.id as string;
 
-  const fetchNotifications = useCallback(async () => {
-    if (!session?.user?.id) return;
-    setLoading(true);
-
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/notifications/fetch`,
-      {
-        credentials: "include",
-      }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          setLoading(false);
-          throw new Error("حدث خطأ أثناء جلب البيانات");
-        }
-        return res.json();
-      })
-      .then(({ data }) => {
-        setLoading(false);
-        setNotifications(data || []);
-        setHasUnread(data.hasUnread);
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.log("Notification error", error);
-      });
-  }, [session?.user?.id]);
-
-  const markAsRead = async () => {
-    try {
-      await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/notifications/patch`,
-        {
-          method: "PATCH",
-          credentials: "include",
-        }
-      );
-      setHasUnread(false);
-    } catch (err) {
-      console.error("Failed to mark notifications as read:", err);
-    }
-  };
+  const fetchNotifications = useNotificationStore(
+    (state) => state.fetchNotifications
+  );
+  const notifications = useNotificationStore((state) => state.notifications);
+  const loading = useNotificationStore((state) => state.loading);
+  const hasUnread = useNotificationStore((state) => state.hasUnread);
+  const markAllAsRead = useNotificationStore((state) => state.markAllAsRead);
 
   useEffect(() => {
-    fetchNotifications();
+    if (user_id) fetchNotifications(user_id);
   }, [fetchNotifications]);
 
   return (
@@ -77,7 +34,7 @@ function NotificationPopper({ session }: NotificationPopperProps) {
         as="button"
         disabled={loading}
         className="relative group cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
-        onClick={markAsRead}
+        onClick={markAllAsRead}
       >
         {({ active }) => (
           <div className="flex items-center gap-1">
@@ -87,7 +44,6 @@ function NotificationPopper({ session }: NotificationPopperProps) {
                 active && "bg-gray_light"
               }`}
             >
-              <span></span>
               <GrNotification size={17} />
               {hasUnread && !active && (
                 <span className="absolute top-2 left-2 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
@@ -106,18 +62,16 @@ function NotificationPopper({ session }: NotificationPopperProps) {
           {loading ? (
             <NotificationSkeletonLoader length={1} />
           ) : notifications.length > 0 ? (
-            notifications.map((notification, index) => {
-              return (
-                <MenuItem key={index} as={Link} href={notification.href || "#"}>
-                  <NotificationCard
-                    type={notification.notification_type}
-                    createdAt={notification.createdAt}
-                    is_read={notification.is_read}
-                    message={notification.message}
-                  />
-                </MenuItem>
-              );
-            })
+            notifications.map((notification, index) => (
+              <MenuItem key={index} as={Link} href={notification.href || "#"}>
+                <NotificationCard
+                  type={notification.notification_type}
+                  createdAt={notification.createdAt}
+                  is_read={notification.is_read}
+                  message={notification.message}
+                />
+              </MenuItem>
+            ))
           ) : (
             <div className="w-full h-32 bg-white flex items-center justify-center p-2 rounded-lg border">
               <p className="text-[11px]">لا توجد إشعارات جديدة!</p>

@@ -1,10 +1,11 @@
 import clientPromise from "@/app/lib/mongodb";
 import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { ObjectId } from "mongodb";
-import { StoryStatus } from "@/app/enums";
+import { ObjectId, UpdateFilter } from "mongodb";
+import { NotificationTypes, StoryStatus } from "@/app/enums";
 import { StoryInterface } from "@/app/interfaces";
 import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
+import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -25,6 +26,8 @@ export async function POST(originalReq: Request) {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
     const collection = db.collection("stories");
+    const notificationsCollection = db.collection("notifications");
+    const usersCollection = db.collection<User>("users");
 
     const body = await originalReq.json();
     const { id_number, birth_date, death_date, bio, ...rest } = body;
@@ -73,6 +76,36 @@ export async function POST(originalReq: Request) {
     const updatedStory = await collection.findOne({
       id_number: id_number,
     });
+
+    if (updatedStory) {
+      // Create notification
+      const storyNotificationPayload = {
+        user_id: updatedStory.publisher_id,
+        message: `تمت إضافة طلبك لإضافة قصة عن الشهيد ${updatedStory.name} بنجاح، وستتم مراجعة الطلب في أسرع وقت!`,
+        href: `/stories/${updatedStory._id}`,
+        notification_type: NotificationTypes.REQUEST,
+        createdAt: new Date(),
+        is_read: false,
+      };
+
+      await notificationsCollection.insertOne(storyNotificationPayload);
+
+      // Push notification to user's array (max 7)
+      const update: UpdateFilter<User> = {
+        $push: {
+          notifications: {
+            $each: [storyNotificationPayload],
+            $position: 0,
+            $slice: 7,
+          },
+        },
+      };
+
+      await usersCollection.updateOne(
+        { _id: updatedStory.publisher_id },
+        update
+      );
+    }
 
     return NextResponse.json(
       { message: "Story updated", data: updatedStory },

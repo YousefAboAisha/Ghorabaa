@@ -92,11 +92,11 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
     if (status !== currentTap) return ""; // ✅ Only add color to active tab
     switch (status) {
       case StoryStatus.APPROVED:
-        return "border-primary";
+        return "border-approved";
       case StoryStatus.PENDING:
-        return "border-orange-500";
+        return "border-pending";
       case StoryStatus.REJECTED:
-        return "border-red-600";
+        return "border-rejected";
       default:
         return "";
     }
@@ -140,11 +140,7 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
         ) : stories.length > 0 ? (
           <div className="cards-grid-3">
             {stories?.map((story: StoryInterface) => (
-              <StoryRejectedCard
-                key={story._id as string}
-                data={story}
-                refetchData={() => fetchStories(StoryStatus.REJECTED)}
-              />
+              <StoryRejectedCard key={story._id as string} data={story} />
             ))}
           </div>
         ) : (

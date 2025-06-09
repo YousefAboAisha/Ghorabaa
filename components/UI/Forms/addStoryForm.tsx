@@ -114,8 +114,8 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
       );
 
       setTimeout(() => {
-        router.push(`/profile#${StoryStatus.PENDING}`);
-      }, 1000);
+        router.push(`/stories/${data?.data?._id}`);
+      }, 500);
 
       console.log("Martyr has been added successfully!", data);
     } catch (error) {
@@ -159,6 +159,7 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
                     icon={<BiUser />}
                     className={`focus:border-primary`}
                     aria-label="لقب الشهيد"
+                    required={false}
                   />
                 </div>
 
@@ -168,7 +169,7 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
                     disabled={isSubmitting}
                     name="social_media.instagram"
                     as={Input}
-                    type="text"
+                    type="url"
                     placeholder="رابط إنستجرام"
                     label="إنستجرام"
                     className={`focus:border-primary`}
@@ -186,7 +187,7 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
                     disabled={isSubmitting}
                     name="social_media.facebook"
                     as={Input}
-                    type="text"
+                    type="url"
                     placeholder="رابط فيسبوك"
                     label="فيسبوك"
                     className={`focus:border-primary`}
@@ -204,7 +205,7 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
                     disabled={isSubmitting}
                     name="social_media.x"
                     as={Input}
-                    type="text"
+                    type="url"
                     placeholder="رابط تويتر (X)"
                     label="تويتر (X)"
                     className={`focus:border-primary`}
