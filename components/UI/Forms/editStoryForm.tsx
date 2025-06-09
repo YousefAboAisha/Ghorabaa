@@ -17,7 +17,6 @@ import { StoryInterface } from "@/app/interfaces";
 import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
 import { StoryValidationSchema } from "@/utils/validators";
 import Input from "../inputs/input";
-import { useNotificationStore } from "@/stores/notificationStore";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -30,7 +29,6 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
-  const { fetchNotifications } = useNotificationStore();
 
   const {
     _id,

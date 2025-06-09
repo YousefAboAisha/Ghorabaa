@@ -129,6 +129,12 @@ const Page = () => {
                     className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
                 </div>
+
+                {error && (
+                  <div className="gap-1 text-[red] bg-red-200 w-fit p-1.5 px-2.5 rounded-md text-[12px] mt-2">
+                    {error}
+                  </div>
+                )}
               </Form>
             )}
           </Formik>

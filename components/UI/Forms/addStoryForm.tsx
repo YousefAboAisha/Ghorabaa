@@ -15,7 +15,6 @@ import Image from "next/image";
 import { StoryInterface } from "@/app/interfaces";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { StoryStatus } from "@/app/enums";
 import { StoryValidationSchema } from "@/utils/validators";
 import Input from "../inputs/input";
 
