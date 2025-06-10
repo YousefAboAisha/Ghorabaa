@@ -30,22 +30,12 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
 
-  const {
-    _id,
-    name,
-    nickname,
-    social_media,
-    publisher_id,
-    city,
-    neighborhood,
-    bio,
-    image,
-  } = data;
+  const { name, nickname, social_media, city, neighborhood, bio, image } = data;
+
+  const story_id = data?._id;
 
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
-    _id,
-    publisher_id,
     city,
     nickname,
     social_media: {
@@ -95,7 +85,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
       }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/update`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/update/${story_id}`,
         {
           method: "PUT",
           headers: {

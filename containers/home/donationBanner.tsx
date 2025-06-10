@@ -6,17 +6,17 @@ import { BiDonateHeart } from "react-icons/bi";
 
 const AddStoryBanner = () => {
   return (
-    <div className="section grid grid-cols-1 lg:grid-cols-2 gap-10 bg-secondary text-white rounded-xl overflow-hidden p-10">
-      <div className="flex flex-col">
-        <div className="flex flex-col gap-2 mt-4">
+    <div className="section grid grid-cols-1 lg:grid-cols-2 gap-10 bg-secondary text-white rounded-xl overflow-hidden p-8">
+      <div className="flex flex-col w-full">
+        <div className="flex flex-col gap-2 mt-4 ">
           <Heading
-            title="اترك سهماً نافعاً"
+            title="اترك سهماً نافعاً لا يُنسى"
             details="الَّذِينَ يُنفِقُونَ أَمْوَالَهُم بِاللَّيْلِ وَالنَّهَارِ سِرًّا وَعَلَانِيَةً فَلَهُمْ أَجْرُهُمْ عِندَ رَبِّهِمْ وَلَا خَوْفٌ عَلَيْهِمْ وَلَا هُمْ يَحْزَنُونَ"
             className="!w-fit"
             highlightColor="before:bg-primary"
           />
 
-          <p className="text-sm font-light mt-2">
+          <p className="text- font-light mt-2">
             في غزة، تنبت الكرامة من تحت الركام، وتُزهِر الأرواح رغم الرماد.
             هناك، لا تزال الجراح مفتوحة، لكنّ الصبر يُكفكفها، والإيمان يُضمدها.
             أمٌّ ثكلى لا تجد إلا الدعاء سندًا، وطفل يتيم يفتّش في وجوه المارّة
@@ -56,7 +56,7 @@ const AddStoryBanner = () => {
         width={500}
         height={500}
         alt="صورة شهيد اليوم"
-        className="shadow-xl rounded-xl self-center"
+        className="shadow-xl rounded-xl self-center w-full"
       />
     </div>
   );

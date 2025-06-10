@@ -1,5 +1,4 @@
 "use client";
-import { StoryStatus } from "@/app/enums";
 import { StoryInterface } from "@/app/interfaces";
 import Button from "@/components/UI/inputs/button";
 import TextArea from "@/components/UI/inputs/textArea";
@@ -22,6 +21,7 @@ export const RejectStory = ({
   setIsOpen,
 }: RejectStoryProps) => {
   const { fetchStatistics } = useStatisticsStore();
+  const story_id = data?._id;
 
   const initialValues = {
     rejectReason: "",
@@ -53,15 +53,12 @@ export const RejectStory = ({
 
           try {
             const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/status/reject`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/status/reject/${story_id}`,
               {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  story_id: data._id,
-                  status: StoryStatus.REJECTED,
                   rejectReason: values.rejectReason,
-                  author_id: data.publisher_id, // if needed
                 }),
               }
             );

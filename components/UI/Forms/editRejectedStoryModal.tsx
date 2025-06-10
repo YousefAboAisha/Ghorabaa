@@ -34,20 +34,11 @@ const EditRejectedStoryForm = ({
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
 
-  const {
-    _id,
-    nickname,
-    city,
-    social_media,
-    neighborhood,
-    bio,
-    image,
-    status,
-  } = data;
+  const { nickname, city, social_media, neighborhood, bio, image, status } =
+    data;
 
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
-    _id,
     city,
     nickname,
     social_media: {
@@ -60,6 +51,8 @@ const EditRejectedStoryForm = ({
     image,
     status,
   };
+
+  const story_id = data?._id;
 
   const handleSubmit = async (
     values: typeof initialValues,
@@ -96,7 +89,7 @@ const EditRejectedStoryForm = ({
       }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/update`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/update/${story_id}`,
         {
           method: "PUT",
           headers: {
@@ -134,7 +127,6 @@ const EditRejectedStoryForm = ({
       setSubmitting(false);
       setLoading(false);
       setFormErrors((error as Error).message);
-      toast.error("حدث خطأ أثناء إضافة الشهيد");
       console.error("Error adding martyr", error);
     }
   };

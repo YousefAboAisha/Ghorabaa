@@ -25,6 +25,9 @@ const EditUser = ({
   setIsOpen,
   setLoading,
 }: EditUserProps) => {
+  // This is user ID
+  const user_id = data?._id;
+
   const initialValues = {
     name: data?.name || "",
     phone_number: data?.phone_number || "",
@@ -53,7 +56,7 @@ const EditUser = ({
             try {
               setLoading?.(true); // Set loading state to true before starting the request
               const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/users/update`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/users/update/${user_id}`,
                 {
                   method: "POST",
                   headers: {
@@ -62,7 +65,6 @@ const EditUser = ({
                   },
                   body: JSON.stringify({
                     ...values,
-                    _id: data._id, // Send user ID for backend to find the user
                   }),
                 }
               );

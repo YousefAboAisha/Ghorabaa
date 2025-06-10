@@ -53,7 +53,7 @@ export const getNotificationHrefPath = (
       return `/stories/${story_id}`;
 
     case NotificationTypes.REJECT:
-      return `/profile#STORY`;
+      return `/profile?activeTap=${StoryStatus.REJECTED}#storyContainer`;
 
     default:
       return `/stories/${story_id}`;
@@ -69,7 +69,7 @@ export const getRoleColor = (role: Role) => {
     case Role.USER:
       return "#1e272e"; // Dark color for stories
     default:
-      return "";
+      return "#1e272e";
   }
 };
 

@@ -6,54 +6,54 @@ import { Role } from "./app/enums";
 const ADMIN_PATH = "/admin";
 
 export async function middleware(request: NextRequest) {
-  const token = await getToken({
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
+  // const token = await getToken({
+  //   req: request,
+  //   secret: process.env.NEXTAUTH_SECRET,
+  // });
 
-  console.log("Middleware token:", token); // Add this for debugging
+  // console.log("Middleware token:", token); // Add this for debugging
 
-  const { pathname } = request.nextUrl;
+  // const { pathname } = request.nextUrl;
 
-  const isAuthPage =
-    pathname.startsWith("/auth") ||
-    pathname === "/signin" ||
-    pathname === "/signup";
+  // const isAuthPage =
+  //   pathname.startsWith("/auth") ||
+  //   pathname === "/signin" ||
+  //   pathname === "/signup";
 
-  const isAdminRoute = pathname.startsWith(ADMIN_PATH);
+  // const isAdminRoute = pathname.startsWith(ADMIN_PATH);
 
-  // User not authenticated
-  if (!token) {
-    if (!isAuthPage) {
-      return NextResponse.redirect(new URL("/signin", request.url));
-    }
-    return NextResponse.next();
-  }
+  // // User not authenticated
+  // if (!token) {
+  //   if (!isAuthPage) {
+  //     return NextResponse.redirect(new URL("/signin", request.url));
+  //   }
+  //   return NextResponse.next();
+  // }
 
-  // Authenticated user visiting an auth page — redirect based on role
-  if (isAuthPage) {
-    const redirectUrl =
-      token.role === Role.ADMIN ? "/admin/dashboard" : "/profile";
+  // // Authenticated user visiting an auth page — redirect based on role
+  // if (isAuthPage) {
+  //   const redirectUrl =
+  //     token.role === Role.ADMIN ? "/admin/dashboard" : "/profile";
 
-    return NextResponse.redirect(new URL(redirectUrl, request.url));
-  }
+  //   return NextResponse.redirect(new URL(redirectUrl, request.url));
+  // }
 
-  // Handle auth-redirect route
-  if (pathname === "/auth-redirect") {
-    if (!token) {
-      return NextResponse.redirect(new URL("/signin", request.url));
-    }
+  // // Handle auth-redirect route
+  // if (pathname === "/auth-redirect") {
+  //   if (!token) {
+  //     return NextResponse.redirect(new URL("/signin", request.url));
+  //   }
 
-    const redirectUrl =
-      token.role === Role.ADMIN ? "/admin/dashboard" : "/profile";
+  //   const redirectUrl =
+  //     token.role === Role.ADMIN ? "/admin/dashboard" : "/profile";
 
-    return NextResponse.redirect(new URL(redirectUrl, request.url));
-  }
+  //   return NextResponse.redirect(new URL(redirectUrl, request.url));
+  // }
 
-  // Authenticated but not admin trying to access admin route
-  if (isAdminRoute && token.role !== Role.ADMIN) {
-    return NextResponse.redirect(new URL("/unauthorized", request.url));
-  }
+  // // Authenticated but not admin trying to access admin route
+  // if (isAdminRoute && token.role !== Role.ADMIN) {
+  //   return NextResponse.redirect(new URL("/unauthorized", request.url));
+  // }
 
   return NextResponse.next();
 }

@@ -2,18 +2,25 @@ import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import clientPromise from "@/app/lib/mongodb";
 import { ObjectId, UpdateFilter } from "mongodb";
-import { StoryStatus, NotificationTypes } from "@/app/enums";
+import { StoryStatus, NotificationTypes, Role } from "@/app/enums";
 import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
+type Params = Promise<{ id: string }>;
 
-export async function PUT(originalReq: Request) {
+export async function PUT(
+  originalReq: NextRequest,
+  { params }: { params: Params }
+) {
+  // This is story ID
+  const { id } = await params;
+
   const req = originalReq.clone();
   const nextReq = new NextRequest(req);
 
   const token = await getToken({ req: nextReq, secret });
 
-  if (!token || token.role !== "ADMIN") {
+  if (!token || token.role !== Role.ADMIN) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -25,29 +32,29 @@ export async function PUT(originalReq: Request) {
     const usersCollection = db.collection<User>("users");
 
     const body = await originalReq.json();
-    const { rejectReason, story_id, status } = body;
+    const { rejectReason } = body;
 
-    console.log("Received body [Reject Story]:", body); // 👀
+    console.log("Received body [Reject Story]:", body);
 
     // Validate required inputs
-    if (!story_id || status !== StoryStatus.REJECTED) {
-      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+    if (!id) {
+      return NextResponse.json({ error: "بعض الحقول مفقودة" }, { status: 400 });
     }
 
     const story = await storiesCollection.findOne({
-      _id: new ObjectId(story_id),
+      _id: new ObjectId(id),
     });
 
     if (!story) {
-      return NextResponse.json({ error: "Story not found" }, { status: 404 });
+      return NextResponse.json({ error: "القصة غير موجودة" }, { status: 404 });
     }
 
     // Update the story
     await storiesCollection.updateOne(
-      { _id: new ObjectId(story_id) },
+      { _id: new ObjectId(id) },
       {
         $set: {
-          status: StoryStatus[status as StoryStatus],
+          status: StoryStatus.REJECTED,
           rejectReason: rejectReason,
           updatedAt: new Date(),
         },
@@ -60,7 +67,7 @@ export async function PUT(originalReq: Request) {
       const storyNotificationPayload = {
         user_id: story.publisher_id,
         message: `تم رفض طلبك لإضافة قصة عن الشهيد ${story?.name} من قبل المشرفين!`,
-        href: `/profile#STORY`,
+        href: `/profile?activeTap=${StoryStatus.REJECTED}#storyContainer`,
         notification_type: NotificationTypes.REJECT,
         createdAt: new Date(),
         is_read: false,
@@ -83,7 +90,7 @@ export async function PUT(originalReq: Request) {
     }
 
     return NextResponse.json(
-      { message: `Story ${status.toLowerCase()}` },
+      { message: `Story ${StoryStatus.REJECTED.toLowerCase()}` },
       { status: 200 }
     );
   } catch (error) {

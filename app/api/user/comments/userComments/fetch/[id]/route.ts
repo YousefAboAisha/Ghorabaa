@@ -4,24 +4,26 @@ import { ObjectId } from "mongodb";
 import { getToken } from "next-auth/jwt";
 
 const secret = process.env.NEXTAUTH_SECRET;
+type Params = Promise<{ id: string }>;
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, { params }: { params: Params }) {
+  // This user ID
+  const { id } = await params;
   try {
     const token = await getToken({ req, secret });
     console.log("User comments token", token);
 
-    if (!token || !token.id) {
+    if (!token || !token.id || token.id !== id) {
       return NextResponse.json({ error: "أنت غير مصرح لك" }, { status: 401 });
     }
 
     const client = await clientPromise;
     const db = client.db("ghorabaa");
     const commentsCollection = db.collection("comments");
-    const user_id = token.id;
 
     const commentsWithAuthor = await commentsCollection
       .aggregate([
-        { $match: { author_id: new ObjectId(user_id) } },
+        { $match: { author_id: new ObjectId(id) } },
         { $sort: { createdAt: -1 } }, // newest first
         {
           $lookup: {

@@ -10,6 +10,7 @@ import { Session } from "next-auth";
 import { StoryTabsData } from "@/data/storyTabsData";
 import RejectAndPendingCardSkeltonLoader from "@/components/UI/loaders/rejectAndPendingCardSkeltonLoader";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type StoryCounts = {
   [key in StoryStatus]: number;
@@ -20,16 +21,15 @@ type SubmittedStoriesProps = {
 };
 
 const StoryTabs = ({ session }: SubmittedStoriesProps) => {
-  const [currentTap, setCurrentTap] = useState<StoryStatus>(
-    StoryStatus.APPROVED
-  );
+  const user_id = session?.user.id;
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  useEffect(() => {
-    const hash = window.location.hash?.replace("#", "") as StoryStatus;
-    if (Object.values(StoryStatus).includes(hash)) {
-      setCurrentTap(hash);
-    }
-  }, []);
+  console.log("Front-end USER_ID ", user_id);
+
+  const [currentTap, setCurrentTap] = useState<StoryStatus>(
+    () => (searchParams.get("activeTap") as StoryStatus) || StoryStatus.APPROVED
+  );
 
   const [stories, setStories] = useState<StoryInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -45,11 +45,12 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/userStories/fetch?status=${status}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/userStories/fetch/${user_id}?status=${status}`,
         {
           credentials: "include", // 👈 THIS IS CRITICAL
         }
       );
+
       if (!res.ok) throw new Error("Failed to fetch stories");
 
       const data = await res.json();
@@ -73,17 +74,27 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   }, [currentTap]);
 
   useEffect(() => {
+    router.push(`/profile?activeTap=${currentTap}`);
+  }, []);
+
+  const searchParamsHandler = (status: StoryStatus) => {
+    setCurrentTap(status);
+    router.push(`/profile?activeTap=${status}`);
+  };
+
+  useEffect(() => {
     const hash = window.location.hash;
     if (hash) {
       const element = document.querySelector(hash);
       if (element) {
-        setTimeout(() => {
-          const yOffset = -300; // 👈 scroll 100px above the element
+        const timer = setTimeout(() => {
+          const yOffset = -300;
           const y =
             element.getBoundingClientRect().top + window.scrollY + yOffset;
-
           window.scrollTo({ top: y, behavior: "smooth" });
-        }, 1000); // Wait for content to be ready
+        }, 1000);
+
+        return () => clearTimeout(timer);
       }
     }
   }, []);
@@ -152,17 +163,16 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   console.log("currentTap", currentTap);
 
   return (
-    <div id={"STORY"} className="section relative">
+    <div className="section relative">
       {/* Tabs */}
       <div className="flex items-center gap-4 text-sm overflow-auto scrollbar-hidden">
         {StoryTabsData.map(({ label, status, color }) => (
           <div
             key={status}
-            title={status}
             className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
               status
             )}`}
-            onClick={() => setCurrentTap(status)}
+            onClick={() => searchParamsHandler(status)}
           >
             <p>{label}</p>
             <p
@@ -177,7 +187,10 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
       </div>
 
       {/* Content */}
-      <div className="relative flex flex-col gap-3 mt-8 min-h-[30vh]">
+      <div
+        id={"storyContainer"}
+        className="relative flex flex-col gap-3 mt-8 min-h-[30vh]"
+      >
         {renderStoryContainer()}
       </div>
     </div>

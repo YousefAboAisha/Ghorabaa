@@ -6,8 +6,14 @@ import { StoryStatus, NotificationTypes, Role } from "@/app/enums";
 import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
+type Params = Promise<{ id: string }>;
 
-export async function POST(originalReq: Request) {
+export async function POST(
+  originalReq: NextRequest,
+  { params }: { params: Params }
+) {
+  const { id } = await params;
+
   const req = originalReq.clone();
   const nextReq = new NextRequest(req);
 
@@ -25,24 +31,24 @@ export async function POST(originalReq: Request) {
     const usersCollection = db.collection<User>("users");
 
     const body = await originalReq.json();
-    const { story_id, status, ...fieldsToUpdate } = body;
+    const { ...fieldsToUpdate } = body;
 
     // Validate required inputs
-    if (!story_id || status !== StoryStatus.APPROVED) {
+    if (!id) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
     const story = await storiesCollection.findOne({
-      _id: new ObjectId(story_id),
+      _id: new ObjectId(id),
     });
 
     if (!story) {
-      return NextResponse.json({ error: "Story not found" }, { status: 404 });
+      return NextResponse.json({ error: "القصة غير موجودة!" }, { status: 404 });
     }
 
     if (!story.publisher_id) {
       return NextResponse.json(
-        { error: "Publisher ID missing." },
+        { error: "يجب إضافة معرف ناشر القصة" },
         { status: 500 }
       );
     }
@@ -57,11 +63,11 @@ export async function POST(originalReq: Request) {
 
     // Update the story
     await storiesCollection.updateOne(
-      { _id: new ObjectId(story_id) },
+      { _id: new ObjectId(id) },
       {
         $set: {
           ...sanitizedUpdate,
-          status: StoryStatus[status as StoryStatus],
+          status: StoryStatus.APPROVED,
           updatedAt: new Date(),
         },
       }
@@ -96,7 +102,7 @@ export async function POST(originalReq: Request) {
     }
 
     return NextResponse.json(
-      { message: `Story ${status.toLowerCase()}` },
+      { message: `Story ${StoryStatus.APPROVED.toLowerCase()}` },
       { status: 200 }
     );
   } catch (error) {

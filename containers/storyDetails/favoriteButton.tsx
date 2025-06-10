@@ -20,7 +20,7 @@ const FavoriteButton = ({ story_id, initialFavorite }: FavoriteButtonProps) => {
       setLoading(true);
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/updateFavorite`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/updateFavorite/${story_id}`,
         {
           method: "POST",
           headers: {
@@ -28,7 +28,6 @@ const FavoriteButton = ({ story_id, initialFavorite }: FavoriteButtonProps) => {
           },
           credentials: "include", // Required for NextAuth session cookies
           body: JSON.stringify({
-            story_id,
             isFavorite: !favorited, // Toggle the current value
           }),
         }

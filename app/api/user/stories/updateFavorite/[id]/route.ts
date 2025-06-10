@@ -5,8 +5,14 @@ import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 
 const secret = process.env.NEXTAUTH_SECRET;
+type Params = Promise<{ id: string }>;
 
-export async function POST(originalReq: Request) {
+export async function POST(
+  originalReq: NextRequest,
+  { params }: { params: Params }
+) {
+  // This is Story ID
+  const { id } = await params;
   const req = originalReq.clone();
   const nextReq = new NextRequest(req);
 
@@ -19,10 +25,13 @@ export async function POST(originalReq: Request) {
     );
   }
 
-  const { story_id, isFavorite } = await originalReq.json();
+  const { isFavorite } = await originalReq.json();
 
-  if (!mongoose.Types.ObjectId.isValid(story_id)) {
-    return NextResponse.json({ message: "معرف القصة غير صالح" }, { status: 400 });
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json(
+      { message: "معرف القصة غير صالح" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -30,7 +39,7 @@ export async function POST(originalReq: Request) {
     const db = client.db("ghorabaa");
     const usersCollection = db.collection("users");
 
-    const storyObjectId = new ObjectId(story_id);
+    const storyObjectId = new ObjectId(id);
 
     // ✅ Update user's favoritesArray only
     await usersCollection.updateOne(

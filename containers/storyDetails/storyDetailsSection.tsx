@@ -21,7 +21,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
   const user_id = session?.user.id;
 
   const storyResponse = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/${id}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/fetch/${id}`,
     {
       cache: "no-store", // optional but recommended if dynamic
     }
@@ -61,7 +61,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
         {data.status == StoryStatus.REJECTED && (
           <Link
             target="_blank"
-            href={`/profile#STORY`}
+            href={`/profile?activeTap=${StoryStatus.REJECTED}#storyContainer`}
             className="group relative flex items-center gap-2 bg-rejected text-white border rounded-md shadow-sm p-3 mt-4 mb-4 w-full font-semibold"
           >
             <BiInfoCircle size={20} />

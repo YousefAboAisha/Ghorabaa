@@ -5,25 +5,40 @@ import { ObjectId } from "mongodb";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
-export async function GET(req: NextRequest) {
+type Params = Promise<{ id: string }>;
+
+export async function GET(req: NextRequest, { params }: { params: Params }) {
+  // This is user ID
+  const { id } = await params;
+
+  if (!ObjectId.isValid(id)) {
+    return NextResponse.json({ error: "معرف غير صالح" }, { status: 400 });
+  }
+
   try {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
     const storiesCollection = db.collection("stories");
     const usersCollection = db.collection("users");
-
     const token = await getToken({ req, secret });
+
+    if (!token) {
+      return NextResponse.json(
+        { error: "غير مصرح لك، الرجاء تسجيل الدخول!" },
+        { status: 401 }
+      );
+    }
 
     let favoritesArray: string[] = [];
 
-    if (token?.email) {
-      const user = await usersCollection.findOne({ email: token.email });
+    if (token?.id) {
+      const user = await usersCollection.findOne({ _id: new ObjectId(id) });
       favoritesArray = (user?.favoritesArray || []).map((id: ObjectId) =>
         id.toString()
       );
     }
 
-    const user = await usersCollection.findOne({ email: token?.email });
+    const user = await usersCollection.findOne({ _id: new ObjectId(id) });
 
     if (!user) {
       return NextResponse.json(
@@ -38,7 +53,7 @@ export async function GET(req: NextRequest) {
 
     // ✅ Build query
     const query: Record<string, unknown> = {
-      publisher_id: new ObjectId(user._id),
+      publisher_id: new ObjectId(id),
     };
     if (status) query.status = status;
 

@@ -10,22 +10,30 @@ import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
 import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
+type Params = Promise<{ id: string }>;
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest, { params }: { params: Params }) {
+  // This is story ID
+  const { id } = await params;
+
+  if (!ObjectId.isValid(id)) {
+    return NextResponse.json({ error: "معرف غير صالح" }, { status: 400 });
+  }
+
   try {
     const token = await getToken({ req, secret });
 
-    if (!token || !token.id || !token.role) {
-      return NextResponse.json({ error: "غري مصرح لك" }, { status: 401 });
+    if (!token || !token.id) {
+      return NextResponse.json({ error: "غير مصرح لك" }, { status: 401 });
     }
 
     const userId = token.id;
     const userRole = token.role;
 
     const body = await req.json();
-    const { _id, publisher_id, bio, ...updateFields } = body;
+    const { bio, ...updateFields } = body;
 
-    if (!_id) {
+    if (!id) {
       return NextResponse.json({ error: "Missing story ID" }, { status: 400 });
     }
 
@@ -36,7 +44,7 @@ export async function PUT(req: NextRequest) {
     const usersCollection = db.collection<User>("users");
 
     const existingStory = await storiesCollection.findOne({
-      _id: new ObjectId(_id),
+      _id: new ObjectId(id),
     });
 
     if (!existingStory) {
@@ -61,12 +69,12 @@ export async function PUT(req: NextRequest) {
     }
 
     const updatedStory = await storiesCollection.findOneAndUpdate(
-      { _id: new ObjectId(_id) },
+      { _id: new ObjectId(id) },
       {
         $set: {
           ...updateFields,
           ...(bio && { bio }),
-          publisher_id: new ObjectId(publisher_id),
+          publisher_id: new ObjectId(existingStory.publisher_id),
           keywords,
           status: StoryStatus.PENDING,
           updatedAt: new Date(),

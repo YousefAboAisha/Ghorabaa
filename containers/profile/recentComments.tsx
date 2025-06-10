@@ -9,10 +9,11 @@ import Link from "next/link";
 const RecentComments = async () => {
   const cookieStore = await cookies(); // Access current cookies
   const session = await getSessionAction();
+  const user_id = session?.user.id;
 
   const userFetchedComments = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/comments/userComments/fetch`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/comments/userComments/fetch/${user_id}`,
       {
         headers: {
           Cookie: cookieStore.toString(), // ⬅️ Forward cookies

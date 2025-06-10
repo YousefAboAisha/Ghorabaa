@@ -7,8 +7,12 @@ import { User } from "next-auth";
 import { getRoleInArabic } from "@/utils/text";
 
 const secret = process.env.NEXTAUTH_SECRET;
+type Params = Promise<{ id: string }>;
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest, { params }: { params: Params }) {
+  // This is user ID
+  const { id } = await params;
+
   try {
     const token = await getToken({ req, secret });
 
@@ -20,9 +24,9 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { _id, name, phone_number, id_number, role } = body;
+    const { name, phone_number, id_number, role } = body;
 
-    if (!_id || !ObjectId.isValid(_id)) {
+    if (!id || !ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "معرف المستخدم غير صالح" },
         { status: 400 }
@@ -37,7 +41,7 @@ export async function POST(req: NextRequest) {
 
     // Fetch existing user
     const existingUser = await usersCollection.findOne({
-      _id: new ObjectId(_id),
+      _id: new ObjectId(id),
     });
 
     if (!existingUser) {
@@ -48,7 +52,7 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await usersCollection.updateOne(
-      { _id: new ObjectId(_id) },
+      { _id: new ObjectId(id) },
       {
         $set: {
           ...(name && { name }),
@@ -69,7 +73,7 @@ export async function POST(req: NextRequest) {
     // 🔔 Notify user if role has changed
     if (role && role !== existingUser.role) {
       const notificationPayload = {
-        user_id: new ObjectId(_id),
+        user_id: new ObjectId(id),
         href: `/profile`,
         message: `تم تحديث صلاحية حسابك في المنصة إلى: ${getRoleInArabic(
           role
@@ -92,7 +96,7 @@ export async function POST(req: NextRequest) {
         },
       };
 
-      await usersCollection.updateOne({ _id: new ObjectId(_id) }, update);
+      await usersCollection.updateOne({ _id: new ObjectId(id) }, update);
     }
 
     return NextResponse.json(

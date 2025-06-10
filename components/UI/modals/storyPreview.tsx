@@ -1,5 +1,4 @@
 "use client";
-import { StoryStatus } from "@/app/enums";
 import { StoryInterface } from "@/app/interfaces";
 import Button from "@/components/UI/inputs/button";
 import Select from "@/components/UI/inputs/selectInput";
@@ -125,7 +124,7 @@ const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
 
             try {
               const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/status/approve`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/status/approve/${story_id}`,
                 {
                   method: "POST",
                   headers: {
@@ -134,8 +133,6 @@ const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
                   },
                   body: JSON.stringify({
                     ...values,
-                    story_id,
-                    status: StoryStatus.APPROVED,
                   }),
                 }
               );
