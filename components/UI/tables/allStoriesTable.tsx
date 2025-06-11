@@ -15,6 +15,8 @@ import { StoryTabsData } from "@/data/storyTabsData";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import Input from "../inputs/input";
 import { CiSearch } from "react-icons/ci";
+import { useRouter, useSearchParams } from "next/navigation";
+import Pagination from "./pagination";
 
 const AllStoriesTable = () => {
   const [tableData, setTableData] = useState<
@@ -30,7 +32,13 @@ const AllStoriesTable = () => {
   const [currentTap, setCurrentTap] = useState<StoryStatus>(
     StoryStatus.APPROVED
   );
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
+  const [page, setPage] = useState<number>(
+    () => Number(searchParams.get("page")) || 1
+  );
+  const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const fetchTableData = async () => {
@@ -38,7 +46,7 @@ const AllStoriesTable = () => {
     setError(null);
 
     await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/fetch?status=${currentTap}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/fetch?status=${currentTap}&page=${page}&limit=10`
     )
       .then((res) => {
         if (!res.ok) {
@@ -47,9 +55,15 @@ const AllStoriesTable = () => {
 
         return res.json();
       })
-      .then(({ data }) => {
-        if (data && Array.isArray(data)) setTableData(data);
-        else setTableData([]);
+      .then(({ data, pagination }) => {
+        if (data && Array.isArray(data)) {
+          console.log("pagination data", pagination);
+
+          setTableData(data);
+          setTotalPages(pagination.totalPages);
+          console.log("table's pagination", pagination);
+        } else setTableData([]);
+        // You can also use pagination.totalPages if you want to render pages dynamically
       })
       .catch((error) => {
         setError(error.message);
@@ -60,8 +74,12 @@ const AllStoriesTable = () => {
   };
 
   useEffect(() => {
+    router.push(`/admin/dashboard?page=${page}`);
+  }, []);
+
+  useEffect(() => {
     fetchTableData();
-  }, [currentTap]);
+  }, [currentTap, page]);
 
   const getBorderColor = (status: StoryStatus) => {
     if (status !== currentTap) return ""; // ✅ Only add color to active tab
@@ -88,7 +106,7 @@ const AllStoriesTable = () => {
   ) => {
     const status = story.status;
 
-    if (status == StoryStatus.APPROVED) return;
+    if (status == StoryStatus.APPROVED) return <p>-</p>;
     if (status == StoryStatus.PENDING) {
       return (
         <>
@@ -261,6 +279,8 @@ const AllStoriesTable = () => {
               status
             )}`}
             onClick={() => {
+              setPage(1);
+              router.push(`/admin/dashboard?page=1`);
               setCurrentTap(status);
               setSearchQuery("");
             }}
@@ -274,7 +294,7 @@ const AllStoriesTable = () => {
         <Input
           placeholder="ابحث عن اسم الشهيد.."
           className="bg-white border focus:border-secondary"
-          icon={<CiSearch size={20} className="text-secondary" />}
+          icon={<CiSearch size={17} className="text-secondary" />}
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
@@ -285,13 +305,22 @@ const AllStoriesTable = () => {
         />
       </div>
 
+      {/* Render the table content */}
       <div className="relative mt-8 overflow-x-auto">
         {renderTableContent()}
       </div>
 
-      <div className="h-10 bg-[red] w-full mt-6 text-white">
-        This is pagination
-      </div>
+      {/* Pagination is here */}
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={(newPage) => {
+          if (newPage !== page) {
+            setPage(newPage);
+            router.push(`/admin/dashboard?page=${newPage}`);
+          }
+        }}
+      />
 
       {/* Preview Story Modal */}
       <Modal isOpen={isOpenStoryPreview} setIsOpen={setIsOpenStoryPreview}>

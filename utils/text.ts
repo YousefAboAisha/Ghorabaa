@@ -13,7 +13,7 @@ import { BsSend } from "react-icons/bs";
 import { MdOutlineClose } from "react-icons/md";
 import { RxUpdate } from "react-icons/rx";
 
-export const convertStoryStatusToArabic = (status: StoryStatus): string => {
+export const getStoryStatusToArabic = (status: StoryStatus): string => {
   switch (status) {
     case StoryStatus.IMPORTED:
       return "مستوردة";
@@ -95,9 +95,9 @@ export const getReportStatusInArabic = (status: ReportStatus): string => {
     case ReportStatus.PENDING:
       return "قيد المراجعة";
     case ReportStatus.RESOLVED:
-      return "تم التحقق";
+      return "تم حذف المحتوى";
     case ReportStatus.REJECTED:
-      return "مرفوضة";
+      return "تم الإبقاء على المحتوى";
     default:
       return "غير معروف";
   }
@@ -106,11 +106,11 @@ export const getReportStatusInArabic = (status: ReportStatus): string => {
 export const getReportColor = (status: ReportStatus): string => {
   switch (status) {
     case ReportStatus.PENDING:
-      return "bg-yellow-500";
+      return "bg-pending";
     case ReportStatus.RESOLVED:
-      return "bg-primary";
+      return "bg-approved";
     case ReportStatus.REJECTED:
-      return "bg-red-500";
+      return "bg-rejected";
     default:
       return "bg-gray-500"; // Default color for unknown status
   }

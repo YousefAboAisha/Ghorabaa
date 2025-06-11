@@ -12,7 +12,7 @@ const CommentPreviewCard = ({ data }: CommentPreviewCardProps) => {
   const { author_image, author_name, text, createdAt, author_role } = data;
 
   return (
-    <div className="relative flex flex-col gap-4 p-5 rounded-3xl rounded-br-none border bg-white shadow-sm w-full h-fit hover:shadow-md duration-200">
+    <div className="relative flex flex-col gap-4 p-5 rounded-3xl rounded-br-none border bg-background_light shadow-sm w-full h-fit hover:shadow-md duration-200">
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1 border rounded-full">
           <Image

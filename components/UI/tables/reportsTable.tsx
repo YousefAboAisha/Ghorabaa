@@ -1,16 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ReportWithUserDataInterface } from "@/app/interfaces";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
-import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
-import {
-  getReportColor,
-  getReportReasonLabel,
-  getReportStatusInArabic,
-} from "@/utils/text";
-import ReportPreview from "../modals/reportPreview";
+import { useRouter, useSearchParams } from "next/navigation";
+import Pagination from "./pagination";
+import Input from "../inputs/input";
+import { CiSearch } from "react-icons/ci";
+import ReportCard from "../cards/reportCard";
+import ReportCardSkeltonLoader from "../loaders/reportCardSkeletonLoader";
 
 const ReportsTable = () => {
   const [tableData, setTableData] = useState<ReportWithUserDataInterface[]>([]);
@@ -19,14 +18,23 @@ const ReportsTable = () => {
   const [error, setError] = useState<string | null>(null);
   const [isOpenReportPreview, setIsOpenReportPreview] =
     useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const [reportData, setReportData] = useState<ReportWithUserDataInterface>();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const [page, setPage] = useState<number>(
+    () => Number(searchParams.get("page")) || 1
+  );
+  const [totalPages, setTotalPages] = useState(1);
 
   const fetchTableData = async () => {
     setTableLoading(true);
     setError(null);
 
-    await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/reports/fetch`)
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/reports/fetch?page=${page}&limit=9`
+    )
       .then((res) => {
         if (!res.ok) {
           throw new Error("حدث خطأ أثناء جلب البيانات");
@@ -34,9 +42,17 @@ const ReportsTable = () => {
 
         return res.json();
       })
-      .then(({data}) => {
-        if (data && Array.isArray(data)) setTableData(data);
-        else setTableData([]);
+      .then(({ data, pagination }) => {
+        if (data && Array.isArray(data)) {
+          console.log("pagination data", pagination);
+
+          setTableData(data);
+          console.log("table's data", data);
+
+          setTotalPages(pagination.totalPages);
+          console.log("table's pagination", pagination);
+        } else setTableData([]);
+        // You can also use pagination.totalPages if you want to render pages dynamically
       })
       .catch((error) => {
         setError(error.message);
@@ -47,100 +63,84 @@ const ReportsTable = () => {
   };
 
   useEffect(() => {
-    fetchTableData();
+    router.push(`/admin/dashboard/reports?page=${page}`);
   }, []);
+
+  useEffect(() => {
+    fetchTableData();
+  }, [page]);
+
+  const filteredData = useMemo(() => {
+    return tableData.filter((report) =>
+      report.reporter_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, tableData]);
 
   const renderTableContent = () => {
     if (tableLoading) {
-      return <DashboardTableSkeletonLoader />;
+      return (
+        <ReportCardSkeltonLoader length={6} className="!mt-8 cards-grid-3" />
+      );
     }
 
     if (error) {
       return <ErrorMessage error={error as string} />;
     }
 
-    if (tableData.length <= 0) {
+    if (filteredData.length <= 0) {
       return <NoDataMessage />;
     }
 
-    if (tableData && tableData.length > 0) {
+    if (filteredData && filteredData.length > 0) {
       return (
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
-                بواسطة
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
-                سبب الإبلاغ
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
-                تاريخ الإبلاغ
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
-                الحالة
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[13px] font-medium">
-                العمليات
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {tableData?.map((report) => (
-              <tr key={report._id as string} className="hover:bg-gray-50">
-                <td className="py-3 px-4 border-b text-[13px] text-right">
-                  {report.reporter_name || "مستخدم غير معروف"}
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-[13px]">
-                  {getReportReasonLabel(report.reason)}
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-[13px]">
-                  {new Date(report.createdAt).toLocaleDateString("ar-EG", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </td>
-
-                <td className={`py-3 px-4 border-b text-right text-[11px]`}>
-                  <p
-                    className={`w-fit p-1.5 px-2 rounded-sm text-white ${getReportColor(
-                      report.status
-                    )}`}
-                  >
-                    {getReportStatusInArabic(report.status)}
-                  </p>
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-[13px]">
-                  <p
-                    onClick={() => {
-                      setIsOpenReportPreview(true);
-                      setReportData(report);
-                    }}
-                    className="hover:underline cursor-pointer "
-                  >
-                    مراجعة الإبلاغ
-                  </p>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="cards-grid-3">
+          {filteredData.map((report) => (
+            <ReportCard
+              key={report._id as string}
+              setIsOpen={setIsOpenReportPreview}
+              data={report}
+              setLoading={setLoading}
+              loading={loading}
+              refetchData={fetchTableData}
+            />
+          ))}
+        </div>
       );
     }
   };
 
   return (
     <>
-      <div className="overflow-x-auto">{renderTableContent()}</div>
+      <div className="w-full md:w-6/12 lg:w-5/12">
+        <Input
+          placeholder="ابحث عن اسم الشخص الذي قدم البلاغ.."
+          className="bg-white border focus:border-secondary"
+          icon={<CiSearch size={17} className="text-secondary" />}
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            tableData.filter((report: ReportWithUserDataInterface) =>
+              report.reporter_name
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
+            );
+          }}
+        />
+      </div>
+
+      <div className="mt-8">{renderTableContent()}</div>
+
+      {/* Pagination is here */}
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={(newPage) => {
+          if (newPage !== page) {
+            setPage(newPage);
+            router.push(`/admin/dashboard/reports?page=${newPage}`);
+          }
+        }}
+      />
 
       {/* Preview Report Modal */}
       <Modal
@@ -148,15 +148,7 @@ const ReportsTable = () => {
         setIsOpen={setIsOpenReportPreview}
         containerClassName="lg:w-[35%]"
         loading={loading}
-      >
-        <ReportPreview
-          setIsOpen={setIsOpenReportPreview}
-          data={reportData!}
-          setLoading={setLoading}
-          loading={loading}
-          refetchData={fetchTableData}
-        />
-      </Modal>
+      ></Modal>
     </>
   );
 };

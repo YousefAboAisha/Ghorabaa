@@ -10,6 +10,8 @@ import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoade
 import { getRoleColor, getRoleInArabic } from "@/utils/text";
 import Input from "../inputs/input";
 import { CiSearch } from "react-icons/ci";
+import { useRouter, useSearchParams } from "next/navigation";
+import Pagination from "./pagination";
 
 const UsersTable = () => {
   const [tableData, setTableData] = useState<UserInterface[]>([]);
@@ -20,11 +22,21 @@ const UsersTable = () => {
   const [userData, setuserData] = useState<UserInterface>();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const [page, setPage] = useState<number>(
+    () => Number(searchParams.get("page")) || 1
+  );
+  const [totalPages, setTotalPages] = useState(1);
+
   const fetchTableData = async () => {
     setTableLoading(true);
     setError(null);
 
-    await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/users/fetch`)
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/users/fetch?page=${page}&limit=10`
+    )
       .then((res) => {
         if (!res.ok) {
           throw new Error("حدث خطأ أثناء جلب البيانات");
@@ -32,9 +44,15 @@ const UsersTable = () => {
 
         return res.json();
       })
-      .then(({ data }) => {
-        if (data && Array.isArray(data)) setTableData(data);
-        else setTableData([]);
+      .then(({ data, pagination }) => {
+        if (data && Array.isArray(data)) {
+          console.log("pagination data", pagination);
+
+          setTableData(data);
+          setTotalPages(pagination.totalPages);
+          console.log("table's pagination", pagination);
+        } else setTableData([]);
+        // You can also use pagination.totalPages if you want to render pages dynamically
       })
       .catch((error) => {
         setError(error.message);
@@ -45,8 +63,12 @@ const UsersTable = () => {
   };
 
   useEffect(() => {
-    fetchTableData();
+    router.push(`/admin/dashboard/users?page=${page}`);
   }, []);
+
+  useEffect(() => {
+    fetchTableData();
+  }, [page]);
 
   const filteredData = useMemo(() => {
     return tableData.filter((user) =>
@@ -103,7 +125,7 @@ const UsersTable = () => {
           </thead>
 
           <tbody>
-            {tableData?.map((user) => (
+            {filteredData?.map((user) => (
               <tr key={user._id as string} className="hover:bg-gray-50">
                 <td className="py-3 px-4 border-b text-right">
                   <Image
@@ -184,6 +206,18 @@ const UsersTable = () => {
       <div className="relative mt-8 overflow-x-auto">
         {renderTableContent()}
       </div>
+
+      {/* Pagination is here */}
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={(newPage) => {
+          if (newPage !== page) {
+            setPage(newPage);
+            router.push(`/admin/dashboard/users?page=${newPage}`);
+          }
+        }}
+      />
 
       {/* Edit user Modal */}
       <Modal

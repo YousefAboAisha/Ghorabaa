@@ -7,7 +7,6 @@ import React, { Dispatch, SetStateAction } from "react";
 import Button from "../inputs/button";
 import Link from "next/link";
 import { getReportReasonLabel } from "@/utils/text";
-import { BiInfoCircle } from "react-icons/bi";
 import { Role } from "@/app/enums";
 import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -68,14 +67,7 @@ const ReportPreview = ({
   };
 
   return (
-    <div className="relative p-8 flex flex-col gap-2">
-      <div className="flex items-center gap-2">
-        <BiInfoCircle size={25} />
-        <h2 className="text-lg font-semibold">التحقق من الإبلاغ</h2>
-      </div>
-
-      <hr className="mt-4 mb-4" />
-
+    <div className="relative p-8 flex flex-col gap-2 bg-white">
       <Link
         title="الذهاب إلى التعليق"
         href={`/stories/${data?.content?.story_id}#COMMENT`}
