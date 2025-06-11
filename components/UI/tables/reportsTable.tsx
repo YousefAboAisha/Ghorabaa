@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { ReportWithUserDataInterface } from "@/app/interfaces";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
-import Modal from "@/components/UI/modals/modal";
 import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "./pagination";
 import Input from "../inputs/input";
@@ -14,10 +13,7 @@ import ReportCardSkeltonLoader from "../loaders/reportCardSkeletonLoader";
 const ReportsTable = () => {
   const [tableData, setTableData] = useState<ReportWithUserDataInterface[]>([]);
   const [tableLoading, setTableLoading] = useState(true);
-  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [isOpenReportPreview, setIsOpenReportPreview] =
-    useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const searchParams = useSearchParams();
@@ -97,10 +93,7 @@ const ReportsTable = () => {
           {filteredData.map((report) => (
             <ReportCard
               key={report._id as string}
-              setIsOpen={setIsOpenReportPreview}
               data={report}
-              setLoading={setLoading}
-              loading={loading}
               refetchData={fetchTableData}
             />
           ))}
@@ -141,14 +134,6 @@ const ReportsTable = () => {
           }
         }}
       />
-
-      {/* Preview Report Modal */}
-      <Modal
-        isOpen={isOpenReportPreview}
-        setIsOpen={setIsOpenReportPreview}
-        containerClassName="lg:w-[35%]"
-        loading={loading}
-      ></Modal>
     </>
   );
 };
