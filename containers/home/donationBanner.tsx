@@ -55,7 +55,7 @@ const AddStoryBanner = () => {
         src={"/donation.png"}
         width={500}
         height={500}
-        alt="صورة شهيد اليوم"
+        alt="صورة حملة التبرع"
         className="shadow-xl rounded-xl self-center w-full"
       />
     </div>

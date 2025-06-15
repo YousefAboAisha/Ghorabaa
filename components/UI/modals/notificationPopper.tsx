@@ -69,6 +69,7 @@ function NotificationPopper({ session }: NotificationPopperProps) {
                   createdAt={notification.createdAt}
                   is_read={notification.is_read}
                   message={notification.message}
+                  isPopperNotification={true}
                 />
               </MenuItem>
             ))

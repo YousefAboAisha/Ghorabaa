@@ -8,8 +8,9 @@ import {
   StoryStatus,
 } from "@/app/enums";
 import { ReportReasonsData } from "@/data/reportReasonsData";
-import { BiBell, BiCheckCircle, BiComment, BiTrash } from "react-icons/bi";
+import { BiBell, BiCheckCircle, BiComment } from "react-icons/bi";
 import { BsSend } from "react-icons/bs";
+import { GiTrashCan } from "react-icons/gi";
 import { MdOutlineClose } from "react-icons/md";
 import { RxUpdate } from "react-icons/rx";
 
@@ -187,36 +188,43 @@ export const getNotificationIcon = (type: NotificationTypes) => {
       return {
         Icon: BsSend,
         className: "text-[orange]",
+        size: "22",
       }; // request
     case NotificationTypes.ACCEPT:
       return {
         Icon: BiCheckCircle,
         className: "text-[green]",
+        size: "27",
       }; // Accept
     case NotificationTypes.REJECT:
       return {
         Icon: MdOutlineClose,
         className: "text-[red] ",
+        size: "27",
       }; // Reject
     case NotificationTypes.DELETE:
       return {
-        Icon: BiTrash,
+        Icon: GiTrashCan,
         className: "text-[red]",
+        size: "25",
       }; // Delete
     case NotificationTypes.UPDATE:
       return {
         Icon: RxUpdate,
         className: "text-[orange]",
+        size: "27",
       }; // Update
     case NotificationTypes.COMMENT:
       return {
         Icon: BiComment,
         className: "text-blueColor",
+        size: "22",
       }; // Comment
     default:
       return {
         Icon: BiBell,
         className: "text-yellow-600",
+        size: "27",
       }; // Default
   }
 };

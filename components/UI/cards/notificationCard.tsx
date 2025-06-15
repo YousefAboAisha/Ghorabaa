@@ -6,6 +6,7 @@ type NotificationTypesProps = {
   message: string;
   type: NotificationTypes;
   is_read: boolean;
+  isPopperNotification?: boolean;
   createdAt: Date;
 };
 
@@ -13,12 +14,15 @@ const NotificationCard = ({
   message,
   type,
   is_read,
+  isPopperNotification = false,
   createdAt,
 }: NotificationTypesProps) => {
   const notificationColor = getNotificationColor(type);
   console.log("Notification Color", notificationColor);
 
-  const { Icon, className } = getNotificationIcon(type);
+  const { Icon, className, size } = getNotificationIcon(type);
+
+  const iconSize = isPopperNotification ? 27 : size;
 
   return (
     <div
@@ -26,7 +30,7 @@ const NotificationCard = ({
         is_read ? "bg-white" : "bg-[#e9e9e9]"
       }`}
     >
-      <Icon size={27} className={`${className}`} />
+      <Icon size={iconSize} className={`${className}`} />
 
       <div className="mt-3 font-normal text-[12px] mb-2 text-black">
         {message}

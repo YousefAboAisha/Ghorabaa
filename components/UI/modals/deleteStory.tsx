@@ -24,7 +24,7 @@ export const DeleteStory = ({
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/stories/delete/${story_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/delete/${story_id}`,
         {
           credentials: "include",
           method: "DELETE",
@@ -68,7 +68,7 @@ export const DeleteStory = ({
       <hr className="mt-4" />
 
       <p className="mt-6 text-[15px]">
-        هل أنت متأكد من رغبتك في حذف هذا التعليق؟
+        هل أنت متأكد من رغبتك في حذف هذا القصة؟
       </p>
 
       <div className="flex items-center gap-4 mt-8">

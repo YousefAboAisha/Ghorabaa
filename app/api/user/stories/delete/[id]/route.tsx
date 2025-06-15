@@ -49,7 +49,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
         user_id: existingStory.publisher_id,
         message: `تم حذف قصة الشهيد ${existingStory.name} بنجاح!`,
         href: `/stories/${existingStory._id}`,
-        notification_type: NotificationTypes.REQUEST,
+        notification_type: NotificationTypes.DELETE,
         createdAt: new Date(),
         is_read: false,
       };
@@ -85,6 +85,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
 
     // Instead of deleting, we nullify specific fields and reset profile status
     const updateFields = {
+      publisher_id: null,
       nickname: null,
       city: null,
       neighborhood: null,

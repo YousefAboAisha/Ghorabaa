@@ -200,7 +200,8 @@ const AllStoriesTable = () => {
             {filteredData?.map((story) => (
               <tr key={story._id as string} className="hover:bg-gray-50">
                 <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {story.status == StoryStatus.APPROVED ? (
+                  {story.status == StoryStatus.APPROVED ||
+                  StoryStatus.PENDING ? (
                     <Link
                       title="عرض القصة"
                       className="hover:underline"

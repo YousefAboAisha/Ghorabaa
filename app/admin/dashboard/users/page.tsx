@@ -1,16 +1,68 @@
+"use client";
+import ErrorMessage from "@/components/responseMessages/errorMessage";
+import UserGrowthLineChart from "@/components/UI/charts/UserGrowthLineChart";
 import UsersTable from "@/components/UI/tables/usersTable";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Users = () => {
+  const [loading, setloading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState([]);
+
+  const fetchStatistics = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/statistics/users/fetch`,
+        {
+          cache: "no-store",
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("حدث خطأ أثناء جلب الإحصائيات");
+      }
+      const { data } = await res.json();
+      console.log("📊 Users Statistics data:", data);
+      setData(data);
+      setloading(false);
+    } catch (error) {
+      setloading(false);
+      setError(error as string);
+      console.error("Error fetching statistics:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStatistics();
+  }, []);
+
+  const renderContent = () => {
+    if (loading) {
+      return <p className="text-[12px] abs-center">جارٍ جلب التحليلات</p>;
+    }
+
+    if (error) {
+      return <ErrorMessage error="حدث خطأ أثناء جلب الإحصائيات" />;
+    }
+
+    if (data && data.length > 0) {
+      return <UserGrowthLineChart data={data} />;
+    }
+  };
+
   return (
     <div className="relative">
-      <div className="relative bg-white border min-h-[40vh] mt-4">
-        <div className="abs-center text-center">
+      <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-[60vh]">
+        <div className="relative p-4 bg-white border rounded-lg">
           <p>Line chart OR Pie chart</p>
           <p>
             توضيح عدد المستخدمين للمنصة ومدى الإقبال عليها ونسبة الزيادة فيها من
             ناحية المستخدمين
           </p>
+        </div>
+
+        <div className="relative bg-white border rounded-lg p-3">
+          {renderContent()}
         </div>
       </div>
 

@@ -8,7 +8,7 @@ import StoryActions from "../stories/storyActions";
 import Link from "next/link";
 import { FaFacebook, FaInstagram, FaXTwitter } from "react-icons/fa6";
 import CommentsSection from "./commentsSection";
-import { StoryStatus } from "@/app/enums";
+import { Role, StoryStatus } from "@/app/enums";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { BiInfoCircle } from "react-icons/bi";
 
@@ -35,8 +35,10 @@ const StoryDetailsSection = async ({ id }: Props) => {
     await storyResponse.json();
 
   const isStoryOwner = data?.publisher_id === user_id;
+  const isAdmin = session?.user.role === Role.ADMIN;
 
-  if (!isStoryOwner && data.status !== StoryStatus.APPROVED) notFound(); // redirects to 404 page
+  if (!isStoryOwner || (!isAdmin && data.status !== StoryStatus.APPROVED))
+    notFound(); // redirects to 404 page
 
   console.log("Story Details Data", data);
 
