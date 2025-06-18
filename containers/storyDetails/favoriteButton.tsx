@@ -51,6 +51,7 @@ const FavoriteButton = ({ story_id, initialFavorite }: FavoriteButtonProps) => {
       }
     } catch (error) {
       console.error("Failed to toggle favorite:", error);
+      toast.error("حدث خطأ أثناء تحديث حالة القصة");
     } finally {
       setLoading(false);
     }

@@ -37,7 +37,10 @@ const StoryDetailsSection = async ({ id }: Props) => {
   const isStoryOwner = data?.publisher_id === user_id;
   const isAdmin = session?.user.role === Role.ADMIN;
 
-  if (!isStoryOwner || (!isAdmin && data.status !== StoryStatus.APPROVED))
+  if (
+    (!isStoryOwner && data.status !== StoryStatus.APPROVED) ||
+    (!isAdmin && data.status !== StoryStatus.APPROVED)
+  )
     notFound(); // redirects to 404 page
 
   console.log("Story Details Data", data);

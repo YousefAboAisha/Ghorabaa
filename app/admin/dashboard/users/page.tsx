@@ -42,7 +42,7 @@ const Users = () => {
     }
 
     if (error) {
-      return <ErrorMessage error="حدث خطأ أثناء جلب الإحصائيات" />;
+      return <ErrorMessage error="حدث خطأ أثناء جلب الإحصائيات" className="!min-h-full !border-none" />;
     }
 
     if (data && data.length > 0) {

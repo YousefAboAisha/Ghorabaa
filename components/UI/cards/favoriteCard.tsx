@@ -4,6 +4,7 @@ import { BsEye, BsTrash } from "react-icons/bs";
 import { StoryInterface } from "@/app/interfaces";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { toast } from "react-toastify";
 
 type FavoriteCardProps = {
   data?: StoryInterface;
@@ -17,17 +18,20 @@ const FavoriteCard = ({ data, refetchData }: FavoriteCardProps) => {
     try {
       setLoading(true);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/updateFavorite`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Required for NextAuth session cookies
-        body: JSON.stringify({
-          story_id: story_id,
-          isFavorite: false, // Toggle the current value
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/updateFavorite`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Required for NextAuth session cookies
+          body: JSON.stringify({
+            story_id,
+            isFavorite: false, // Toggle the current value
+          }),
+        }
+      );
 
       const data = await res.json();
 
@@ -39,6 +43,7 @@ const FavoriteCard = ({ data, refetchData }: FavoriteCardProps) => {
       if (refetchData) refetchData();
     } catch (error) {
       console.error("Failed to toggle favorite:", error);
+      toast.error("حدث خطأ أثناء إزالة القصة إلى المحفوظات");
     } finally {
       setLoading(false);
     }
