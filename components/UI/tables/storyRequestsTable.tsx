@@ -31,26 +31,38 @@ const StoryRequestsTable = () => {
     setTableLoading(true);
     setError(null);
 
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/pending/fetch`
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("حدث خطأ أثناء جلب البيانات");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/pending/fetch`
+      );
+
+      if (!res.ok) {
+        let errorMsg = "حدث خطأ أثناء جلب البيانات";
+        try {
+          const errorResponse = await res.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = res.statusText || errorMsg;
         }
 
-        return res.json();
-      })
-      .then(({ data }) => {
-        if (data && Array.isArray(data)) setTableData(data);
-        else setTableData([]);
-      })
-      .catch((error) => {
-        setError(error.message);
-      })
-      .finally(() => {
-        setTableLoading(false);
-      });
+        throw new Error(errorMsg);
+      }
+
+      const { data } = await res.json();
+
+      if (data && Array.isArray(data)) {
+        setTableData(data);
+      } else {
+        setTableData([]);
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+      setError(message);
+      console.error("Error fetching pending stories:", error);
+    } finally {
+      setTableLoading(false);
+    }
   };
 
   useEffect(() => {

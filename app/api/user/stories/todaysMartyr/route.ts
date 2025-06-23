@@ -36,6 +36,6 @@ export async function GET() {
     );
   } catch (error) {
     console.error("Error fetching random approved story:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

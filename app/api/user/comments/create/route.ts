@@ -84,6 +84,6 @@ export async function POST(originalReq: Request) {
     return NextResponse.json({ success: true, data: result }, { status: 201 });
   } catch (error) {
     console.error("Error adding comment:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

@@ -111,7 +111,7 @@ const CommentCard = ({
         containerClassName="lg:w-[440px]"
       >
         <DeleteComment
-          refetchData={refetchData!}
+          refetchData={refetchData}
           setIsOpen={setIsOpenDeleteComment}
           setLoading={setLoading}
           loading={loading}

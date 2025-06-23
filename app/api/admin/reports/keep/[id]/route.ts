@@ -45,6 +45,6 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     });
   } catch (error) {
     console.error("❌ Error accepting report:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

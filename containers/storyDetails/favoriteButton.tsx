@@ -33,25 +33,39 @@ const FavoriteButton = ({ story_id, initialFavorite }: FavoriteButtonProps) => {
         }
       );
 
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
+
+      if (!res.ok) {
+        const errorMsg =
+          data?.message || "حدث خطأ أثناء إضافة القصة إلى المحفوظات";
+        console.error("Server responded with an error:", errorMsg);
+        toast.error(errorMsg);
+        return;
+      }
+
       console.log("Favorite Response data", data);
       const isFavorited = data.favorited;
 
-      if (!res.ok) {
-        console.error("Server responded with an error:", data.message);
-        toast.error("حدث خطأ أثناء إضافة القصة إلى المحفوظات");
-        return; // Optional: show toast or error message to user
-      }
       setFavorited(isFavorited);
       fetchAndUpdateCount();
+
       if (isFavorited) {
         toast.success("تمت إضافة القصة إلى قائمة المحفوظات");
       } else {
         toast.warn("تمت إزالة القصة من قائمة المحفوظات");
       }
     } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "حدث خطأ أثناء تحديث حالة القصة";
       console.error("Failed to toggle favorite:", error);
-      toast.error("حدث خطأ أثناء تحديث حالة القصة");
+      toast.error(message);
     } finally {
       setLoading(false);
     }

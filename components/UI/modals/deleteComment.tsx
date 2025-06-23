@@ -23,8 +23,9 @@ export const DeleteComment = ({
 
   const deleteCommentHandler = async () => {
     setLoading(true);
+
     try {
-      const response = await fetch(
+      const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/comments/delete/${comment_id}`,
         {
           method: "DELETE",
@@ -32,22 +33,35 @@ export const DeleteComment = ({
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to update the story.");
+      if (!res.ok) {
+        let errorMsg = "حدث خطأ أثناء حذف التعليق";
+        try {
+          const errorResponse = await res.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = res.statusText || errorMsg;
+        }
+
+        toast.error(errorMsg);
+        throw new Error(errorMsg);
       }
 
-      const result = await response.json();
-      console.log("✅ Story updated:", result);
-      setIsOpen(false); // Close the preview modal
-      setLoading(false);
-      refetchData?.(); // Refetch the data after successful update
+      const result = await res.json();
+      console.log("✅ Comment deleted:", result);
+
+      setIsOpen(false); // Close the modal
+      refetchData?.(); // Refetch data
       toast.warn("تم حذف التعليق بنجاح!");
     } catch (error) {
-      console.error("❌ Error updating story:", error);
+      const message =
+        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+      console.error("❌ Error deleting comment:", error);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="flex flex-col bg-white p-8">
       <div className="flex items-center gap-2">

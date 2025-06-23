@@ -13,6 +13,7 @@ type NotificationState = {
   notifications: MixedNotification[];
   hasUnread: boolean;
   loading: boolean;
+  error: string | null;
   fetchNotifications: (userId: string) => Promise<void>;
   markAllAsRead: () => Promise<void>;
 };
@@ -21,6 +22,7 @@ export const useNotificationStore = create<NotificationState>((set) => ({
   notifications: [],
   hasUnread: false,
   loading: false,
+  error: null,
 
   fetchNotifications: async (userId: string) => {
     if (!userId) return;
@@ -32,10 +34,19 @@ export const useNotificationStore = create<NotificationState>((set) => ({
         { credentials: "include" }
       );
 
-      if (!res.ok) throw new Error("حدث خطأ أثناء جلب البيانات");
+      if (!res.ok) {
+        let errorMsg = "حدث خطأ أثناء جلب الإشعارات";
+        try {
+          const errorResponse = await res.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = res.statusText || errorMsg;
+        }
+        throw new Error(errorMsg);
+      }
 
       const { data, hasUnread } = await res.json();
-      console.log("[data, hasUnRead]", [data, hasUnread]);
+      console.log("[data, hasUnread]", [data, hasUnread]);
 
       set({
         notifications: [...data],
@@ -43,8 +54,10 @@ export const useNotificationStore = create<NotificationState>((set) => ({
         loading: false,
       });
     } catch (error) {
-      console.error("Notification fetch error:", error);
-      set({ loading: false });
+      const message =
+        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+      console.error("Notification fetch error:", message);
+      set({ error: message, loading: false });
     }
   },
 

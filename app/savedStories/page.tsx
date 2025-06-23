@@ -14,31 +14,37 @@ const Page = () => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchFavoriteStories = async () => {
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/favorites/fetch`,
-      {
-        credentials: "include", // needed for session auth
-      }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          setLoading(false);
-          throw new Error("حدث خطأ أثناء جلب البيانات");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/favorites/fetch`,
+        {
+          credentials: "include", // needed for session auth
+        }
+      );
+
+      if (!res.ok) {
+        setLoading(false);
+        let errorMsg = "حدث خطأ أثناء جلب البيانات";
+        try {
+          const errorResponse = await res.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = res.statusText || errorMsg;
         }
 
-        return res.json();
-      })
-      .then(({ data }) => {
-        setFavorites(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error.message as string);
-        setLoading(false);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        throw new Error(errorMsg);
+      }
+
+      const { data } = await res.json();
+      setFavorites(data);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+      setError(message);
+      console.error("Error fetching favorite stories:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderContent = () => {

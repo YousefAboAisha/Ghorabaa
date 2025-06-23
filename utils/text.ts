@@ -236,7 +236,7 @@ export const getResponseMessage = (status: number) => {
     case 404:
       return "لم يتم العثور على أية بيانات";
     case 500:
-      return "خطأ في السيرفر";
+      return "تعذر الوصول إلى السيرفر";
     default:
       return "حدث خطأ أثناء جلب البيانات!";
   }

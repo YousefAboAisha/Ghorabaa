@@ -121,7 +121,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
           label="العُمر الابتدائي"
           placeholder="مثال: 14"
           type="number"
-          className="focus:border-secondary"
+          className="focus:border-secondary w-full"
           required={false}
           value={age.from || ""}
           onChange={(e) =>
@@ -133,7 +133,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
           label="العُمر النهائي"
           placeholder="مثال: 28"
           type="number"
-          className="focus:border-secondary"
+          className="focus:border-secondary w-full"
           required={false}
           value={age.to || ""}
           onChange={(e) =>

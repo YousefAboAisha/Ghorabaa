@@ -1,4 +1,5 @@
 import { UserInterface } from "@/app/interfaces";
+import ErrorMessage from "@/components/responseMessages/errorMessage";
 import EditProfileForm from "@/components/UI/Forms/editProfileForm";
 import { dateConversion } from "@/utils/format";
 import { getRoleColor, getRoleInArabic } from "@/utils/text";
@@ -20,98 +21,106 @@ const ProfileDetails = async () => {
     );
 
     if (!res.ok) {
-      console.log("Failed to fetch data");
+      const { error } = await res.json();
+      throw new Error(error as string);
     }
-
     return res.json();
   };
 
   const response = await userDetails();
   const data: UserInterface = response.data;
+  const error = response.error;
 
-  return (
-    <div className="flex-col md:flex md:flex-row gap-4 md:gap-4">
-      {/* Profile Card Details */}
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
 
-      <EditProfileForm
-        data={
-          response && {
-            name: data?.name,
-            id_number: data?.id_number,
-            phone_number: data?.phone_number,
+  if (data) {
+    return (
+      <div className="flex-col md:flex md:flex-row gap-4 md:gap-4">
+        {/* Profile Card Details */}
+
+        <EditProfileForm
+          data={
+            response && {
+              name: data?.name,
+              id_number: data?.id_number,
+              phone_number: data?.phone_number,
+            }
           }
-        }
-      />
+        />
 
-      <table className="h-full w-full md:min-w-fit md:w-fit md:mt-0 mt-8 rounded-t-lg">
-        <tbody className="bg-white h-full">
-          <tr className="rounded-t-md">
-            <td colSpan={2}>
-              <div className="relative flex items-center justify-center bg-secondary p-6 rounded-t-md ">
-                <div className="flex items-center justify-center w-[100px] h-[100px] rounded-full border-2 p-[2px]">
-                  <Image
-                    src={data?.image || "/notFound.png"}
-                    width={100}
-                    height={100}
-                    alt="صورة الملف الشخصي"
-                    className="rounded-full"
-                  />
+        <table className="h-full w-full md:min-w-fit md:w-fit md:mt-0 mt-8 rounded-t-lg">
+          <tbody className="bg-white h-full">
+            <tr className="rounded-t-md">
+              <td colSpan={2}>
+                <div className="relative flex items-center justify-center bg-secondary p-6 rounded-t-md ">
+                  <div className="flex items-center justify-center w-[100px] h-[100px] rounded-full border-2 p-[2px]">
+                    <Image
+                      src={data?.image || "/notFound.png"}
+                      width={100}
+                      height={100}
+                      alt="صورة الملف الشخصي"
+                      className="rounded-full"
+                    />
+                  </div>
                 </div>
-              </div>
-            </td>
-          </tr>
+              </td>
+            </tr>
 
-          <tr className="border">
-            <td className="py-3 px-4 border-b text-right text-sm border-l">
-              الاسم
-            </td>
+            <tr className="border">
+              <td className="py-3 px-4 border-b text-right text-sm border-l">
+                الاسم
+              </td>
 
-            <td className="py-3 px-4 border-b text-right text-sm ">
-              {data?.name || "الاسم غير معرّف"}
-            </td>
-          </tr>
+              <td className="py-3 px-4 border-b text-right text-sm ">
+                {data?.name || "الاسم غير معرّف"}
+              </td>
+            </tr>
 
-          <tr className="border">
-            <td className="py-3 px-4 border-b text-right text-sm border-l">
-              البريد الالكتروني
-            </td>
+            <tr className="border">
+              <td className="py-3 px-4 border-b text-right text-sm border-l">
+                البريد الالكتروني
+              </td>
 
-            <td className="py-3 px-4 border-b text-right text-sm ">
-              {data?.email || "البريد الالكتروني غير معرّف"}
-            </td>
-          </tr>
+              <td className="py-3 px-4 border-b text-right text-sm ">
+                {data?.email || "البريد الالكتروني غير معرّف"}
+              </td>
+            </tr>
 
-          <tr className="border">
-            <td className="py-3 px-4 border-b text-right text-sm border-l">
-              صلاحية الحساب
-            </td>
+            <tr className="border">
+              <td className="py-3 px-4 border-b text-right text-sm border-l">
+                صلاحية الحساب
+              </td>
 
-            <td className="py-3 px-4 border-b text-right">
-              <p
-                style={{
-                  backgroundColor: getRoleColor(data?.role),
-                }}
-                className={`w-fit p-1.5 px-2.5 rounded-sm text-white text-[13px]`}
-              >
-                {getRoleInArabic(data?.role)}
-              </p>
-            </td>
-          </tr>
+              <td className="py-3 px-4 border-b text-right">
+                <p
+                  style={{
+                    backgroundColor: getRoleColor(data?.role),
+                  }}
+                  className={`w-fit p-1.5 px-2.5 rounded-sm text-white text-[13px]`}
+                >
+                  {getRoleInArabic(data?.role)}
+                </p>
+              </td>
+            </tr>
 
-          <tr className="border">
-            <td className="py-3 px-4 text-right text-sm border-l">
-              تاريخ الإنشاء
-            </td>
+            <tr className="border">
+              <td className="py-3 px-4 text-right text-sm border-l">
+                تاريخ الإنشاء
+              </td>
 
-            <td className="py-3 px-4 text-right text-sm">
-              {(data?.createdAt && dateConversion(new Date(data.createdAt))) ||
-                "تاريخ الإنشاء غير معرّف"}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
+              <td className="py-3 px-4 text-right text-sm">
+                {(data?.createdAt &&
+                  dateConversion(new Date(data.createdAt))) ||
+                  "تاريخ الإنشاء غير معرّف"}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 };
 
 export default ProfileDetails;

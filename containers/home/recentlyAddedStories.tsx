@@ -23,10 +23,6 @@ const RecentlyAddedStories = async ({ session }: RecentlyAddedStories) => {
       }
     );
 
-    if (!res.ok) {
-      console.log("Failed to fetch data");
-    }
-
     return res.json();
   };
 

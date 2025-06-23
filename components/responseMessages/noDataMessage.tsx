@@ -12,9 +12,9 @@ const NoDataMessage: React.FC<NoDataMessageProps> = ({
 }) => {
   return (
     <div
-      className={`relative flex flex-col justify-center items-center gap-3 min-h-[50vh] bg-white rounded-md border text-sm ${className}`}
+      className={`relative flex flex-col justify-center items-center gap-2 min-h-[50vh] bg-white rounded-md border text-sm ${className}`}
     >
-      <BiErrorCircle size={30} className="text-[red] font-bold" />
+      <BiErrorCircle size={25} className=" font-bold" />
       <p>{message}</p>
     </div>
   );

@@ -105,6 +105,6 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
     );
   } catch (error) {
     console.error("❌ Error updating user:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

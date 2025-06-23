@@ -1,5 +1,6 @@
 import { getSessionAction } from "@/app/actions/registerActions";
 import { CommentInterface } from "@/app/interfaces";
+import ErrorMessage from "@/components/responseMessages/errorMessage";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import CommentCard from "@/components/UI/cards/commentCard";
 import Heading from "@/components/UI/typography/heading";
@@ -23,20 +24,27 @@ const RecentComments = async () => {
     );
 
     if (!res.ok) {
-      console.log("Failed to fetch data");
+      const { error } = await res.json();
+      throw new Error(error as string);
     }
 
     return res.json();
   };
-  const { data } = await userFetchedComments();
+  const { data, error } = await userFetchedComments();
 
   const commentsData: CommentInterface[] = data;
 
-  console.log("User comments data", data);
-  return (
-    <div className="section">
-      <Heading title="" highLightText="التعليقات الأخيرة" className="" />
-      {commentsData?.length > 0 ? (
+  const renderContent = () => {
+    if (error) {
+      return <ErrorMessage error={error} />;
+    }
+
+    if (data.length == 0) {
+      return <NoDataMessage className="mt-8" />;
+    }
+
+    if (data.length > 0) {
+      return (
         <div className="cards-grid-3 mt-8">
           {commentsData?.map((comment: CommentInterface) => {
             return (
@@ -49,9 +57,16 @@ const RecentComments = async () => {
             );
           })}
         </div>
-      ) : (
-        <NoDataMessage className="mt-8" />
-      )}
+      );
+    }
+  };
+
+  console.log("User comments data", data);
+  return (
+    <div className="section">
+      <Heading title="" highLightText="التعليقات الأخيرة" className="" />
+
+      {renderContent()}
     </div>
   );
 };

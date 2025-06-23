@@ -23,14 +23,23 @@ type AddStoryPrpos = {
   setLoading: Dispatch<SetStateAction<boolean>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   id_number: string;
+  data: StoryInterface | null;
 };
 
-const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
+const AddStoryForm = ({
+  setLoading,
+  setIsOpen,
+  id_number,
+  data,
+}: AddStoryPrpos) => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1; // Allow only one image
   const router = useRouter();
+
+  console.log("Search data", data);
+  console.log("id_number", id_number);
 
   // Updated initialValues to include image
   const initialValues: Partial<StoryInterface> = {
@@ -46,6 +55,9 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
     image: "",
   };
 
+  const birth_date = data?.birth_date;
+  const death_date = data?.death_date;
+
   const handleSubmit = async (
     values: typeof initialValues,
     {
@@ -55,73 +67,89 @@ const AddStoryForm = ({ setLoading, setIsOpen, id_number }: AddStoryPrpos) => {
     }
   ) => {
     setLoading(true);
-    console.log("Submit handler started!");
     setFormErrors("");
+    setSubmitting(true);
+    console.log("Submit handler started!");
     console.log("Values", values);
 
     try {
-      // 1. Upload image to Cloudinary first
+      // 1. Upload image to Cloudinary
       const imageUploadRes = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
         {
           credentials: "include",
           method: "POST",
-          body: JSON.stringify({ image: values.image }), // base64 image
           headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: values.image }),
         }
       );
-      setLoading(false);
 
-      const { url } = await imageUploadRes.json();
-      console.log("Image URL:", url);
-      if (!imageUploadRes.ok) {
-        setFormErrors("Error uploading image");
-        console.log("Image Upload Error:", url);
-        setLoading(false);
-        return;
+      let imageUploadData;
+      try {
+        imageUploadData = await imageUploadRes.json();
+      } catch {
+        imageUploadData = {};
       }
 
+      if (!imageUploadRes.ok) {
+        const errorMsg = imageUploadData?.error || "حدث خطأ أثناء رفع الصورة";
+        throw new Error(errorMsg);
+      }
+
+      const imageUrl = imageUploadData.url;
+      console.log("Image URL:", imageUrl);
+
+      const age =
+        new Date(death_date as string).getFullYear() -
+        new Date(birth_date as string).getFullYear();
+
+      // 2. Create story
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/storyDetails/create`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // 👈 THIS IS CRITICAL
-          body: JSON.stringify({ ...values, image: url, id_number }),
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            ...values,
+            age,
+            image: imageUrl,
+            id_number,
+          }),
         }
       );
 
-      const data = await response.json();
-      console.log("Data Object is:", data);
-      setLoading(false);
-
-      if (!response.ok) {
-        setFormErrors(data.error);
-        console.log("Add Martyr Error:", data.error);
-        setLoading(false);
-        return;
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        data = {};
       }
 
-      setSubmitting(false);
-      setLoading(false);
-      setIsOpen(false);
+      if (!response.ok) {
+        const errorMsg = data?.error || "حدث خطأ أثناء إرسال بيانات القصة";
+        throw new Error(errorMsg);
+      }
+
+      console.log("Martyr has been added successfully!", data);
 
       toast.success(
         "تم إرسال طلب نشر القصة بنجاح، وستتم مراجعته في أقرب وقت !"
       );
 
+      setIsOpen(false);
+
       setTimeout(() => {
         router.push(`/stories/${data?.data?._id}`);
       }, 500);
-
-      console.log("Martyr has been added successfully!", data);
     } catch (error) {
-      setSubmitting(false);
+      const message =
+        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+      console.error("Error adding martyr:", message);
+      setFormErrors(message);
+    } finally {
       setLoading(false);
-      setFormErrors((error as Error).message);
-      console.error("Error adding martyr", error);
+      setSubmitting(false);
     }
   };
 

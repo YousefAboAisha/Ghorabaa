@@ -131,25 +131,34 @@ const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
                     "Content-Type": "application/json",
                     credential: "include",
                   },
-                  body: JSON.stringify({
-                    ...values,
-                  }),
+                  body: JSON.stringify({ ...values }),
                 }
               );
 
               if (!res.ok) {
-                throw new Error("Failed to update the story.");
+                let errorMsg = "حدث خطأ أثناء نشر القصة";
+                try {
+                  const errorResponse = await res.json();
+                  errorMsg = errorResponse?.error || errorMsg;
+                } catch {
+                  errorMsg = res.statusText || errorMsg;
+                }
+
+                throw new Error(errorMsg);
               }
 
               const result = await res.json();
-              console.log("✅ Story updated:", result);
-              setIsOpen(false); // Close the preview modal
-              refetchData?.(); // Refetch the data after successful update
-              fetchStatistics();
+              console.log("✅ Story approved:", result);
+
+              setIsOpen(false); // Close modal
+              refetchData?.(); // Refresh list
+              fetchStatistics(); // Update stats
               toast.success("تم تحديث ونشر القصة بنجاح!");
-              // Optionally show a toast or redirect
             } catch (error) {
-              console.error("❌ Error updating story:", error);
+              const message =
+                error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+              console.error("❌ Error approving story:", error);
+              toast.error(message);
             } finally {
               setSubmitting(false);
             }

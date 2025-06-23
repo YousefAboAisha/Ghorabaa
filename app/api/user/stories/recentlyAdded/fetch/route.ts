@@ -16,8 +16,6 @@ export async function GET(req: NextRequest) {
     // ✅ Get session token
     const token = await getToken({ req, secret });
 
-    console.log("Recenlty added [token]", token);
-
     let favoritesArray: string[] = [];
 
     if (token?.email) {
@@ -37,12 +35,6 @@ export async function GET(req: NextRequest) {
     // ✅ Add "favorite" boolean
     const serializedStories = stories.map((s) => {
       const isFavorite = favoritesArray.includes(s._id.toString());
-      // Debug log: compare story id and favoritesArray
-      console.log(
-        `Story ID: ${s._id.toString()}, Is Favorite: ${isFavorite}, Favorites: ${JSON.stringify(
-          favoritesArray
-        )}`
-      );
       return {
         ...s,
         _id: s._id.toString(),
@@ -59,6 +51,6 @@ export async function GET(req: NextRequest) {
     );
   } catch (error) {
     console.error("Error fetching stories:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

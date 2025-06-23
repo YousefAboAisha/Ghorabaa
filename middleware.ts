@@ -20,11 +20,16 @@ export async function middleware(request: NextRequest) {
     pathname === "/signin" ||
     pathname === "/signup";
 
-  const isAdminRoute = pathname.startsWith(ADMIN_PATH);
+  const isUserPage =
+    pathname.startsWith("/profile") ||
+    pathname === "/savedStories" ||
+    pathname === "/addStory";
+
+  const isAdminPage = pathname.startsWith(ADMIN_PATH);
 
   // User not authenticated
   if (!token) {
-    if (!isAuthPage) {
+    if (isUserPage || isAdminPage) {
       return NextResponse.redirect(new URL("/signin", request.url));
     }
     return NextResponse.next();
@@ -51,7 +56,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Authenticated but not admin trying to access admin route
-  if (isAdminRoute && token.role !== Role.ADMIN) {
+  if (isAdminPage && token.role !== Role.ADMIN) {
     return NextResponse.redirect(new URL("/unauthorized", request.url));
   }
 

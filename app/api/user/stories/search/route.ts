@@ -2,6 +2,7 @@ import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
+import { StoryStatus } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -45,6 +46,9 @@ export async function GET(req: NextRequest) {
             },
           },
         },
+        {
+          $match: { status: StoryStatus.APPROVED }, // ✅ Only pending stories
+        },
         { $limit: 20 },
         {
           $project: {
@@ -69,6 +73,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ data: serialized }, { status: 200 });
   } catch (error) {
     console.error("Search error:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

@@ -22,24 +22,31 @@ export const useStatisticsStore = create<StatisticsState>((set) => ({
 
   fetchStatistics: async () => {
     set({ loading: true, error: null });
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/statistics/allStories/fetch`,
-        {
-          cache: "no-store",
-        }
+        { cache: "no-store" }
       );
 
       if (!res.ok) {
-        throw new Error("حدث خطأ أثناء جلب الإحصائيات");
+        let errorMsg = "حدث خطأ أثناء جلب الإحصائيات";
+        try {
+          const errorResponse = await res.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = res.statusText || errorMsg;
+        }
+        throw new Error(errorMsg);
       }
 
       const data = await res.json();
       console.log("📊 Statistics data from store:", data);
       set({ data, error: null, loading: false });
-    } catch (error: any) {
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "خطأ غير معروف";
       console.error("Error fetching statistics:", error);
-      set({ error: error.message || "خطأ غير معروف", loading: false });
+      set({ error: message, loading: false });
     }
   },
 }));

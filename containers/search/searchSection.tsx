@@ -25,37 +25,45 @@ const SearchSection = ({ session }: SearchSectionProps) => {
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (searchQuery.length > 0) {
-        setLoading(true);
-        setError(null);
+        const fetchStoriesByQuery = async () => {
+          setLoading(true);
+          setError(null);
 
-        // hasCompleteProfile=true query is to return the stories with complete profiles only!
-        fetch(
-          `${
-            process.env.NEXT_PUBLIC_API_BASE_URL
-          }/user/stories/search?query=${encodeURIComponent(searchQuery)}`,
-          {
-            credentials: "include",
-          }
-        )
-          .then((res) => {
-            console.log("respones object: ", res);
+          try {
+            const res = await fetch(
+              `${
+                process.env.NEXT_PUBLIC_API_BASE_URL
+              }/user/stories/search?query=${encodeURIComponent(searchQuery)}`,
+              {
+                credentials: "include",
+              }
+            );
+
             if (!res.ok) {
-              throw new Error("حدث خطأ أثناء جلب البيانات");
+              let errorMsg = "حدث خطأ أثناء جلب البيانات";
+              try {
+                const errorResponse = await res.json();
+                errorMsg = errorResponse?.error || errorMsg;
+              } catch {
+                errorMsg = res.statusText || errorMsg;
+              }
+              throw new Error(errorMsg);
             }
-            console.log("Response is ok, parsing JSON", res);
 
-            return res.json();
-          })
-          .then(({ data }) => {
-            console.log("data object: ", data);
+            const { data } = await res.json();
             setStories(data);
             console.log("Data inside the useEffect", data);
-          })
-          .catch((error) => {
-            console.error("This is error: ", error);
-            setError(error.message);
-          })
-          .finally(() => setLoading(false));
+          } catch (error) {
+            const message =
+              error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+            console.error("This is error: ", message);
+            setError(message);
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        fetchStoriesByQuery();
       } else {
         setStories([]);
       }

@@ -15,24 +15,31 @@ export const useReportsTableData = create<reportsTableSatate>((set) => ({
 
   fetchData: async () => {
     set({ loading: true, error: null });
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/reports/fetch`,
-        {
-          cache: "no-store",
-        }
+        { cache: "no-store" }
       );
 
       if (!res.ok) {
-        throw new Error("حدث خطأ أثناء جلب البيانات");
+        let errorMsg = "حدث خطأ أثناء جلب البيانات";
+        try {
+          const errorResponse = await res.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = res.statusText || errorMsg;
+        }
+        throw new Error(errorMsg);
       }
 
       const data = await res.json();
       console.log("Users table data are fetched: ", data);
       set({ data, error: null, loading: false });
-    } catch (error: any) {
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "خطأ غير معروف";
       console.error("حدث خطأ أثناء جلب بيانات المستخدمين:", error);
-      set({ error: error.message || "خطأ غير معروف", loading: false });
+      set({ error: message, loading: false });
     }
   },
 }));

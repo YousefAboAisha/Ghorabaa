@@ -54,7 +54,8 @@ const EditUser = ({
           validationSchema={EditUserValidationSchema}
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              setLoading?.(true); // Set loading state to true before starting the request
+              setLoading?.(true);
+
               const res = await fetch(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/users/update/${user_id}`,
                 {
@@ -63,33 +64,40 @@ const EditUser = ({
                     "Content-Type": "application/json",
                     credential: "include",
                   },
-                  body: JSON.stringify({
-                    ...values,
-                  }),
+                  body: JSON.stringify({ ...values }),
                 }
               );
 
               if (!res.ok) {
-                throw new Error("Failed to update the story.");
+                let errorMsg = "حدث خطأ أثناء تحديث بيانات المستخدم";
+                try {
+                  const errorResponse = await res.json();
+                  errorMsg = errorResponse?.error || errorMsg;
+                } catch {
+                  errorMsg = res.statusText || errorMsg;
+                }
+
+                throw new Error(errorMsg);
               }
 
               const result = await res.json();
-              console.log("✅ Story updated:", result);
-              setLoading?.(false); // Set loading state to false
-              setIsOpen(false); // Close the preview modal
+              console.log("✅ User updated:", result);
+
               toast.success("تم تحديث بيانات المستخدم بنجاح!");
+              setIsOpen(false);
 
               setTimeout(() => {
-                refetchData?.(); // Refetch data after successful update
-              }, 500); // Delay to allow the modal to close before refetching
-
-              // Optionally show a toast or redirect
+                refetchData?.();
+              }, 500);
             } catch (error) {
-              console.error("❌ Error updating story:", error);
+              const message =
+                error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+              console.error("❌ Error updating user:", error);
+              toast.error(message);
             } finally {
               setSubmitting(false);
-              setLoading?.(false); // Ensure loading state is false even on error
-              setIsOpen(false); // Close the preview modal
+              setLoading?.(false);
+              setIsOpen(false);
             }
           }}
         >

@@ -57,6 +57,6 @@ export async function POST(
     });
   } catch (error) {
     console.error("Favorite toggle error:", error);
-    return NextResponse.json({ message: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ message: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

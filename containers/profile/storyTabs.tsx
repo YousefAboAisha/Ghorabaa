@@ -43,6 +43,7 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
 
   const fetchStories = async (status: StoryStatus) => {
     setLoading(true);
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/userStories/fetch/${user_id}?status=${status}`,
@@ -51,7 +52,16 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
         }
       );
 
-      if (!res.ok) throw new Error("Failed to fetch stories");
+      if (!res.ok) {
+        let errorMsg = "حدث خطأ أثناء جلب القصص";
+        try {
+          const errorResponse = await res.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = res.statusText || errorMsg;
+        }
+        throw new Error(errorMsg);
+      }
 
       const data = await res.json();
       const fetchedStories = data.data || [];
@@ -59,7 +69,9 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
       setStories(fetchedStories);
       setStoryCounts((prev) => ({ ...prev, [status]: fetchedStories.length }));
     } catch (error) {
-      console.error("Error:", error);
+      const message =
+        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+      console.error("Error fetching stories:", message);
       setStories([]);
       setStoryCounts((prev) => ({ ...prev, [status]: 0 }));
     } finally {

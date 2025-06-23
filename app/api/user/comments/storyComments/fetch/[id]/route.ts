@@ -9,7 +9,10 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     const { id } = await params;
 
     if (!id) {
-      return NextResponse.json({ error: "معرف القصة غير موجود!" }, { status: 400 });
+      return NextResponse.json(
+        { error: "معرف القصة غير موجود!" },
+        { status: 400 }
+      );
     }
 
     const client = await clientPromise;
@@ -51,6 +54,9 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     return NextResponse.json({ data: commentsWithAuthor }, { status: 200 });
   } catch (error) {
     console.error("Error fetching comments:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

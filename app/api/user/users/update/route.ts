@@ -42,6 +42,6 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("Error updating profile:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

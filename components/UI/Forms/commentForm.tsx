@@ -12,10 +12,10 @@ import { Session } from "next-auth";
 type CommentFormProps = {
   session: Session | null;
   id: string;
-  updateComments?: () => void;
+  refetchData?: () => void;
 };
 
-const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
+const CommentForm = ({ session, id, refetchData }: CommentFormProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentUrl =
@@ -60,7 +60,7 @@ const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
               if (response.ok) {
                 console.log("Comment added:", data);
                 resetForm(); // ✅ This clears the form
-                if (updateComments) updateComments();
+                if (refetchData) refetchData();
               } else {
                 console.error("Failed to add comment:", data.error);
               }
@@ -73,14 +73,27 @@ const CommentForm = ({ session, id, updateComments }: CommentFormProps) => {
         >
           {({ isSubmitting, values, errors }) => (
             <Form className="relative mt-4">
-              {/* Notes Field */}
-              <Field
-                name="text"
-                as={TextArea}
-                placeholder="أضف تعليقاً أو ذكرى.."
-                className={`w-full focus:border-secondary bg-white text-md`}
-                aria-invalid={!!errors.text}
-              />
+              <div
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault(); // Prevent newline
+                    const form = e.currentTarget.closest("form");
+                    if (form)
+                      form.dispatchEvent(
+                        new Event("submit", { cancelable: true, bubbles: true })
+                      );
+                  }
+                }}
+              >
+                <Field
+                  name="text"
+                  as={TextArea}
+                  placeholder="أضف تعليقاً أو ذكرى.."
+                  className={`w-full focus:border-secondary bg-white text-md`}
+                  aria-invalid={!!errors.text}
+                  disabled={isSubmitting}
+                />
+              </div>
 
               <Button
                 title={"إضافة"}

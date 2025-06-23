@@ -114,6 +114,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     );
   } catch (error) {
     console.error("❌ Error deleting story:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

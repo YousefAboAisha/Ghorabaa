@@ -14,9 +14,6 @@ const TodaysMartyr = async () => {
       }
     );
 
-    if (!res.ok) {
-      console.log("Failed to fetch data");
-    }
     return res.json();
   };
 

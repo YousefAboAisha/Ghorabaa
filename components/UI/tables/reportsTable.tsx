@@ -28,34 +28,41 @@ const ReportsTable = () => {
     setTableLoading(true);
     setError(null);
 
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/reports/fetch?page=${page}&limit=9`
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("حدث خطأ أثناء جلب البيانات");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/reports/fetch?page=${page}&limit=9`
+      );
+
+      if (!res.ok) {
+        let errorMsg = "حدث خطأ أثناء جلب البيانات";
+        try {
+          const errorResponse = await res.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = res.statusText || errorMsg;
         }
 
-        return res.json();
-      })
-      .then(({ data, pagination }) => {
-        if (data && Array.isArray(data)) {
-          console.log("pagination data", pagination);
+        throw new Error(errorMsg);
+      }
 
-          setTableData(data);
-          console.log("table's data", data);
+      const { data, pagination } = await res.json();
 
-          setTotalPages(pagination.totalPages);
-          console.log("table's pagination", pagination);
-        } else setTableData([]);
-        // You can also use pagination.totalPages if you want to render pages dynamically
-      })
-      .catch((error) => {
-        setError(error.message);
-      })
-      .finally(() => {
-        setTableLoading(false);
-      });
+      if (data && Array.isArray(data)) {
+        console.log("pagination data", pagination);
+        console.log("table's data", data);
+        setTableData(data);
+        setTotalPages(pagination.totalPages);
+      } else {
+        setTableData([]);
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+      setError(message);
+      console.error("Error fetching reports table data:", error);
+    } finally {
+      setTableLoading(false);
+    }
   };
 
   useEffect(() => {

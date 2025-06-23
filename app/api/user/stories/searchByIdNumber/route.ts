@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
 
     if (!storyData) {
       return NextResponse.json(
-        { error: "لم يتم العثور على القصة" },
+        { error: "لم يتم العثور على الشهيد" },
         { status: 404 }
       );
     }
@@ -53,6 +53,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ data: storyData }, { status: 200 });
   } catch (error) {
     console.error("Error in fetching story:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

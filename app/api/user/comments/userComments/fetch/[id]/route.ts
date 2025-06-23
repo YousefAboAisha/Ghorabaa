@@ -56,6 +56,6 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     return NextResponse.json({ data: commentsWithAuthor }, { status: 200 });
   } catch (error) {
     console.error("Error fetching comments:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

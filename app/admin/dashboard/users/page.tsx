@@ -19,16 +19,27 @@ const Users = () => {
       );
 
       if (!res.ok) {
-        throw new Error("حدث خطأ أثناء جلب الإحصائيات");
+        let errorMsg = "حدث خطأ أثناء جلب البيانات";
+        try {
+          const errorResponse = await res.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = res.statusText || errorMsg;
+        }
+
+        throw new Error(errorMsg);
       }
+
       const { data } = await res.json();
       console.log("📊 Users Statistics data:", data);
       setData(data);
-      setloading(false);
     } catch (error) {
-      setloading(false);
-      setError(error as string);
+      const message =
+        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+      setError(message);
       console.error("Error fetching statistics:", error);
+    } finally {
+      setloading(false);
     }
   };
 
@@ -42,7 +53,12 @@ const Users = () => {
     }
 
     if (error) {
-      return <ErrorMessage error="حدث خطأ أثناء جلب الإحصائيات" className="!min-h-full !border-none" />;
+      return (
+        <ErrorMessage
+          error="حدث خطأ أثناء جلب الإحصائيات"
+          className="!min-h-full !border-none"
+        />
+      );
     }
 
     if (data && data.length > 0) {

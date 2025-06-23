@@ -45,7 +45,6 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
       limit: "8",
     });
 
-    // ✅ Append filter params if present
     if (gender) params.set("gender", gender);
     if (ageFrom) params.set("ageFrom", ageFrom);
     if (ageTo) params.set("ageTo", ageTo);
@@ -61,10 +60,17 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
       );
 
       if (!res.ok) {
-        throw new Error("حدث خطأ أثناء جلب البيانات");
+        let errorMsg = "حدث خطأ أثناء جلب البيانات";
+        try {
+          const errorResponse = await res.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = res.statusText || errorMsg;
+        }
+        throw new Error(errorMsg);
       }
 
-      const { data, hasMore } = await res.json();
+      const { data, hasMore: newHasMore } = await res.json();
 
       setInitialLoading(false);
       setStories((prev) => {
@@ -75,10 +81,12 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
         return [...prev, ...unique];
       });
 
-      setHasMore(hasMore);
+      setHasMore(newHasMore);
       setPage((prev) => prev + 1);
     } catch (error) {
-      setError((error as Error).message);
+      const message =
+        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+      setError(message);
       setInitialLoading(false);
     } finally {
       fetching.current = false;

@@ -45,32 +45,41 @@ const AllStoriesTable = () => {
     setTableLoading(true);
     setError(null);
 
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/fetch?status=${currentTap}&page=${page}&limit=10`
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("حدث خطأ أثناء جلب البيانات");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/fetch?status=${currentTap}&page=${page}&limit=10`
+      );
+
+      if (!res.ok) {
+        let errorMsg = "حدث خطأ أثناء جلب البيانات";
+        try {
+          const errorResponse = await res.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = res.statusText || errorMsg;
         }
 
-        return res.json();
-      })
-      .then(({ data, pagination }) => {
-        if (data && Array.isArray(data)) {
-          console.log("pagination data", pagination);
+        throw new Error(errorMsg);
+      }
 
-          setTableData(data);
-          setTotalPages(pagination.totalPages);
-          console.log("table's pagination", pagination);
-        } else setTableData([]);
-        // You can also use pagination.totalPages if you want to render pages dynamically
-      })
-      .catch((error) => {
-        setError(error.message);
-      })
-      .finally(() => {
-        setTableLoading(false);
-      });
+      const { data, pagination } = await res.json();
+
+      if (data && Array.isArray(data)) {
+        console.log("pagination data", pagination);
+        setTableData(data);
+        setTotalPages(pagination.totalPages);
+        console.log("table's pagination", pagination);
+      } else {
+        setTableData([]);
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+      setError(message);
+      console.error("Error fetching table data:", error);
+    } finally {
+      setTableLoading(false);
+    }
   };
 
   useEffect(() => {

@@ -24,6 +24,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ data: users }, { status: 200 });
   } catch (error) {
     console.error("Error fetching users:", error);
-    return NextResponse.json({ error: "خطأ في السيرفر" }, { status: 500 });
+    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
   }
 }

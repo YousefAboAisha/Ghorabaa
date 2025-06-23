@@ -19,7 +19,7 @@ const FavoriteCard = ({ data, refetchData }: FavoriteCardProps) => {
       setLoading(true);
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/updateFavorite`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/updateFavorite/${story_id}`,
         {
           method: "POST",
           headers: {
@@ -27,18 +27,18 @@ const FavoriteCard = ({ data, refetchData }: FavoriteCardProps) => {
           },
           credentials: "include", // Required for NextAuth session cookies
           body: JSON.stringify({
-            story_id,
             isFavorite: false, // Toggle the current value
           }),
         }
       );
 
-      const data = await res.json();
-
       if (!res.ok) {
-        console.error("Server responded with an error:", data.message);
-        return; // Optional: show toast or error message to user
+        const { error } = await res.json();
+        throw new Error(error as string);
       }
+
+      const data = await res.json();
+      console.log("data", data);
 
       if (refetchData) refetchData();
     } catch (error) {

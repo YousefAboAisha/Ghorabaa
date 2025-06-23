@@ -38,6 +38,7 @@ const Page = () => {
   const fetchStoryDetails = async (searchQuery: string) => {
     setLoading(true);
     setSearchData(null);
+    setError(null);
 
     try {
       const response = await fetch(
@@ -51,22 +52,32 @@ const Page = () => {
         }
       );
 
-      console.log("Data search respones", response.statusText);
+      console.log("Data search response:", response.statusText);
 
       if (!response.ok) {
-        throw new Error("حدث خطأ أثناء جلب البيانات!");
+        let errorMsg = "حدث خطأ أثناء جلب البيانات!";
+        try {
+          const errorResponse = await response.json();
+          errorMsg = errorResponse?.error || errorMsg;
+        } catch {
+          errorMsg = response.statusText || errorMsg;
+        }
+        throw new Error(errorMsg);
       }
 
       const result = await response.json();
-      if (result && result.data) {
+
+      if (result?.data) {
         setSearchData(result.data);
-        setLoading(false);
+      } else {
+        setSearchData(null);
       }
     } catch (error) {
-      console.error("Failed to search data:", error);
-      if (error instanceof Error) {
-        setError(error.message);
-      }
+      const message =
+        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+      console.error("Failed to search data:", message);
+      setError(message);
+    } finally {
       setLoading(false);
     }
   };
@@ -81,7 +92,9 @@ const Page = () => {
     }
 
     if (!searchData) {
-      return <NoDataMessage />;
+      return (
+        <NoDataMessage message={(error as string) || "لا يوجد بيانات لعرضها"} />
+      );
     }
 
     if (searchData) {
@@ -282,6 +295,7 @@ const Page = () => {
           setLoading={setLoading}
           setIsOpen={setIsOpen}
           id_number={searchData?.id_number as string}
+          data={searchData ?? null}
         />
       </Modal>
     </div>
