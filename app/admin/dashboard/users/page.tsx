@@ -54,10 +54,7 @@ const Users = () => {
 
     if (error) {
       return (
-        <ErrorMessage
-          error="حدث خطأ أثناء جلب الإحصائيات"
-          className="!min-h-full !border-none"
-        />
+        <ErrorMessage error={error} className="!min-h-full !border-none" />
       );
     }
 

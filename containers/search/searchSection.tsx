@@ -47,6 +47,7 @@ const SearchSection = ({ session }: SearchSectionProps) => {
               } catch {
                 errorMsg = res.statusText || errorMsg;
               }
+
               throw new Error(errorMsg);
             }
 
@@ -73,20 +74,22 @@ const SearchSection = ({ session }: SearchSectionProps) => {
   }, [searchQuery]);
 
   const renderContent = () => {
+    if (loading) return <StoryCardSkeletonLoader length={8} />;
     if (error) return <ErrorMessage error={error as string} />;
 
-    if (loading) return <StoryCardSkeletonLoader length={8} />;
+    if (stories.length <= 0) {
+      return <NoDataMessage message="لا توجد نتائج للبحث" />;
+    }
 
-    if (stories)
-      return stories?.length <= 0 ? (
-        <NoDataMessage message="لا توجد نتائج للبحث" />
-      ) : (
+    if (stories.length > 0) {
+      return (
         <div className="cards-grid-4">
           {stories?.map((martyr: StoryInterface, index) => (
             <StoryCard key={index} data={martyr} session={session} />
           ))}
         </div>
       );
+    }
   };
 
   return (

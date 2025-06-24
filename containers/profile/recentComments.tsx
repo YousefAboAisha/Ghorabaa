@@ -23,20 +23,16 @@ const RecentComments = async () => {
       }
     );
 
-    if (!res.ok) {
-      const { error } = await res.json();
-      throw new Error(error as string);
-    }
-
     return res.json();
   };
+
   const { data, error } = await userFetchedComments();
 
   const commentsData: CommentInterface[] = data;
 
   const renderContent = () => {
     if (error) {
-      return <ErrorMessage error={error} />;
+      return <ErrorMessage error={error} className="mt-4" />;
     }
 
     if (data.length == 0) {

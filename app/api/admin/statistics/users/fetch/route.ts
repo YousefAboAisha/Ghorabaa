@@ -52,7 +52,7 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching user growth data:", error);
     return NextResponse.json(
-      { message: "Failed to fetch user growth data" },
+      { error: "تعذر الوصول إلى السيرفر" },
       { status: 500 }
     );
   }

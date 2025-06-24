@@ -11,6 +11,7 @@ import { StoryTabsData } from "@/data/storyTabsData";
 import RejectAndPendingCardSkeltonLoader from "@/components/UI/loaders/rejectAndPendingCardSkeltonLoader";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import { useRouter, useSearchParams } from "next/navigation";
+import ErrorMessage from "@/components/responseMessages/errorMessage";
 
 type StoryCounts = {
   [key in StoryStatus]: number;
@@ -33,6 +34,7 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
 
   const [stories, setStories] = useState<StoryInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [storyCounts, setStoryCounts] = useState<StoryCounts>({
     [StoryStatus.APPROVED]: 0,
@@ -43,6 +45,7 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
 
   const fetchStories = async (status: StoryStatus) => {
     setLoading(true);
+    setError(null);
 
     try {
       const res = await fetch(
@@ -72,6 +75,7 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
       console.error("Error fetching stories:", message);
+      setError(message);
       setStories([]);
       setStoryCounts((prev) => ({ ...prev, [status]: 0 }));
     } finally {
@@ -126,6 +130,10 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   };
 
   const renderStoryContainer = () => {
+    if (error) {
+      return <ErrorMessage error={error} />;
+    }
+
     switch (currentTap) {
       case StoryStatus.APPROVED:
         return loading ? (

@@ -56,7 +56,7 @@ export async function GET() {
   } catch (error) {
     console.error("📊 Error fetching statistics:", error);
     return NextResponse.json(
-      { error: "فشل في استرجاع إحصائيات القصص" },
+      { error: "تعذر الوصول إلى السيرفر" },
       { status: 500 }
     );
   }

@@ -1,4 +1,3 @@
-import { UserInterface } from "@/app/interfaces";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import EditProfileForm from "@/components/UI/Forms/editProfileForm";
 import { dateConversion } from "@/utils/format";
@@ -20,16 +19,10 @@ const ProfileDetails = async () => {
       }
     );
 
-    if (!res.ok) {
-      const { error } = await res.json();
-      throw new Error(error as string);
-    }
     return res.json();
   };
 
-  const response = await userDetails();
-  const data: UserInterface = response.data;
-  const error = response.error;
+  const { data, error } = await userDetails();
 
   if (error) {
     return <ErrorMessage error={error} />;
@@ -41,13 +34,11 @@ const ProfileDetails = async () => {
         {/* Profile Card Details */}
 
         <EditProfileForm
-          data={
-            response && {
-              name: data?.name,
-              id_number: data?.id_number,
-              phone_number: data?.phone_number,
-            }
-          }
+          data={{
+            name: data?.name,
+            id_number: data?.id_number,
+            phone_number: data?.phone_number,
+          }}
         />
 
         <table className="h-full w-full md:min-w-fit md:w-fit md:mt-0 mt-8 rounded-t-lg">
