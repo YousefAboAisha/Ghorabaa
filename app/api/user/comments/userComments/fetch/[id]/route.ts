@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getToken } from "next-auth/jwt";
+import { Role } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 type Params = Promise<{ id: string }>;
@@ -9,11 +10,16 @@ type Params = Promise<{ id: string }>;
 export async function GET(req: NextRequest, { params }: { params: Params }) {
   // This user ID
   const { id } = await params;
+
+  if (!ObjectId.isValid(id)) {
+    return NextResponse.json({ error: "معرف غير صالح" }, { status: 400 });
+  }
+
   try {
     const token = await getToken({ req, secret });
     console.log("User comments token", token);
 
-    if (!token || !token.id || token.id !== id) {
+    if (!token || token.id !== id || token.role !== Role.ADMIN) {
       return NextResponse.json({ error: "أنت غير مصرح لك" }, { status: 401 });
     }
 
@@ -56,6 +62,9 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     return NextResponse.json({ data: commentsWithAuthor }, { status: 200 });
   } catch (error) {
     console.error("Error fetching comments:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

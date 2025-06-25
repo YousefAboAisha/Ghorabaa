@@ -2,6 +2,7 @@ import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
+import { Role } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     const usersCollection = db.collection("users");
     const token = await getToken({ req, secret });
 
-    if (!token) {
+    if (!token || token.role !== Role.ADMIN) {
       return NextResponse.json(
         { error: "غير مصرح لك، الرجاء تسجيل الدخول!" },
         { status: 401 }
@@ -84,6 +85,9 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     );
   } catch (error) {
     console.error("Error fetching user stories:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

@@ -7,10 +7,13 @@ import Heading from "@/components/UI/typography/heading";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-const RecentComments = async () => {
+type RecentCommentsProps = {
+  user_id: string;
+};
+
+const RecentComments = async ({ user_id }: RecentCommentsProps) => {
   const cookieStore = await cookies(); // Access current cookies
   const session = await getSessionAction();
-  const user_id = session?.user.id;
 
   const userFetchedComments = async () => {
     const res = await fetch(

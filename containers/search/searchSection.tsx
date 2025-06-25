@@ -75,6 +75,7 @@ const SearchSection = ({ session }: SearchSectionProps) => {
 
   const renderContent = () => {
     if (loading) return <StoryCardSkeletonLoader length={8} />;
+
     if (error) return <ErrorMessage error={error as string} />;
 
     if (stories.length <= 0) {
@@ -84,7 +85,7 @@ const SearchSection = ({ session }: SearchSectionProps) => {
     if (stories.length > 0) {
       return (
         <div className="cards-grid-4">
-          {stories?.map((martyr: StoryInterface, index) => (
+          {stories.map((martyr: StoryInterface, index) => (
             <StoryCard key={index} data={martyr} session={session} />
           ))}
         </div>

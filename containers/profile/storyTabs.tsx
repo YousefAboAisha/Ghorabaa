@@ -1,5 +1,5 @@
 "use client";
-import { StoryStatus } from "@/app/enums";
+import { Role, StoryStatus } from "@/app/enums";
 import React, { useEffect, useState } from "react";
 import { StoryInterface } from "@/app/interfaces";
 import StoryCard from "@/components/UI/cards/storyCard";
@@ -19,12 +19,14 @@ type StoryCounts = {
 
 type SubmittedStoriesProps = {
   session: Session | null;
+  user_id: string;
 };
 
-const StoryTabs = ({ session }: SubmittedStoriesProps) => {
-  const user_id = session?.user.id;
+const StoryTabs = ({ session, user_id }: SubmittedStoriesProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const isOwner = user_id == session?.user.id;
+  const isAdmin = session?.user.role === Role.ADMIN;
 
   console.log("Front-end USER_ID ", user_id);
 
@@ -46,6 +48,10 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   const fetchStories = async (status: StoryStatus) => {
     setLoading(true);
     setError(null);
+
+    if ((!isAdmin || !isOwner) && status !== StoryStatus.APPROVED) {
+      return;
+    }
 
     try {
       const res = await fetch(
@@ -70,7 +76,10 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
       const fetchedStories = data.data || [];
 
       setStories(fetchedStories);
-      setStoryCounts((prev) => ({ ...prev, [status]: fetchedStories.length }));
+      setStoryCounts((prev) => ({
+        ...prev,
+        [status]: fetchedStories.length,
+      }));
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
@@ -90,12 +99,12 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
   }, [currentTap]);
 
   useEffect(() => {
-    router.push(`/profile?activeTap=${currentTap}`);
+    router.push(`/profile/${user_id}?activeTap=${currentTap}`);
   }, []);
 
   const searchParamsHandler = (status: StoryStatus) => {
     setCurrentTap(status);
-    router.push(`/profile?activeTap=${status}`);
+    router.push(`/profile/${user_id}?activeTap=${status}`);
   };
 
   useEffect(() => {
@@ -153,30 +162,34 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
         );
 
       case StoryStatus.PENDING:
-        return loading ? (
-          <RejectAndPendingCardSkeltonLoader length={3} />
-        ) : stories.length > 0 ? (
-          <div className="cards-grid-3">
-            {stories?.map((story: StoryInterface) => (
-              <StoryPendingCard key={story._id as string} data={story} />
-            ))}
-          </div>
-        ) : (
-          <NoDataMessage />
-        );
+        if (isOwner || isAdmin) {
+          return loading ? (
+            <RejectAndPendingCardSkeltonLoader length={3} />
+          ) : stories.length > 0 ? (
+            <div className="cards-grid-3">
+              {stories?.map((story: StoryInterface) => (
+                <StoryPendingCard key={story._id as string} data={story} />
+              ))}
+            </div>
+          ) : (
+            <NoDataMessage />
+          );
+        }
 
       case StoryStatus.REJECTED:
-        return loading ? (
-          <RejectAndPendingCardSkeltonLoader length={3} />
-        ) : stories.length > 0 ? (
-          <div className="cards-grid-3">
-            {stories?.map((story: StoryInterface) => (
-              <StoryRejectedCard key={story._id as string} data={story} />
-            ))}
-          </div>
-        ) : (
-          <NoDataMessage />
-        );
+        if (isOwner || isAdmin) {
+          return loading ? (
+            <RejectAndPendingCardSkeltonLoader length={3} />
+          ) : stories.length > 0 ? (
+            <div className="cards-grid-3">
+              {stories?.map((story: StoryInterface) => (
+                <StoryRejectedCard key={story._id as string} data={story} />
+              ))}
+            </div>
+          ) : (
+            <NoDataMessage />
+          );
+        }
     }
   };
 
@@ -186,24 +199,38 @@ const StoryTabs = ({ session }: SubmittedStoriesProps) => {
     <div className="section relative">
       {/* Tabs */}
       <div className="flex items-center gap-4 text-sm overflow-auto scrollbar-hidden">
-        {StoryTabsData.map(({ label, status, color }) => (
-          <div
-            key={status}
-            className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
-              status
-            )}`}
-            onClick={() => searchParamsHandler(status)}
-          >
-            <p>{label}</p>
-            <p
-              className={`text-gray_dark text-[13px] font-semibold ${
-                currentTap === status ? `text-${color}` : ""
-              }`}
+        {isAdmin || isOwner ? (
+          StoryTabsData.map(({ label, status, color }) => (
+            <div
+              key={status}
+              className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
+                status
+              )}`}
+              onClick={() => searchParamsHandler(status)}
             >
-              +{storyCounts[status] ?? 0}
+              <p>{label}</p>
+              <p
+                className={`text-gray_dark text-[13px] font-semibold ${
+                  currentTap === status ? `text-${color}` : ""
+                }`}
+              >
+                +{storyCounts[status] ?? 0}
+              </p>
+            </div>
+          ))
+        ) : (
+          <div
+            className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
+              StoryStatus.APPROVED
+            )}`}
+            onClick={() => searchParamsHandler(StoryStatus.APPROVED)}
+          >
+            <p>الطلبات المقبولة</p>
+            <p className={`text-approved text-[13px] font-semibold `}>
+              +{storyCounts[StoryStatus.APPROVED] ?? 0}
             </p>
           </div>
-        ))}
+        )}
       </div>
 
       {/* Content */}

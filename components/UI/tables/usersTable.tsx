@@ -12,6 +12,7 @@ import Input from "../inputs/input";
 import { CiSearch } from "react-icons/ci";
 import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "./pagination";
+import Link from "next/link";
 
 const UsersTable = () => {
   const [tableData, setTableData] = useState<UserInterface[]>([]);
@@ -146,8 +147,15 @@ const UsersTable = () => {
                   />
                 </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {user.name}
+                <td className="py-3 px-4 border-b text-right text-sm text-gray-700 hover:underline">
+                  <Link
+                    title="عرض القصة"
+                    className="hover:underline"
+                    href={`/admin/dashboard/users/${user._id}`}
+                    target="_blank"
+                  >
+                    {user.name}
+                  </Link>
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-sm text-gray-700">

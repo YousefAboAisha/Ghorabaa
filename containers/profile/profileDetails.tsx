@@ -5,12 +5,16 @@ import { getRoleColor, getRoleInArabic } from "@/utils/text";
 import { cookies } from "next/headers";
 import Image from "next/image";
 
-const ProfileDetails = async () => {
+type ProfileDetailsProps = {
+  user_id: string;
+};
+
+const ProfileDetails = async ({ user_id }: ProfileDetailsProps) => {
   const cookieStore = await cookies(); // Access current cookies
 
   const userDetails = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/userDetails/fetch`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/userDetails/fetch/${user_id}`,
       {
         headers: {
           Cookie: cookieStore.toString(), // ⬅️ Forward cookies
