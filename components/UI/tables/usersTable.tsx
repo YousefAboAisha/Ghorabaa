@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { UserInterface } from "@/app/interfaces";
 import Image from "next/image";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
@@ -8,11 +8,12 @@ import Modal from "@/components/UI/modals/modal";
 import EditUser from "@/components/UI/modals/editUser";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import { getRoleColor, getRoleInArabic } from "@/utils/text";
-import Input from "../inputs/input";
 import { CiSearch } from "react-icons/ci";
 import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "./pagination";
 import Link from "next/link";
+import Button from "../inputs/button";
+import UserSearch from "../modals/userSearch";
 
 const UsersTable = () => {
   const [tableData, setTableData] = useState<UserInterface[]>([]);
@@ -20,8 +21,9 @@ const UsersTable = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpenEditUser, setIsOpenEditUser] = useState<boolean>(false);
+  const [isOpenStorySearch, setIsOpenStorySearch] = useState<boolean>(false);
+
   const [userData, setuserData] = useState<UserInterface>();
-  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -80,12 +82,6 @@ const UsersTable = () => {
     fetchTableData();
   }, [page]);
 
-  const filteredData = useMemo(() => {
-    return tableData.filter((user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery, tableData]);
-
   const renderTableContent = () => {
     if (tableLoading) {
       return <DashboardTableSkeletonLoader />;
@@ -95,11 +91,11 @@ const UsersTable = () => {
       return <ErrorMessage error={error as string} />;
     }
 
-    if (filteredData.length <= 0) {
+    if (tableData.length <= 0) {
       return <NoDataMessage />;
     }
 
-    if (filteredData && filteredData.length > 0) {
+    if (tableData && tableData.length > 0) {
       return (
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
@@ -135,7 +131,7 @@ const UsersTable = () => {
           </thead>
 
           <tbody>
-            {filteredData?.map((user) => (
+            {tableData?.map((user) => (
               <tr key={user._id as string} className="hover:bg-gray-50">
                 <td className="py-3 px-4 border-b text-right">
                   <Image
@@ -151,7 +147,7 @@ const UsersTable = () => {
                   <Link
                     title="عرض القصة"
                     className="hover:underline"
-                    href={`/admin/dashboard/users/${user._id}`}
+                    href={`/profile/${user._id}`}
                     target="_blank"
                   >
                     {user.name}
@@ -206,17 +202,12 @@ const UsersTable = () => {
 
   return (
     <>
-      <div className="w-full md:w-6/12 lg:w-5/12">
-        <Input
-          placeholder="ابحث عن اسم المستخدم.."
-          className="bg-white border focus:border-secondary "
-          icon={<CiSearch size={20} className="text-secondary" />}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            tableData.filter((user: UserInterface) =>
-              user.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-          }}
+      <div className="w-full lg:w-fit">
+        <Button
+          onClick={() => setIsOpenStorySearch(true)}
+          title="بحث عن مستخدم"
+          className="bg-secondary text-white px-4"
+          icon={<CiSearch size={20} />}
         />
       </div>
 
@@ -249,6 +240,14 @@ const UsersTable = () => {
           setIsOpen={setIsOpenEditUser}
           setLoading={setLoading}
         />
+      </Modal>
+
+      <Modal
+        isOpen={isOpenStorySearch}
+        setIsOpen={setIsOpenStorySearch}
+        containerClassName="!lg:w-3/12 "
+      >
+        <UserSearch />
       </Modal>
     </>
   );

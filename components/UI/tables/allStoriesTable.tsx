@@ -13,10 +13,11 @@ import RejectStory from "@/components/UI/modals/rejectStory";
 import Link from "next/link";
 import { StoryTabsData } from "@/data/storyTabsData";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
-import Input from "../inputs/input";
-import { CiSearch } from "react-icons/ci";
 import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "./pagination";
+import Button from "../inputs/button";
+import StorySearch from "../modals/storySearch";
+import { CiSearch } from "react-icons/ci";
 
 const AllStoriesTable = () => {
   const [tableData, setTableData] = useState<
@@ -24,8 +25,11 @@ const AllStoriesTable = () => {
   >([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const [isOpenStoryPreview, setIsOpenStoryPreview] = useState<boolean>(false);
   const [isOpenStoryReject, setIsOpenStoryReject] = useState<boolean>(false);
+  const [isOpenStorySearch, setIsOpenStorySearch] = useState<boolean>(false);
+
   const [storyData, setStoryData] = useState<
     StoryInterface & { publisher_name: string }
   >();
@@ -280,39 +284,35 @@ const AllStoriesTable = () => {
 
   return (
     <>
-      <div className="flex items-center gap-4 text-sm overflow-auto scrollbar-hidden mb-8">
-        {StoryTabsData.map(({ label, status }) => (
-          <div
-            key={status}
-            title={label}
-            className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
-              status
-            )}`}
-            onClick={() => {
-              setPage(1);
-              router.push(`/admin/dashboard?page=1`);
-              setCurrentTap(status);
-              setSearchQuery("");
-            }}
-          >
-            <p>{label}</p>
-          </div>
-        ))}
-      </div>
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-6 text-sm mb-8">
+        <div className="flex items-center gap-4 overflow-auto scrollbar-hidden ">
+          {StoryTabsData.map(({ label, status }) => (
+            <div
+              key={status}
+              title={label}
+              className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
+                status
+              )}`}
+              onClick={() => {
+                setPage(1);
+                router.push(`/admin/dashboard?page=1`);
+                setCurrentTap(status);
+                setSearchQuery("");
+              }}
+            >
+              <p>{label}</p>
+            </div>
+          ))}
+        </div>
 
-      <div className="w-full md:w-6/12 lg:w-5/12">
-        <Input
-          placeholder="ابحث عن اسم الشهيد.."
-          className="bg-white border focus:border-secondary"
-          icon={<CiSearch size={17} className="text-secondary" />}
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            tableData.filter((story: StoryInterface) =>
-              story.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-          }}
-        />
+        <div className="w-full lg:w-fit">
+          <Button
+            onClick={() => setIsOpenStorySearch(true)}
+            title="بحث عن قصة"
+            className="bg-secondary text-white px-4"
+            icon={<CiSearch size={20} />}
+          />
+        </div>
       </div>
 
       {/* Render the table content */}
@@ -352,6 +352,14 @@ const AllStoriesTable = () => {
           refetchData={fetchTableData}
           setIsOpen={setIsOpenStoryReject}
         />
+      </Modal>
+
+      <Modal
+        isOpen={isOpenStorySearch}
+        setIsOpen={setIsOpenStorySearch}
+        containerClassName="!lg:w-3/12 "
+      >
+        <StorySearch />
       </Modal>
     </>
   );

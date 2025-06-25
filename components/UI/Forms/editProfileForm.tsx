@@ -22,7 +22,7 @@ const EditProfileForm = ({ data }: EditProfileFormProps) => {
     name: name || "",
     phone_number: phone_number || "",
     id_number: id_number || "",
-  };  
+  };
 
   return (
     <div className="relative w-full">
@@ -31,14 +31,17 @@ const EditProfileForm = ({ data }: EditProfileFormProps) => {
       <Formik
         initialValues={initialValues}
         validationSchema={ProfileValidationSchema}
-        onSubmit={async (values, {  setSubmitting }) => {
+        onSubmit={async (values, { setSubmitting }) => {
           try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/update`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(values),
-              credentials: "include", // 👈 THIS IS CRITICAL
-            });
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/update`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(values),
+                credentials: "include", // 👈 THIS IS CRITICAL
+              }
+            );
 
             const data = await response.json();
 

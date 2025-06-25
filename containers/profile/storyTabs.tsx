@@ -49,7 +49,10 @@ const StoryTabs = ({ session, user_id }: SubmittedStoriesProps) => {
     setLoading(true);
     setError(null);
 
-    if ((!isAdmin || !isOwner) && status !== StoryStatus.APPROVED) {
+    if (!(isAdmin || isOwner) && status !== StoryStatus.APPROVED) {
+      setStories([]);
+      setError("غير مصرح لك بمشاهدة هذه القصص");
+      setLoading(false);
       return;
     }
 
@@ -162,34 +165,34 @@ const StoryTabs = ({ session, user_id }: SubmittedStoriesProps) => {
         );
 
       case StoryStatus.PENDING:
-        if (isOwner || isAdmin) {
-          return loading ? (
-            <RejectAndPendingCardSkeltonLoader length={3} />
-          ) : stories.length > 0 ? (
-            <div className="cards-grid-3">
-              {stories?.map((story: StoryInterface) => (
-                <StoryPendingCard key={story._id as string} data={story} />
-              ))}
-            </div>
-          ) : (
-            <NoDataMessage />
-          );
-        }
+        if (!(isOwner || isAdmin))
+          return <ErrorMessage error={error as string} />;
+        return loading ? (
+          <RejectAndPendingCardSkeltonLoader length={3} />
+        ) : stories.length > 0 ? (
+          <div className="cards-grid-3">
+            {stories?.map((story: StoryInterface) => (
+              <StoryPendingCard key={story._id as string} data={story} />
+            ))}
+          </div>
+        ) : (
+          <NoDataMessage />
+        );
 
       case StoryStatus.REJECTED:
-        if (isOwner || isAdmin) {
-          return loading ? (
-            <RejectAndPendingCardSkeltonLoader length={3} />
-          ) : stories.length > 0 ? (
-            <div className="cards-grid-3">
-              {stories?.map((story: StoryInterface) => (
-                <StoryRejectedCard key={story._id as string} data={story} />
-              ))}
-            </div>
-          ) : (
-            <NoDataMessage />
-          );
-        }
+        if (!(isOwner || isAdmin))
+          return <ErrorMessage error={error as string} />;
+        return loading ? (
+          <RejectAndPendingCardSkeltonLoader length={3} />
+        ) : stories.length > 0 ? (
+          <div className="cards-grid-3">
+            {stories?.map((story: StoryInterface) => (
+              <StoryRejectedCard key={story._id as string} data={story} />
+            ))}
+          </div>
+        ) : (
+          <NoDataMessage />
+        );
     }
   };
 

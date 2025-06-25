@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Session } from "next-auth";
 import { Role } from "@/app/enums";
 import { PiGearLight } from "react-icons/pi";
+import { toast } from "react-toastify";
 
 type ProfilePopperProps = {
   session: Session | null;
@@ -17,6 +18,7 @@ type ProfilePopperProps = {
 function ProfilePopper({ session }: ProfilePopperProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const profileImage = session?.user?.image || "/notFound.png"; // Fallback image
+  const user_id = session?.user.id;
 
   const handleGoogleSignout = async () => {
     setLoading(true);
@@ -24,8 +26,17 @@ function ProfilePopper({ session }: ProfilePopperProps) {
     try {
       await signOut();
       setLoading(false); // fallback if signIn fails
-    } catch (error) {
+
+      setTimeout(() => {
+        window.location.href = `/`;
+      }, 1000);
+    } catch (error: unknown) {
       console.error("Google sign-in failed:", error);
+      if (error && typeof error === "object" && "message" in error) {
+        toast.error((error as { message: string }).message);
+      } else {
+        toast.error("حدث خطأ أثناء تسجيل الخروج");
+      }
       setLoading(false);
     }
   };
@@ -95,7 +106,7 @@ function ProfilePopper({ session }: ProfilePopperProps) {
 
           <MenuItem>
             <Link
-              href={`/profile`}
+              href={`/profile/${user_id}`}
               className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
               prefetch
             >

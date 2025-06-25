@@ -1,3 +1,5 @@
+import { getSessionAction } from "@/app/actions/registerActions";
+import { Role } from "@/app/enums";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import EditProfileForm from "@/components/UI/Forms/editProfileForm";
 import { dateConversion } from "@/utils/format";
@@ -11,6 +13,9 @@ type ProfileDetailsProps = {
 
 const ProfileDetails = async ({ user_id }: ProfileDetailsProps) => {
   const cookieStore = await cookies(); // Access current cookies
+  const session = await getSessionAction();
+  const isAdmin = session?.user.role == Role.ADMIN;
+  const isOwner = session?.user.id == user_id;
 
   const userDetails = async () => {
     const res = await fetch(
@@ -37,13 +42,15 @@ const ProfileDetails = async ({ user_id }: ProfileDetailsProps) => {
       <div className="flex-col md:flex md:flex-row gap-4 md:gap-4">
         {/* Profile Card Details */}
 
-        <EditProfileForm
-          data={{
-            name: data?.name,
-            id_number: data?.id_number,
-            phone_number: data?.phone_number,
-          }}
-        />
+        {isAdmin || isOwner ? (
+          <EditProfileForm
+            data={{
+              name: data?.name,
+              id_number: data?.id_number,
+              phone_number: data?.phone_number,
+            }}
+          />
+        ) : null}
 
         <table className="h-full w-full md:min-w-fit md:w-fit md:mt-0 mt-8 rounded-t-lg">
           <tbody className="bg-white h-full">

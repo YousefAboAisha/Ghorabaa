@@ -14,7 +14,6 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 
-
 const SigninForm = () => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -71,7 +70,7 @@ const SigninForm = () => {
 
       // Redirect to profile after a short delay
       setTimeout(() => {
-        window.location.href = "/profile";
+        window.location.href = `profile/${data?.id}`;
       }, 1000);
 
       console.log("User has been created successfully!", data);

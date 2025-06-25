@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getToken } from "next-auth/jwt";
-import { Role } from "@/app/enums";
+// import { Role } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 type Params = Promise<{ id: string }>;
@@ -17,10 +17,21 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
 
   try {
     const token = await getToken({ req, secret });
-    console.log("User comments token", token);
+    // const isOwner = id === token?.id;
+    // const isAdmin = token?.role == Role.ADMIN;
 
-    if (!token || token.id !== id || token.role !== Role.ADMIN) {
-      return NextResponse.json({ error: "أنت غير مصرح لك" }, { status: 401 });
+    // if (!(isOwner || isAdmin)) {
+    //   return NextResponse.json(
+    //     { error: "غير مصرح لك، الرجاء تسجيل الدخول!" },
+    //     { status: 401 }
+    //   );
+    // }
+
+    if (!token) {
+      return NextResponse.json(
+        { error: "غير مصرح لك، الرجاء تسجيل الدخول!" },
+        { status: 401 }
+      );
     }
 
     const client = await clientPromise;

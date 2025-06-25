@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
   // Authenticated user visiting an auth page — redirect based on role
   if (isAuthPage) {
     const redirectUrl =
-      token.role === Role.ADMIN ? "/admin/dashboard" : "/profile";
+      token.role === Role.ADMIN ? "/admin/dashboard" : `/profile/${token.id}`;
 
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
@@ -50,7 +50,7 @@ export async function middleware(request: NextRequest) {
     }
 
     const redirectUrl =
-      token.role === Role.ADMIN ? "/admin/dashboard" : "/profile";
+      token.role === Role.ADMIN ? "/admin/dashboard" : `/profile/${token.id}`;
 
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
