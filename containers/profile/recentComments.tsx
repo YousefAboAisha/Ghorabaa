@@ -5,7 +5,6 @@ import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import CommentCard from "@/components/UI/cards/commentCard";
 import Heading from "@/components/UI/typography/heading";
 import { cookies } from "next/headers";
-import Link from "next/link";
 
 type RecentCommentsProps = {
   user_id: string;
@@ -47,12 +46,11 @@ const RecentComments = async ({ user_id }: RecentCommentsProps) => {
         <div className="cards-grid-3 mt-8">
           {commentsData?.map((comment: CommentInterface) => {
             return (
-              <Link
+              <CommentCard
                 key={comment._id as string}
-                href={`/stories/${comment.story_id}#COMMENT`}
-              >
-                <CommentCard data={comment} session={session} />
-              </Link>
+                data={comment}
+                session={session}
+              />
             );
           })}
         </div>

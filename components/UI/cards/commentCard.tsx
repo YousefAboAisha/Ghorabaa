@@ -12,6 +12,7 @@ import { Session } from "next-auth";
 import { Role } from "@/app/enums";
 import { MdOutlineReport } from "react-icons/md";
 import ReportComment from "../modals/reportComment";
+import Link from "next/link";
 
 type CommentCardProps = {
   data: CommentInterface;
@@ -26,8 +27,15 @@ const CommentCard = ({
   session,
   showActionButtons = false,
 }: CommentCardProps) => {
-  const { author_id, author_image, author_name, text, createdAt, author_role } =
-    data;
+  const {
+    author_id,
+    story_id,
+    author_image,
+    author_name,
+    text,
+    createdAt,
+    author_role,
+  } = data;
 
   const current_user_id = session?.user.id;
   const current_user_role = session?.user.role;
@@ -47,7 +55,7 @@ const CommentCard = ({
 
   return (
     <>
-      <div className="group relative flex flex-col gap-4 p-5 rounded-3xl rounded-tr-none border bg-white shadow-sm w-full h-fit hover:shadow-md duration-200">
+      <div className="group relative flex flex-col gap-4 p-6 rounded-3xl rounded-tr-none border bg-white shadow-sm w-full h-fit hover:shadow-md duration-200">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 border rounded-full">
             {author_image ? (
@@ -66,21 +74,35 @@ const CommentCard = ({
           </div>
 
           <div className="flex flex-col gap-1">
-            <h5 className="text-[13px] font-semibold">{author_name}</h5>
+            <Link
+              title="عرض صفحة المستخدم"
+              href={`/profile/${author_id}`}
+              target="_blank"
+              className="text-[13px] font-semibold truncate whitespace-nowrap overflow-hidden text-ellipsis hover:underline"
+            >
+              {author_name}
+            </Link>
             <p className="text-primary text-[10px] font-semibold">
               {getRoleInArabic(author_role!)}
             </p>
           </div>
         </div>
 
-        <p className="text-[14px] mb-4 text-wrap font-light">{text}</p>
+        <Link
+          title="عرض القصة"
+          target="_blank"
+          href={`/stories/${story_id}#COMMENT`}
+          className="text-[14px] mb-4 text-wrap font-light hover:underline"
+        >
+          {text}
+        </Link>
 
         <p className="text-gray-500 text-[11px] absolute bottom-2 left-6">
           {createdAt ? dateConversion(createdAt) : "تاريخ غير متوفر"}
         </p>
 
         {showActionButtons && (
-          <div className="absolute top-2 left-2 flex flex-col gap-0.5">
+          <div className="absolute top-0 right-0 flex flex-col gap-0.5">
             {(isCommentOwner || isAdmin) && (
               <div
                 onClick={() => setIsOpenDeleteComment(true)}

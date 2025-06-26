@@ -96,7 +96,13 @@ const StoryDetailsSection = async ({ id }: Props) => {
           <div className="flex justify-between text-[11px] mt-2">
             <div className="flex items-center gap-2 text-gray_dark">
               <p>بواسطة: </p>
-              <p>{data.publisherName}</p>
+              <Link
+                className="hover:underline"
+                href={`/profile/${data.publisher_id}`}
+                target="_blank"
+              >
+                {data.publisherName}
+              </Link>
               <p> | </p>
               <p>{dateConversion(data.createdAt)}</p>
             </div>
