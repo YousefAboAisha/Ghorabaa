@@ -44,6 +44,7 @@ export interface StoryInterface extends Document {
   birth_date: string;
   death_date: string;
   age: number;
+  visits: number;
   city: string;
   neighborhood: string;
   bio: string;

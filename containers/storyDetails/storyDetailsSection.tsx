@@ -9,8 +9,9 @@ import Link from "next/link";
 import { FaFacebook, FaInstagram, FaXTwitter } from "react-icons/fa6";
 import CommentsSection from "./commentsSection";
 import { Role, StoryStatus } from "@/app/enums";
-import { BsExclamationTriangle } from "react-icons/bs";
+import { BsExclamationTriangle, BsEye } from "react-icons/bs";
 import { BiInfoCircle } from "react-icons/bi";
+import LogVisit from "@/utils/logVisit";
 
 type Props = {
   id: string;
@@ -48,6 +49,8 @@ const StoryDetailsSection = async ({ id }: Props) => {
   return (
     data && (
       <div className="mt-24">
+        {data.status === StoryStatus.APPROVED && <LogVisit storyId={id} />}
+
         {/* Story Actions Component [Edit | Share  | Report | Delete ] */}
         {data.status === StoryStatus.APPROVED && data && (
           <StoryActions data={data!} session={session} />
@@ -105,6 +108,11 @@ const StoryDetailsSection = async ({ id }: Props) => {
               </Link>
               <p> | </p>
               <p>{dateConversion(data.createdAt)}</p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <p>{data?.visits || 0}</p>
+              <BsEye size={18} />
             </div>
           </div>
 

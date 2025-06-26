@@ -62,6 +62,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
             keywords: 1,
             createdAt: 1,
             publisher_id: 1,
+            visits: 1,
             publisherName: "$publisher.name",
           },
         },

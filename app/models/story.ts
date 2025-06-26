@@ -49,6 +49,11 @@ const storySchema = new Schema<StoryInterface>(
       required: [true, "Age is required and cannot be empty."],
     },
 
+    visits: {
+      type: Number,
+      required: false,
+    },
+
     city: {
       type: String,
       required: [true, "City is required and cannot be empty."],
