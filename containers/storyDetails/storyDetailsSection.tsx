@@ -37,12 +37,11 @@ const StoryDetailsSection = async ({ id }: Props) => {
 
   const isStoryOwner = data?.publisher_id === user_id;
   const isAdmin = session?.user.role === Role.ADMIN;
+  const isApproved = data.status === StoryStatus.APPROVED;
 
-  if (
-    (!isStoryOwner && data.status !== StoryStatus.APPROVED) ||
-    (!isAdmin && data.status !== StoryStatus.APPROVED)
-  )
-    notFound(); // redirects to 404 page
+  if (!isApproved && !isStoryOwner && !isAdmin) {
+    notFound(); // only allow access if approved, OR user is admin/owner
+  }
 
   console.log("Story Details Data", data);
 
@@ -85,13 +84,14 @@ const StoryDetailsSection = async ({ id }: Props) => {
 
         <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-secondary rounded-2xl">
           <Image
-            src={data.image || "/notFound.png"}
+            src={data?.image || "/notFound.png"}
             alt="صورة الشهيد"
             width={350}
             height={350}
             className="mx-auto z-[10] max-h-[60vh] object-cover rounded-2xl shadow-xl"
             priority
             quality={100}
+            unoptimized
           />
         </div>
 
@@ -110,7 +110,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
               <p>{dateConversion(data.createdAt)}</p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-gray_dark">
               <p>{data?.visits || 0}</p>
               <BsEye size={18} />
             </div>

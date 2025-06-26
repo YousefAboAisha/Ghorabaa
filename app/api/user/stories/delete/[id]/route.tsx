@@ -34,6 +34,8 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     const storiesCollection = db.collection("stories");
     const notificationsCollection = db.collection("notifications");
     const usersCollection = db.collection<User>("users");
+    const commentsCollection = db.collection("comments");
+    const reportsCollection = db.collection("reports");
 
     const existingStory = await storiesCollection.findOne({
       _id: new ObjectId(id),
@@ -83,6 +85,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
       );
     }
 
+    await commentsCollection.deleteMany({ story_id: new ObjectId(id) });
+    await reportsCollection.deleteMany({ content_id: new ObjectId(id) });
+
     // Instead of deleting, we nullify specific fields and reset profile status
     const updateFields = {
       publisher_id: null,
@@ -114,6 +119,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     );
   } catch (error) {
     console.error("❌ Error deleting story:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

@@ -9,6 +9,7 @@ const secret = process.env.NEXTAUTH_SECRET;
 
 export async function POST(req: NextRequest) {
   const token = await getToken({ req, secret });
+  const user_id = token?.id;
 
   if (!token) {
     return NextResponse.json(
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
 
     // ✅ Get reporter info from token
     const reporter = await usersCollection.findOne(
-      { _id: new ObjectId(token.id) },
+      { _id: new ObjectId(user_id) },
       { projection: { name: 1 } }
     );
 
@@ -58,7 +59,7 @@ export async function POST(req: NextRequest) {
       status: ReportStatus.PENDING,
       content: existingComment,
       content_type: ContentType.COMMENT,
-      content_id: existingComment._id, // 👈 Important: reference to reported content
+      content_id: existingComment.story_id, // 👈 Important: reference to reported content
       user_id: new ObjectId(token.id), // 👈 Correct field for reporter
       user_name: reporter?.name || "مجهول", // 👈 Correct reporter name
       createdAt: new Date(),
@@ -102,6 +103,9 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("Error creating report:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

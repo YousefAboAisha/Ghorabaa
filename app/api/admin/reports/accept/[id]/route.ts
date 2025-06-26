@@ -48,7 +48,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
       );
     }
 
-    const content_id = report.content?._id;
+    const content_id = report.content_id;
 
     if (!content_id) {
       return NextResponse.json(

@@ -17,7 +17,7 @@ type ReportCommentProps = {
 };
 
 export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
-  const comment_id = data._id;
+  const comment_id = data?._id;
 
   const initialValues = {
     rejectReason: "",
@@ -42,7 +42,7 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
           console.log("Submitting report with values:", values);
 
           try {
-            const response = await fetch(
+            const res = await fetch(
               `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/reports/create`,
               {
                 method: "POST",
@@ -55,17 +55,28 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
               }
             );
 
-            if (!response.ok) {
-              throw new Error("Failed to update the story.");
+            if (!res.ok) {
+              let errorMsg = "حدث خطأ أثناء جلب البيانات";
+              try {
+                const errorResponse = await res.json();
+                errorMsg = errorResponse?.error || errorMsg;
+              } catch {
+                errorMsg = res.statusText || errorMsg;
+              }
+
+              throw new Error(errorMsg);
             }
 
-            const result = await response.json();
+            const result = await res.json();
             console.log("✅ Story updated:", result);
             resetForm();
             setIsOpen(false);
             toast.warn("تم إرسال البلاغ بنجاح");
           } catch (error) {
-            console.error("❌ Error updating story:", error);
+            const message =
+              error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+            toast.error(message);
+            console.error("Error fetching favorite stories:", error);
           } finally {
             setSubmitting(false);
           }

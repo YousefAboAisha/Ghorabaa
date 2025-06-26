@@ -102,14 +102,14 @@ const CommentCard = ({
         </p>
 
         {showActionButtons && (
-          <div className="absolute top-0 right-0 flex flex-col gap-0.5">
+          <div className="absolute top-2 left-2 flex flex-col">
             {(isCommentOwner || isAdmin) && (
               <div
                 onClick={() => setIsOpenDeleteComment(true)}
                 title="حذف التعليق"
-                className="opacity-0 group-hover:opacity-100 items-center justify-center p-2 text-[red] hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+                className="opacity-0 group-hover:opacity-100 items-center justify-center p-1.5 text-[red] hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
-                <BsTrash size={17} />
+                <BsTrash size={15} />
               </div>
             )}
 
@@ -117,9 +117,9 @@ const CommentCard = ({
               <div
                 onClick={() => setIsOpenReportComment(true)}
                 title="إبلاغ عن التعليق"
-                className="opacity-0 group-hover:opacity-100 items-center justify-center p-2 text-gray_dark hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+                className="opacity-0 group-hover:opacity-100 items-center justify-center p-1.5 text-gray_dark hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
-                <MdOutlineReport size={17} />
+                <MdOutlineReport size={15} />
               </div>
             )}
           </div>
