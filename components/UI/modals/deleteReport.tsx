@@ -17,7 +17,6 @@ export const DeleteReport = ({
   setIsOpen,
 }: AcceptReportProps) => {
   const report_id = data?._id;
-  const content_id = data?.content_id;
 
   const [keepLoading, setKeepLoading] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);

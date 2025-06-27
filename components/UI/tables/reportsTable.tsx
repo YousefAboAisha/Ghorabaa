@@ -1,12 +1,10 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ReportWithUserDataInterface } from "@/app/interfaces";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "./pagination";
-import Input from "../inputs/input";
-import { CiSearch } from "react-icons/ci";
 import ReportCard from "../cards/reportCard";
 import ReportCardSkeltonLoader from "../loaders/reportCardSkeletonLoader";
 
@@ -14,7 +12,6 @@ const ReportsTable = () => {
   const [tableData, setTableData] = useState<ReportWithUserDataInterface[]>([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const searchParams = useSearchParams();
   const router = useRouter();

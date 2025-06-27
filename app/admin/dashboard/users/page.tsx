@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import UsersTable from "@/components/UI/tables/usersTable";
-import UserGrowthLineChart from "@/components/UI/charts/UserGrowthLineChart";
+import UserGrowthLineChart from "@/components/UI/charts/userGrowthLineChart";
 
 interface ActiveUserData {
   user_id: string;
