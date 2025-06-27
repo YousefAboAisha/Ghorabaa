@@ -67,24 +67,14 @@ const StorySearch = () => {
 
   const renderContent = () => {
     if (loading)
-      return (
-        <p className="abs-center text-sm font-normal">جارٍ البحث عن القصة.</p>
-      );
+      return <p className="text-sm font-normal">جارٍ البحث عن القصة...</p>;
 
     if (error)
-      return (
-        <ErrorMessage
-          error={error as string}
-          className="min-h-[25vh] border-none"
-        />
-      );
+      return <ErrorMessage error={error as string} className="!border-none" />;
 
     if (stories.length <= 0) {
       return (
-        <NoDataMessage
-          message="لا توجد نتائج للبحث"
-          className="min-h-[25vh] border-none"
-        />
+        <NoDataMessage message="لا توجد نتائج للبحث" className="!border-none" />
       );
     }
 
@@ -124,6 +114,7 @@ const StorySearch = () => {
       <div className="w-full relative mt-8">
         <div className="flex flex-col justify-between w-full">
           <Input
+            autoFocus={true}
             placeholder="قم بكتابة اسم الشهيد.."
             className="w-full border focus:border-secondary"
             type="text"
@@ -148,7 +139,7 @@ const StorySearch = () => {
           )}
         </div>
 
-        <div className="relative mt-6 h-[35vh] overflow-y-auto border rounded-md">
+        <div className="relative flex items-center justify-center mt-6 min-h-[50vh] border rounded-md">
           {renderContent()}
         </div>
       </div>

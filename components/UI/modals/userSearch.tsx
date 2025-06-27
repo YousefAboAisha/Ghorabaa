@@ -74,19 +74,11 @@ const UserSearch = () => {
       );
 
     if (error)
-      return (
-        <ErrorMessage
-          error={error as string}
-          className="min-h-[25vh] border-none"
-        />
-      );
+      return <ErrorMessage error={error as string} className="border-none" />;
 
     if (users.length <= 0) {
       return (
-        <NoDataMessage
-          message="لا توجد نتائج للبحث"
-          className="min-h-[25vh] border-none"
-        />
+        <NoDataMessage message="لا توجد نتائج للبحث" className="border-none" />
       );
     }
 
@@ -126,6 +118,7 @@ const UserSearch = () => {
       <div className="mt-8">
         <div className="flex flex-col justify-between w-full">
           <Input
+            autoFocus
             placeholder="قم بكتابة اسم المستخدم..."
             className="w-full border focus:border-secondary"
             type="text"
@@ -150,7 +143,7 @@ const UserSearch = () => {
           )}
         </div>
 
-        <div className="relative mt-6 min-h-[25vh] border rounded-md">
+        <div className="relative mt-6 min-h-[50vh] border rounded-md">
           {renderContent()}
         </div>
       </div>

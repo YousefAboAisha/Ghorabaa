@@ -19,6 +19,7 @@ type CommentCardProps = {
   session: Session | null;
   refetchData?: () => void;
   showActionButtons?: boolean;
+  isProfileCommentCard?: boolean;
 };
 
 const CommentCard = ({
@@ -26,6 +27,7 @@ const CommentCard = ({
   refetchData,
   session,
   showActionButtons = false,
+  isProfileCommentCard = false,
 }: CommentCardProps) => {
   const {
     author_id,
@@ -88,14 +90,23 @@ const CommentCard = ({
           </div>
         </div>
 
-        <Link
-          title="عرض القصة"
-          target="_blank"
-          href={`/stories/${story_id}#COMMENT`}
-          className="text-[14px] mb-4 text-wrap font-light hover:underline"
-        >
-          {text}
-        </Link>
+        {isProfileCommentCard ? (
+          <Link
+            title="عرض القصة"
+            target="_blank"
+            href={`/stories/${story_id}#COMMENT`}
+            className="text-[14px] mb-4 text-wrap font-light hover:underline"
+          >
+            {text}
+          </Link>
+        ) : (
+          <p
+            title="عرض القصة"
+            className="text-[14px] mb-4 text-wrap font-light"
+          >
+            {text}
+          </p>
+        )}
 
         <p className="text-gray-500 text-[11px] absolute bottom-2 left-6">
           {createdAt ? dateConversion(createdAt) : "تاريخ غير متوفر"}

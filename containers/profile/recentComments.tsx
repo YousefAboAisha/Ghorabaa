@@ -50,6 +50,7 @@ const RecentComments = async ({ user_id }: RecentCommentsProps) => {
                 key={comment._id as string}
                 data={comment}
                 session={session}
+                isProfileCommentCard={true}
               />
             );
           })}
