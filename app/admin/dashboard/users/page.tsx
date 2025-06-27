@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
-import UserGrowthLineChart from "@/components/UI/charts/UserGrowthLineChart";
 import UsersTable from "@/components/UI/tables/usersTable";
+import UserGrowthLineChart from "@/components/UI/charts/UserGrowthLineChart";
 
 interface ActiveUserData {
   user_id: string;
@@ -24,8 +24,10 @@ interface UserGrowthData {
 const Users = () => {
   const [usersCountLoader, setUsersCountLoader] = useState(true);
   const [activeUsersCount, setActiveUsersCount] = useState(true);
+
   const [userCountsError, setUserCountsError] = useState<string | null>(null);
   const [activeUsersError, setActiveUsersError] = useState<string | null>(null);
+
   const [usersData, setUsersData] = useState<UserGrowthData[]>([]);
   const [activeUsersData, setActiveUsersData] = useState<ActiveUserData[]>([]);
 

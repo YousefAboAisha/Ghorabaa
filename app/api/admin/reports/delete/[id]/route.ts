@@ -38,9 +38,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
 
     const reported_user_name = userData?.name;
 
-    console.log("reported_user_id", reported_user_id);
-    console.log("reported_user_name", userData);
-
     if (!report) {
       return NextResponse.json(
         { error: "لم يتم العثور على الإبلاغ" },
@@ -48,9 +45,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
       );
     }
 
-    const content_id = report.content_id;
+    const comment_id = report?.content?._id;
 
-    if (!content_id) {
+    if (!comment_id) {
       return NextResponse.json(
         { error: "المحتوى المرتبط بالإبلاغ غير موجود" },
         { status: 404 }
@@ -59,12 +56,12 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
 
     const result = await db
       .collection("comments")
-      .deleteOne({ _id: new ObjectId(content_id) });
+      .deleteOne({ _id: new ObjectId(comment_id) });
 
     // Step 3: Optionally update report status
     await reportsCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: { status: ReportStatus.RESOLVED } }
+      { $set: { status: ReportStatus.DELETED } }
     );
 
     if (report) {

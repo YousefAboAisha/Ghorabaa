@@ -37,7 +37,7 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     // Step 3: Optionally update report status
     await reportsCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: { status: ReportStatus.REJECTED } }
+      { $set: { status: ReportStatus.KEPT } }
     );
 
     return NextResponse.json({
@@ -45,6 +45,9 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     });
   } catch (error) {
     console.error("❌ Error accepting report:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

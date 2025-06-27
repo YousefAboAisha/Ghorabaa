@@ -95,9 +95,9 @@ export const getReportStatusInArabic = (status: ReportStatus): string => {
   switch (status) {
     case ReportStatus.PENDING:
       return "قيد المراجعة";
-    case ReportStatus.RESOLVED:
+    case ReportStatus.DELETED:
       return "تم حذف المحتوى";
-    case ReportStatus.REJECTED:
+    case ReportStatus.KEPT:
       return "تم الإبقاء على المحتوى";
     default:
       return "غير معروف";
@@ -108,9 +108,9 @@ export const getReportColor = (status: ReportStatus): string => {
   switch (status) {
     case ReportStatus.PENDING:
       return "bg-pending";
-    case ReportStatus.RESOLVED:
+    case ReportStatus.KEPT:
       return "bg-approved";
-    case ReportStatus.REJECTED:
+    case ReportStatus.DELETED:
       return "bg-rejected";
     default:
       return "bg-gray-500"; // Default color for unknown status

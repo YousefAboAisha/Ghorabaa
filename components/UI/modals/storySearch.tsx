@@ -114,7 +114,6 @@ const StorySearch = () => {
       <div className="w-full relative mt-8">
         <div className="flex flex-col justify-between w-full">
           <Input
-            autoFocus={true}
             placeholder="قم بكتابة اسم الشهيد.."
             className="w-full border focus:border-secondary"
             type="text"

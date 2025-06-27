@@ -13,20 +13,20 @@ import {
 
 interface DataPoint {
   date: string;
-  users: number;
+  reports: number;
 }
 
 interface Props {
   data: DataPoint[];
 }
 
-export default function UserGrowthLineChart({ data }: Props) {
+export default function ReportsGrowthLineChart({ data }: Props) {
   return (
     <div className="w-full h-full">
       <ResponsiveContainer>
         <AreaChart data={data}>
           <defs>
-            <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="colorReports" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#5B913B" stopOpacity={0.8} />
               <stop offset="95%" stopColor="#5B913B" stopOpacity={0} />
             </linearGradient>
@@ -40,7 +40,7 @@ export default function UserGrowthLineChart({ data }: Props) {
 
           <Tooltip
             labelFormatter={(value) => `الشهر: ${value}`}
-            formatter={(value) => [`${value}`, "المشتركون"]}
+            formatter={(value) => [`${value}`, "الإبلاغات"]}
             labelStyle={{
               fontSize: "11px",
             }}
@@ -53,9 +53,9 @@ export default function UserGrowthLineChart({ data }: Props) {
 
           <Area
             type="monotone"
-            dataKey="users"
+            dataKey="reports"
             stroke="#5B913B"
-            fill="url(#colorUsers)"
+            fill="url(#colorReports)"
             strokeWidth={1}
           />
         </AreaChart>

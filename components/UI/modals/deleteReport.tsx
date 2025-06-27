@@ -11,13 +11,13 @@ type AcceptReportProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export const AcceptReport = ({
+export const DeleteReport = ({
   data,
   refetchData,
   setIsOpen,
 }: AcceptReportProps) => {
   const report_id = data?._id;
-  const content_id = data?.content._id;
+  const content_id = data?.content_id;
 
   const [keepLoading, setKeepLoading] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
@@ -26,13 +26,10 @@ export const AcceptReport = ({
     setDeleteLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/reports/accept/${report_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/reports/delete/${report_id}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            content_id,
-          }),
         }
       );
 
@@ -117,4 +114,4 @@ export const AcceptReport = ({
   );
 };
 
-export default AcceptReport;
+export default DeleteReport;

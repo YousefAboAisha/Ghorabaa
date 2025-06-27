@@ -15,7 +15,7 @@ import { ReportStatus, Role } from "@/app/enums";
 import CommentPreviewCard from "../cards/commentPreviewCard";
 import { dateConversion } from "@/utils/format";
 import Modal from "../modals/modal";
-import AcceptReport from "../modals/reportAction";
+import { DeleteReport } from "../modals/deleteReport";
 
 type ReportCardProps = {
   data: ReportWithUserDataInterface;
@@ -39,9 +39,14 @@ const ReportCard = ({ data, refetchData }: ReportCardProps) => {
   return (
     <>
       <div className="relative p-6 flex flex-col gap-2 bg-white border rounded-lg pb-8 hover:shadow-md duration-200 h-fit">
-        <div className="flex items-center gap-2 text-[12px] font-light mb-2">
+        <div className="flex items-center gap-1 text-[12px] font-light mb-2">
           <p>الإبلاغ بواسطة: </p>
-          <p className="font-normal">{data?.reporter_name}</p>
+          <Link
+            href={`/profile/${data?.user_id}`}
+            className="font-normal hover:underline"
+          >
+            {data?.reporter_name}
+          </Link>
         </div>
 
         <Link
@@ -90,7 +95,7 @@ const ReportCard = ({ data, refetchData }: ReportCardProps) => {
         setIsOpen={setIsOpenReportAction}
         containerClassName="lg:w-[30%]"
       >
-        <AcceptReport
+        <DeleteReport
           data={data}
           setIsOpen={setIsOpenReportAction}
           refetchData={refetchData}

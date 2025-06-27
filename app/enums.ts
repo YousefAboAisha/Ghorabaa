@@ -22,8 +22,8 @@ export enum StoryStatus {
 // Report Status Enums
 export enum ReportStatus {
   PENDING = "PENDING",
-  RESOLVED = "RESOLVED",
-  REJECTED = "REJECTED",
+  DELETED = "DELETED",
+  KEPT = "KEPT",
 }
 
 // Event Status Enums
