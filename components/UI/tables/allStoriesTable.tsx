@@ -43,7 +43,6 @@ const AllStoriesTable = () => {
     () => Number(searchParams.get("page")) || 1
   );
   const [totalPages, setTotalPages] = useState(1);
-  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const fetchTableData = async () => {
     setTableLoading(true);
@@ -108,12 +107,6 @@ const AllStoriesTable = () => {
     }
   };
 
-  const filteredData = useMemo(() => {
-    return tableData.filter((story) =>
-      story.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery, tableData]);
-
   const renderTableActions = (
     story: StoryInterface & { publisher_name: string }
   ) => {
@@ -170,11 +163,11 @@ const AllStoriesTable = () => {
       return <ErrorMessage error={error as string} />;
     }
 
-    if (filteredData.length === 0) {
+    if (tableData.length === 0) {
       return <NoDataMessage />;
     }
 
-    if (filteredData && filteredData.length > 0) {
+    if (tableData && tableData.length > 0) {
       return (
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
@@ -210,7 +203,7 @@ const AllStoriesTable = () => {
           </thead>
 
           <tbody>
-            {filteredData?.map((story) => (
+            {tableData?.map((story) => (
               <tr key={story._id as string} className="hover:bg-gray-50">
                 <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
                   {story.status == StoryStatus.APPROVED ||
@@ -297,7 +290,6 @@ const AllStoriesTable = () => {
                 setPage(1);
                 router.push(`/admin/dashboard?page=1`);
                 setCurrentTap(status);
-                setSearchQuery("");
               }}
             >
               <p>{label}</p>

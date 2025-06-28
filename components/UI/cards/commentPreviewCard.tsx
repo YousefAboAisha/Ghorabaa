@@ -3,13 +3,15 @@ import { CommentInterface } from "@/app/interfaces";
 import { dateConversion } from "@/utils/format";
 import { getRoleInArabic } from "@/utils/text";
 import Image from "next/image";
+import Link from "next/link";
 
 type CommentPreviewCardProps = {
   data: CommentInterface;
 };
 
 const CommentPreviewCard = ({ data }: CommentPreviewCardProps) => {
-  const { author_image, author_name, text, createdAt, author_role } = data;
+  const { author_image, author_name, author_id, text, createdAt, author_role } =
+    data;
 
   return (
     <div className="relative flex flex-col gap-4 p-5 rounded-3xl rounded-br-none border bg-background_light shadow-sm w-full h-fit hover:shadow-md duration-200">
@@ -25,7 +27,13 @@ const CommentPreviewCard = ({ data }: CommentPreviewCardProps) => {
         </div>
 
         <div className="flex flex-col gap-1">
-          <h5 className="text-[13px] font-semibold">{author_name}</h5>
+          <Link
+            target="_blank"
+            href={`/profile/${author_id}`}
+            className="text-[13px] font-semibold hover:underline"
+          >
+            {author_name}
+          </Link>
           <p className="text-primary text-[10px] font-semibold">
             {getRoleInArabic(author_role!)}
           </p>

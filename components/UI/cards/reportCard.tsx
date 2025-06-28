@@ -28,7 +28,7 @@ const ReportCard = ({ data, refetchData }: ReportCardProps) => {
   console.log("Report data ", data);
 
   const commentData = {
-    author_id: data?.user_id,
+    author_id: data?.content.author_id,
     author_image: data?.reported_user_image || "/notFound.png",
     author_name: data?.reported_user_name || "مستخدم غير معروف",
     text: data?.content?.text || "تعليق غير متوفر",
@@ -39,14 +39,25 @@ const ReportCard = ({ data, refetchData }: ReportCardProps) => {
   return (
     <>
       <div className="relative p-6 flex flex-col gap-2 bg-white border rounded-lg pb-8 hover:shadow-md duration-200 h-fit">
-        <div className="flex items-center gap-1 text-[12px] font-light mb-2">
-          <p>الإبلاغ بواسطة: </p>
-          <Link
-            href={`/profile/${data?.user_id}`}
-            className="font-normal hover:underline"
+        <div className="flex items-center justify-between gap-1 text-[12px] font-light mb-2">
+          <div className="flex gap-1 items-center flex-wrap">
+            <p className="inline-block min-w-fit">الإبلاغ بواسطة: </p>
+            <Link
+              href={`/profile/${data?.user_id}`}
+              className="font-normal inline-block hover:underline min-w-fit"
+            >
+              {data?.reporter_name}
+            </Link>
+          </div>
+
+          <p
+            title={getReportStatusInArabic(data?.status)}
+            className={`min-w-fit p-1.5 px-2 text-white text-[10px] rounded-md ${getReportColor(
+              data?.status
+            )}`}
           >
-            {data?.reporter_name}
-          </Link>
+            {getReportStatusInArabic(data?.status)}
+          </p>
         </div>
 
         <Link
@@ -57,13 +68,6 @@ const ReportCard = ({ data, refetchData }: ReportCardProps) => {
         >
           <CommentPreviewCard data={commentData as CommentInterface} />
         </Link>
-
-        <p
-          title={getReportStatusInArabic(data?.status)}
-          className={`absolute top-3 left-3 w-3 h-3 text-white text-[10px] rounded-full cursor-pointer hover:shadow-md duration-200 ${getReportColor(
-            data?.status
-          )}`}
-        ></p>
 
         <div className="flex flex-col gap-2">
           <div className="gap-1 text-[red] bg-red-200 w-fit p-1.5 px-2.5 rounded-md text-[12px] mt-2">

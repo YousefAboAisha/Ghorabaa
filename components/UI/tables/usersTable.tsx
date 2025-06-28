@@ -14,6 +14,8 @@ import Pagination from "./pagination";
 import Link from "next/link";
 import Button from "../inputs/button";
 import UserSearch from "../modals/userSearch";
+import { UserRolesData } from "@/data/userRolesData";
+import { Role } from "@/app/enums";
 
 const UsersTable = () => {
   const [tableData, setTableData] = useState<UserInterface[]>([]);
@@ -32,6 +34,7 @@ const UsersTable = () => {
     () => Number(searchParams.get("page")) || 1
   );
   const [totalPages, setTotalPages] = useState(1);
+  const [currentRole, setCurrentRole] = useState<Role>(Role.ADMIN);
 
   const fetchTableData = async () => {
     setTableLoading(true);
@@ -39,7 +42,7 @@ const UsersTable = () => {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/users/fetch?page=${page}&limit=10`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/users/fetch?role=${currentRole}&page=${page}&limit=10`
       );
 
       if (!res.ok) {
@@ -80,7 +83,7 @@ const UsersTable = () => {
 
   useEffect(() => {
     fetchTableData();
-  }, [page]);
+  }, [page, currentRole]);
 
   const renderTableContent = () => {
     if (tableLoading) {
@@ -200,15 +203,50 @@ const UsersTable = () => {
     }
   };
 
+  const getBorderColor = (role: Role) => {
+    if (role !== currentRole) return ""; // ✅ Only add color to active tab
+    switch (role) {
+      case Role.ADMIN:
+        return "border-primary";
+      case Role.EDITOR:
+        return "border-blueColor";
+      case Role.USER:
+        return "border-secondary";
+      default:
+        return "";
+    }
+  };
+
   return (
     <>
-      <div className="w-full lg:w-fit">
-        <Button
-          onClick={() => setIsOpenStorySearch(true)}
-          title="بحث عن مستخدم"
-          className="bg-secondary text-white px-4"
-          icon={<CiSearch size={20} />}
-        />
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-6 text-sm mb-8">
+        <div className="flex items-center gap-4 overflow-auto scrollbar-hidden ">
+          {UserRolesData.map(({ label, role }) => (
+            <div
+              key={role}
+              title={label}
+              className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
+                role
+              )}`}
+              onClick={() => {
+                setPage(1);
+                router.push(`/admin/dashboard/users?page=1`);
+                setCurrentRole(role);
+              }}
+            >
+              <p className="px-2">{label}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="w-full lg:w-fit">
+          <Button
+            onClick={() => setIsOpenStorySearch(true)}
+            title="بحث عن مستخدم"
+            className="bg-secondary text-white px-4"
+            icon={<CiSearch size={20} />}
+          />
+        </div>
       </div>
 
       <div className="relative mt-8 overflow-x-auto">
