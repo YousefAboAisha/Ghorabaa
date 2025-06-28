@@ -7,6 +7,7 @@ import Button from "../inputs/button";
 import { FaEye } from "react-icons/fa";
 import FavoriteButton from "@/containers/storyDetails/favoriteButton";
 import { Session } from "next-auth";
+import { HighlightedText } from "../typography/highlightText";
 
 interface StoryCardsProps {
   data?: StoryInterface & { favorite?: boolean };
@@ -37,15 +38,33 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
       </Link>
 
       <div className="relative p-4">
-        <div className="flex items-center gap-2 text-sm overflow-hidden">
-          <p className="text-gray_dark whitespace-nowrap">الشهيد/</p>
+        <div className="flex items-center justify-between gap-2 text-sm ">
           <p className="font-bold text-secondary truncate whitespace-nowrap overflow-hidden text-ellipsis">
-            {data?.name}
+            <HighlightedText
+              highlights={data?.highlight}
+              field="name"
+              fallback={data?.name!}
+            />
+          </p>
+
+          <p className="text-gray_dark font-normal inline min-w-fit">
+            "
+            <HighlightedText
+              highlights={data?.highlight}
+              field="nickname"
+              fallback={data?.nickname ?? ""}
+            />
+            "
           </p>
         </div>
 
+        {/* Bio with highlighting */}
         <p className="text-gray-600 text-[13px] mt-2 line-clamp-2 h-9">
-          {data?.bio}
+          <HighlightedText
+            highlights={data?.highlight}
+            field="bio"
+            fallback={data?.bio ?? ""}
+          />
         </p>
       </div>
 

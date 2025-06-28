@@ -11,7 +11,7 @@ import CommentsSection from "./commentsSection";
 import { Role, StoryStatus } from "@/app/enums";
 import { BsExclamationTriangle, BsEye } from "react-icons/bs";
 import { BiInfoCircle } from "react-icons/bi";
-import LogVisit from "@/utils/logVisit";
+import LogVisit from "@/containers/stories/logVisit";
 
 type Props = {
   id: string;

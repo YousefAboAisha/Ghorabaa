@@ -24,7 +24,7 @@ const SearchSection = ({ session }: SearchSectionProps) => {
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      if (searchQuery.length > 0) {
+      if (searchQuery.length > 1) {
         const fetchStoriesByQuery = async () => {
           setLoading(true);
           setError(null);
@@ -78,11 +78,11 @@ const SearchSection = ({ session }: SearchSectionProps) => {
 
     if (error) return <ErrorMessage error={error as string} />;
 
-    if (stories.length <= 0) {
+    if (stories?.length < 1) {
       return <NoDataMessage message="لا توجد نتائج للبحث" />;
     }
 
-    if (stories.length > 0) {
+    if (stories?.length >= 1) {
       return (
         <div className="cards-grid-4">
           {stories.map((martyr: StoryInterface, index) => (

@@ -7,6 +7,7 @@ import ErrorMessage from "@/components/responseMessages/errorMessage";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import Image from "next/image";
 import Link from "next/link";
+import { HighlightedText } from "../typography/highlightText";
 
 const UserSearch = () => {
   const [users, setUsers] = useState<UserInterface[]>([]);
@@ -16,7 +17,7 @@ const UserSearch = () => {
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      if (searchQuery.length > 0) {
+      if (searchQuery.length > 1) {
         const fetchUsersByQuery = async () => {
           setLoading(true);
           setError(null);
@@ -76,13 +77,13 @@ const UserSearch = () => {
     if (error)
       return <ErrorMessage error={error as string} className="border-none" />;
 
-    if (users.length <= 0) {
+    if (users?.length <= 0) {
       return (
         <NoDataMessage message="لا توجد نتائج للبحث" className="border-none" />
       );
     }
 
-    if (users.length > 0) {
+    if (users?.length > 0) {
       return (
         <div className="cards-grid-2 p-4">
           {users.map((user: UserInterface, index) => (
@@ -101,8 +102,21 @@ const UserSearch = () => {
               />
 
               <div className="flex flex-col gap-2">
-                <h2 className="text-[13px] font-normal">{user.name}</h2>
-                <p className="text-[12px] text-gray_dark">{user.email}</p>
+                <h2 className="text-[13px] font-normal">
+                  <HighlightedText
+                    highlights={user?.highlight}
+                    field="name"
+                    fallback={user?.name ?? ""}
+                  />
+                </h2>
+
+                <p className="text-[12px] text-gray_dark">
+                  <HighlightedText
+                    highlights={user?.highlight}
+                    field="email"
+                    fallback={user?.email ?? ""}
+                  />
+                </p>
               </div>
             </Link>
           ))}
@@ -135,7 +149,7 @@ const UserSearch = () => {
             }}
           />
 
-          {users.length > 0 && (
+          {users?.length > 0 && (
             <div className="text-[11px] font-light mt-2">
               تم العثور على <p className="font-bold inline">{users.length}</p>{" "}
               من نتائج البحث

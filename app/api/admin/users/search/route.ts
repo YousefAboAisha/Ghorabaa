@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
 
   console.log("Search Query", query);
 
-  if (!query) {
+  if (!query || query.length < 2) {
     return NextResponse.json([], { status: 200 });
   }
 
@@ -29,16 +29,54 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // ✅ Fetch search results
     const data = await usersCollection
       .aggregate([
         {
           $search: {
             index: "user",
-            text: {
-              query: query,
+            compound: {
+              should: [
+                {
+                  text: {
+                    query,
+                    path: "name",
+                    fuzzy: { maxEdits: 1, prefixLength: 2 },
+                    score: { boost: { value: 3 } },
+                  },
+                },
+                {
+                  text: {
+                    query,
+                    path: "email",
+                    fuzzy: { maxEdits: 1, prefixLength: 2 },
+                    score: { boost: { value: 1 } },
+                  },
+                },
+              ],
+            },
+            highlight: {
               path: ["name", "email"],
             },
+          },
+        },
+        {
+          $addFields: {
+            highlights: { $meta: "searchHighlights" },
+            score: { $meta: "searchScore" },
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+            email: 1,
+            image: 1,
+            highlight: { $meta: "searchHighlights" },
+          },
+        },
+        {
+          $sort: {
+            score: -1,
           },
         },
         { $limit: 20 },

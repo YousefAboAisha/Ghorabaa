@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
 
   console.log("Search Query", query);
 
-  if (!query) {
+  if (!query || query.length < 2) {
     return NextResponse.json([], { status: 200 });
   }
 
@@ -35,14 +35,58 @@ export async function GET(req: NextRequest) {
         {
           $search: {
             index: "default",
-            text: {
-              query: query,
-              path: ["name", "bio"],
+            compound: {
+              should: [
+                {
+                  text: {
+                    query,
+                    path: "name",
+                    fuzzy: {
+                      maxEdits: 2,
+                      prefixLength: 2,
+                    },
+                    score: { boost: { value: 3 } },
+                  },
+                },
+                {
+                  text: {
+                    query,
+                    path: "bio",
+                    fuzzy: {
+                      maxEdits: 1,
+                      prefixLength: 2,
+                    },
+                    score: { boost: { value: 1 } },
+                  },
+                },
+              ],
             },
+            highlight: { path: ["name", "bio"] },
           },
         },
         {
-          $match: { status: StoryStatus.APPROVED }, // ✅ Only pending stories
+          $match: {
+            status: StoryStatus.APPROVED,
+          },
+        },
+        {
+          $addFields: {
+            score: { $meta: "searchScore" },
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+            image: 1,
+            highlight: { $meta: "searchHighlights" },
+            age: 1,
+          },
+        },
+        {
+          $sort: {
+            score: -1,
+          },
         },
         { $limit: 20 },
       ])

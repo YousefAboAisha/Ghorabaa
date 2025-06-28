@@ -20,15 +20,23 @@ const Modal = ({
   children,
   ...rest
 }: ModalType) => {
-  // Hide body scroll when modal is open
+  // Hide body scroll when modal is open + handle Escape key
   useEffect(() => {
     const scrollBarWidth =
       window.innerWidth - document.documentElement.clientWidth;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen && !loading) {
+        setIsOpen(false);
+      }
+    };
 
     if (isOpen) {
       document.body.style.setProperty("overflow", "hidden", "important");
       document.body.style.paddingRight = `${scrollBarWidth}px`;
       document.documentElement.style.overflow = "hidden";
+
+      document.addEventListener("keydown", handleKeyDown);
     } else {
       document.body.style.overflow = "";
       document.body.style.paddingRight = "";
@@ -39,8 +47,9 @@ const Modal = ({
       document.body.style.overflow = "";
       document.body.style.paddingRight = "";
       document.documentElement.style.overflow = "";
+      document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isOpen, loading, setIsOpen]);
 
   return (
     <>

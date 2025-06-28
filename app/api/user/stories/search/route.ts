@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
   console.log("Search Query", query);
 
-  if (!query) {
+  if (!query || query.length < 2) {
     return NextResponse.json([], { status: 200 });
   }
 
@@ -40,24 +40,49 @@ export async function GET(req: NextRequest) {
         {
           $search: {
             index: "default",
-            text: {
-              query: query,
-              path: ["name", "bio"],
+            compound: {
+              should: [
+                {
+                  text: {
+                    query,
+                    path: ["name", "nickname"], // <-- add "nickname" here
+                    fuzzy: {
+                      maxEdits: 1,
+                      prefixLength: 3,
+                    },
+                    score: { boost: { value: 3 } },
+                  },
+                },
+              ],
             },
+            highlight: { path: ["name", "nickname"] },
           },
         },
         {
-          $match: { status: StoryStatus.APPROVED }, // ✅ Only pending stories
+          $match: {
+            status: StoryStatus.APPROVED,
+          },
         },
-        { $limit: 20 },
+        {
+          $addFields: {
+            score: { $meta: "searchScore" },
+          },
+        },
         {
           $project: {
             _id: 1,
             name: 1,
+            nickname: 1,
             image: 1,
             bio: 1,
+            highlight: { $meta: "searchHighlights" },
             birth_date: 1,
             death_date: 1,
+          },
+        },
+        {
+          $sort: {
+            score: -1,
           },
         },
       ])
@@ -73,6 +98,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ data: serialized }, { status: 200 });
   } catch (error) {
     console.error("Search error:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

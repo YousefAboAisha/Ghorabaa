@@ -16,6 +16,7 @@ export interface UserInterface extends Document {
   _id: Types.ObjectId | string; // Unique identifier for the report.
   id_number?: string;
   name: string;
+  highlight: Highlight[];
   image: string;
   phone_number?: string;
   email: string;
@@ -34,11 +35,20 @@ export interface SocialMediaLinks {
   x?: string;
 }
 
+export type Highlight = {
+  path: string; // field name (e.g., "name", "bio")
+  texts: {
+    value: string; // the actual text fragment
+    type: "text" | "hit"; // "hit" = matched part, "text" = normal part
+  }[];
+};
+
 export interface StoryInterface extends Document {
   _id: Types.ObjectId | string;
   id_number: string;
   gender: Gender;
   name: string;
+  highlight: Highlight[];
   social_media?: SocialMediaLinks;
   nickname?: string;
   birth_date: string;

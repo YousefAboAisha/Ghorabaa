@@ -7,6 +7,7 @@ import ErrorMessage from "@/components/responseMessages/errorMessage";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import Image from "next/image";
 import Link from "next/link";
+import { HighlightedText } from "../typography/highlightText";
 
 const StorySearch = () => {
   const [stories, setStories] = useState<StoryInterface[]>([]);
@@ -16,7 +17,7 @@ const StorySearch = () => {
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      if (searchQuery.length > 0) {
+      if (searchQuery.length > 1) {
         const fetchStoriesByQuery = async () => {
           setLoading(true);
           setError(null);
@@ -67,37 +68,48 @@ const StorySearch = () => {
 
   const renderContent = () => {
     if (loading)
-      return <p className="text-sm font-normal">جارٍ البحث عن القصة...</p>;
+      return (
+        <p className="text-sm font-normal abs-center">جارٍ البحث عن القصة...</p>
+      );
 
     if (error)
       return <ErrorMessage error={error as string} className="!border-none" />;
 
-    if (stories.length <= 0) {
+    if (stories?.length <= 0) {
       return (
         <NoDataMessage message="لا توجد نتائج للبحث" className="!border-none" />
       );
     }
 
-    if (stories.length > 0) {
+    if (stories?.length > 0) {
       return (
         <div className="cards-grid-2 p-4">
           {stories.map((martyr: StoryInterface, index) => (
             <Link
               href={`/stories/${martyr._id}`}
               key={index}
-              className="p-4 flex items-center gap-3 bg-background_light border rounded-md hover:shadow-sm duration-150"
+              className="p-4 flex items-center gap-3 bg-white border rounded-md hover:shadow-sm duration-150"
               target="_blank"
             >
-              <Image
-                src={martyr.image || "/notFound.png"}
-                alt={martyr.name}
-                width={40}
-                height={40}
-                className="rounded"
-              />
+              <div className="relative w-[60px] h-[60px]">
+                <Image
+                  src={martyr.image || "/notFound.png"}
+                  alt={martyr.name}
+                  width={60}
+                  height={60}
+                  className="rounded-md w-full h-full object-cover"
+                  unoptimized
+                />
+              </div>
 
               <div className="flex flex-col gap-2">
-                <h2 className="text-[13px] font-normal">{martyr.name}</h2>
+                <h2 className="text-[13px] font-normal">
+                  <HighlightedText
+                    highlights={martyr?.highlight}
+                    field="name"
+                    fallback={martyr?.name ?? ""}
+                  />
+                </h2>
                 <p className="text-[12px] text-gray_dark">{martyr.age} عاماً</p>
               </div>
             </Link>
@@ -130,7 +142,7 @@ const StorySearch = () => {
             }}
           />
 
-          {stories.length > 0 && (
+          {stories?.length > 0 && (
             <div className="text-[11px] font-light mt-2">
               تم العثور على <p className="font-bold inline">{stories.length}</p>{" "}
               من نتائج البحث
@@ -138,7 +150,7 @@ const StorySearch = () => {
           )}
         </div>
 
-        <div className="relative flex items-center justify-center mt-6 min-h-[50vh] border rounded-md">
+        <div className="relative bg-background_light mt-6 min-h-[50vh] border rounded-md">
           {renderContent()}
         </div>
       </div>
