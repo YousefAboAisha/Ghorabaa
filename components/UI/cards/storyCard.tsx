@@ -43,7 +43,7 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
             <HighlightedText
               highlights={data?.highlight}
               field="name"
-              fallback={data?.name!}
+              fallback={data?.name ?? ""}
             />
           </p>
 
