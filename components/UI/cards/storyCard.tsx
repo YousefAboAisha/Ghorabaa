@@ -48,13 +48,13 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
           </p>
 
           <p className="text-gray_dark font-normal inline min-w-fit">
-            "
+            &quot;
             <HighlightedText
               highlights={data?.highlight}
               field="nickname"
               fallback={data?.nickname ?? ""}
             />
-            "
+            &quot;
           </p>
         </div>
 

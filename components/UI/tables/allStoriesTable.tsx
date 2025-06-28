@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { StoryInterface } from "@/app/interfaces";
 import Image from "next/image";
 import { StoryStatus } from "@/app/enums";
