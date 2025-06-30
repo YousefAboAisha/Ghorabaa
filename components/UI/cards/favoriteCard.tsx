@@ -4,7 +4,7 @@ import { BsEye, BsTrash } from "react-icons/bs";
 import { StoryInterface } from "@/app/interfaces";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { toast } from "react-toastify";
+import { useFavoriteStore } from "@/stores/favoriteStore";
 
 type FavoriteCardProps = {
   data?: StoryInterface;
@@ -12,41 +12,17 @@ type FavoriteCardProps = {
 };
 
 const FavoriteCard = ({ data, refetchData }: FavoriteCardProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const { removeFromFavorites } = useFavoriteStore();
+  const [loading, setLoading] = useState(false);
 
-  const removeFromFavorites = async (story_id: string) => {
-    try {
-      setLoading(true);
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/updateFavorite/${story_id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // Required for NextAuth session cookies
-          body: JSON.stringify({
-            isFavorite: false, // Toggle the current value
-          }),
-        }
-      );
-
-      if (!res.ok) {
-        const { error } = await res.json();
-        throw new Error(error as string);
+  const removeFromFavoritesHandler = async (storyId: string) => {
+    setLoading(true);
+    await removeFromFavorites(storyId as string, () => {
+      if (refetchData) {
+        refetchData();
       }
-
-      const data = await res.json();
-      console.log("data", data);
-
-      if (refetchData) refetchData();
-    } catch (error) {
-      console.error("Failed to toggle favorite:", error);
-      toast.error("حدث خطأ أثناء إزالة القصة إلى المحفوظات");
-    } finally {
-      setLoading(false);
-    }
+    });
+    setLoading(false);
   };
 
   return (
@@ -83,7 +59,7 @@ const FavoriteCard = ({ data, refetchData }: FavoriteCardProps) => {
             <div
               title="إزالة من القصص المحفوظة"
               className="flex items-center justify-center rounded-xl border border-gray_light shadow-sm p-3 cursor-pointer "
-              onClick={() => removeFromFavorites(data?._id as string)}
+              onClick={() => removeFromFavoritesHandler(data?._id as string)}
             >
               {loading ? (
                 <AiOutlineLoading3Quarters size={20} className="animate-spin" />

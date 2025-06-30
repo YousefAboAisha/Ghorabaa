@@ -1,10 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import UsersTable from "@/components/UI/tables/usersTable";
 import UserGrowthLineChart from "@/components/UI/charts/userGrowthLineChart";
+import ActiveUserCard from "@/components/UI/cards/activeUserCard";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import {
+  MdOutlineArrowBackIos,
+  MdOutlineArrowForwardIos,
+} from "react-icons/md";
 
 interface ActiveUserData {
   user_id: string;
@@ -127,60 +135,52 @@ const Users = () => {
     if (activeUsersData.length === 0) return null;
 
     return (
-      <div className="relative cards-grid-2 p-4 bg-white rounded-lg max-h-[60vh] overflow-auto">
-        {activeUsersData.map((user, index) => (
-          <div
-            key={user.user_id}
-            className="relative min-w-fit h-fit bg-background_light border rounded-md hover:shadow-sm duration-150"
-          >
-            <div className="absolute top-1 right-1 flex items-center justify-center rounded-md p-1.5 text-[13px] text-white bg-primary font-semibold">
-              #{index + 1}
-            </div>
-
-            <div className="flex flex-col w-fit items-center gap-2 p-6 py-4 mx-auto">
-              <Image
-                alt="صورة المستخدم"
-                src={user.image || "/notFound.png"}
-                width={75}
-                height={75}
-                className="rounded-full object-cover"
+      <Swiper
+        modules={[Navigation, Autoplay]}
+        navigation={{
+          nextEl: ".swiper-button-next-custom",
+          prevEl: ".swiper-button-prev-custom",
+        }}
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 3000 }}
+        className="relative overflow-hidden"
+        style={{
+          direction: "ltr",
+        }}
+      >
+        {activeUsersData.map(
+          (
+            { user_id, name, email, image, stories, comments, total },
+            index
+          ) => (
+            <SwiperSlide key={index}>
+              <ActiveUserCard
+                user_id={user_id}
+                name={name}
+                email={email}
+                image={image}
+                stories={stories}
+                comments={comments}
+                total={index + 1}
               />
+            </SwiperSlide>
+          )
+        )}
 
-              <div className="flex flex-col flex-wrap gap-1 items-center justify-center text-center">
-                <Link
-                  href={`/profile/${user.user_id}`}
-                  target="_blank"
-                  className="text-[13px] font-normal hover:underline"
-                >
-                  {user.name || "مستخدم غير معروف"}
-                </Link>
-                <p className="font-light text-[12px] break-words">
-                  {user.email}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center border-t">
-              <div className="flex flex-col justify-center items-center gap-1 w-full h-full p-6 py-4 border-l">
-                <h4 className="text-[13px] font-light">القصص</h4>
-                <p className="text-lg font-bold">{user.stories}</p>
-              </div>
-
-              <div className="flex flex-col justify-center items-center gap-1 w-full h-full p-6 py-4">
-                <h4 className="text-sm font-light">التعليقات</h4>
-                <p className="text-lg font-bold">{user.comments}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+        <button className="swiper-button-prev-custom absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-white shadow rounded-full disabled:cursor-not-allowed disabled:opacity-35 ">
+          <MdOutlineArrowBackIos />
+        </button>
+        <button className="swiper-button-next-custom absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-white shadow rounded-full  disabled:cursor-not-allowed disabled:opacity-35">
+          <MdOutlineArrowForwardIos />
+        </button>
+      </Swiper>
     );
   };
 
   return (
     <div className="relative">
       <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-[60vh]">
-        <div className="relative bg-white border rounded-lg">
+        <div className="relative flex items-center justify-center p-0 md:p-12 bg-white border rounded-lg">
           {renderActiveUsersContent()}
         </div>
 

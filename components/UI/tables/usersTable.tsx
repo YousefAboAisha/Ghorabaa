@@ -1,31 +1,37 @@
 "use client";
 import { useEffect, useState } from "react";
-import { UserInterface } from "@/app/interfaces";
+import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
+
+import { UserInterface } from "@/app/interfaces";
+import { Role } from "@/app/enums";
+import { UserRolesData } from "@/data/userRolesData";
+
+import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
+import Pagination from "./pagination";
+import Button from "../inputs/button";
 import Modal from "@/components/UI/modals/modal";
 import EditUser from "@/components/UI/modals/editUser";
-import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
+import UserSearch from "../modals/userSearch";
+
 import { getRoleColor, getRoleInArabic } from "@/utils/text";
 import { CiSearch } from "react-icons/ci";
-import { useRouter, useSearchParams } from "next/navigation";
-import Pagination from "./pagination";
-import Link from "next/link";
-import Button from "../inputs/button";
-import UserSearch from "../modals/userSearch";
-import { UserRolesData } from "@/data/userRolesData";
-import { Role } from "@/app/enums";
 
 const UsersTable = () => {
   const [tableData, setTableData] = useState<UserInterface[]>([]);
   const [tableLoading, setTableLoading] = useState(true);
-  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [isOpenEditUser, setIsOpenEditUser] = useState<boolean>(false);
-  const [isOpenStorySearch, setIsOpenStorySearch] = useState<boolean>(false);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const [userData, setuserData] = useState<UserInterface>();
+  const [userData, setUserData] = useState<UserInterface | null>(null);
+  const [isOpenEditUser, setIsOpenEditUser] = useState(false);
+  const [isOpenUserSearch, setIsOpenUserSearch] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [currentRole, setCurrentRole] = useState<Role>(Role.ADMIN);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -33,8 +39,6 @@ const UsersTable = () => {
   const [page, setPage] = useState<number>(
     () => Number(searchParams.get("page")) || 1
   );
-  const [totalPages, setTotalPages] = useState(1);
-  const [currentRole, setCurrentRole] = useState<Role>(Role.ADMIN);
 
   const fetchTableData = async () => {
     setTableLoading(true);
@@ -53,17 +57,17 @@ const UsersTable = () => {
         } catch {
           errorMsg = res.statusText || errorMsg;
         }
-
         throw new Error(errorMsg);
       }
 
       const { data, pagination } = await res.json();
 
-      if (data && Array.isArray(data)) {
-        console.log("pagination data", pagination);
+      if (Array.isArray(data)) {
+        console.log("Fetched Users Data:", data);
+        console.log("Fetched Pagination Data:", pagination);
+
         setTableData(data);
         setTotalPages(pagination.totalPages);
-        console.log("table's pagination", pagination);
       } else {
         setTableData([]);
       }
@@ -71,140 +75,23 @@ const UsersTable = () => {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
       setError(message);
-      console.error("Error fetching users table data:", error);
     } finally {
       setTableLoading(false);
     }
   };
 
+  // Initial URL sync
   useEffect(() => {
     router.push(`/admin/dashboard/users?page=${page}`);
   }, []);
 
+  // Refetch on role/page change
   useEffect(() => {
     fetchTableData();
-  }, [page, currentRole]);
-
-  const renderTableContent = () => {
-    if (tableLoading) {
-      return <DashboardTableSkeletonLoader />;
-    }
-
-    if (error) {
-      return <ErrorMessage error={error as string} />;
-    }
-
-    if (tableData.length <= 0) {
-      return <NoDataMessage />;
-    }
-
-    if (tableData && tableData.length > 0) {
-      return (
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                الصورة
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                اسم المستخدم
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                البريد الالكتروني
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                رقم الهاتف
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                تاريخ الإنشاء
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                نوع الحساب
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                العمليات
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {tableData?.map((user) => (
-              <tr key={user._id as string} className="hover:bg-gray-50">
-                <td className="py-3 px-4 border-b text-right">
-                  <Image
-                    src={user.image}
-                    alt={user.name}
-                    width={50}
-                    height={50}
-                    className="rounded-full border"
-                  />
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700 hover:underline">
-                  <Link
-                    title="عرض القصة"
-                    className="hover:underline"
-                    href={`/profile/${user._id}`}
-                    target="_blank"
-                  >
-                    {user.name}
-                  </Link>
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {user.email || "غير محدد"}
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {user.phone_number || "غير محدد"}
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {new Date(user.createdAt).toLocaleDateString("ar-EG", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </td>
-
-                <td className={`py-3 px-4 border-b text-right text-[12px]`}>
-                  <p
-                    style={{
-                      backgroundColor: getRoleColor(user.role),
-                    }}
-                    className={`w-fit p-1.5 px-2.5 rounded-sm text-white`}
-                  >
-                    {getRoleInArabic(user.role)}
-                  </p>
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-[12px]">
-                  <p
-                    onClick={() => {
-                      setIsOpenEditUser(true);
-                      setuserData(user);
-                    }}
-                    className="hover:underline cursor-pointer"
-                  >
-                    تعديل البيانات
-                  </p>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      );
-    }
-  };
+  }, [currentRole, page]);
 
   const getBorderColor = (role: Role) => {
-    if (role !== currentRole) return ""; // ✅ Only add color to active tab
+    if (role !== currentRole) return "";
     switch (role) {
       case Role.ADMIN:
         return "border-primary";
@@ -217,10 +104,99 @@ const UsersTable = () => {
     }
   };
 
+  const renderTableContent = () => {
+    if (tableLoading) return <DashboardTableSkeletonLoader />;
+    if (error) return <ErrorMessage error={error} />;
+    if (tableData.length === 0) return <NoDataMessage />;
+
+    return (
+      <table className="min-w-full bg-white border border-gray-200">
+        <thead>
+          <tr className="bg-gray-100">
+            {[
+              "الصورة",
+              "اسم المستخدم",
+              "البريد الالكتروني",
+              "رقم الهاتف",
+              "تاريخ الإنشاء",
+              "نوع الحساب",
+              "العمليات",
+            ].map((title, i) => (
+              <th
+                key={i}
+                className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium"
+              >
+                {title}
+              </th>
+            ))}
+          </tr>
+        </thead>
+
+        <tbody>
+          {tableData.map((user) => (
+            <tr key={user._id as string} className="hover:bg-gray-50">
+              <td className="py-3 px-4 border-b text-right">
+                <Image
+                  src={user.image}
+                  alt={user.name}
+                  width={50}
+                  height={50}
+                  className="rounded-full border"
+                />
+              </td>
+              <td className="py-3 px-4 border-b text-right text-sm text-gray-700 hover:underline">
+                <Link
+                  title="عرض المستخدم"
+                  href={`/profile/${user._id}`}
+                  target="_blank"
+                >
+                  {user.name}
+                </Link>
+              </td>
+              <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                {user.email || "غير محدد"}
+              </td>
+              <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                {user.phone_number || "غير محدد"}
+              </td>
+              <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                {new Date(user.createdAt).toLocaleDateString("ar-EG", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </td>
+              <td className="py-3 px-4 border-b text-right text-[12px]">
+                <span
+                  style={{ backgroundColor: getRoleColor(user.role) }}
+                  className="w-fit p-1.5 px-2.5 rounded-sm text-white"
+                >
+                  {getRoleInArabic(user.role)}
+                </span>
+              </td>
+              <td className="py-3 px-4 border-b text-right text-[12px]">
+                <span
+                  onClick={() => {
+                    setUserData(user);
+                    setIsOpenEditUser(true);
+                  }}
+                  className="hover:underline cursor-pointer"
+                >
+                  تعديل البيانات
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
   return (
     <>
+      {/* Role Filter + Search */}
       <div className="flex flex-col lg:flex-row items-center justify-between gap-6 text-sm mb-8">
-        <div className="flex items-center gap-4 overflow-auto scrollbar-hidden ">
+        <div className="flex items-center gap-4 overflow-auto scrollbar-hidden">
           {UserRolesData.map(({ label, role }) => (
             <div
               key={role}
@@ -241,7 +217,7 @@ const UsersTable = () => {
 
         <div className="w-full lg:w-fit">
           <Button
-            onClick={() => setIsOpenStorySearch(true)}
+            onClick={() => setIsOpenUserSearch(true)}
             title="بحث عن مستخدم"
             className="bg-secondary text-white px-4"
             icon={<CiSearch size={20} />}
@@ -249,11 +225,12 @@ const UsersTable = () => {
         </div>
       </div>
 
+      {/* Table */}
       <div className="relative mt-8 overflow-x-auto">
         {renderTableContent()}
       </div>
 
-      {/* Pagination is here */}
+      {/* Pagination */}
       <Pagination
         currentPage={page}
         totalPages={totalPages}
@@ -265,25 +242,28 @@ const UsersTable = () => {
         }}
       />
 
-      {/* Edit user Modal */}
+      {/* Edit User Modal */}
       <Modal
         isOpen={isOpenEditUser}
         setIsOpen={setIsOpenEditUser}
         containerClassName="lg:w-[35%]"
         loading={loading}
       >
-        <EditUser
-          data={userData!}
-          refetchData={fetchTableData}
-          setIsOpen={setIsOpenEditUser}
-          setLoading={setLoading}
-        />
+        {userData && (
+          <EditUser
+            data={userData}
+            refetchData={fetchTableData}
+            setIsOpen={setIsOpenEditUser}
+            setLoading={setLoading}
+          />
+        )}
       </Modal>
 
+      {/* Search Modal */}
       <Modal
-        isOpen={isOpenStorySearch}
-        setIsOpen={setIsOpenStorySearch}
-        containerClassName="!lg:w-3/12 "
+        isOpen={isOpenUserSearch}
+        setIsOpen={setIsOpenUserSearch}
+        containerClassName="!lg:w-3/12"
       >
         <UserSearch />
       </Modal>

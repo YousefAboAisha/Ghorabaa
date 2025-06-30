@@ -1,4 +1,4 @@
-// app/api/users/route.ts
+// app/api/admin/users/fetch/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
@@ -28,18 +28,24 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
+    // Validate role if provided
+    const validRoles = Object.values(Role);
+    const matchStage: Record<string, unknown> = {};
+
+    if (role && validRoles.includes(role as Role)) {
+      matchStage.role = role;
+    }
+
     // Get paginated users
     const users = await usersCollection
-      .find({
-        role,
-      })
+      .find(matchStage)
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 })
       .toArray();
 
-    // Count total users
-    const totalDocs = await usersCollection.countDocuments();
+    // Count total users for pagination metadata
+    const totalDocs = await usersCollection.countDocuments(matchStage);
 
     return NextResponse.json(
       {

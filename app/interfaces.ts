@@ -28,6 +28,16 @@ export interface UserInterface extends Document {
   createdAt: Date;
 }
 
+export interface ActiveUserData {
+  user_id: string;
+  name: string;
+  email: string;
+  image?: string;
+  stories: number;
+  comments: number;
+  total: number;
+}
+
 // Define the Story interface
 export interface SocialMediaLinks {
   instagram?: string;
