@@ -74,19 +74,6 @@ export async function PUT(
       };
 
       await notificationsCollection.insertOne(storyNotificationPayload);
-
-      // Push notification to user's array (max 7)
-      const update: UpdateFilter<User> = {
-        $push: {
-          notifications: {
-            $each: [storyNotificationPayload],
-            $position: 0,
-            $slice: 7,
-          },
-        },
-      };
-
-      await usersCollection.updateOne({ _id: story.publisher_id }, update);
     }
 
     return NextResponse.json(
@@ -95,6 +82,9 @@ export async function PUT(
     );
   } catch (error) {
     console.error("Status update error:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

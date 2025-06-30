@@ -84,19 +84,6 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
       };
 
       await notificationsCollection.insertOne(notificationPayload);
-
-      // Optionally push to embedded notifications array (limit to latest 7)
-      const update: UpdateFilter<User> = {
-        $push: {
-          notifications: {
-            $each: [notificationPayload],
-            $position: 0,
-            $slice: 7,
-          },
-        },
-      };
-
-      await usersCollection.updateOne({ _id: new ObjectId(id) }, update);
     }
 
     return NextResponse.json(
@@ -105,6 +92,9 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
     );
   } catch (error) {
     console.error("❌ Error updating user:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

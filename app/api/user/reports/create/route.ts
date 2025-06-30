@@ -79,22 +79,6 @@ export async function POST(req: NextRequest) {
       };
 
       await notificationsCollection.insertOne(storyNotificationPayload);
-
-      // Push notification to user's array (max 7)
-      const update: UpdateFilter<User> = {
-        $push: {
-          notifications: {
-            $each: [storyNotificationPayload],
-            $position: 0,
-            $slice: 7,
-          },
-        },
-      };
-
-      await usersCollection.updateOne(
-        { _id: new ObjectId(newReport.user_id) },
-        update
-      );
     }
 
     return NextResponse.json(

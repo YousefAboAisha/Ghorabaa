@@ -24,7 +24,6 @@ export interface UserInterface extends Document {
   role: Role;
   provider: ProviderTypes;
   favorites: StoryInterface[];
-  notifications: NotificationInterface[];
   createdAt: Date;
 }
 

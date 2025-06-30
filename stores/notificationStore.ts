@@ -49,7 +49,7 @@ export const useNotificationStore = create<NotificationState>((set) => ({
       console.log("[data, hasUnread]", [data, hasUnread]);
 
       set({
-        notifications: [...data],
+        notifications: data.slice(0, 7),
         hasUnread,
         loading: false,
       });

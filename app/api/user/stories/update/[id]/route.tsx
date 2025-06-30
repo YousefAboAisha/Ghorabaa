@@ -95,22 +95,6 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
       };
 
       await notificationsCollection.insertOne(storyNotificationPayload);
-
-      // Push notification to user's array (max 7)
-      const update: UpdateFilter<User> = {
-        $push: {
-          notifications: {
-            $each: [storyNotificationPayload],
-            $position: 0,
-            $slice: 7,
-          },
-        },
-      };
-
-      await usersCollection.updateOne(
-        { _id: updatedStory.publisher_id },
-        update
-      );
     }
 
     if (!updatedStory) {
@@ -126,6 +110,9 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     });
   } catch (error) {
     console.error("Update Error:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

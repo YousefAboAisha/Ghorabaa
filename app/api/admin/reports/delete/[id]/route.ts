@@ -76,22 +76,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
       };
 
       await notificationsCollection.insertOne(storyNotificationPayload);
-
-      // Push notification to user's array (max 7)
-      const update: UpdateFilter<User> = {
-        $push: {
-          notifications: {
-            $each: [storyNotificationPayload],
-            $position: 0,
-            $slice: 7,
-          },
-        },
-      };
-
-      await usersCollection.updateOne(
-        { _id: new ObjectId(report.user_id) },
-        update
-      );
     }
 
     return NextResponse.json({

@@ -14,10 +14,7 @@ export async function POST(originalReq: Request) {
   const token = await getToken({ req: new NextRequest(reqForToken), secret });
 
   if (!token) {
-    return NextResponse.json(
-      { error: "غير مصرح لك" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "غير مصرح لك" }, { status: 401 });
   }
 
   try {
@@ -66,24 +63,14 @@ export async function POST(originalReq: Request) {
       };
 
       await notificationsCollection.insertOne(notificationPayload);
-
-      // Push to user.notifications array, keeping only latest 7
-      const update: UpdateFilter<User> = {
-        $push: {
-          notifications: {
-            $each: [notificationPayload],
-            $position: 0,
-            $slice: 7,
-          },
-        },
-      };
-
-      await usersCollection.updateOne({ _id: story?.publisher_id }, update);
     }
 
     return NextResponse.json({ success: true, data: result }, { status: 201 });
   } catch (error) {
     console.error("Error adding comment:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

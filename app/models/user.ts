@@ -53,23 +53,6 @@ const userSchema = new Schema<UserInterface>(
       },
     ],
 
-    notifications: {
-      type: [
-        {
-          title: String,
-          notification_type: {
-            type: String,
-            enum: Object.values(NotificationTypes),
-          },
-          story_id: { type: Schema.Types.ObjectId, ref: "Story" },
-          author_name: String,
-          author_id: { type: Schema.Types.ObjectId, ref: "User" },
-          createdAt: Date,
-        },
-      ],
-      default: [],
-    },
-
     role: {
       type: String,
       enum: Object.values(Role),

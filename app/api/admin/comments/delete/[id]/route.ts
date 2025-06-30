@@ -73,19 +73,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
         createdAt: new Date(),
       };
       await notificationsCollection.insertOne(storyNotificationPayload);
-
-      // Push notification to user's array (max 7)[]
-      const update: UpdateFilter<User> = {
-        $push: {
-          notifications: {
-            $each: [storyNotificationPayload],
-            $position: 0,
-            $slice: 7,
-          },
-        },
-      };
-
-      await usersCollection.updateOne({ _id: comment.author_id }, update);
     }
 
     return NextResponse.json(
