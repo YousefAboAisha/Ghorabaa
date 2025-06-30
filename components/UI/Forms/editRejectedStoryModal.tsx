@@ -325,7 +325,10 @@ const EditRejectedStoryForm = ({
                   </div>
                 </div>
 
-                <div>
+                <fieldset
+                  disabled={isSubmitting}
+                  className="relative group disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <div className="App">
                     <ReactImageUploading
                       multiple={false} // Allow only one image
@@ -340,15 +343,7 @@ const EditRejectedStoryForm = ({
                       }}
                       maxNumber={maxNumber}
                       dataURLKey="data_url"
-                      acceptType={[
-                        "jpg",
-                        "gif",
-                        "png",
-                        "JFIF",
-                        "webp",
-                        "heic",
-                        "mpeg",
-                      ]}
+                      acceptType={["jpg", "gif", "png", "JFIF", "webp"]}
                     >
                       {({
                         onImageUpload,
@@ -358,7 +353,7 @@ const EditRejectedStoryForm = ({
                       }) => (
                         <div>
                           <div
-                            className="flex flex-col items-center justify-center gap-2 border p-4 rounded-xl cursor-pointer"
+                            className="flex flex-col items-center justify-center gap-2 border p-4 rounded-xl cursor-pointer group-disabled:cursor-not-allowed"
                             style={isDragging ? { color: "red" } : undefined}
                             onClick={onImageUpload}
                             {...dragProps}
@@ -400,7 +395,7 @@ const EditRejectedStoryForm = ({
                     component="div"
                     className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
-                </div>
+                </fieldset>
 
                 {/* Submit Button */}
                 <Button
