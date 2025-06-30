@@ -1,10 +1,9 @@
 // app/api/admin/report/reject/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
-import { ObjectId, UpdateFilter } from "mongodb";
+import { ObjectId } from "mongodb";
 import { getToken } from "next-auth/jwt";
 import { Role, ReportStatus, NotificationTypes } from "@/app/enums";
-import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
 type Params = Promise<{ id: string }>;
@@ -22,7 +21,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     const db = client.db("ghorabaa");
     const reportsCollection = db.collection("reports");
     const notificationsCollection = db.collection("notifications");
-    const usersCollection = db.collection<User>("users");
 
     // Step 1: Get the report document
     const report = await reportsCollection.findOne({

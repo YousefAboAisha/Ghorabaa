@@ -1,11 +1,10 @@
 import clientPromise from "@/app/lib/mongodb";
 import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { ObjectId, UpdateFilter } from "mongodb";
+import { ObjectId } from "mongodb";
 import { NotificationTypes, StoryStatus } from "@/app/enums";
 import { StoryInterface } from "@/app/interfaces";
 import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
-import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -27,7 +26,6 @@ export async function POST(originalReq: Request) {
     const db = client.db("ghorabaa");
     const collection = db.collection("stories");
     const notificationsCollection = db.collection("notifications");
-    const usersCollection = db.collection<User>("users");
 
     const body = await originalReq.json();
     const { id_number, age, bio, ...rest } = body;

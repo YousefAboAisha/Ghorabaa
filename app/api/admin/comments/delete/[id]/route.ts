@@ -1,9 +1,8 @@
 import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import { ObjectId, UpdateFilter } from "mongodb";
+import { ObjectId } from "mongodb";
 import { getToken } from "next-auth/jwt";
 import { NotificationTypes, Role } from "@/app/enums";
-import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -31,7 +30,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     const commentsCollection = db.collection("comments");
     const notificationsCollection = db.collection("notifications");
     const storiesCollection = db.collection("stories");
-    const usersCollection = db.collection<User>("users");
 
     const comment = await commentsCollection.findOne({ _id: new ObjectId(id) });
 

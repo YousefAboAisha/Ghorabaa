@@ -1,9 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import clientPromise from "@/app/lib/mongodb";
-import { ObjectId, UpdateFilter } from "mongodb";
+import { ObjectId } from "mongodb";
 import { StoryStatus, NotificationTypes, Role } from "@/app/enums";
-import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
 type Params = Promise<{ id: string }>;
@@ -29,7 +28,6 @@ export async function PUT(
     const db = client.db("ghorabaa");
     const storiesCollection = db.collection("stories");
     const notificationsCollection = db.collection("notifications");
-    const usersCollection = db.collection<User>("users");
 
     const body = await originalReq.json();
     const { rejectReason } = body;

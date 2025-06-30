@@ -3,11 +3,10 @@
 import { getToken } from "next-auth/jwt";
 import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import { ObjectId, UpdateFilter } from "mongodb";
+import { ObjectId } from "mongodb";
 import { NotificationTypes, StoryStatus } from "@/app/enums";
 import { Role } from "@/app/enums"; // ✅ Import Role enum
 import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
-import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
 type Params = Promise<{ id: string }>;
@@ -41,7 +40,6 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     const db = client.db("ghorabaa");
     const storiesCollection = db.collection("stories");
     const notificationsCollection = db.collection("notifications");
-    const usersCollection = db.collection<User>("users");
 
     const existingStory = await storiesCollection.findOne({
       _id: new ObjectId(id),

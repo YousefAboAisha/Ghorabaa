@@ -5,7 +5,7 @@ import UsersTable from "@/components/UI/tables/usersTable";
 import UserGrowthLineChart from "@/components/UI/charts/userGrowthLineChart";
 import ActiveUserCard from "@/components/UI/cards/activeUserCard";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -149,10 +149,7 @@ const Users = () => {
         }}
       >
         {activeUsersData.map(
-          (
-            { user_id, name, email, image, stories, comments, total },
-            index
-          ) => (
+          ({ user_id, name, email, image, stories, comments }, index) => (
             <SwiperSlide key={index}>
               <ActiveUserCard
                 user_id={user_id}

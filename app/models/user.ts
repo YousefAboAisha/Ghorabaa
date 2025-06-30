@@ -1,6 +1,6 @@
 import { Schema, model, models } from "mongoose";
 import { UserInterface } from "../interfaces";
-import { NotificationTypes, ProviderTypes, Role } from "../enums";
+import { ProviderTypes, Role } from "../enums";
 
 // Define the Martyr schema
 const userSchema = new Schema<UserInterface>(

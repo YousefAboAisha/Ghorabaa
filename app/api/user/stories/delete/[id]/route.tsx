@@ -2,9 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { getToken } from "next-auth/jwt";
-import { ObjectId, UpdateFilter } from "mongodb";
+import { ObjectId } from "mongodb";
 import { NotificationTypes, Role, StoryStatus } from "@/app/enums";
-import { User } from "next-auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
 type Params = Promise<{ id: string }>;
@@ -33,7 +32,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     const db = client.db("ghorabaa");
     const storiesCollection = db.collection("stories");
     const notificationsCollection = db.collection("notifications");
-    const usersCollection = db.collection<User>("users");
     const commentsCollection = db.collection("comments");
     const reportsCollection = db.collection("reports");
 
