@@ -19,8 +19,8 @@ const TodaysMartyr = async () => {
 
   const { data, error } = await fetchTodaysMartyr();
 
-  console.log("Todays martyr data: ", data);
-  console.log("Todays martyr error: ", error);
+  // console.log("Todays martyr data: ", data);
+  // console.log("Todays martyr error: ", error);
 
   if (error) {
     return <ErrorMessage error={error} className="mt-4" />;

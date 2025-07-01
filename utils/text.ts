@@ -70,7 +70,7 @@ export const getRoleColor = (role: Role) => {
     case Role.USER:
       return "#1e272e"; // Dark color for stories
     default:
-      return "#1e272e";
+      return "#828282";
   }
 };
 

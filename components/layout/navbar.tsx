@@ -27,8 +27,6 @@ const Navbar = ({ session }: NavbarProps) => {
 
   const { count, fetchAndUpdateCount } = useFavoriteStore();
 
-  console.log("Session values [Navbar]", session);
-
   // Memoize the routes to avoid unnecessary re-renders
   const renderedRoutes = useMemo(
     () =>
