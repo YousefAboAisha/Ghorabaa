@@ -19,7 +19,7 @@ const ActiveUserCard = ({
         direction: "rtl", // Ensure the card content is displayed in RTL
       }}
     >
-      <div className="absolute top-3 right-3 bg-white border flex items-center justify-center rounded-md p-1.5 text-[13px] font-semibold">
+      <div className="absolute top-3 right-3 bg-white shadow-md border flex items-center justify-center rounded-md p-1.5 text-[13px] font-semibold ">
         #{total}
       </div>
 

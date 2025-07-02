@@ -25,7 +25,7 @@ export const useStatisticsStore = create<StatisticsState>((set) => ({
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/analytics/stories/fetch`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/analytics/stories/count/fetch`,
         { cache: "no-store" }
       );
 

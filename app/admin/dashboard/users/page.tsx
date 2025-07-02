@@ -35,7 +35,7 @@ const Users = () => {
   const fetchUserCountStatistics = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/analytics/users/fetch`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/analytics/users/users-growth/fetch`,
         { cache: "no-store" }
       );
 
