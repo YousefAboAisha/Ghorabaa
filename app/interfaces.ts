@@ -75,6 +75,8 @@ export interface StoryInterface extends Document {
   rejectReason?: string;
   reports?: ReportInterface[];
   createdAt: Date;
+  updatedAt?: Date;
+  effectiveDate?: Date; // The date used for sorting and filtering, can be updated to the latest update date if available.
 }
 
 export interface TrendingStoryInterface {

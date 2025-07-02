@@ -230,11 +230,16 @@ const AllStoriesTable = () => {
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {new Date(story.createdAt).toLocaleDateString("ar-EG", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
+                  {story.effectiveDate
+                    ? new Date(story.effectiveDate).toLocaleDateString(
+                        "ar-EG",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )
+                    : "غير محدد"}
                 </td>
                 <td className="py-3 px-4 border-b text-right">
                   <Image

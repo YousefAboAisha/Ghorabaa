@@ -4,6 +4,37 @@ import clientPromise from "@/app/lib/mongodb";
 import { StoryStatus } from "@/app/enums";
 
 export async function GET() {
+  async function countByDate(
+    collection: import("mongodb").Collection<import("mongodb").Document>,
+    status: string,
+    date: Date
+  ): Promise<number> {
+    const result = await collection
+      .aggregate([
+        {
+          $match: { status },
+        },
+        {
+          $addFields: {
+            effectiveDate: {
+              $ifNull: ["$updatedAt", "$createdAt"],
+            },
+          },
+        },
+        {
+          $match: {
+            effectiveDate: { $gte: date },
+          },
+        },
+        {
+          $count: "count",
+        },
+      ])
+      .toArray();
+
+    return result[0]?.count || 0;
+  }
+
   try {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
@@ -29,27 +60,13 @@ export async function GET() {
 
     for (const status of statuses) {
       const [today, week, month, total] = await Promise.all([
-        storiesCollection.countDocuments({
-          status,
-          createdAt: { $gte: startOfToday },
-        }),
-        storiesCollection.countDocuments({
-          status,
-          createdAt: { $gte: startOfWeek },
-        }),
-        storiesCollection.countDocuments({
-          status,
-          createdAt: { $gte: startOfMonth },
-        }),
+        countByDate(storiesCollection, status, startOfToday),
+        countByDate(storiesCollection, status, startOfWeek),
+        countByDate(storiesCollection, status, startOfMonth),
         storiesCollection.countDocuments({ status }),
       ]);
 
-      data[status.toUpperCase()] = {
-        today,
-        week,
-        month,
-        total,
-      };
+      data[status.toUpperCase()] = { today, week, month, total };
     }
 
     return NextResponse.json(data, { status: 200 });

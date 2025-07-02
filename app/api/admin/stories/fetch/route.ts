@@ -42,6 +42,13 @@ export async function GET(req: NextRequest) {
       },
       { $unwind: "$publisher" },
       {
+        $addFields: {
+          effectiveDate: {
+            $ifNull: ["$updatedAt", "$createdAt"],
+          },
+        },
+      },
+      {
         $project: {
           _id: 1,
           name: 1,
@@ -55,9 +62,11 @@ export async function GET(req: NextRequest) {
           publisher_id: 1,
           publisher_name: "$publisher.name",
           createdAt: 1,
+          updatedAt: 1, // optional: include it for reference
+          effectiveDate: 1, // optional: remove if not needed in result
         },
       },
-      { $sort: { createdAt: -1 } },
+      { $sort: { effectiveDate: -1 } },
       { $skip: skip },
       { $limit: limit },
     ];
@@ -84,6 +93,9 @@ export async function GET(req: NextRequest) {
     );
   } catch (error) {
     console.error("Error fetching stories:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }
