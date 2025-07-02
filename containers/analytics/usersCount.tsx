@@ -1,9 +1,9 @@
 "use client";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
-import UserAnalyticsCard from "@/components/UI/cards/userAnalyticsCard";
+import UsersCountCard from "@/components/UI/cards/usersCountCard";
 import { useEffect, useState } from "react";
 
-const UserAnalytics = () => {
+const UsersCount = () => {
   const [usersCountLoader, setUsersCountLoader] = useState(true);
   const [usersData, setUsersData] = useState<{
     TOTAL: number;
@@ -79,28 +79,32 @@ const UserAnalytics = () => {
 
     return (
       <div className="relative w-full flex items-center flex-wrap gap-4">
-        <UserAnalyticsCard
+        <UsersCountCard
           title="كافة المستخدمين"
           count={usersData.TOTAL}
-          className="bg-pending"
+          countClassname="text-gray_dark"
+          classname="border-gray_dark border-b-8"
         />
 
-        <UserAnalyticsCard
+        <UsersCountCard
           title={"مشرف"}
           count={usersData.ADMIN}
-          className="bg-primary"
+          countClassname="text-primary"
+          classname="border-primary border-b-8"
         />
 
-        <UserAnalyticsCard
+        <UsersCountCard
           title={"محرر"}
           count={usersData.EDITOR}
-          className="bg-blueColor"
+          countClassname="text-blueColor"
+          classname="border-blueColor border-b-8"
         />
 
-        <UserAnalyticsCard
+        <UsersCountCard
           title={"مستخدم عادي"}
           count={usersData.USER}
-          className="bg-secondary"
+          countClassname="text-secondary"
+          classname="border-secondary border-b-8"
         />
       </div>
     );
@@ -109,4 +113,4 @@ const UserAnalytics = () => {
   return <div className="relative w-full mt-6">{renderUserCounts()}</div>;
 };
 
-export default UserAnalytics;
+export default UsersCount;

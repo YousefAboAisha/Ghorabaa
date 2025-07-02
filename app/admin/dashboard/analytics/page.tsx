@@ -1,6 +1,6 @@
 import Heading from "@/components/UI/typography/heading";
 import TrendingStories from "@/containers/analytics/trendingStories";
-import UserAnalytics from "@/containers/analytics/userAnalytics";
+import UsersCount from "@/containers/analytics/usersCount";
 import VisitsAnalytics from "@/containers/analytics/visitsAnalytics";
 
 const Analytics = () => {
@@ -9,7 +9,7 @@ const Analytics = () => {
       {/* this is user analytics section */}
       <div>
         <Heading highLightText="مستخدمو المنصة" title="" />
-        <UserAnalytics />
+        <UsersCount />
       </div>
 
       <div className="section">
