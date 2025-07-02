@@ -41,7 +41,7 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching monthly visits:", error);
     return NextResponse.json(
-      { error: "فشل في جلب بيانات الزيارات" },
+      { error: "تعذر الوصول إلى السيرفر" },
       { status: 500 }
     );
   }

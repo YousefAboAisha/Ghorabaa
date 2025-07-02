@@ -22,7 +22,7 @@ const UserAnalytics = () => {
   const fetchUserRoleCount = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/statistics/users/count/fetch`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/analytics/users/count/fetch`,
         { cache: "no-store" }
       );
 
@@ -66,20 +66,19 @@ const UserAnalytics = () => {
     fetchUserRoleCount();
   }, []);
 
-  const renderUserRoleCount = () => {
-    if (usersCountLoader)
-      return <p className="text-[12px] abs-center">جارٍ جلب التحليلات</p>;
-
+  const renderUserCounts = () => {
     if (userCountsError)
+      return <ErrorMessage error={userCountsError} className="min-h-[40vh]" />;
+
+    if (usersCountLoader)
       return (
-        <ErrorMessage
-          error={userCountsError}
-          className="!min-h-full !border-none"
-        />
+        <div className="relative bg-white border rounded-md min-h-[40vh] flex items-center justify-center">
+          <p className="text-[12px]">جارٍ جلب التحليلات</p>
+        </div>
       );
 
     return (
-      <div className="flex items-center flex-wrap gap-4">
+      <div className="relative w-full flex items-center flex-wrap gap-4">
         <UserAnalyticsCard
           title="كافة المستخدمين"
           count={usersData.TOTAL}
@@ -107,7 +106,7 @@ const UserAnalytics = () => {
     );
   };
 
-  return <div className="w-full">{renderUserRoleCount()}</div>;
+  return <div className="relative w-full mt-6">{renderUserCounts()}</div>;
 };
 
 export default UserAnalytics;

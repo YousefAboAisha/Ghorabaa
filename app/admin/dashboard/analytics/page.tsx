@@ -1,4 +1,5 @@
 import Heading from "@/components/UI/typography/heading";
+import TrendingStories from "@/containers/analytics/trendingStories";
 import UserAnalytics from "@/containers/analytics/userAnalytics";
 import VisitsAnalytics from "@/containers/analytics/visitsAnalytics";
 
@@ -6,20 +7,25 @@ const Analytics = () => {
   return (
     <div className="relative">
       {/* this is user analytics section */}
-      <div className="flex flex-col gap-8">
-        <div className="flex flex-col gap-4">
-          <Heading highLightText="مستخدمو المنصة" title="" />
-          <div className="relative w-full flex items-center justify-center bg-white border min-h-[40vh] rounded-md p-6">
-            <UserAnalytics />
-          </div>
-        </div>
+      <div>
+        <Heading highLightText="مستخدمو المنصة" title="" />
+        <UserAnalytics />
+      </div>
 
-        <div className="flex flex-col gap-4">
-          <Heading highLightText="زوار المنصة" title="" />
-          <div className="relative bg-white border min-h-[40vh] rounded-md p-6">
-            <VisitsAnalytics />
-          </div>
-        </div>
+      <div className="section">
+        <Heading highLightText="زوار المنصة" title="" />
+        <VisitsAnalytics />
+      </div>
+
+      {/* this is story analytics section */}
+      <div className="section">
+        <Heading
+          highLightText="القصص الأكثر تفاعلاً"
+          title=""
+          highlightColor="before:bg-blueColor"
+        />
+
+        <TrendingStories />
       </div>
     </div>
   );

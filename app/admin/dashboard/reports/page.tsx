@@ -30,7 +30,7 @@ const Reports = () => {
   const fetchReportsCountStatistics = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/statistics/reports/fetch`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/analytics/reports/fetch`,
         { cache: "no-store" }
       );
 
@@ -63,7 +63,7 @@ const Reports = () => {
   const fetchReportsResolutionStatistics = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/statistics/reports/resolution/fetch`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/analytics/reports/resolution/fetch`,
         { cache: "no-store" }
       );
 

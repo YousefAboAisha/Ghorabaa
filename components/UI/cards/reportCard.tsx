@@ -29,6 +29,7 @@ const ReportCard = ({ data, refetchData }: ReportCardProps) => {
 
   const commentData = {
     author_id: data?.content.author_id,
+    story_id: data?.content.story_id,
     author_image: data?.reported_user_image || "/notFound.png",
     author_name: data?.reported_user_name || "مستخدم غير معروف",
     text: data?.content?.text || "تعليق غير متوفر",
@@ -60,14 +61,7 @@ const ReportCard = ({ data, refetchData }: ReportCardProps) => {
           </p>
         </div>
 
-        <Link
-          title="الذهاب إلى التعليق"
-          href={`/stories/${data?.content?.story_id}#COMMENT`}
-          target="_blank"
-          className="relative h-fit"
-        >
-          <CommentPreviewCard data={commentData as CommentInterface} />
-        </Link>
+        <CommentPreviewCard data={commentData as CommentInterface} />
 
         <div className="flex flex-col gap-2">
           <div className="gap-1 text-[red] bg-red-200 w-fit p-1.5 px-2.5 rounded-md text-[12px] mt-2">

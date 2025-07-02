@@ -22,7 +22,7 @@ interface Props {
 
 export default function VisitsLineChart({ data }: Props) {
   return (
-    <div className="relative h-[350px]">
+    <div className="relative flex items-center justify-center h-[350px] bg-white p-4 border rounded-md">
       <ResponsiveContainer>
         <AreaChart data={data}>
           <defs>

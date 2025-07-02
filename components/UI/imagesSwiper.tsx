@@ -45,7 +45,7 @@ const ImagesSwiper = ({ data, session }: ImagesSwiperProps) => {
         className="mt-8"
       >
         {data?.map((item: StoryInterface) => (
-          <SwiperSlide key={item._id as string}>
+          <SwiperSlide key={item._id as string} className="pb-10">
             <StoryCard data={item} session={session} />
           </SwiperSlide>
         ))}

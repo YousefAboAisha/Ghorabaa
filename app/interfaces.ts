@@ -27,7 +27,7 @@ export interface UserInterface extends Document {
   createdAt: Date;
 }
 
-export interface ActiveUserData {
+export interface ActiveUserInterface {
   user_id: string;
   name: string;
   email: string;
@@ -75,6 +75,16 @@ export interface StoryInterface extends Document {
   rejectReason?: string;
   reports?: ReportInterface[];
   createdAt: Date;
+}
+
+export interface TrendingStoryInterface {
+  story_id: string;
+  name: string;
+  age: number;
+  image?: string;
+  visits: number;
+  comments: number;
+  total: number;
 }
 
 // Define the Report interface

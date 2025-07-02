@@ -74,7 +74,7 @@ function ProfilePopper({ session }: ProfilePopperProps) {
         className="flex flex-col gap-2 w-48 bg-white z-[100000] rounded-xl border shadow-2xl origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 outline-none"
       >
         <MenuItem disabled as={"div"} className="overflow-hidden">
-          <p className="flex items-center gap-2 p-4 bg-gray_light text-[13px] truncate whitespace-nowrap overflow-hidden text-ellipsis w-full">
+          <p className="flex items-center gap-2 p-4 bg-gray_light text-[13px] truncate w-full">
             {session?.user?.name}
           </p>
         </MenuItem>

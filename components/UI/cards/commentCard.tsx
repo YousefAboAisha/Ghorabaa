@@ -80,7 +80,7 @@ const CommentCard = ({
               title="عرض صفحة المستخدم"
               href={`/profile/${author_id}`}
               target="_blank"
-              className="text-[13px] font-semibold truncate whitespace-nowrap overflow-hidden text-ellipsis hover:underline"
+              className="text-[13px] font-semibold truncate hover:underline"
             >
               {author_name}
             </Link>

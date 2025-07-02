@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Failed to record visit:", error);
     return NextResponse.json(
-      { error: "فشل في تسجيل الزيارة" },
+      { error: "تعذر الوصول إلى السيرفر" },
       { status: 500 }
     );
   }

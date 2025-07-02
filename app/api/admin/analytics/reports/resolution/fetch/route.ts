@@ -1,4 +1,4 @@
-// /app/api/admin/statistics/resolution/fetch/route.ts
+// /app/api/admin/analytics/resolution/fetch/route.ts
 import { NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { ReportStatus } from "@/app/enums";

@@ -13,16 +13,7 @@ import {
   MdOutlineArrowBackIos,
   MdOutlineArrowForwardIos,
 } from "react-icons/md";
-
-interface ActiveUserData {
-  user_id: string;
-  name: string;
-  email: string;
-  image?: string;
-  stories: number;
-  comments: number;
-  total: number;
-}
+import { ActiveUserInterface } from "@/app/interfaces";
 
 interface UserGrowthData {
   date: string;
@@ -37,12 +28,14 @@ const Users = () => {
   const [activeUsersError, setActiveUsersError] = useState<string | null>(null);
 
   const [usersData, setUsersData] = useState<UserGrowthData[]>([]);
-  const [activeUsersData, setActiveUsersData] = useState<ActiveUserData[]>([]);
+  const [activeUsersData, setActiveUsersData] = useState<ActiveUserInterface[]>(
+    []
+  );
 
   const fetchUserCountStatistics = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/statistics/users/fetch`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/analytics/users/fetch`,
         { cache: "no-store" }
       );
 
@@ -75,7 +68,7 @@ const Users = () => {
   const fetchActiveUsersStatistics = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/statistics/users/active/fetch`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/analytics/users/active/fetch`,
         { cache: "no-store" }
       );
 

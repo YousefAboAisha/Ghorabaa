@@ -4,17 +4,33 @@ import { dateConversion } from "@/utils/format";
 import { getRoleInArabic } from "@/utils/text";
 import Image from "next/image";
 import Link from "next/link";
+import { BsEye } from "react-icons/bs";
 
 type CommentPreviewCardProps = {
   data: CommentInterface;
 };
 
 const CommentPreviewCard = ({ data }: CommentPreviewCardProps) => {
-  const { author_image, author_name, author_id, text, createdAt, author_role } =
-    data;
+  const {
+    author_image,
+    story_id,
+    author_name,
+    author_id,
+    text,
+    createdAt,
+    author_role,
+  } = data;
 
   return (
-    <div className="relative flex flex-col gap-4 p-5 rounded-3xl rounded-br-none border bg-background_light shadow-sm w-full h-fit hover:shadow-md duration-200">
+    <div className="relative flex flex-col gap-4 p-5 rounded-3xl rounded-br-none border bg-background_light shadow-sm w-full h-fit">
+      <Link
+        href={`/stories/${story_id}#COMMENT`}
+        target="_blank"
+        className="top-2 left-2 absolute flex items-center justify-center w-8 h-8 rounded-full bg-[#FFF] shadow-sm border hover:shadow-md duration-300"
+      >
+        <BsEye />
+      </Link>
+
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1 border rounded-full">
           <Image

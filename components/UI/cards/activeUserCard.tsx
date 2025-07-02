@@ -1,4 +1,4 @@
-import { ActiveUserData } from "@/app/interfaces";
+import { ActiveUserInterface } from "@/app/interfaces";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,7 +10,7 @@ const ActiveUserCard = ({
   stories,
   comments,
   total,
-}: ActiveUserData) => {
+}: ActiveUserInterface) => {
   return (
     <div
       key={user_id}

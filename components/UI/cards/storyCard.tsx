@@ -38,8 +38,8 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
       </Link>
 
       <div className="relative p-4">
-        <div className="flex items-center justify-between gap-2 text-sm ">
-          <p className="font-bold text-secondary truncate whitespace-nowrap overflow-hidden text-ellipsis">
+        <div className="flex items-center gap-2 text-sm mb-2">
+          <p className="font-bold text-secondary truncate">
             <HighlightedText
               highlights={data?.highlight}
               field="name"

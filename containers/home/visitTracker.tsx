@@ -13,7 +13,7 @@ const VisitTracker = () => {
       const trackVisit = async () => {
         try {
           await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/statistics/visits/add`,
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/analytics/visits/add`,
             {
               method: "POST",
               headers: {

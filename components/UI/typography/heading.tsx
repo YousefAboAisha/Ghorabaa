@@ -6,7 +6,7 @@ type HeadingProps = {
   detailsStyles?: string;
   highlightColor?:
     | "before:bg-primary"
-    | "before:bg-blue"
+    | "before:bg-blueColor"
     | "before:bg-secondary";
 } & React.HTMLAttributes<HTMLHeadingElement>;
 
