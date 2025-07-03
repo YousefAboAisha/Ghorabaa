@@ -1,11 +1,14 @@
 "use client";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import Button from "@/components/UI/inputs/button";
 import Input from "@/components/UI/inputs/input";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { MdNumbers } from "react-icons/md";
-import { FaPhone, FaUser } from "react-icons/fa";
+import { FaPhone, FaTimes, FaUser } from "react-icons/fa";
 import { ProfileValidationSchema } from "@/utils/validators";
+import Image from "next/image";
+import { CiCamera } from "react-icons/ci";
+import ReactImageUploading, { ImageListType } from "react-images-uploading";
 
 type EditProfileFormPDetails = {
   loading?: boolean;
@@ -14,15 +17,19 @@ type EditProfileFormPDetails = {
     name: string;
     phone_number: string;
     id_number: string;
+    image?: string;
   };
 };
 
 const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
-  const { name, phone_number, id_number } = data;
+  const { name, phone_number, id_number, image } = data;
+  const [images, setImages] = useState<ImageListType>([]);
+
   const initialValues = {
     name: name || "",
     phone_number: phone_number || "",
     id_number: id_number || "",
+    image: image || "./notFound.png",
   };
 
   return (
@@ -61,9 +68,70 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
           }
         }}
       >
-        {({ isSubmitting, errors }) => (
+        {({ isSubmitting, errors, setFieldValue }) => (
           <Form className="relative mt-6 flex flex-col gap-4">
-            {/* Notes Field */}
+            <ReactImageUploading
+              multiple={false}
+              value={images}
+              onChange={async (imageList: ImageListType) => {
+                setImages(imageList);
+                if (imageList.length > 0) {
+                  setFieldValue("image", imageList[0].data_url); // ✅ store base64
+                } else {
+                  setFieldValue("image", null); // ✅ reset on remove
+                }
+              }}
+              maxNumber={1}
+              dataURLKey="data_url"
+              acceptType={["jpg", "gif", "png", "jfif", "webp"]}
+            >
+              {({ onImageUpload, onImageRemove, dragProps }) => (
+                <fieldset
+                  disabled={isSubmitting}
+                  className="relative disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {/* 📸 Custom image uploader circle */}
+                  <div
+                    title="تغيير صورة الملف الشخصي"
+                    onClick={onImageUpload}
+                    {...dragProps}
+                    className="relative group flex items-center justify-center bg-background_light w-[100px] h-[100px] rounded-full p-1 shadow-md mx-auto before:absolute before:w-full before:h-full before:rounded-full before:opacity-0 before:bg-[#00000092] hover:before:opacity-100 before:z-10 before:duration-300 cursor-pointer before:backdrop-blur-md z-0 transition-all duration-300"
+                  >
+                    <Image
+                      src={
+                        images.length > 0
+                          ? images[0].data_url
+                          : image || "/notFound.png"
+                      }
+                      width={100}
+                      height={100}
+                      alt="صورة الملف الشخصي"
+                      className="rounded-full object-cover"
+                    />
+                    <CiCamera
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 text-white z-10 duration-300"
+                      size={35}
+                    />
+                  </div>
+
+                  {/* ❌ Remove button */}
+                  {images.length > 0 && (
+                    <button
+                      type="button"
+                      className="absolute top-0 right-[calc(50%-10px)] -translate-y-[10px] bg-white border shadow p-1 rounded-full text-red-500 z-20"
+                      onClick={() => {
+                        onImageRemove(0);
+                        setFieldValue("image", null);
+                      }}
+                    >
+                      <FaTimes size={10} />
+                    </button>
+                  )}
+                </fieldset>
+              )}
+            </ReactImageUploading>
+
+            {/* name Field */}
             <div>
               <Field
                 required={false}
@@ -84,6 +152,7 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
               />
             </div>
 
+            {/* phone number Field */}
             <div>
               <Field
                 required={false}
@@ -107,6 +176,7 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
               />
             </div>
 
+            {/* ID number Field */}
             <div>
               <Field
                 required={false}

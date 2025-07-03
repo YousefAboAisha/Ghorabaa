@@ -390,6 +390,7 @@ const AddStoryForm = ({
                       )}
                     </ReactImageUploading>
                   </div>
+
                   <ErrorMessage
                     name="image"
                     component="div"

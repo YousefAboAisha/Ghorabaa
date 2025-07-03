@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "غير مصرح لك" }, { status: 401 });
     }
 
-    const { name, phone_number, id_number } = await req.json();
+    const { name, phone_number, id_number, image } = await req.json();
 
     const client = await clientPromise;
     const db = client.db("ghorabaa");
@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
           name,
           phone_number,
           id_number,
+          image: image || "./notFound.png", // Default image if not provided
         },
       }
     );
@@ -42,6 +43,9 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("Error updating profile:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

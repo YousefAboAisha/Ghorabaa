@@ -24,12 +24,16 @@ function ProfilePopper({ session }: ProfilePopperProps) {
     setLoading(true);
 
     try {
-      await signOut();
-      setLoading(false); // fallback if signIn fails
+      await signOut({
+        redirect: false,
+      });
 
       setTimeout(() => {
-        window.location.href = `/`;
+        toast.success("تم تسجيل الخروج بنجاح");
+        window.location.href = "/";
       }, 1000);
+
+      setLoading(false); // fallback if signIn fails
     } catch (error: unknown) {
       console.error("Google sign-in failed:", error);
       if (error && typeof error === "object" && "message" in error) {

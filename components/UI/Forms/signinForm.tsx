@@ -15,7 +15,7 @@ import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 
 const SigninForm = () => {
-  const [formErrors, setFormErrors] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/auth-redirect";
@@ -25,7 +25,7 @@ const SigninForm = () => {
       .email("البريد الإلكتروني غير صالح")
       .required("يرجى إدخال البريد الإلكتروني"),
     password: Yup.string()
-      .min(6, "كلمة المرور يجب أن تكون 6 أحرف على الأقل")
+      .min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل")
       .required("يرجى إدخال كلمة المرور"),
   });
 
@@ -36,50 +36,36 @@ const SigninForm = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    {
-      setSubmitting,
-    }: {
-      setSubmitting: (isSubmitting: boolean) => void;
-    }
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    setFormErrors("");
+    setError("");
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/signin`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...values }),
-        }
-      );
+      const res = await signIn("credentials", {
+        callbackUrl: callbackUrl,
+        redirect: false,
+        email: values.email,
+        password: values.password,
+      });
 
-      const data = await response.json();
-      console.log("Data Object is:", data);
-
-      if (!response.ok) {
-        setFormErrors(data.error);
-        console.log("Sign in Error:", data.error);
+      if (res?.error) {
+        setError(res.error);
         return;
       }
 
-      // Show success toast
+      // Fetch session to get the user's ID
+      const sessionRes = await fetch("/api/auth/session");
+      const session = await sessionRes.json();
+      const userId = session?.user?.id;
+
       toast.success("تم تسجيل الدخول بنجاح!");
-
-      // Redirect to profile after a short delay
       setTimeout(() => {
-        window.location.href = `profile/${data?.id}`;
+        window.location.href = `/profile/${userId}`;
       }, 1000);
-
-      console.log("User has been created successfully!", data);
-      setSubmitting(false);
     } catch (error) {
-      setSubmitting(false);
-      setFormErrors((error as Error).message);
-      toast.error("حدث خطأ أثناء تسجيل الدخول"); // Show error toast
-      console.error("Error while signing in", error);
+      console.error("Sign-in error:", error);
+      toast.error("حدث خطأ أثناء تسجيل الدخول");
+      setError("حدث خطأ أثناء تسجيل الدخول");
     } finally {
       setSubmitting(false);
     }
@@ -184,14 +170,14 @@ const SigninForm = () => {
               )}
             </div>
 
-            {formErrors && (
+            {error && (
               <div className="rounded-lg p-4 w-full bg-red-100 text-[red] text-[12px]">
-                {formErrors}
+                {error}
               </div>
             )}
 
             {isSubmitting ? null : (
-              <div className="text-center text-sm mt-2 ">
+              <div className="text-center text-[12px] mt-2">
                 إذا كنت لا تمتلك حساباً، قم بـ
                 <Link
                   className="text-primary font-bold hover:underline"

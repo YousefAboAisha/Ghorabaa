@@ -1,5 +1,6 @@
 "use client";
-import { BiIdCard, BiLock, BiMailSend, BiPhone, BiUser } from "react-icons/bi";
+
+import { BiLock, BiMailSend, BiPhone, BiUser } from "react-icons/bi";
 import { PiShootingStarThin } from "react-icons/pi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -9,12 +10,12 @@ import Heading from "@/components/UI/typography/heading";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { signIn } from "next-auth/react";
 
 const Signup = () => {
   const [formErrors, setFormErrors] = useState<string>("");
 
   const initialValues = {
-    idNumber: "",
     name: "",
     email: "",
     phoneNumber: "",
@@ -22,9 +23,7 @@ const Signup = () => {
     confirmPassword: "",
   };
 
-  // Validation schema using Yup
   const validationSchema = Yup.object({
-    idNumber: Yup.string().required("يرجى إدخال رقم الهوية"),
     name: Yup.string().required("يرجى إدخال الاسم رباعي"),
     email: Yup.string()
       .email("البريد الإلكتروني غير صالح")
@@ -34,7 +33,7 @@ const Signup = () => {
       .min(10, "رقم الهاتف يجب أن يكون 10 أرقام على الأقل")
       .required("يرجى إدخال رقم الهاتف"),
     password: Yup.string()
-      .min(6, "كلمة المرور يجب أن تكون 6 أحرف على الأقل")
+      .min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل")
       .required("يرجى إدخال كلمة المرور"),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password")], "كلمة المرور غير متطابقة")
@@ -43,50 +42,45 @@ const Signup = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    {
-      setSubmitting,
-    }: {
-      setSubmitting: (isSubmitting: boolean) => void;
-    }
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
     setFormErrors("");
 
     try {
-      // Log the form values to verify they are correct
-      console.log("Form Values:", values);
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values), // Ensure values are being sent as JSON
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/signup`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        }
+      );
 
       const data = await response.json();
-      console.log("API Response:", data);
 
       if (!response.ok) {
         setFormErrors(data.error || "حدث خطأ أثناء إنشاء الحساب");
-        console.log("Error is:", data.error);
         return;
       }
-      console.log("User has been created successfully!", data);
 
-      // Show success toast
-      toast.success("تم تسجيل الدخول بنجاح!");
+      // Auto sign-in after signup
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+      });
 
-      // Redirect to profile after a short delay
-      setTimeout(() => {
-        window.location.href = "/profile";
-      }, 1000);
-
-      setSubmitting(false);
-      window.location.href = "/profile";
+      if (res?.error) {
+        toast.error("تم إنشاء الحساب، لكن فشل تسجيل الدخول");
+      } else {
+        toast.success("تم إنشاء الحساب وتسجيل الدخول بنجاح!");
+        setTimeout(() => {
+          window.location.href = `/profile/${data.user.id}`;
+        }, 1000);
+      }
     } catch (error) {
-      setSubmitting(false);
-      toast.error("حدث خطأ أثناء تسجيل الدخول"); // Show error toast
       console.error("Error creating user", error);
+      toast.error("حدث خطأ أثناء تسجيل الحساب");
     } finally {
       setSubmitting(false);
     }
@@ -100,8 +94,9 @@ const Signup = () => {
           title=""
           highlightColor="before:bg-primary"
           className="mb-8 mx-auto"
-          additionalStyles="text-[30px] text-center mx-auto"
+          additionalStyles="text-2xl text-center mx-auto"
         />
+
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -109,134 +104,101 @@ const Signup = () => {
         >
           {({ isSubmitting, errors }) => (
             <Form className="flex flex-col gap-4">
-              {/* IdNumber Field */}
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="idNumber"
-                  as={Input}
-                  type="text"
-                  placeholder="رقم الهوية"
-                  label="رقم الهوية"
-                  icon={<BiIdCard size={20} />}
-                  className={`focus:border-primary`}
-                  aria-label="رقم الهوية"
-                  aria-invalid={!!errors.idNumber}
-                />
-                <ErrorMessage
-                  name="idNumber"
-                  component="div"
-                  className="text-red-500 mt-2 font-bold text-[10px]"
-                />
-              </div>
-
               {/* Name Field */}
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="name"
-                  as={Input}
-                  type="text"
-                  placeholder="الاسم رباعي"
-                  label="الاسم رباعي"
-                  icon={<BiUser size={20} />}
-                  className={`focus:border-primary`}
-                  aria-label="الاسم رباعي"
-                  aria-invalid={!!errors.name}
-                />
-                <ErrorMessage
-                  name="name"
-                  component="div"
-                  className="text-red-500 mt-2 font-bold text-[10px]"
-                />
-              </div>
+              <Field
+                disabled={isSubmitting}
+                name="name"
+                as={Input}
+                type="text"
+                placeholder="الاسم رباعي"
+                label="الاسم رباعي"
+                icon={<BiUser size={20} />}
+                className="focus:border-primary"
+                aria-label="الاسم رباعي"
+                aria-invalid={!!errors.name}
+              />
+              <ErrorMessage
+                name="name"
+                component="div"
+                className="text-red-500 mt-2 font-bold text-[10px]"
+              />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {/* Email Field */}
-                <div>
-                  <Field
-                    disabled={isSubmitting}
-                    name="email"
-                    as={Input}
-                    type="email"
-                    placeholder="البريد الالكتروني"
-                    label="البريد الالكتروني"
-                    icon={<BiMailSend size={20} />}
-                    className={`focus:border-primary`}
-                    aria-label="البريد الالكتروني"
-                    aria-invalid={!!errors.email}
-                  />
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-red-500 mt-2 font-bold text-[10px]"
-                  />
-                </div>
-                {/* Phone Number Field */}
-                <div>
-                  <Field
-                    disabled={isSubmitting}
-                    name="phoneNumber"
-                    as={Input}
-                    type="text"
-                    placeholder="رقم الجوال"
-                    label="رقم الجوال"
-                    icon={<BiPhone size={20} />}
-                    className={`focus:border-primary`}
-                    aria-label="رقم الجوال"
-                    aria-invalid={!!errors.phoneNumber}
-                  />
-                  <ErrorMessage
-                    name="phoneNumber"
-                    component="div"
-                    className="text-red-500 mt-2 font-bold text-[10px]"
-                  />
-                </div>
-              </div>
+              {/* Email Field */}
+              <Field
+                disabled={isSubmitting}
+                name="email"
+                as={Input}
+                type="email"
+                placeholder="البريد الالكتروني"
+                label="البريد الالكتروني"
+                icon={<BiMailSend size={20} />}
+                className="focus:border-primary"
+                aria-label="البريد الالكتروني"
+                aria-invalid={!!errors.email}
+              />
+              <ErrorMessage
+                name="email"
+                component="div"
+                className="text-red-500 mt-2 font-bold text-[10px]"
+              />
+
+              {/* Phone Number Field */}
+              <Field
+                disabled={isSubmitting}
+                name="phoneNumber"
+                as={Input}
+                type="text"
+                placeholder="رقم الجوال"
+                label="رقم الجوال"
+                icon={<BiPhone size={20} />}
+                className="focus:border-primary"
+                aria-label="رقم الجوال"
+                aria-invalid={!!errors.phoneNumber}
+              />
+              <ErrorMessage
+                name="phoneNumber"
+                component="div"
+                className="text-red-500 mt-2 font-bold text-[10px]"
+              />
 
               {/* Password Field */}
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="password"
-                  as={Input}
-                  type="password"
-                  placeholder="كلمة المرور"
-                  label="كلمة المرور"
-                  icon={<BiLock size={20} />}
-                  className={`focus:border-primary`}
-                  aria-label="كلمة المرور"
-                  aria-invalid={!!errors.password}
-                />
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="text-red-500 mt-2 font-bold text-[10px]"
-                />
-              </div>
+              <Field
+                disabled={isSubmitting}
+                name="password"
+                as={Input}
+                type="password"
+                placeholder="كلمة المرور"
+                label="كلمة المرور"
+                icon={<BiLock size={20} />}
+                className="focus:border-primary"
+                aria-label="كلمة المرور"
+                aria-invalid={!!errors.password}
+              />
+              <ErrorMessage
+                name="password"
+                component="div"
+                className="text-red-500 mt-2 font-bold text-[10px]"
+              />
 
               {/* Confirm Password Field */}
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="confirmPassword"
-                  as={Input}
-                  type="password"
-                  placeholder="تأكيد كلمة المرور"
-                  label="تأكيد كلمة المرور"
-                  icon={<BiLock size={20} />}
-                  className={`focus:border-primary`}
-                  aria-label="تأكيد كلمة المرور"
-                  aria-invalid={!!errors.confirmPassword}
-                />
-                <ErrorMessage
-                  name="confirmPassword"
-                  component="div"
-                  className="text-red-500 mt-2 font-bold text-[10px]"
-                />
-              </div>
+              <Field
+                disabled={isSubmitting}
+                name="confirmPassword"
+                as={Input}
+                type="password"
+                placeholder="تأكيد كلمة المرور"
+                label="تأكيد كلمة المرور"
+                icon={<BiLock size={20} />}
+                className="focus:border-primary"
+                aria-label="تأكيد كلمة المرور"
+                aria-invalid={!!errors.confirmPassword}
+              />
+              <ErrorMessage
+                name="confirmPassword"
+                component="div"
+                className="text-red-500 mt-2 font-bold text-[10px]"
+              />
 
-              {/* Submit Button */}
               <Button
                 title="إنشاء حساب"
                 type="submit"
@@ -252,8 +214,8 @@ const Signup = () => {
                 </div>
               )}
 
-              {isSubmitting ? null : (
-                <div className="text-center text-sm mt-6 ">
+              {!isSubmitting && (
+                <div className="text-center text-[12px] mt-2">
                   إذا كنت تمتلك حساباً، قم بـ
                   <Link
                     className="text-primary font-bold hover:underline"
