@@ -13,12 +13,14 @@ type RejectStoryProps = {
   data: StoryInterface & { publisher_name: string };
   refetchData: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 };
 
 export const RejectStory = ({
   data,
   refetchData,
   setIsOpen,
+  setLoading,
 }: RejectStoryProps) => {
   const { fetchStatistics } = useStatisticsStore();
   const story_id = data?._id;
@@ -50,6 +52,7 @@ export const RejectStory = ({
         validationSchema={StoryRejectValidationSchema}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
           setSubmitting(true);
+          setLoading(true); // Set loading state to true
 
           try {
             const response = await fetch(
@@ -64,6 +67,7 @@ export const RejectStory = ({
             );
 
             if (!response.ok) {
+              setLoading(false); // Reset loading state
               throw new Error("Failed to update the story.");
             }
 
@@ -75,9 +79,11 @@ export const RejectStory = ({
             fetchStatistics();
             toast.warn("تم رفض طلب إضافة القصة");
           } catch (error) {
+            setLoading(false); // Reset loading state
             console.error("❌ Error updating story:", error);
           } finally {
             setSubmitting(false);
+            setLoading(false); // Reset loading state
           }
         }}
       >

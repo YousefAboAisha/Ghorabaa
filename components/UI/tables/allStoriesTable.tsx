@@ -17,7 +17,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "./pagination";
 import Button from "../inputs/button";
 import StorySearch from "../modals/storySearch";
-import { CiSearch } from "react-icons/ci";
+import { CiSearch, CiTrash } from "react-icons/ci";
+import { DeleteStory } from "../modals/deleteStory";
+import { useStatisticsStore } from "@/stores/storiesTableStore";
 
 const AllStoriesTable = () => {
   const [tableData, setTableData] = useState<
@@ -27,8 +29,18 @@ const AllStoriesTable = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [isOpenStoryPreview, setIsOpenStoryPreview] = useState<boolean>(false);
+  const [isStoryPreviewLoading, setIsStoryPreviewLoading] =
+    useState<boolean>(false);
+
   const [isOpenStoryReject, setIsOpenStoryReject] = useState<boolean>(false);
+  const [isStoryRejectLoading, setIsStoryRejectLoading] =
+    useState<boolean>(false);
+
   const [isOpenStorySearch, setIsOpenStorySearch] = useState<boolean>(false);
+
+  // Delete Story Modal state variables
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
 
   const [storyData, setStoryData] = useState<
     StoryInterface & { publisher_name: string }
@@ -43,6 +55,8 @@ const AllStoriesTable = () => {
     () => Number(searchParams.get("page")) || 1
   );
   const [totalPages, setTotalPages] = useState(1);
+
+  const { fetchStatistics } = useStatisticsStore();
 
   const fetchTableData = async () => {
     setTableLoading(true);
@@ -141,15 +155,27 @@ const AllStoriesTable = () => {
 
     if (status == StoryStatus.REJECTED) {
       return (
-        <HiCheck
-          title="قبول القصة"
-          className="cursor-pointer text-[green]"
-          onClick={() => {
-            setIsOpenStoryPreview(true);
-            setStoryData(story);
-          }}
-          size={22}
-        />
+        <>
+          <HiCheck
+            title="قبول القصة"
+            className="cursor-pointer text-approved"
+            onClick={() => {
+              setIsOpenStoryPreview(true);
+              setStoryData(story);
+            }}
+            size={22}
+          />
+
+          <CiTrash
+            title="حذف القصة"
+            className="cursor-pointer text-rejected"
+            onClick={() => {
+              setIsDeleteModalOpen(true);
+              setStoryData(story);
+            }}
+            size={22}
+          />
+        </>
       );
     }
   };
@@ -330,11 +356,16 @@ const AllStoriesTable = () => {
       />
 
       {/* Preview Story Modal */}
-      <Modal isOpen={isOpenStoryPreview} setIsOpen={setIsOpenStoryPreview}>
+      <Modal
+        isOpen={isOpenStoryPreview}
+        setIsOpen={setIsOpenStoryPreview}
+        loading={isStoryPreviewLoading}
+      >
         <PreviewStory
           data={storyData!}
           refetchData={fetchTableData}
           setIsOpen={setIsOpenStoryPreview}
+          setLoading={setIsStoryPreviewLoading}
         />
       </Modal>
 
@@ -343,20 +374,41 @@ const AllStoriesTable = () => {
         isOpen={isOpenStoryReject}
         setIsOpen={setIsOpenStoryReject}
         containerClassName="w-11/12 md:w-7/12 !lg:w-[20%]"
+        loading={isStoryRejectLoading}
       >
         <RejectStory
           data={storyData!}
           refetchData={fetchTableData}
           setIsOpen={setIsOpenStoryReject}
+          setLoading={setIsStoryRejectLoading}
         />
       </Modal>
 
       <Modal
         isOpen={isOpenStorySearch}
         setIsOpen={setIsOpenStorySearch}
-        containerClassName="!lg:w-3/12 "
+        containerClassName="!lg:w-3/12"
       >
         <StorySearch />
+      </Modal>
+
+      {/* Delete Story Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        setIsOpen={setIsDeleteModalOpen}
+        containerClassName="lg:w-[30%]"
+        loading={isDeleteLoading}
+      >
+        <DeleteStory
+          setIsOpen={setIsDeleteModalOpen}
+          setLoading={setIsDeleteLoading}
+          loading={isDeleteLoading}
+          data={storyData!}
+          callback={() => {
+            fetchTableData();
+            fetchStatistics();
+          }}
+        />
       </Modal>
     </>
   );

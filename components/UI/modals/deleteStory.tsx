@@ -5,10 +5,11 @@ import Button from "../inputs/button";
 import { StoryInterface } from "@/app/interfaces";
 
 type DeleteStory = {
-  data: StoryInterface;
+  data: StoryInterface & { publisher_name?: string };
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
+  callback?: () => void;
 };
 
 export const DeleteStory = ({
@@ -16,9 +17,10 @@ export const DeleteStory = ({
   setIsOpen,
   setLoading,
   loading,
+  callback,
 }: DeleteStory) => {
-  const story_id = data._id;
-  const story_title = data.name;
+  const story_id = data?._id;
+  const story_title = data?.name;
 
   const deleteStory = async () => {
     setLoading(true);
@@ -40,11 +42,10 @@ export const DeleteStory = ({
       console.log("✅ Story updated:", result);
       setIsOpen(false); // Close the preview modal
       setLoading(false);
+      if (typeof callback === "function") {
+        callback(); // Call the callback function if provided
+      }
       toast.success("تم حذف القصة بنجاح!");
-
-      setTimeout(() => {
-        window.location.href = "/stories"; // Redirect to the stories page
-      }, 1000); // Reload the page after a short delay
     } catch (error) {
       console.error("❌ Error updating story:", error);
     } finally {

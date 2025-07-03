@@ -33,7 +33,7 @@ const TrendingStoryCard = ({
           src={image || "/notFound.png"}
           width={90}
           height={90}
-          className="rounded-full object-cover w-[90px] h-[90px] border shadow-md"
+          className="rounded-lg object-cover w-[90px] h-[90px] border shadow-md"
         />
 
         <div className="flex flex-col flex-wrap gap-2 mt-2 items-center justify-center text-center">

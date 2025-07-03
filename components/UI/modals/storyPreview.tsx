@@ -21,9 +21,15 @@ type StoryPreviewProps = {
   data: StoryInterface & { publisher_name: string };
   refetchData?: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setLoading: Dispatch<SetStateAction<boolean>>; // Optional loading state
 };
 
-const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
+const StoryPreview = ({
+  data,
+  refetchData,
+  setIsOpen,
+  setLoading,
+}: StoryPreviewProps) => {
   const { fetchStatistics } = useStatisticsStore();
 
   const city = data?.city;
@@ -121,6 +127,7 @@ const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
           validationSchema={StoryPreviewValidationSchema}
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
+            setLoading(true); // Set loading state if provided
 
             try {
               const res = await fetch(
@@ -137,6 +144,8 @@ const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
 
               if (!res.ok) {
                 let errorMsg = "حدث خطأ أثناء نشر القصة";
+                setLoading(false); // Set loading state if provided
+
                 try {
                   const errorResponse = await res.json();
                   errorMsg = errorResponse?.error || errorMsg;
@@ -149,17 +158,21 @@ const StoryPreview = ({ data, refetchData, setIsOpen }: StoryPreviewProps) => {
 
               const result = await res.json();
               console.log("✅ Story approved:", result);
+              setLoading(false); // Set loading state if provided
 
               setIsOpen(false); // Close modal
               refetchData?.(); // Refresh list
               fetchStatistics(); // Update stats
               toast.success("تم تحديث ونشر القصة بنجاح!");
             } catch (error) {
+              setLoading(false); // Set loading state if provided
+
               const message =
                 error instanceof Error ? error.message : "حدث خطأ غير متوقع";
               console.error("❌ Error approving story:", error);
               toast.error(message);
             } finally {
+              setLoading(false); // Set loading state if provided
               setSubmitting(false);
             }
           }}

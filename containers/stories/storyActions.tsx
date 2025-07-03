@@ -95,6 +95,11 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
           setLoading={setIsDeleteLoading}
           loading={isDeleteLoading}
           data={data}
+          callback={() => {
+            setTimeout(() => {
+              window.location.href = "/stories"; // Redirect to the stories page
+            }, 1000); // Reload the page after a short delay
+          }}
         />
       </Modal>
     </>
