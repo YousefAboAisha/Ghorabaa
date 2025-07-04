@@ -9,6 +9,7 @@ type editProfileDetailsButtonProps = {
     name: string;
     phone_number: string;
     id_number: string;
+    image?: string;
   };
 };
 

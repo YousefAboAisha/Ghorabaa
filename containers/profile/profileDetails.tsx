@@ -46,6 +46,7 @@ const ProfileDetails = async ({ user_id }: ProfileDetailsProps) => {
               name: data?.name,
               phone_number: data?.phone_number,
               id_number: data?.id_number,
+              image: data?.image || "/notFound.png",
             }}
           />
         ) : null}

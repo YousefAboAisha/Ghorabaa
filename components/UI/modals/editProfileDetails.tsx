@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Button from "@/components/UI/inputs/button";
 import Input from "@/components/UI/inputs/input";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -24,6 +24,9 @@ type EditProfileFormPDetails = {
 const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
   const { name, phone_number, id_number, image } = data;
   const [images, setImages] = useState<ImageListType>([]);
+  const [isNewImageUploaded, setIsNewImageUploaded] = useState(false);
+  const [placeholderImage, setPlaceholderImage] =
+    useState<string>("/notFound.png");
 
   const initialValues = {
     name: name || "",
@@ -31,6 +34,14 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
     id_number: id_number || "",
     image: image || "./notFound.png",
   };
+
+  useEffect(() => {
+    if (image) {
+      setPlaceholderImage(image); // existing user image
+    } else {
+      setPlaceholderImage("/notFound.png"); // default fallback
+    }
+  }, [image]);
 
   return (
     <div className="relative w-full p-6">
@@ -75,10 +86,13 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
               value={images}
               onChange={async (imageList: ImageListType) => {
                 setImages(imageList);
+
                 if (imageList.length > 0) {
-                  setFieldValue("image", imageList[0].data_url); // ✅ store base64
+                  setFieldValue("image", imageList[0].data_url);
+                  setIsNewImageUploaded(true);
                 } else {
-                  setFieldValue("image", null); // ✅ reset on remove
+                  setFieldValue("image", null);
+                  setIsNewImageUploaded(false);
                 }
               }}
               maxNumber={1}
@@ -101,13 +115,14 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
                       src={
                         images.length > 0
                           ? images[0].data_url
-                          : image || "/notFound.png"
+                          : placeholderImage // ✅ always fallback to user image or notFound
                       }
                       width={100}
                       height={100}
                       alt="صورة الملف الشخصي"
                       className="rounded-full object-cover"
                     />
+
                     <CiCamera
                       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 text-white z-10 duration-300"
                       size={35}
@@ -115,13 +130,15 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
                   </div>
 
                   {/* ❌ Remove button */}
-                  {images.length > 0 && (
+                  {isNewImageUploaded && images.length > 0 && (
                     <button
                       type="button"
                       className="absolute top-0 right-[calc(50%-10px)] -translate-y-[10px] bg-white border shadow p-1 rounded-full text-red-500 z-20"
                       onClick={() => {
                         onImageRemove(0);
                         setFieldValue("image", null);
+                        setIsNewImageUploaded(false);
+                        setImages([]); // ✅ Clear the uploaded image
                       }}
                     >
                       <FaTimes size={10} />
