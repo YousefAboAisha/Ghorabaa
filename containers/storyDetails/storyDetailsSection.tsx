@@ -68,7 +68,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
         {data.status == StoryStatus.REJECTED && (
           <Link
             target="_blank"
-            href={`/profile?activeTap=${StoryStatus.REJECTED}#storyContainer`}
+            href={`/profile/${user_id}?activeTap=${StoryStatus.REJECTED}#storyContainer`}
             className="group relative flex items-center gap-2 bg-rejected text-white border rounded-md shadow-sm p-3 mt-4 mb-4 w-full font-semibold"
           >
             <BiInfoCircle size={20} />

@@ -16,6 +16,7 @@ type NotificationState = {
   error: string | null;
   fetchNotifications: (userId: string) => Promise<void>;
   markAllAsRead: () => Promise<void>;
+  pollUnreadAndFetchIfChanged: (userId: string) => Promise<void>;
 };
 
 export const useNotificationStore = create<NotificationState>((set) => ({
@@ -49,7 +50,7 @@ export const useNotificationStore = create<NotificationState>((set) => ({
       console.log("[data, hasUnread]", [data, hasUnread]);
 
       set({
-        notifications: data.slice(0, 7),
+        notifications: data,
         hasUnread,
         loading: false,
       });
@@ -70,9 +71,31 @@ export const useNotificationStore = create<NotificationState>((set) => ({
           credentials: "include",
         }
       );
-      set({ hasUnread: false });
+
+      set((state) => ({
+        hasUnread: false,
+        notifications: state.notifications.map((n) => ({
+          ...JSON.parse(JSON.stringify(n)),
+          is_read: true,
+        })) as MixedNotification[],
+      }));
     } catch (err) {
       console.error("Failed to mark notifications as read:", err);
     }
+  },
+
+  pollUnreadAndFetchIfChanged: async (userId: string) => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/notifications/unread/fetch?user_id=${userId}`
+    );
+    const { hasUnread } = await res.json();
+
+    set((state) => {
+      if (hasUnread && !state.hasUnread) {
+        // fetch full notifications if new ones appeared
+        state.fetchNotifications(userId);
+      }
+      return { hasUnread };
+    });
   },
 }));

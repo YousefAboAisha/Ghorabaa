@@ -4,29 +4,71 @@ import { GrNotification } from "react-icons/gr";
 import NotificationCard from "../cards/notificationCard";
 import Link from "next/link";
 import { Session } from "next-auth";
-import { useEffect } from "react";
-
+import { useEffect, useRef, useState } from "react";
 import NotificationSkeletonLoader from "../loaders/notificationSkeletonLoader";
 import { useNotificationStore } from "@/stores/notificationStore";
+import {
+  CommentNotificationInterface,
+  StoryNotificationInterface,
+} from "@/app/interfaces";
 
 type NotificationPopperProps = {
   session: Session | null;
 };
 
+type MixedNotification =
+  | StoryNotificationInterface
+  | CommentNotificationInterface;
+
 function NotificationPopper({ session }: NotificationPopperProps) {
   const user_id = session?.user?.id as string;
+  const hasMarkedRef = useRef(false);
+  const [menuOpen, setMenuOpen] = useState(false); // manual tracking
+  const [slicedNotifications, setSlicedNotifications] = useState<
+    MixedNotification[]
+  >([]);
 
-  const fetchNotifications = useNotificationStore(
-    (state) => state.fetchNotifications
-  );
-  const notifications = useNotificationStore((state) => state.notifications);
-  const loading = useNotificationStore((state) => state.loading);
-  const hasUnread = useNotificationStore((state) => state.hasUnread);
-  const markAllAsRead = useNotificationStore((state) => state.markAllAsRead);
+  const {
+    hasUnread,
+    pollUnreadAndFetchIfChanged,
+    markAllAsRead,
+    loading,
+    notifications,
+    fetchNotifications,
+  } = useNotificationStore();
 
+  // Update slicedNotifications whenever notifications change
   useEffect(() => {
-    if (user_id) fetchNotifications(user_id);
-  }, [fetchNotifications]);
+    setSlicedNotifications(notifications.slice(0, 7));
+  }, [notifications]);
+
+  // ✅ Fetch notifications on mount
+  useEffect(() => {
+    if (user_id) {
+      fetchNotifications(user_id);
+    }
+  }, [user_id, fetchNotifications]);
+
+  // Trigger polling
+  useEffect(() => {
+    if (!user_id) return;
+
+    const interval = setInterval(() => {
+      pollUnreadAndFetchIfChanged(user_id);
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [user_id]);
+
+  // ✅ Mark notifications as read when menu opens
+  useEffect(() => {
+    if (menuOpen && !hasMarkedRef.current) {
+      markAllAsRead();
+      hasMarkedRef.current = true;
+    } else if (!menuOpen) {
+      hasMarkedRef.current = false;
+    }
+  }, [menuOpen, markAllAsRead]);
 
   return (
     <Menu as="div">
@@ -34,23 +76,20 @@ function NotificationPopper({ session }: NotificationPopperProps) {
         as="button"
         disabled={loading}
         className="relative group cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
-        onClick={markAllAsRead}
+        onClick={() => setMenuOpen(true)} // ✅ set true only on click
+        onBlur={() => setMenuOpen(false)} // ✅ fallback for menu close
       >
-        {({ active }) => (
-          <div className="flex items-center gap-1">
-            <p
-              title="الإشعارات"
-              className={`flex items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full ${
-                active && "bg-gray_light"
-              }`}
-            >
-              <GrNotification size={17} />
-              {hasUnread && !active && (
-                <span className="absolute top-2 left-2 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
-              )}
-            </p>
-          </div>
-        )}
+        <div className="flex items-center gap-1">
+          <p
+            title="الإشعارات"
+            className="flex items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full"
+          >
+            <GrNotification size={17} />
+            {hasUnread && (
+              <span className="absolute top-2 left-2 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
+            )}
+          </p>
+        </div>
       </MenuButton>
 
       <MenuItems
@@ -61,9 +100,13 @@ function NotificationPopper({ session }: NotificationPopperProps) {
         <div className="flex flex-col gap-1 p-1.5 max-h-[50vh] overflow-y-auto">
           {loading ? (
             <NotificationSkeletonLoader length={1} />
-          ) : notifications.length > 0 ? (
-            notifications.map((notification, index) => (
-              <MenuItem key={index} as={Link} href={notification.href || "#"}>
+          ) : slicedNotifications.length > 0 ? (
+            slicedNotifications.map((notification, index) => (
+              <MenuItem
+                key={notification._id?.toString() ?? index}
+                as={Link}
+                href={notification.href || "#"}
+              >
                 <NotificationCard
                   type={notification.notification_type}
                   createdAt={notification.createdAt}

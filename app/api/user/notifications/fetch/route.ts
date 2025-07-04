@@ -19,10 +19,12 @@ export async function GET(req: NextRequest) {
 
     const notifications = await notificationsCollection
       .find({ user_id: new ObjectId(token.id) })
-      .sort({ createdAt: -1 }) // 👈 Sort by createdAt DESC (most recent first)
+      .sort({ createdAt: -1 })
       .toArray();
 
-    return NextResponse.json({ data: notifications ?? [] }, { status: 200 });
+    const hasUnread = notifications.some((n) => !n.is_read); // ✅ check flag
+
+    return NextResponse.json({ data: notifications, hasUnread });
   } catch (error) {
     console.error("Error fetching notifications:", error);
     return NextResponse.json(
