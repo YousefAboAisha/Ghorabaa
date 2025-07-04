@@ -98,23 +98,29 @@ export const authOptions: AuthOptions = {
     },
 
     async jwt({ token, user, account }) {
-      // On first login (Google or Credentials)
-      if (user) {
-        token.id = user.id;
-        token.name = user.name ?? undefined;
-        token.email = user.email ?? undefined;
-        token.image = user.image ?? undefined;
-        token.role = user.role || Role.USER;
-        token.createdAt = user.createdAt ?? new Date().toISOString();
-        token.accessToken = account?.access_token; // only for Google
-        return token;
-      }
-
-      // On subsequent requests
       const client = await clientPromise;
       const db = client.db("ghorabaa");
       const usersCollection = db.collection("users");
 
+      // First login (Google or Credentials)
+      if (user) {
+        const existingUser = await usersCollection.findOne({
+          email: user.email,
+        });
+
+        token.id = existingUser?._id.toString(); // ✅ use MongoDB _id here
+        token.name = existingUser?.name;
+        token.email = existingUser?.email;
+        token.image = existingUser?.image;
+        token.role = existingUser?.role || Role.USER;
+        token.createdAt =
+          existingUser?.createdAt?.toISOString() ?? new Date().toISOString();
+        token.accessToken = account?.access_token;
+
+        return token;
+      }
+
+      // Subsequent requests (from stored token)
       const existingUser = await usersCollection.findOne({
         email: token.email,
       });
