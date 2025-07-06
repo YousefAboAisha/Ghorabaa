@@ -105,12 +105,19 @@ const StoriesAnalytics = () => {
   }, []);
 
   const renderStoriesGrowthContent = () => {
-    if (storiesGrowthLoader)
-      return <p className="text-[12px] abs-center">جارٍ جلب التحليلات</p>;
     if (storiesGrowthError)
       return (
-        <ErrorMessage error={storiesGrowthError} className="min-h-[40vh]" />
+        <ErrorMessage
+          error={storiesGrowthError}
+          className="min-h-[40vh] !border-none"
+        />
       );
+
+    if (storiesGrowthLoader)
+      return (
+        <div className="relative w-full h-full rounded-xl bg-gray-300 animate-pulse"></div>
+      );
+
     if (storiesGrowthData.length > 0)
       return <StoriesGrowthLineChart data={storiesGrowthData} />;
     return null;
@@ -118,14 +125,18 @@ const StoriesAnalytics = () => {
 
   const renderStoriesResolutionContent = () => {
     if (storiesResolutionLoader)
-      return <p className="text-[12px] abs-center">جارٍ جلب التحليلات</p>;
+      return (
+        <div className="relative w-full h-full rounded-xl bg-gray-300 animate-pulse"></div>
+      );
+
     if (storiesResolutionError)
       return (
         <ErrorMessage
           error={storiesGrowthError as string}
-          className="min-h-[40vh]"
+          className="min-h-[40vh] !border-none"
         />
       );
+
     if (storiesResolutionData.length > 0)
       return <StoriesResolutionPieChart data={storiesResolutionData} />;
     return null;

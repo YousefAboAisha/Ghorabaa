@@ -103,7 +103,10 @@ const Users = () => {
 
   const renderUsersCountContent = () => {
     if (usersCountLoader)
-      return <p className="text-[12px] abs-center">جارٍ جلب التحليلات</p>;
+      return (
+        <div className="relative w-full h-full rounded-xl bg-gray-300 animate-pulse"></div>
+      );
+
     if (userCountsError)
       return (
         <ErrorMessage
@@ -117,7 +120,10 @@ const Users = () => {
 
   const renderActiveUsersContent = () => {
     if (activeUsersCount)
-      return <p className="text-[12px] abs-center">جارٍ جلب التحليلات</p>;
+      return (
+        <div className="relative w-full h-full rounded-xl bg-gray-300 animate-pulse"></div>
+      );
+
     if (activeUsersError)
       return (
         <ErrorMessage
@@ -136,7 +142,7 @@ const Users = () => {
         }}
         pagination={{ clickable: true }}
         autoplay={{ delay: 3000 }}
-        className="relative overflow-hidden"
+        className="relative overflow-hidden md:p-0 p-10"
         style={{
           direction: "ltr",
         }}
@@ -170,11 +176,11 @@ const Users = () => {
   return (
     <div className="relative">
       <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-[60vh]">
-        <div className="relative flex items-center justify-center p-0 md:p-12 bg-white border rounded-lg">
+        <div className="relative flex items-center justify-center p-4 bg-white border rounded-lg">
           {renderActiveUsersContent()}
         </div>
 
-        <div className="relative bg-white border rounded-lg p-3">
+        <div className="relative bg-white border rounded-lg p-4">
           {renderUsersCountContent()}
         </div>
       </div>

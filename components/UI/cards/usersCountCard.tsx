@@ -3,6 +3,7 @@ type UserAnalysisCardProps = {
   count: number;
   countClassname?: string;
   classname?: string;
+  icon?: JSX.Element;
 };
 
 const UsersCountCard = ({
@@ -10,15 +11,24 @@ const UsersCountCard = ({
   count,
   countClassname = "",
   classname = "",
+  icon,
 }: UserAnalysisCardProps) => {
+  const Icon = icon;
+
   return (
     <div
-      className={`relative bg-white flex flex-col flex-grow flex-1 justify-center items-stretch gap-4 p-16 rounded-xl shadow-md ${classname}`}
+      className={`relative bg-white flex flex-1 items-stretch gap-4 p-8 rounded-xl shadow-md `}
     >
-      <p className="text-center text-md">{title}</p>
-      <h2 className={`text-center font-extrabold text-6xl ${countClassname}`}>
-        {count}
-      </h2>
+      <div
+        className={`w-12 h-12 p-1 rounded-xl flex items-center justify-center ${classname}`}
+      >
+        {Icon}
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <h2 className={`font-extrabold text-2xl ${countClassname}`}>{count}</h2>
+        <p className="text-[12px] text-gray_dark">{title}</p>
+      </div>
     </div>
   );
 };

@@ -46,8 +46,8 @@ const VisitsAnalytics = () => {
     if (error) return <ErrorMessage error={error} className="min-h-[40vh]" />;
     if (loading)
       return (
-        <div className="relative bg-white border rounded-md min-h-[40vh] flex items-center justify-center">
-          <p className="text-[12px]">جارٍ جلب التحليلات</p>
+        <div className="relative bg-white border rounded-md min-h-[40vh] p-4 flex items-center justify-center">
+          <div className="relative w-full min-h-[40vh] rounded-xl bg-gray-300 animate-pulse"></div>
         </div>
       );
 

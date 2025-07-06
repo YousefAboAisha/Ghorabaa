@@ -1,7 +1,9 @@
 "use client";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import UsersCountCard from "@/components/UI/cards/usersCountCard";
+import UserCountSkeletonLoader from "@/components/UI/loaders/userCountSkeletonLoader";
 import { useEffect, useState } from "react";
+import { FaUser, FaUserCheck, FaUserGear, FaUsers } from "react-icons/fa6";
 
 const UsersCount = () => {
   const [usersCountLoader, setUsersCountLoader] = useState(true);
@@ -68,43 +70,38 @@ const UsersCount = () => {
 
   const renderUserCounts = () => {
     if (userCountsError)
-      return <ErrorMessage error={userCountsError} className="min-h-[40vh]" />;
+      return <ErrorMessage error={userCountsError} className="min-h-[30vh]" />;
 
-    if (usersCountLoader)
-      return (
-        <div className="relative bg-white border rounded-md min-h-[40vh] flex items-center justify-center">
-          <p className="text-[12px]">جارٍ جلب التحليلات</p>
-        </div>
-      );
+    if (usersCountLoader) return <UserCountSkeletonLoader length={4} />;
 
     return (
       <div className="relative w-full flex items-center flex-wrap gap-4">
         <UsersCountCard
           title="كافة المستخدمين"
           count={usersData.TOTAL}
-          countClassname="text-gray_dark"
-          classname="border-gray_dark border-b-8"
+          icon={<FaUsers size={22} className="text-gray_dark font-bold z-10" />}
+          classname="bg-[#74747420]"
         />
 
         <UsersCountCard
-          title={"مشرف"}
+          title={"المشرفون"}
           count={usersData.ADMIN}
-          countClassname="text-primary"
-          classname="border-primary border-b-8"
+          icon={<FaUserGear size={22} className="text-primary font-bold" />}
+          classname="bg-[#5b913b20]"
         />
 
         <UsersCountCard
-          title={"محرر"}
+          title={"المحررون"}
           count={usersData.EDITOR}
-          countClassname="text-blueColor"
-          classname="border-blueColor border-b-8"
+          icon={<FaUserCheck size={22} className="text-blueColor font-bold" />}
+          classname="bg-[#2980b920]"
         />
 
         <UsersCountCard
-          title={"مستخدم عادي"}
+          title={"المستخدمون العاديون"}
           count={usersData.USER}
-          countClassname="text-secondary"
-          classname="border-secondary border-b-8"
+          icon={<FaUser size={18} className="text-secondary font-bold" />}
+          classname="bg-[#1e272e20]"
         />
       </div>
     );

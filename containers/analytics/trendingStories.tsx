@@ -9,6 +9,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
+import TrendingStorySkeletonLoader from "@/components/UI/loaders/trendingStorySkeletonLoader";
 
 const breakboints = {
   // When window width is >= 640px
@@ -72,12 +73,7 @@ const TrendingStories = () => {
 
   const renderTrendingStories = () => {
     if (error) return <ErrorMessage error={error} />;
-    if (loading)
-      return (
-        <div className="relative bg-white border rounded-md min-h-[40vh] flex items-center justify-center">
-          <p className="text-[12px]">جارٍ جلب التحليلات</p>
-        </div>
-      );
+    if (loading) return <TrendingStorySkeletonLoader length={4} />;
 
     if (data.length === 0) return <NoDataMessage className="min-h-[40vh]" />;
 
