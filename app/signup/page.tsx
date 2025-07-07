@@ -10,10 +10,16 @@ import Heading from "@/components/UI/typography/heading";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { signIn } from "next-auth/react";
+import Modal from "@/components/UI/modals/modal";
+import VerifyEmail from "@/components/UI/modals/verifyEmail";
 
 const Signup = () => {
-  const [formErrors, setFormErrors] = useState<string>("");
+  const [error, setError] = useState<string>("");
+
+  const [isOpenModal, setisOpenModal] = useState<boolean>(false);
+  const [otp, setOtp] = useState<string>("");
+  const [email, setEmail] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
 
   const initialValues = {
     name: "",
@@ -44,7 +50,9 @@ const Signup = () => {
     values: typeof initialValues,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    setFormErrors("");
+    setError("");
+    setEmail(values.email); // ✅ SET IT EARLY
+    setPassword(values.password); // Store password for later use
 
     try {
       const response = await fetch(
@@ -59,25 +67,13 @@ const Signup = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        setFormErrors(data.error || "حدث خطأ أثناء إنشاء الحساب");
+        setError(data.error || "حدث خطأ أثناء إنشاء الحساب");
         return;
       }
 
-      // Auto sign-in after signup
-      const res = await signIn("credentials", {
-        redirect: false,
-        email: values.email,
-        password: values.password,
-      });
+      setEmail(values.email as string); // Set email for OTP verification
 
-      if (res?.error) {
-        toast.error("تم إنشاء الحساب، لكن فشل تسجيل الدخول");
-      } else {
-        toast.success("تم إنشاء الحساب وتسجيل الدخول بنجاح!");
-        setTimeout(() => {
-          window.location.href = `/profile/${data.user.id}`;
-        }, 1000);
-      }
+      setisOpenModal(true); // Open OTP modal
     } catch (error) {
       console.error("Error creating user", error);
       toast.error("حدث خطأ أثناء تسجيل الحساب");
@@ -87,149 +83,166 @@ const Signup = () => {
   };
 
   return (
-    <div className="relative mb-14 flex items-center justify-center">
-      <div className="w-11/12 md:w-7/12 lg:w-5/12 border p-8 rounded-3xl shadow-sm bg-white mt-40">
-        <Heading
-          highLightText="إنشاء حساب"
-          title=""
-          highlightColor="before:bg-primary"
-          className="mb-8 mx-auto"
-          additionalStyles="text-2xl text-center mx-auto"
-        />
+    <>
+      <div className="relative mb-14 flex items-center justify-center">
+        <div className="w-11/12 md:w-7/12 lg:w-5/12 border p-8 rounded-3xl shadow-sm bg-white mt-40">
+          <Heading
+            highLightText="إنشاء حساب"
+            title=""
+            highlightColor="before:bg-primary"
+            className="mb-8 mx-auto"
+            additionalStyles="text-2xl text-center mx-auto"
+          />
 
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ isSubmitting, errors }) => (
-            <Form className="flex flex-col gap-4">
-              {/* Name Field */}
-              <Field
-                disabled={isSubmitting}
-                name="name"
-                as={Input}
-                type="text"
-                placeholder="الاسم رباعي"
-                label="الاسم رباعي"
-                icon={<BiUser size={20} />}
-                className="focus:border-primary"
-                aria-label="الاسم رباعي"
-                aria-invalid={!!errors.name}
-              />
-              <ErrorMessage
-                name="name"
-                component="div"
-                className="text-red-500 mt-2 font-bold text-[10px]"
-              />
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ isSubmitting, errors }) => (
+              <Form className="flex flex-col gap-4">
+                {/* Name Field */}
+                <Field
+                  disabled={isSubmitting}
+                  name="name"
+                  as={Input}
+                  type="text"
+                  placeholder="الاسم رباعي"
+                  label="الاسم رباعي"
+                  icon={<BiUser size={20} />}
+                  className="focus:border-primary"
+                  aria-label="الاسم رباعي"
+                  aria-invalid={!!errors.name}
+                />
+                <ErrorMessage
+                  name="name"
+                  component="div"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
+                />
 
-              {/* Email Field */}
-              <Field
-                disabled={isSubmitting}
-                name="email"
-                as={Input}
-                type="email"
-                placeholder="البريد الالكتروني"
-                label="البريد الالكتروني"
-                icon={<BiMailSend size={20} />}
-                className="focus:border-primary"
-                aria-label="البريد الالكتروني"
-                aria-invalid={!!errors.email}
-              />
-              <ErrorMessage
-                name="email"
-                component="div"
-                className="text-red-500 mt-2 font-bold text-[10px]"
-              />
+                {/* Email Field */}
+                <Field
+                  disabled={isSubmitting}
+                  name="email"
+                  as={Input}
+                  type="email"
+                  placeholder="البريد الالكتروني"
+                  label="البريد الالكتروني"
+                  icon={<BiMailSend size={20} />}
+                  className="focus:border-primary"
+                  aria-label="البريد الالكتروني"
+                  aria-invalid={!!errors.email}
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
+                />
 
-              {/* Phone Number Field */}
-              <Field
-                disabled={isSubmitting}
-                name="phoneNumber"
-                as={Input}
-                type="text"
-                placeholder="رقم الجوال"
-                label="رقم الجوال"
-                icon={<BiPhone size={20} />}
-                className="focus:border-primary"
-                aria-label="رقم الجوال"
-                aria-invalid={!!errors.phoneNumber}
-              />
-              <ErrorMessage
-                name="phoneNumber"
-                component="div"
-                className="text-red-500 mt-2 font-bold text-[10px]"
-              />
+                {/* Phone Number Field */}
+                <Field
+                  disabled={isSubmitting}
+                  name="phoneNumber"
+                  as={Input}
+                  type="text"
+                  placeholder="رقم الجوال"
+                  label="رقم الجوال"
+                  icon={<BiPhone size={20} />}
+                  className="focus:border-primary"
+                  aria-label="رقم الجوال"
+                  aria-invalid={!!errors.phoneNumber}
+                />
+                <ErrorMessage
+                  name="phoneNumber"
+                  component="div"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
+                />
 
-              {/* Password Field */}
-              <Field
-                disabled={isSubmitting}
-                name="password"
-                as={Input}
-                type="password"
-                placeholder="كلمة المرور"
-                label="كلمة المرور"
-                icon={<BiLock size={20} />}
-                className="focus:border-primary"
-                aria-label="كلمة المرور"
-                aria-invalid={!!errors.password}
-              />
-              <ErrorMessage
-                name="password"
-                component="div"
-                className="text-red-500 mt-2 font-bold text-[10px]"
-              />
+                {/* Password Field */}
+                <Field
+                  disabled={isSubmitting}
+                  name="password"
+                  as={Input}
+                  type="password"
+                  placeholder="كلمة المرور"
+                  label="كلمة المرور"
+                  icon={<BiLock size={20} />}
+                  className="focus:border-primary"
+                  aria-label="كلمة المرور"
+                  aria-invalid={!!errors.password}
+                />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
+                />
 
-              {/* Confirm Password Field */}
-              <Field
-                disabled={isSubmitting}
-                name="confirmPassword"
-                as={Input}
-                type="password"
-                placeholder="تأكيد كلمة المرور"
-                label="تأكيد كلمة المرور"
-                icon={<BiLock size={20} />}
-                className="focus:border-primary"
-                aria-label="تأكيد كلمة المرور"
-                aria-invalid={!!errors.confirmPassword}
-              />
-              <ErrorMessage
-                name="confirmPassword"
-                component="div"
-                className="text-red-500 mt-2 font-bold text-[10px]"
-              />
+                {/* Confirm Password Field */}
+                <Field
+                  disabled={isSubmitting}
+                  name="confirmPassword"
+                  as={Input}
+                  type="password"
+                  placeholder="تأكيد كلمة المرور"
+                  label="تأكيد كلمة المرور"
+                  icon={<BiLock size={20} />}
+                  className="focus:border-primary"
+                  aria-label="تأكيد كلمة المرور"
+                  aria-invalid={!!errors.confirmPassword}
+                />
+                <ErrorMessage
+                  name="confirmPassword"
+                  component="div"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
+                />
 
-              <Button
-                title="إنشاء حساب"
-                type="submit"
-                className="bg-primary mt-2 w-full mx-auto"
-                icon={<PiShootingStarThin size={20} />}
-                disabled={isSubmitting}
-                loading={isSubmitting}
-              />
+                <Button
+                  title="إنشاء حساب"
+                  type="submit"
+                  className="bg-primary mt-2 w-full mx-auto"
+                  icon={<PiShootingStarThin size={20} />}
+                  disabled={isSubmitting}
+                  loading={isSubmitting}
+                />
 
-              {formErrors && (
-                <div className="rounded-lg p-4 w-full bg-red-100 text-[red] text-sm">
-                  {formErrors}
-                </div>
-              )}
+                {error && (
+                  <div className="rounded-lg p-4 w-full bg-red-100 text-[red] text-[12px]">
+                    {error}
+                  </div>
+                )}
 
-              {!isSubmitting && (
-                <div className="text-center text-[12px] mt-2">
-                  إذا كنت تمتلك حساباً، قم بـ
-                  <Link
-                    className="text-primary font-bold hover:underline"
-                    href={"/signin"}
-                  >
-                    تسجيل الدخول
-                  </Link>
-                </div>
-              )}
-            </Form>
-          )}
-        </Formik>
+                {!isSubmitting && (
+                  <div className="text-center text-[12px] mt-2">
+                    إذا كنت تمتلك حساباً، قم بـ
+                    <Link
+                      className="text-primary font-bold hover:underline"
+                      href={"/signin"}
+                    >
+                      تسجيل الدخول
+                    </Link>
+                  </div>
+                )}
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
-    </div>
+
+      <Modal
+        isOpen={isOpenModal}
+        setIsOpen={setisOpenModal}
+        containerClassName="lg:w-[30%]"
+        loading={true}
+      >
+        <VerifyEmail
+          setIsOpen={setisOpenModal}
+          otp={otp}
+          setOtp={setOtp}
+          email={email || ""} // Pass email if available, otherwise empty string
+          password={password || ""} // Pass password if available, otherwise empty string
+        />
+      </Modal>
+    </>
   );
 };
 

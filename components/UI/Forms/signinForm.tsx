@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 const SigninForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/auth-redirect";
 
@@ -40,34 +41,24 @@ const SigninForm = () => {
   ) => {
     setError("");
 
-    try {
-      const res = await signIn("credentials", {
-        callbackUrl: callbackUrl,
-        redirect: false,
-        email: values.email,
-        password: values.password,
-      });
+    const res = await signIn("credentials", {
+      callbackUrl,
+      redirect: false,
+      email: values.email,
+      password: values.password,
+    });
 
-      if (res?.error) {
-        setError(res.error);
-        return;
-      }
-
-      // Fetch session to get the user's ID
-      const sessionRes = await fetch("/api/auth/session");
-      const session = await sessionRes.json();
-      const userId = session?.user?.id;
-
+    if (res?.error) {
+      setError(res.error);
+    } else {
       toast.success("تم تسجيل الدخول بنجاح!");
-      setTimeout(() => {
-        window.location.href = `/profile/${userId}`;
-      }, 1000);
-    } catch (error) {
-      console.error("Sign-in error:", error);
-      setError("حدث خطأ أثناء تسجيل الدخول");
-    } finally {
-      setSubmitting(false);
+      const session = await (
+        await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/session`)
+      ).json();
+      window.location.href = `/profile/${session?.user?.id}`;
     }
+
+    setSubmitting(false);
   };
 
   const handleGoogleLogin = async () => {
@@ -84,112 +75,117 @@ const SigninForm = () => {
   };
 
   return (
-    <div className="w-11/12 md:w-7/12 lg:w-[35%] border p-8 rounded-3xl shadow-sm bg-white mt-[70px]">
-      <Heading
-        title="تسجيل الدخول"
-        highlightColor="before:bg-primary"
-        className="mb-8 mx-auto text-center !text-2xl"
-      />
+    <>
+      <div className="w-11/12 md:w-7/12 lg:w-[35%] border p-8 rounded-3xl shadow-sm bg-white mt-[70px]">
+        <Heading
+          title="تسجيل الدخول"
+          highlightColor="before:bg-primary"
+          className="mb-8 mx-auto text-center !text-2xl"
+        />
 
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting, errors }) => (
-          <Form className="flex flex-col gap-4">
-            {/* Email Field */}
-            <div>
-              <Field
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting, errors }) => (
+            <Form className="flex flex-col gap-4">
+              {/* Email Field */}
+              <div>
+                <Field
+                  disabled={isSubmitting}
+                  name="email"
+                  as={Input}
+                  type="email"
+                  placeholder="البريد الالكتروني"
+                  label="البريد الالكتروني"
+                  icon={<BiUser />}
+                  className={`focus:border-primary`}
+                  aria-label="البريد الالكتروني"
+                  aria-invalid={!!errors.email}
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
+                />
+              </div>
+
+              {/* Password Field */}
+              <div>
+                <Field
+                  disabled={isSubmitting}
+                  name="password"
+                  as={Input}
+                  type="password"
+                  placeholder="كلمة المرور"
+                  label="كلمة المرور"
+                  icon={<BiLock />}
+                  className={`focus:border-primary`}
+                  aria-label="كلمة المرور"
+                  aria-invalid={!!errors.password}
+                />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 mt-2 font-bold text-[10px]"
+                />
+              </div>
+
+              {/* Submit Button */}
+              <Button
+                title={"تسجيل الدخول"}
+                type="submit"
+                className="bg-primary w-full hover:shadow-lg"
+                icon={<PiSignIn size={22} className="rotate-180" />}
+                loading={isSubmitting}
                 disabled={isSubmitting}
-                name="email"
-                as={Input}
-                type="email"
-                placeholder="البريد الالكتروني"
-                label="البريد الالكتروني"
-                icon={<BiUser />}
-                className={`focus:border-primary`}
-                aria-label="البريد الالكتروني"
-                aria-invalid={!!errors.email}
               />
-              <ErrorMessage
-                name="email"
-                component="div"
-                className="text-red-500 mt-2 font-bold text-[10px]"
-              />
-            </div>
 
-            {/* Password Field */}
-            <div>
-              <Field
-                disabled={isSubmitting}
-                name="password"
-                as={Input}
-                type="password"
-                placeholder="كلمة المرور"
-                label="كلمة المرور"
-                icon={<BiLock />}
-                className={`focus:border-primary`}
-                aria-label="كلمة المرور"
-                aria-invalid={!!errors.password}
-              />
-              <ErrorMessage
-                name="password"
-                component="div"
-                className="text-red-500 mt-2 font-bold text-[10px]"
-              />
-            </div>
+              <p className="bg-transparent w-full flex justify-center text-sm">
+                أو
+              </p>
 
-            {/* Submit Button */}
-            <Button
-              title={"تسجيل الدخول"}
-              type="submit"
-              className="bg-primary w-full hover:shadow-lg"
-              icon={<PiSignIn size={22} className="rotate-180" />}
-              loading={isSubmitting}
-              disabled={isSubmitting}
-            />
+              {/* Submit Button */}
+              <div
+                onClick={() => handleGoogleLogin()}
+                className="px-2 py-3 cursor-pointer text-center justify-center rounded-lg text-sm bg-white border border-gray_dark shadow-none hover:shadow-none flex items-center gap-2"
+                title={"تسجيل بواسطة جوجل"}
+                aria-label="تسجيل بواسطة جوجل"
+              >
+                تسجيل بواسطة جوجل
+                {loading ? (
+                  <AiOutlineLoading3Quarters
+                    size={17}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <FcGoogle size={20} />
+                )}
+              </div>
 
-            <p className="bg-transparent w-full flex justify-center text-sm">
-              أو
-            </p>
-
-            {/* Submit Button */}
-            <div
-              onClick={() => handleGoogleLogin()}
-              className="px-2 py-3 cursor-pointer text-center justify-center rounded-lg text-sm bg-white border border-gray_dark shadow-none hover:shadow-none flex items-center gap-2"
-              title={"تسجيل بواسطة جوجل"}
-              aria-label="تسجيل بواسطة جوجل"
-            >
-              تسجيل بواسطة جوجل
-              {loading ? (
-                <AiOutlineLoading3Quarters size={17} className="animate-spin" />
-              ) : (
-                <FcGoogle size={20} />
+              {error && (
+                <div className="rounded-lg p-4 w-full bg-red-100 text-[red] text-[12px]">
+                  {error}
+                </div>
               )}
-            </div>
 
-            {error && (
-              <div className="rounded-lg p-4 w-full bg-red-100 text-[red] text-[12px]">
-                {error}
-              </div>
-            )}
-
-            {isSubmitting ? null : (
-              <div className="text-center text-[12px] mt-2">
-                إذا كنت لا تمتلك حساباً، قم بـ
-                <Link
-                  className="text-primary font-bold hover:underline"
-                  href={"/signup"}
-                >
-                  إنشاء حساب
-                </Link>
-              </div>
-            )}
-          </Form>
-        )}
-      </Formik>
-    </div>
+              {isSubmitting ? null : (
+                <div className="text-center text-[12px] mt-2">
+                  إذا كنت لا تمتلك حساباً، قم بـ
+                  <Link
+                    className="text-primary font-bold hover:underline"
+                    href={"/signup"}
+                  >
+                    إنشاء حساب
+                  </Link>
+                </div>
+              )}
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </>
   );
 };
 

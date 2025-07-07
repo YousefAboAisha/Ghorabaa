@@ -20,6 +20,7 @@ export interface UserInterface extends Document {
   image: string;
   phone_number?: string;
   email: string;
+  isVerified: boolean; // Indicates if the user has verified their email.
   password?: string;
   role: Role;
   provider: ProviderTypes;

@@ -42,6 +42,10 @@ export const authOptions: AuthOptions = {
           throw new Error("يرجى تسجيل الدخول باستخدام Google");
         }
 
+        if (!user.isVerified) {
+          throw new Error("يرجى التحقق من الرمز المُرسل لبريدك الالكتروني!");
+        }
+
         const isValid = await bcrypt.compare(
           credentials!.password,
           user.password
@@ -78,14 +82,19 @@ export const authOptions: AuthOptions = {
         });
 
         if (!existingUser) {
+          const isGoogle = account?.provider === "google";
+
           const newUser = {
             name: user.name,
             email: user.email,
             image: user.image,
             provider: account?.provider,
             role: Role.USER,
+            isVerified: isGoogle ? true : false, // ✅ This line ensures Google users are verified
+            favorites: [],
             createdAt: new Date(),
           };
+
           await usersCollection.insertOne(newUser);
           console.log("New user created:", newUser);
         }

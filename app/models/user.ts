@@ -46,6 +46,11 @@ const userSchema = new Schema<UserInterface>(
       default: ProviderTypes.DEFAULT,
     },
 
+    isVerified: {
+      type: Boolean,
+      default: false, // Default to false, can be set to true after email verification
+    },
+
     favorites: [
       {
         type: Schema.Types.ObjectId,
