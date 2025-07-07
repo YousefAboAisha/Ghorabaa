@@ -27,7 +27,6 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
         {
           $match: {
             _id: new ObjectId(id),
-            hasCompleteProfile: true,
           },
         },
         {

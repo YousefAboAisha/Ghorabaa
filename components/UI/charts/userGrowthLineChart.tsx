@@ -1,5 +1,4 @@
 "use client";
-
 import {
   AreaChart,
   Area,
@@ -22,7 +21,7 @@ interface Props {
 
 export default function UserGrowthLineChart({ data }: Props) {
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-[40vh]">
       <ResponsiveContainer>
         <AreaChart data={data}>
           <defs>

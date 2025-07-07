@@ -14,7 +14,6 @@ export async function GET() {
         {
           $match: {
             status: StoryStatus.APPROVED,
-            hasCompleteProfile: true,
           },
         },
         { $sample: { size: 1 } },

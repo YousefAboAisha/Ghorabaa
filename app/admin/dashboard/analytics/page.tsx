@@ -1,4 +1,5 @@
 import Heading from "@/components/UI/typography/heading";
+import ActiveUsers from "@/containers/analytics/activeUsers";
 import StoriesAnalytics from "@/containers/analytics/storiesAnalytics";
 import TrendingStories from "@/containers/analytics/trendingStories";
 import UsersCount from "@/containers/analytics/usersCount";
@@ -7,16 +8,21 @@ import VisitsAnalytics from "@/containers/analytics/visitsAnalytics";
 const Analytics = () => {
   return (
     <div className="relative">
-      {/* this is user analytics section */}
+      {/* this is visits analytics section */}
       <div>
+        <Heading highLightText="زوار المنصة" title="" />
+        <VisitsAnalytics />
+      </div>
+
+      {/* this is user analytics section */}
+      <div className="section">
         <Heading highLightText="مستخدمو المنصة" title="" />
         <UsersCount />
       </div>
 
-      {/* this is visits analytics section */}
       <div className="section">
-        <Heading highLightText="زوار المنصة" title="" />
-        <VisitsAnalytics />
+        <Heading highLightText="المستخدمون الأكثر تفاعلاً" title="" />
+        <ActiveUsers />
       </div>
 
       {/* this is story analytics section */}
@@ -30,6 +36,7 @@ const Analytics = () => {
         <StoriesAnalytics />
       </div>
 
+      {/* this is trending stories section */}
       <div className="section">
         <Heading
           highLightText="القصص الأكثر تفاعلاً"

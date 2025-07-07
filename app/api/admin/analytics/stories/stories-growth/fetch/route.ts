@@ -1,20 +1,9 @@
-// /app/api/stats/user-growth/route.ts
 import { NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 
 const monthNames = [
-  "يناير", // January
-  "فبراير", // February
-  "مارس", // March
-  "أبريل", // April
-  "مايو", // May
-  "يونيو", // June
-  "يوليو", // July
-  "أغسطس", // August
-  "سبتمبر", // September
-  "أكتوبر", // October
-  "نوفمبر", // November
-  "ديسمبر", // December
+  "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+  "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر",
 ];
 
 export async function GET() {
@@ -26,10 +15,15 @@ export async function GET() {
     const result = await stories
       .aggregate([
         {
+          $addFields: {
+            effectiveDate: { $ifNull: ["$updatedAt", "$createdAt"] },
+          },
+        },
+        {
           $group: {
             _id: {
-              year: { $year: "$createdAt" },
-              month: { $month: "$createdAt" },
+              year: { $year: "$effectiveDate" },
+              month: { $month: "$effectiveDate" },
             },
             stories: { $sum: 1 },
           },
@@ -43,7 +37,7 @@ export async function GET() {
     const formatted = result.map((item) => {
       const monthIndex = item._id.month - 1;
       return {
-        date: `${monthNames[monthIndex]}`,
+        date: `${monthNames[monthIndex]} ${item._id.year}`,
         stories: item.stories,
       };
     });

@@ -60,7 +60,6 @@ export async function POST(originalReq: Request) {
       keywords, // <- Add extracted keywords
       publisher_id: new ObjectId(token.id),
       status: StoryStatus.PENDING,
-      hasCompleteProfile: true,
       age,
       updatedAt: new Date(),
     };

@@ -17,7 +17,7 @@ interface ResolutionData {
 }
 
 const Reports = () => {
-  const [reportsCountLoader, setReportsCountLoader] = useState(true);
+  const [reportsCountLoading, setReportsCountLoading] = useState(true);
   const [reportsCountsError, setReportsCountsError] = useState<string | null>(
     null
   );
@@ -35,7 +35,7 @@ const Reports = () => {
       );
 
       if (!res.ok) {
-        setReportsCountLoader(false);
+        setReportsCountLoading(false);
         let errorMsg = "حدث خطأ أثناء جلب البيانات";
         try {
           const errorResponse = await res.json();
@@ -50,13 +50,13 @@ const Reports = () => {
       console.log("📊 Reports Statistics data:", data);
       setReportsData(data);
     } catch (error) {
-      setReportsCountLoader(false);
+      setReportsCountLoading(false);
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
       setReportsCountsError(message);
       console.error("Error fetching statistics:", error);
     } finally {
-      setReportsCountLoader(false);
+      setReportsCountLoading(false);
     }
   };
 
@@ -92,8 +92,10 @@ const Reports = () => {
   };
 
   const renderUsersCountContent = () => {
-    if (reportsCountLoader)
-      return <p className="text-[12px] abs-center">جارٍ جلب التحليلات</p>;
+    if (reportsCountLoading)
+      return (
+        <div className="relative w-full h-full rounded-xl bg-gray-300 animate-pulse"></div>
+      );
 
     if (reportsCountsError)
       return (
@@ -117,7 +119,9 @@ const Reports = () => {
 
   const renderReportsResolutionContent = () => {
     if (resolutionLoading)
-      return <p className="text-[12px] abs-center">جارٍ جلب التحليلات</p>;
+      return (
+        <div className="relative w-full h-full rounded-xl bg-gray-300 animate-pulse"></div>
+      );
 
     if (resolutionError)
       return (

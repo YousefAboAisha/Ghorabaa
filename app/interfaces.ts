@@ -70,7 +70,6 @@ export interface StoryInterface extends Document {
   status: StoryStatus;
   image: string;
   publisher_id: Types.ObjectId | string;
-  hasCompleteProfile: boolean;
   keywords: string[];
   rejectReason?: string;
   reports?: ReportInterface[];

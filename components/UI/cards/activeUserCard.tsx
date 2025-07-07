@@ -14,16 +14,16 @@ const ActiveUserCard = ({
   return (
     <div
       key={user_id}
-      className="relative bg-white md:bg-background_light border rounded-md hover:shadow-sm duration-150"
+      className="relative bg-white border rounded-md hover:shadow-lg duration-300"
       style={{
         direction: "rtl", // Ensure the card content is displayed in RTL
       }}
     >
-      <div className="absolute top-3 right-3 bg-white shadow-md border flex items-center justify-center rounded-md p-1.5 text-[13px] font-semibold ">
+      <div className="absolute top-3 right-3 bg-background_light shadow-md border flex items-center justify-center rounded-md p-1.5 text-[13px] font-semibold ">
         #{total}
       </div>
 
-      <div className="flex flex-col w-fit items-center gap-2 p-8 mx-auto">
+      <div className="flex flex-col w-fit items-center gap-3 p-8 mx-auto">
         <Image
           alt="صورة المستخدم"
           src={image || "/notFound.png"}

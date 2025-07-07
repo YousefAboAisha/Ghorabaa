@@ -78,7 +78,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
       neighborhood: null,
       bio: null,
       image: null,
-      hasCompleteProfile: false,
       status: StoryStatus.IMPORTED,
       updatedAt: new Date(),
     };

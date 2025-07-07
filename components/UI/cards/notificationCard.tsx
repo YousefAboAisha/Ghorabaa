@@ -22,7 +22,7 @@ const NotificationCard = ({
 
   const { Icon, className, size } = getNotificationIcon(type);
 
-  const iconSize = isPopperNotification ? 20 : size;
+  const iconSize = isPopperNotification ? 25 : size;
 
   return (
     <div

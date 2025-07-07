@@ -100,8 +100,8 @@ const Page = () => {
     }
 
     if (searchData) {
-      return searchData.status == StoryStatus.PENDING ||
-        StoryStatus.REJECTED ? (
+      return searchData.status === StoryStatus.PENDING ||
+        searchData.status === StoryStatus.REJECTED ? (
         <div className="flex flex-col gap-4 items-center justify-center min-h-[40vh] bg-white border rounded-md">
           <div className="w-fit h-fit p-3.5 rounded-full bg-[#f39c1220]">
             <BsExclamationTriangle className="text-pending" size={20} />
@@ -192,7 +192,7 @@ const Page = () => {
                 </td>
 
                 <td className="py-3 px-4 text-right text-sm">
-                  {searchData.hasCompleteProfile ? (
+                  {searchData.status === StoryStatus.APPROVED ? (
                     <div className="flex items-center gap-2">
                       <p className="w-fit p-2 rounded-md text-[12px] bg-primary text-white">
                         مكتمل
@@ -211,8 +211,7 @@ const Page = () => {
           </table>
 
           <div className="w-full md:w-4/12 mx-auto mt-3">
-            {searchData?.hasCompleteProfile &&
-            searchData?.status == StoryStatus.APPROVED ? (
+            {searchData?.status == StoryStatus.APPROVED ? (
               <Link href={`/stories/${searchData?._id}`}>
                 <Button
                   title="عرض صفحة الشهيد"

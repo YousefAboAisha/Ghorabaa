@@ -17,7 +17,7 @@ const UsersCountCard = ({
 
   return (
     <div
-      className={`relative bg-white flex flex-1 items-stretch gap-4 p-8 rounded-xl shadow-md `}
+      className={`relative bg-white flex flex-1 items-stretch gap-4 p-8 rounded-xl shadow-sm `}
     >
       <div
         className={`w-12 h-12 p-1 rounded-xl flex items-center justify-center ${classname}`}

@@ -53,14 +53,39 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
         initialValues={initialValues}
         validationSchema={ProfileValidationSchema}
         onSubmit={async (values, { setSubmitting }) => {
+          setSubmitting(true);
           try {
+            let finalImageUrl = values.image;
+
+            // 👇 Upload image only if it's a new base64 image (not an existing URL)
+            if (isNewImageUploaded && values.image?.startsWith("data:image")) {
+              const imageUploadRes = await fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
+                {
+                  method: "POST",
+                  body: JSON.stringify({ image: values.image }),
+                  headers: { "Content-Type": "application/json" },
+                }
+              );
+
+              const { url } = await imageUploadRes.json();
+              if (!imageUploadRes.ok || !url) {
+                console.error("Image Upload Error:", url);
+                setSubmitting(false);
+                return;
+              }
+
+              finalImageUrl = url;
+            }
+
+            // 👇 Send updated form data with uploaded image URL
             const response = await fetch(
               `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/update`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values),
-                credentials: "include", // 👈 THIS IS CRITICAL
+                credentials: "include",
+                body: JSON.stringify({ ...values, image: finalImageUrl }),
               }
             );
 
@@ -70,10 +95,10 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
               console.log("User details updated:", data);
               window.location.reload();
             } else {
-              console.error("Failed to add User details:", data.error);
+              console.error("Failed to update user details:", data.error);
             }
           } catch (error) {
-            console.error("Error updating User details:", error);
+            console.error("Error updating user details:", error);
           } finally {
             setSubmitting(false);
           }

@@ -64,7 +64,6 @@ const SigninForm = () => {
       }, 1000);
     } catch (error) {
       console.error("Sign-in error:", error);
-      toast.error("حدث خطأ أثناء تسجيل الدخول");
       setError("حدث خطأ أثناء تسجيل الدخول");
     } finally {
       setSubmitting(false);
