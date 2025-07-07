@@ -2,6 +2,7 @@
 import { usePathname } from "next/navigation";
 import Logo from "../UI/logo";
 import RenderredRoutes from "./renderredRoutes";
+import Link from "next/link";
 
 const Footer = () => {
   const date = new Date().getFullYear();
@@ -9,7 +10,7 @@ const Footer = () => {
   const pathname = usePathname();
 
   // Only render the navbar if it's not an admin page
-  if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) {
+  if (pathname.startsWith("/admin")) {
     return null;
   }
 
@@ -23,9 +24,18 @@ const Footer = () => {
             <RenderredRoutes />
           </div>
 
-          <p className="text-[12px] font-light">
-            جميع الحقوق محفوظة لدى يوسف رشاد أبو عيشة {date}
-          </p>
+          <div className="text-[12px] font-light">
+            جميع الحقوق محفوظة لدى{" "}
+            <Link
+              href={"https://portfolio-neon-delta-76.vercel.app/"}
+              target="_blank"
+              className="font-normal hover:underline"
+            >
+              {" "}
+              يوسف رشاد أبو عيشة
+            </Link>{" "}
+            {date}
+          </div>
         </div>
       </div>
 

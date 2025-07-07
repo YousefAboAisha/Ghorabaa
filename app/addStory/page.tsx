@@ -18,6 +18,8 @@ import AddStoryForm from "@/components/UI/Forms/addStoryForm";
 import { getGenderLabel } from "@/utils/text";
 import ErrorMessageContainer from "@/components/responseMessages/errorMessage";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
+import { StoryStatus } from "../enums";
+import { BsExclamationTriangle } from "react-icons/bs";
 
 const Page = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -98,7 +100,18 @@ const Page = () => {
     }
 
     if (searchData) {
-      return (
+      return searchData.status == StoryStatus.PENDING ||
+        StoryStatus.REJECTED ? (
+        <div className="flex flex-col gap-4 items-center justify-center min-h-[40vh] bg-white border rounded-md">
+          <div className="w-fit h-fit p-3.5 rounded-full bg-[#f39c1220]">
+            <BsExclamationTriangle className="text-pending" size={20} />
+          </div>
+
+          <p className="text-[13px]">
+            قام أحد المستخدمين بإرسال طلب لنشر قصة عن هذا الشهيد!
+          </p>
+        </div>
+      ) : (
         <>
           <table className="min-w-full bg-white border border-gray-200 h-full">
             <tbody>
@@ -198,7 +211,8 @@ const Page = () => {
           </table>
 
           <div className="w-full md:w-4/12 mx-auto mt-3">
-            {searchData?.hasCompleteProfile ? (
+            {searchData?.hasCompleteProfile &&
+            searchData?.status == StoryStatus.APPROVED ? (
               <Link href={`/stories/${searchData?._id}`}>
                 <Button
                   title="عرض صفحة الشهيد"
@@ -206,7 +220,7 @@ const Page = () => {
                   icon={<FaEye />}
                 />
               </Link>
-            ) : (
+            ) : searchData.status == StoryStatus.IMPORTED ? (
               <Button
                 onClick={() => {
                   setIsOpen(true);
@@ -215,7 +229,8 @@ const Page = () => {
                 className="bg-secondary text-white px-4"
                 icon={<FiPlus />}
               />
-            )}
+            ) : // The condition where status is [ PENDING OR REJECTED ]
+            null}
           </div>
         </>
       );
@@ -285,7 +300,7 @@ const Page = () => {
           </Formik>
         </div>
 
-        <div className="flex flex-col gap-2 w-full h-full mt-8">
+        <div className="flex flex-col gap-2 w-full h-full mt-4">
           {renderContent()}
         </div>
       </div>

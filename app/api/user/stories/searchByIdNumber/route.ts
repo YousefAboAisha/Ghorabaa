@@ -1,6 +1,5 @@
 import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import { StoryStatus } from "@/app/enums";
 import { getToken } from "next-auth/jwt";
 
 const secret = process.env.NEXTAUTH_SECRET;
@@ -35,7 +34,6 @@ export async function GET(req: NextRequest) {
     const result = await storiesCollection
       .find({
         id_number: query,
-        status: { $in: [StoryStatus.IMPORTED, StoryStatus.APPROVED] },
       })
       .sort({ createdAt: -1 })
       .limit(1)
@@ -53,6 +51,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ data: storyData }, { status: 200 });
   } catch (error) {
     console.error("Error in fetching story:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

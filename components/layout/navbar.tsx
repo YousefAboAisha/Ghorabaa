@@ -54,7 +54,7 @@ const Navbar = ({ session }: NavbarProps) => {
   }, []);
 
   // Only render the navbar if it's not an admin page
-  if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) {
+  if (pathname.startsWith("/admin")) {
     return null;
   }
 
