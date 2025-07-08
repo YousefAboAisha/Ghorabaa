@@ -10,7 +10,7 @@ const Spinner = ({ additionalStyles }: SpinnerProps) => {
       role="status"
       className={`abs-center fixed w-screen h-screen  z-[100000] bg-[white] ${additionalStyles}`}
     >
-      <Logo className="animate-pulse text-lg abs-center" />
+      <Logo className="animate-pulse text-lg abs-center select-none" />
     </div>
   );
 };

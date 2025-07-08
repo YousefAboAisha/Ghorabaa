@@ -59,7 +59,9 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
         </div>
 
         {/* Bio with highlighting */}
-        <p className="text-gray-600 text-[13px] mt-2 line-clamp-2 h-9">
+        <p style={{
+          lineHeight: "20px",
+        }} className="text-gray-600 text-[13px] mt-2 line-clamp-2 h-10">
           <HighlightedText
             highlights={data?.highlight}
             field="bio"

@@ -31,7 +31,7 @@ const Navbar = ({ session }: NavbarProps) => {
   const renderedRoutes = useMemo(
     () =>
       Routes.filter(
-        ({ href }) => href !== "/donationCampaigns" && href !== "/events"
+        ({ href }) => href !== "/supportUs" && href !== "/events"
       ).map(({ title, href }, index) => (
         <Link
           key={index}

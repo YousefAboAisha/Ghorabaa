@@ -18,13 +18,13 @@ export const Routes = [
     icon: RxLayers,
   },
   {
-    title: "حملات التبرع",
-    href: "/donationCampaigns",
+    title: "الفعاليات",
+    href: "/events",
     icon: RxLayers,
   },
   {
-    title: "الفعاليات",
-    href: "/events",
+    title: "دعم المنصة",
+    href: "/supportUs",
     icon: RxLayers,
   },
 ];

@@ -2,7 +2,7 @@ import Button from "@/components/UI/inputs/button";
 import Heading from "@/components/UI/typography/heading";
 import Image from "next/image";
 import Link from "next/link";
-import { BiDonateHeart } from "react-icons/bi";
+import { BsStar } from "react-icons/bs";
 
 const AddStoryBanner = () => {
   return (
@@ -30,22 +30,11 @@ const AddStoryBanner = () => {
           </p>
         </div>
 
-        <Link
-          href={`/donationCampaigns`}
-          className="mt-6 lg:w-4/12 md:6/12 w-5/12"
-        >
+        <Link href={`/supportUs`} className="mt-6 lg:w-4/12 md:6/12 w-5/12">
           <Button
-            title="حملات التبرع"
+            title="دعم المنصة"
             className="w-full bg-primary text-white text-sm"
-            icon={
-              <BiDonateHeart
-                style={{
-                  transform: "scale(-1,1)",
-                }}
-                size={18}
-                className="scale-[-1,1]"
-              />
-            }
+            icon={<BsStar size={16} className="scale-[-1,1]" />}
             hasShiningBar={false}
           />
         </Link>
