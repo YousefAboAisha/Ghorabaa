@@ -23,8 +23,8 @@ export const Routes = [
     icon: RxLayers,
   },
   {
-    title: "دعم المنصة",
-    href: "/supportUs",
+    title: "من نحن",
+    href: "/about",
     icon: RxLayers,
   },
 ];

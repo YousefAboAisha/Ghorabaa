@@ -122,7 +122,7 @@ function ProfilePopper({ session }: ProfilePopperProps) {
           <MenuItem>
             <div
               onClick={handleGoogleSignout} // Add onClick handler for logout
-              className="flex items-center gap-2 p-3 cursor-pointer text-[13px] rounded-lg bg-[red] text-white"
+              className="flex items-center gap-2 p-3 cursor-pointer text-[13px] rounded-lg bg-rejected text-white"
             >
               <CiLogout size={20} />
               <p>تسجيل الخروج</p>

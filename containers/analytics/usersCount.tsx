@@ -79,8 +79,8 @@ const UsersCount = () => {
         <UsersCountCard
           title="كافة المستخدمين"
           count={usersData.TOTAL}
-          icon={<FaUsers size={22} className="text-gray_dark font-bold z-10" />}
-          classname="bg-[#74747420]"
+          icon={<FaUsers size={22} className="text-rejected font-bold z-10" />}
+          classname="bg-[#c2361620]"
         />
 
         <UsersCountCard

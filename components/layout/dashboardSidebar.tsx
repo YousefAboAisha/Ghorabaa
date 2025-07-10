@@ -3,7 +3,7 @@ import { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; // Import usePathname
-import { BiDonateHeart, BiLineChart } from "react-icons/bi";
+import { BiLineChart } from "react-icons/bi";
 import { BsCalendar4Week } from "react-icons/bs";
 import { FiHome, FiUsers } from "react-icons/fi";
 import { MdOutlineReport } from "react-icons/md";
@@ -66,19 +66,6 @@ const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
             >
               <BsCalendar4Week size={18} />
               <p className="hidden lg:block text-[13px] ">الفعاليات</p>
-            </li>
-          </Link>
-
-          <Link href={"/admin/dashboard/donationCampaigns"}>
-            <li
-              className={`list-none cursor-pointer duration-100 p-4 w-full rounded-lg flex items-center lg:justify-normal justify-center gap-2 ${
-                pathname === "/admin/dashboard/donationCampaigns"
-                  ? "bg-primary text-white"
-                  : "bg-gray-100"
-              }`}
-            >
-              <BiDonateHeart size={20} />
-              <p className="hidden lg:block text-[13px] ">حملات التبرع</p>
             </li>
           </Link>
 
