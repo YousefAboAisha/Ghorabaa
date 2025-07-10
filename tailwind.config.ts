@@ -71,6 +71,8 @@ module.exports = {
         "home-landing2": "url('/home-landing2.jpg')",
         "donation-banner": "url('/donation_banner.jpg')",
         "event-banner": "url('/event.jpg')",
+        "secondary-banner": "url('/secondary-bg.png')",
+        "primary-banner": "url('/primary-bg.png')",
       },
     },
   },

@@ -48,13 +48,13 @@ const TodaysMartyr = async () => {
           </Link>
         </div>
 
-        <div className="relative flex flex-col justify-center w-full min-h-[60vh] rounded-2xl bg-secondary">
+        <div className="relative flex flex-col justify-center w-full min-h-[60vh] rounded-md bg-[#5b913b30] ">
           <Image
             src={data?.image || "/notFound.png"}
             width={350}
             height={350}
             alt="Today's martyr"
-            className="shadow-2xl self-center h-[350px] group-hover:scale-125 duration-700 object-cover rounded-xl"
+            className="shadow-2xl self-center h-[350px] rounded-xl object-cover object-center"
             blurDataURL="https://reactnative-examples.com/wp-content/uploads/2022/02/default-loading-image.png"
             placeholder="blur"
             priority

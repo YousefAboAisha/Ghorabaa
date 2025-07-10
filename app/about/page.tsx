@@ -8,7 +8,7 @@ const SupportUs = () => {
   return (
     <div className="container min-h-screen mt-24">
       {/* Hero section */}
-      <div className="relative flex items-center justify-center p-8 min-h-[45vh] bg-secondary rounded-2xl ">
+      <div className="relative flex items-center justify-center p-8 min-h-[45vh] bg-secondary-banner rounded-2xl ">
         <div className="flex flex-col justify-center items-center gap-4 -translate-y-8">
           <h2 className="font-bold text-white text-5xl">منصة غُربَاء</h2>
         </div>
