@@ -48,7 +48,7 @@ const TodaysMartyr = async () => {
           </Link>
         </div>
 
-        <div className="relative flex flex-col justify-center w-full min-h-[60vh] rounded-md bg-[#5b913b30] ">
+        <div className="relative flex flex-col justify-center w-full min-h-[60vh] rounded-md bg-[#1e272e30]  ">
           <Image
             src={data?.image || "/notFound.png"}
             width={350}
