@@ -214,3 +214,38 @@ export interface allStoriesStatisticsInterface {
     total: number;
   };
 }
+
+export interface MassacreInterface {
+  title: string;
+  date: Date; // ISO format e.g. "2024-10-15"
+  location: {
+    city: string;
+    neighborhood?: string;
+  };
+  deathToll: {
+    men?: number;
+    women?: number;
+    children?: number;
+    total: number;
+  };
+  injuries?: {
+    total: number;
+    severe?: number;
+  };
+  displacedFamilies?: number;
+  damage?: {
+    homes?: number;
+    schools?: number;
+    hospitals?: number;
+    mosques?: number;
+  };
+  description: string;
+  perpetrator?: string;
+  media?: {
+    type: "image" | "video" | "audio";
+    url: string;
+    caption?: string;
+  }[];
+  tags?: string[];
+  internationalReactions?: string[];
+}

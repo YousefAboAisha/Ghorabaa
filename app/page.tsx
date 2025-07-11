@@ -1,4 +1,3 @@
-import DonationBanner from "@/containers/home/donationBanner";
 import Landing from "@/containers/home/landing";
 import MartyrsStatistics from "@/containers/home/martyersStatistics";
 import TodaysMartyr from "@/containers/home/todaysMartyer";
@@ -57,17 +56,31 @@ export default async function Home() {
 
           <Link
             href={"/stories"}
-            className="text-primary flex items-center gap-2 justify-center mt-6 hover:underline text-sm w-fit mx-auto"
+            className="text-primary flex items-center gap-2 justify-center hover:underline text-sm w-fit mx-auto"
           >
-            <p>عرض المزيد</p>
+            <p>عرض الكل</p>
             <BsArrowLeft />
           </Link>
         </div>
       </div>
 
-      <div className="container">
-        <DonationBanner />
-      </div>
+      {/* <div className="container">
+        <div className="cards-grid-3">
+          <MassacreCard
+            id="shujaiyya-2014"
+            title="مجزرة الشجاعية"
+            date="2014-07-20"
+            location={{ city: "غزة", neighborhood: "الشجاعية" }}
+            deathToll={{ total: 120 }}
+            media={[
+              {
+                type: "image",
+                url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZEuFwVul9ILfE5vNnplbWsLQoaQaDVnJkUA&s",
+              },
+            ]}
+          />
+        </div>
+      </div> */}
     </>
   );
 }

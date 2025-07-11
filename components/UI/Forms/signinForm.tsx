@@ -10,7 +10,6 @@ import Heading from "@/components/UI/typography/heading";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -93,7 +92,7 @@ const SigninForm = () => {
               {/* Email Field */}
               <div>
                 <Field
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || loading}
                   name="email"
                   as={Input}
                   type="email"
@@ -114,7 +113,7 @@ const SigninForm = () => {
               {/* Password Field */}
               <div>
                 <Field
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || loading}
                   name="password"
                   as={Input}
                   type="password"
@@ -139,30 +138,22 @@ const SigninForm = () => {
                 className="bg-primary w-full hover:shadow-lg"
                 icon={<PiSignIn size={22} className="rotate-180" />}
                 loading={isSubmitting}
-                disabled={isSubmitting}
+                disabled={isSubmitting || loading}
               />
 
               <p className="bg-transparent w-full flex justify-center text-sm">
                 أو
               </p>
 
-              {/* Submit Button */}
-              <div
+              <Button
                 onClick={() => handleGoogleLogin()}
-                className="px-2 py-3 cursor-pointer text-center justify-center rounded-lg text-sm bg-white border border-gray_dark shadow-none hover:shadow-none flex items-center gap-2"
                 title={"تسجيل بواسطة جوجل"}
                 aria-label="تسجيل بواسطة جوجل"
-              >
-                تسجيل بواسطة جوجل
-                {loading ? (
-                  <AiOutlineLoading3Quarters
-                    size={17}
-                    className="animate-spin"
-                  />
-                ) : (
-                  <FcGoogle size={20} />
-                )}
-              </div>
+                className="px-2 py-3 cursor-pointer text-center justify-center rounded-lg text-sm bg-white border !border-gray_dark !text-black shadow-none hover:shadow-none flex items-center gap-2"
+                icon={<FcGoogle size={22} />}
+                loading={loading}
+                disabled={isSubmitting || loading}
+              />
 
               {error && (
                 <div className="rounded-lg p-4 w-full bg-red-100 text-[red] text-[12px]">
