@@ -3,6 +3,8 @@ import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ImagesSwiper from "@/components/UI/imagesSwiper";
 import { Session } from "next-auth";
 import { cookies } from "next/headers"; // App Router only
+import Link from "next/link";
+import { BsArrowLeft } from "react-icons/bs";
 
 type RecentlyAddedStories = {
   session: Session | null;
@@ -37,7 +39,18 @@ const RecentlyAddedStories = async ({ session }: RecentlyAddedStories) => {
   }
 
   if (data) {
-    return <ImagesSwiper data={data} session={session} />;
+    return (
+      <div className="flex flex-col">
+        <ImagesSwiper data={data} session={session} />
+        <Link
+          href={"/stories"}
+          className="text-primary flex items-center gap-2 justify-center hover:underline text-sm w-fit mx-auto"
+        >
+          <p>عرض الكل</p>
+          <BsArrowLeft />
+        </Link>
+      </div>
+    );
   }
 };
 

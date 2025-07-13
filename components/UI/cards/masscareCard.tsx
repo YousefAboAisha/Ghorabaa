@@ -1,14 +1,16 @@
 import Link from "next/link";
-import { BsCalendar } from "react-icons/bs";
-import { BiMapPin } from "react-icons/bi";
 import Image from "next/image";
+import { GrCalendar, GrLocation } from "react-icons/gr";
+import { arabicDateConversion } from "@/utils/format";
 
 interface Props {
   id: string;
   title: string;
-  date: string;
+  description: string;
+  date: string | Date;
   location: { city: string; neighborhood?: string };
   deathToll: { total: number };
+  injuries: { total: number };
   media?: { url: string; type: "image" | "video" }[];
 }
 
@@ -17,41 +19,83 @@ export default function MassacreCard({
   title,
   date,
   location,
+  description,
   deathToll,
-  media,
+  injuries,
 }: Props) {
   return (
     <Link
-      href={`/massacres/${id}`}
-      className="rounded-2xl shadow-md hover:shadow-lg transition bg-white overflow-hidden border border-gray-200"
+      href={`/masscares/${id}`}
+      style={{
+        direction: "rtl",
+      }}
+      className="section grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white border rounded-xl overflow-hidden p-10 px-16 hover:shadow-md duration-300"
     >
-      <div className="h-48 w-full overflow-hidden">
-        <Image
-          src={media?.[0]?.url || "/notFound.png"}
-          alt={title}
-          className="w-full h-full object-cover"
-        />
+      <div className="flex flex-col w-full">
+        <div className="flex flex-col gap-2 mt-4 ">
+          {/* title */}
+
+          <h2 className="text-2xl font-semibold mb-2">{title}</h2>
+
+          <div className="flex items-center flex-wrap gap-2">
+            {["مقاومة", "حصار", "غزة", "مجزرة"]?.map((keywrod, index) => {
+              return (
+                <div
+                  key={index}
+                  className="border bg-[#5b913b40] rounded-xl p-1.5 px-3 text-[10px]"
+                >
+                  #{keywrod}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="flex gap-6 mt-2 text-[12px]">
+            <div className="flex items-center gap-2">
+              <GrCalendar size={20} className="text-primary" />
+              <p className="text-[12px]">
+                {arabicDateConversion(date as Date)}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <GrLocation size={20} className="text-primary font-bold" />
+              <div className="flex items-center gap-1">
+                <p>{location.city}</p>-<p>{location.neighborhood}</p>
+              </div>
+            </div>
+          </div>
+
+          <p className="font-light mt-2 line-clamp-[10] text-[15px]">
+            {description}
+          </p>
+        </div>
+
+        <div className="flex items-center flex-wrap gap-2 mt-4">
+          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
+            <p className="text-[12px]">شهداء</p>
+            <p className="font-bold text-rejected">{deathToll.total}+</p>
+          </div>
+
+          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
+            <p className="text-[12px]">إصابات</p>
+            <p className="font-bold text-pending">{injuries.total}+</p>
+          </div>
+
+          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
+            <p className="text-[12px] ">منازل مدمرة</p>
+            <p className="font-bold text-secondary">{injuries.total}+</p>
+          </div>
+        </div>
       </div>
-      <div className="p-4 space-y-2">
-        <h2 className="text-xl font-bold text-red-600">{title}</h2>
-        <div className="text-sm text-gray-500 flex items-center gap-1">
-          <BsCalendar className="w-4 h-4" />
-          {new Date(date).toLocaleDateString("ar-EG", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </div>
-        <div className="text-sm text-gray-500 flex items-center gap-1">
-          <BiMapPin className="w-4 h-4" />
-          {location.city}
-          {location.neighborhood ? ` - ${location.neighborhood}` : ""}
-        </div>
-        <div className="text-sm text-gray-700">
-          الشهداء:{" "}
-          <span className="font-semibold text-red-700">{deathToll.total}</span>
-        </div>
-      </div>
+
+      <Image
+        src={"/donation.png"}
+        width={500}
+        height={500}
+        alt="صورة حملة التبرع"
+        className="shadow-xl rounded-xl self-center w-full"
+      />
     </Link>
   );
 }

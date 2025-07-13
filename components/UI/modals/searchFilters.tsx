@@ -96,7 +96,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
           <div
             onClick={() => setGender(Gender.MALE)}
             className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
-              gender === Gender.MALE && "bg-secondary text-white"
+              gender === Gender.MALE && "bg-blueColor text-white"
             }`}
           >
             <GiMale size={30} />
@@ -106,7 +106,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
           <div
             onClick={() => setGender(Gender.FEMALE)}
             className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
-              gender === Gender.FEMALE && "bg-secondary text-white"
+              gender === Gender.FEMALE && "bg-[#ff5982] text-white"
             }`}
           >
             <GiFemale size={30} />

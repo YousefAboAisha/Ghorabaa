@@ -6,10 +6,9 @@ import RecentlyAddedStories from "@/containers/home/recentlyAddedStories";
 import { Suspense } from "react";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import Heading from "@/components/UI/typography/heading";
-import Link from "next/link";
-import { BsArrowLeft } from "react-icons/bs";
 import { HomeMetadata } from "./lib/metadata";
 import { getSessionAction } from "./actions/registerActions";
+import Masscares from "@/containers/home/masscares";
 
 export const generateMetadata = async () => HomeMetadata;
 
@@ -23,7 +22,9 @@ export default async function Home() {
     <>
       <Landing />
 
-      <MartyrsStatistics />
+      <div className="section">
+        <MartyrsStatistics />
+      </div>
 
       <div className="container">
         {/* todays martyr */}
@@ -37,9 +38,11 @@ export default async function Home() {
           <TodaysMartyr />
         </div>
 
-        <AddStoryBanner />
+        <div className="section">
+          <AddStoryBanner />
+        </div>
 
-        <div className="mt-24">
+        <div className="section">
           <Heading
             highLightText="قصص مضافة حديثاً"
             highlightColor="before:bg-primary"
@@ -53,34 +56,11 @@ export default async function Home() {
           >
             <RecentlyAddedStories session={session} />
           </Suspense>
-
-          <Link
-            href={"/stories"}
-            className="text-primary flex items-center gap-2 justify-center hover:underline text-sm w-fit mx-auto"
-          >
-            <p>عرض الكل</p>
-            <BsArrowLeft />
-          </Link>
         </div>
+
+        {/* Masscard section*/}
+        <Masscares />
       </div>
-
-      {/* <div className="container">
-        <div className="cards-grid-3">
-          <MassacreCard
-            id="shujaiyya-2014"
-            title="مجزرة الشجاعية"
-            date="2014-07-20"
-            location={{ city: "غزة", neighborhood: "الشجاعية" }}
-            deathToll={{ total: 120 }}
-            media={[
-              {
-                type: "image",
-                url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZEuFwVul9ILfE5vNnplbWsLQoaQaDVnJkUA&s",
-              },
-            ]}
-          />
-        </div>
-      </div> */}
     </>
   );
 }

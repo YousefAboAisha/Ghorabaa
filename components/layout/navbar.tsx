@@ -30,9 +30,7 @@ const Navbar = ({ session }: NavbarProps) => {
   // Memoize the routes to avoid unnecessary re-renders
   const renderedRoutes = useMemo(
     () =>
-      Routes.filter(
-        ({ href }) => href !== "/about" && href !== "/events"
-      ).map(({ title, href }, index) => (
+      Routes.map(({ title, href }, index) => (
         <Link
           key={index}
           href={href}
@@ -64,7 +62,7 @@ const Navbar = ({ session }: NavbarProps) => {
     >
       <div className="container flex flex-row justify-between items-center h-full">
         <div className={`flex items-center gap-1`}>
-          <div className="flex md:hidden cursor-pointer m-0">
+          <div className="flex lg:hidden cursor-pointer m-0">
             <Hamburger
               toggled={sidebarIsOpen}
               toggle={setSidebarIsOpen}
@@ -78,12 +76,12 @@ const Navbar = ({ session }: NavbarProps) => {
             <div className="flex items-center gap-2">
               <Link
                 href={"/signin"}
-                className="h-full outline-none hidden md:flex"
+                className="outline-none hidden lg:flex !min-w-fit"
                 prefetch
               >
                 <Button
                   title="تسجيل الدخول"
-                  className="bg-primary px-4 md:px-3"
+                  className="bg-primary px-4 lg:px-3 !min-w-fit"
                   icon={<FiUser />}
                   hasShiningBar={false}
                 />
@@ -93,7 +91,7 @@ const Navbar = ({ session }: NavbarProps) => {
                 title="تسجيل الدخول"
                 prefetch
                 href={"/signin"}
-                className="flex md:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+                className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
                 <BsPersonAdd size={22} />
               </Link>
@@ -102,7 +100,7 @@ const Navbar = ({ session }: NavbarProps) => {
                 title="البحث عن الشهداء"
                 prefetch
                 href={"/search"}
-                className="flex md:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+                className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
                 <BsSearch />
               </Link>
@@ -120,7 +118,7 @@ const Navbar = ({ session }: NavbarProps) => {
                 title="البحث عن الشهداء"
                 prefetch
                 href={"/search"}
-                className="flex items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+                className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
                 <BsSearch />
               </Link>
@@ -144,12 +142,12 @@ const Navbar = ({ session }: NavbarProps) => {
                   <BsBookmark />
                 )}
               </Link>
-              <span className="hidden md:flex">|</span>
+              <span className="hidden lg:flex">|</span>
             </div>
           )}
 
           {/* Routes */}
-          <div className="hidden md:flex gap-6 mr-4">{renderedRoutes}</div>
+          <div className="hidden lg:flex gap-6 mr-4">{renderedRoutes}</div>
         </div>
 
         {/* Logo */}

@@ -85,3 +85,15 @@ select {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer and Edge */
 }
+
+/* Default bullets */
+.swiper-pagination-bullet {
+  background-color: #d1d5db; /* Tailwind gray-300 */
+  opacity: 1; /* make visible */
+}
+
+/* Active bullet */
+.swiper-pagination-bullet-active {
+  background-color: #5B913B !important; /* Tailwind blue-800 or your brand color */
+}
+

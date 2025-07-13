@@ -35,7 +35,7 @@ const TodaysMartyr = async () => {
               <h4 className="font-bold text-lg  ">{data?.name}</h4>
             </div>
 
-            <p className="text-[13px]">{data?.bio}</p>
+            <p className="text-md font-light line-clamp-[13]">{data?.bio}</p>
           </div>
 
           <Link href={`/stories/${data?._id}`} className="mt-4">
