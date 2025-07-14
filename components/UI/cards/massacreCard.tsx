@@ -2,30 +2,27 @@ import Link from "next/link";
 import Image from "next/image";
 import { GrCalendar, GrLocation } from "react-icons/gr";
 import { arabicDateConversion } from "@/utils/format";
+import { MassacreInterface } from "@/app/interfaces";
 
-interface Props {
-  id: string;
-  title: string;
-  description: string;
-  date: string | Date;
-  location: { city: string; neighborhood?: string };
-  deathToll: { total: number };
-  injuries: { total: number };
-  media?: { url: string; type: "image" | "video" }[];
-}
+type Props = {
+  data: MassacreInterface;
+};
 
-export default function MassacreCard({
-  id,
-  title,
-  date,
-  location,
-  description,
-  deathToll,
-  injuries,
-}: Props) {
+export default function MassacreCard({ data }: Props) {
+  const {
+    _id,
+    title,
+    date,
+    location,
+    description,
+    deaths,
+    injuries,
+    destroyedHouses,
+  } = data;
+
   return (
     <Link
-      href={`/masscares/${id}`}
+      href={`/massacres/${_id}`}
       style={{
         direction: "rtl",
       }}
@@ -74,17 +71,17 @@ export default function MassacreCard({
         <div className="flex items-center flex-wrap gap-2 mt-4">
           <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
             <p className="text-[12px]">شهداء</p>
-            <p className="font-bold text-rejected">{deathToll.total}+</p>
+            <p className="font-bold text-rejected">{deaths}+</p>
           </div>
 
           <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
             <p className="text-[12px]">إصابات</p>
-            <p className="font-bold text-pending">{injuries.total}+</p>
+            <p className="font-bold text-pending">{injuries}+</p>
           </div>
 
           <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
             <p className="text-[12px] ">منازل مدمرة</p>
-            <p className="font-bold text-secondary">{injuries.total}+</p>
+            <p className="font-bold text-secondary">{destroyedHouses}+</p>
           </div>
         </div>
       </div>

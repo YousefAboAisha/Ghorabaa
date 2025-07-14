@@ -216,36 +216,37 @@ export interface allStoriesStatisticsInterface {
 }
 
 export interface MassacreInterface {
+  _id: Types.ObjectId | string; // Unique identifier for the report.
   title: string;
-  date: Date; // ISO format e.g. "2024-10-15"
+  cover_image: string;
+  date: string | Date;
   location: {
     city: string;
     neighborhood?: string;
   };
-  deathToll: {
-    men?: number;
-    women?: number;
-    children?: number;
-    total: number;
-  };
-  injuries?: {
-    total: number;
-    severe?: number;
-  };
-  displacedFamilies?: number;
-  damage?: {
-    homes?: number;
-    schools?: number;
-    hospitals?: number;
-    mosques?: number;
-  };
+  deaths: number;
+  injuries: number;
+  destroyedHouses: number;
   description: string;
-  perpetrator?: string;
-  media?: {
-    type: "image" | "video" | "audio";
-    url: string;
-    caption?: string;
-  }[];
+  media: string[];
   tags?: string[];
+  externalLinks: {
+    wikipedia: {
+      title: string;
+      href: string;
+    };
+
+    alJazeera: {
+      title: string;
+      href: string;
+    };
+
+    stateOfPalestine: {
+      title: string;
+      href: string;
+    };
+  };
   internationalReactions?: string[];
+  visits?: number;
+  createdAt: Date;
 }

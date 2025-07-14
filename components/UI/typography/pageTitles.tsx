@@ -15,6 +15,7 @@ const pathTranslations: Record<string, string> = {
   editProfile: "تعديل الملف الشخصي",
   notifications: "الإشعارات",
   savedStories: "القصص المحفوظة",
+  massacres: "المجازر الصهيونية",
 };
 
 type PageTitlesProps = {
@@ -25,7 +26,9 @@ const PageTitles = ({ storyName }: PageTitlesProps) => {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
-  const isStoryDetailsPage = segments[0] === "stories" && segments.length === 2;
+  const isStoryDetailsPage =
+    segments[0] === "stories" ||
+    (segments[0] === "massacres" && segments.length === 2);
 
   return (
     <div className="flex items-center mb-2 text-sm">

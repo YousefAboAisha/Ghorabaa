@@ -8,7 +8,7 @@ import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLo
 import Heading from "@/components/UI/typography/heading";
 import { HomeMetadata } from "./lib/metadata";
 import { getSessionAction } from "./actions/registerActions";
-import Masscares from "@/containers/home/masscares";
+import RecentlyAddedMasscares from "@/containers/home/recentlyAddedMasscares";
 
 export const generateMetadata = async () => HomeMetadata;
 
@@ -59,7 +59,7 @@ export default async function Home() {
         </div>
 
         {/* Masscard section*/}
-        <Masscares />
+        <RecentlyAddedMasscares />
       </div>
     </>
   );
