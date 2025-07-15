@@ -1,6 +1,6 @@
 "use client";
 import { StoryInterface } from "@/app/interfaces";
-import EditStoryForm from "@/components/UI/Forms/editStoryForm";
+import EditStoryForm from "@/components/UI/forms/editStoryForm";
 import Modal from "@/components/UI/modals/modal";
 import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";

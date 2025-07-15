@@ -15,12 +15,12 @@ const GeneralStatisticCard = ({ title, count, icon }: props) => {
     >
       <span className="absolute right-0 top-0 h-full w-1/4 bg-secondary z-0 group-hover:w-full duration-500 "></span>
       <div
-        className={`rounded-r-xl flex items-center justify-center text-white bg-secondary z-10 p-10`}
+        className={`rounded-r-xl flex items-center justify-center text-white bg-secondary z-10 w-1/4`}
       >
         {Icon}
       </div>
 
-      <div className="flex flex-col gap-1 z-10">
+      <div className="flex flex-col gap-1 z-10 py-6">
         <p className="text-gray_dark group-hover:text-white duration-500">
           {title}
         </p>

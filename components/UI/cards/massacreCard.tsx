@@ -26,7 +26,7 @@ export default function MassacreCard({ data }: Props) {
       style={{
         direction: "rtl",
       }}
-      className="section grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white border rounded-xl overflow-hidden p-10 px-16 hover:shadow-md duration-300"
+      className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white border rounded-xl overflow-hidden p-10 px-16 hover:shadow-md duration-300"
     >
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-2 mt-4 ">

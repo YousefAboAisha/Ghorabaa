@@ -1,4 +1,4 @@
-import SigninForm from "@/components/UI/Forms/signinForm";
+import SigninForm from "@/components/UI/forms/signinForm";
 
 const Signin = async () => {
   return (

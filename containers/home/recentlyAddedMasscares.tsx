@@ -4,7 +4,7 @@ import RecentlyAddedSwiper from "@/components/UI/swipers/massacres/recentlyAdded
 
 const RecentlyAddedMasscares = async () => {
   // Fetch the data of recently added stories
-  const fetchRecentlyAddedStories = async () => {
+  const fetchRecentlyMassacres = async () => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/massacres/recentlyAdded/fetch`,
       {
@@ -15,7 +15,7 @@ const RecentlyAddedMasscares = async () => {
     return res.json();
   };
 
-  const { data, error } = await fetchRecentlyAddedStories();
+  const { data, error } = await fetchRecentlyMassacres();
 
   if (error) {
     return <ErrorMessage error={error} className="mt-4" />;

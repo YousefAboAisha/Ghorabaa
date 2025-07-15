@@ -33,7 +33,6 @@ module.exports = {
 
       fontFamily: {
         noto_kufi: ["Noto Kufi Arabic", "display", "sans-serif"],
-        // el_messiri: ["El Messiri", "display", "serif"],
       },
 
       borderColor: {

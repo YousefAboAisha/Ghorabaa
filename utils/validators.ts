@@ -154,3 +154,38 @@ export const ContactFormSchema = Yup.object({
     .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام")
     .required("يُرجى إضافة رقم الهوية"),
 });
+
+export const MassacresValidationSchema = Yup.object({
+  title: Yup.string().required("يرجى إدخال عنوان المجزرة"),
+  date: Yup.string().required("يرجى إدخال تاريخ حدوث المجزرة"),
+  cover_image: Yup.mixed().required("يرجى إضافة صورة"),
+
+  deaths: Yup.mixed().required(""),
+  injuries: Yup.mixed().required(""),
+  destroyedHouses: Yup.mixed().required(""),
+
+  location: Yup.object({
+    city: Yup.string().required("يرجى اختيار المدينة"),
+    neighborhood: Yup.string().required("يرجى اختيار الحي"),
+  }),
+
+  description: Yup.string()
+    .required("يرجى إدخال تفاصيل المجزرة")
+    .test(
+      "min-words",
+      "يجب أن تحتوي تفاصيل المجزرة على 200 كلمة على الأقل",
+      function (value) {
+        const wordCount =
+          value?.trim().split(/\s+/).filter(Boolean).length || 0;
+        return wordCount >= 200;
+      }
+    ),
+
+  externalLinks: Yup.object({
+    wikipedia: Yup.string().required("يرجى إدخال رابط ويكيبيديا للمجزرة"),
+    alJazeera: Yup.string().required("يرجى إدخال رابط قناة الجزيرة للمجزرة"),
+    stateOfPalestine: Yup.string().required(
+      "يرجى إدخال رابط الإحصاء الفلسطيني للمجزرة"
+    ),
+  }),
+});

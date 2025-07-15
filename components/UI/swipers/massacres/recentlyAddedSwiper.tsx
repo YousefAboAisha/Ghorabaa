@@ -34,13 +34,13 @@ const RecentlyAddedSwiper = ({ data }: Props) => {
         nextEl: ".custom-next",
         prevEl: ".custom-prev",
       }}
-      className="relative py-10"
+      className="relative mt-8 pb-10"
       style={{
         direction: "ltr",
       }}
     >
       {data?.map((item: MassacreInterface) => (
-        <SwiperSlide key={item._id as string} className="pb-10">
+        <SwiperSlide key={item._id as string} className="overflow-hidden">
           <MassacreCard data={item} />
         </SwiperSlide>
       ))}
