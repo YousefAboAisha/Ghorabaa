@@ -216,7 +216,8 @@ export interface allStoriesStatisticsInterface {
 }
 
 export interface MassacreInterface {
-  _id: Types.ObjectId | string; // Unique identifier for the report.
+  _id: Types.ObjectId | string; // Unique identifier for the massacre.
+  publisher_id: Types.ObjectId | string; // Unique identifier for the masscre publisher
   title: string;
   cover_image: string;
   date: string | Date;

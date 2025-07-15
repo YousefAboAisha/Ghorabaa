@@ -1,4 +1,4 @@
-type SupportCardCardProps = {
+type AboutCardCardProps = {
   details?: string;
   title: string;
   titleClassname?: string;
@@ -6,13 +6,13 @@ type SupportCardCardProps = {
   icon?: JSX.Element;
 };
 
-const SupportCard = ({
+const AboutCard = ({
   details,
   title,
   titleClassname = "",
   classname = "",
   icon,
-}: SupportCardCardProps) => {
+}: AboutCardCardProps) => {
   const Icon = icon;
 
   return (
@@ -33,4 +33,4 @@ const SupportCard = ({
   );
 };
 
-export default SupportCard;
+export default AboutCard;

@@ -59,6 +59,11 @@
   margin: 0;
 }
 
+*:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 li {
   list-style: circle;
 }
@@ -94,6 +99,5 @@ select {
 
 /* Active bullet */
 .swiper-pagination-bullet-active {
-  background-color: #5B913B !important; /* Tailwind blue-800 or your brand color */
+  background-color: #5b913b !important; /* Tailwind blue-800 or your brand color */
 }
-

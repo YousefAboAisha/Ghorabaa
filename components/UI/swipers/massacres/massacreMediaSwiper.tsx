@@ -39,7 +39,7 @@ const MassacreMediaSwiper = ({ data }: Props) => {
             <SwiperSlide key={index} className="py-6 pb-10">
               <div className="relative w-full overflow-hidden group h-[350px] hover:cursor-grab">
                 <Image
-                  src={"/banner.png"}
+                  src={elem}
                   alt="Event Title"
                   fill
                   sizes="(max-width: 768px) 100vw, 768px"

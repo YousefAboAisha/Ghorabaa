@@ -1,7 +1,7 @@
 "use client";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import { BiSend, BiUser } from "react-icons/bi";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 import Button from "@/components/UI/inputs/button";
 import Heading from "@/components/UI/typography/heading";
 import Select from "@/components/UI/inputs/selectInput";
@@ -12,29 +12,16 @@ import ReactImageUploading, { ImageListType } from "react-images-uploading";
 import { CiImageOn } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
-import { MassacreInterface, StoryInterface } from "@/app/interfaces";
+import { MassacreInterface } from "@/app/interfaces";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { MassacresValidationSchema } from "@/utils/validators";
 import Input from "../inputs/input";
 
-type Props = {
-  loading?: boolean;
-  setLoading?: Dispatch<SetStateAction<boolean>>;
-  setIsOpen?: Dispatch<SetStateAction<boolean>>;
-  id_number?: string;
-  data?: StoryInterface | null;
-};
-
-const AddMassacres = ({ setLoading, setIsOpen, id_number, data }: Props) => {
+const AddMassacres = () => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
-  const maxNumber = 1; // Allow only one image
-  const router = useRouter();
-
-  console.log("Search data", data);
-  console.log("id_number", id_number);
+  const maxNumber = 5; // Allow only one image
 
   // Updated initialValues to include image
   const initialValues: Partial<MassacreInterface> = {
@@ -58,9 +45,6 @@ const AddMassacres = ({ setLoading, setIsOpen, id_number, data }: Props) => {
     },
   };
 
-  const birth_date = data?.birth_date;
-  const death_date = data?.death_date;
-
   const handleSubmit = async (
     values: typeof initialValues,
     {
@@ -69,89 +53,90 @@ const AddMassacres = ({ setLoading, setIsOpen, id_number, data }: Props) => {
       setSubmitting: (isSubmitting: boolean) => void;
     }
   ) => {
-    setLoading?.(true);
     setFormErrors("");
     setSubmitting(true);
-    console.log("Submit handler started!");
-    console.log("Values", values);
 
     try {
-      // 1. Upload image to Cloudinary
-      const imageUploadRes = await fetch(
+      // 1. Upload cover image
+      const coverUploadRes = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
         {
           credentials: "include",
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: values.cover_image }),
-        }
-      );
-
-      let imageUploadData;
-      try {
-        imageUploadData = await imageUploadRes.json();
-      } catch {
-        imageUploadData = {};
-      }
-
-      if (!imageUploadRes.ok) {
-        const errorMsg = imageUploadData?.error || "حدث خطأ أثناء رفع الصورة";
-        throw new Error(errorMsg);
-      }
-
-      const imageUrl = imageUploadData.url;
-      console.log("Image URL:", imageUrl);
-
-      const age =
-        new Date(death_date as string).getFullYear() -
-        new Date(birth_date as string).getFullYear();
-
-      // 2. Create story
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/storyDetails/create`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
           body: JSON.stringify({
-            ...values,
-            age,
-            image: imageUrl,
-            id_number,
+            image: values.cover_image,
+            folder: "massacres",
           }),
         }
       );
 
-      let data;
-      try {
-        data = await response.json();
-      } catch {
-        data = {};
+      const coverUploadData = await coverUploadRes.json();
+      if (!coverUploadRes.ok) {
+        throw new Error(coverUploadData?.error || "فشل رفع صورة الغلاف");
       }
+      const coverImageUrl = coverUploadData.url;
 
-      if (!response.ok) {
-        const errorMsg = data?.error || "حدث خطأ أثناء إرسال بيانات القصة";
-        throw new Error(errorMsg);
-      }
-
-      console.log("Martyr has been added successfully!", data);
-
-      toast.success(
-        "تم إرسال طلب نشر القصة بنجاح، وستتم مراجعته في أقرب وقت !"
+      // 2. Upload media images (excluding cover image)
+      const mediaImagesToUpload = (values.media || []).filter(
+        (img) => img !== values.cover_image
       );
 
-      setIsOpen?.(false);
+      const mediaUploadUrls = await Promise.all(
+        mediaImagesToUpload.map(async (image) => {
+          const mediaRes = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
+            {
+              credentials: "include",
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                image,
+                folder: "massacres",
+              }),
+            }
+          );
 
-      setTimeout(() => {
-        router.push(`/stories/${data?.data?._id}`);
-      }, 500);
+          const mediaData = await mediaRes.json();
+          if (!mediaRes.ok) {
+            throw new Error(mediaData?.error || "فشل رفع إحدى الصور");
+          }
+          return mediaData.url;
+        })
+      );
+
+      // Include the cover image in the media list (first position)
+      const fullMediaUrls = [coverImageUrl, ...mediaUploadUrls];
+
+      // 3. Send to backend
+      const payload = {
+        ...values,
+        cover_image: coverImageUrl,
+        media: fullMediaUrls,
+      };
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/massacres/create`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result?.error || "حدث خطأ أثناء إرسال البيانات");
+      }
+
+      toast.success("✅ تم إرسال المجزرة بنجاح!");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
-      console.error("Error adding martyr:", message);
       setFormErrors(message);
+      console.error("❌ Error:", message);
     } finally {
-      setLoading?.(false);
       setSubmitting(false);
     }
   };
@@ -176,47 +161,49 @@ const AddMassacres = ({ setLoading, setIsOpen, id_number, data }: Props) => {
 
           return (
             <Form className="flex flex-col gap-5">
-              {/* title Field */}
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="title"
-                  as={Input}
-                  type="text"
-                  placeholder="عنوان المجزرة"
-                  label="عنوان المجزرة"
-                  icon={<BiUser />}
-                  className={`focus:border-secondary`}
-                  aria-label="عنوان المجزرة"
-                  required={true}
-                />
+              <div className="cards-grid-2 gap-4">
+                {/* title Field */}
+                <div>
+                  <Field
+                    disabled={isSubmitting}
+                    name="title"
+                    as={Input}
+                    type="text"
+                    placeholder="عنوان المجزرة"
+                    label="عنوان المجزرة"
+                    icon={<BiUser />}
+                    className={`focus:border-secondary`}
+                    aria-label="عنوان المجزرة"
+                    required={true}
+                  />
 
-                <ErrorMessage
-                  name="title"
-                  component="div"
-                  className="text-red-500 mt-2 font-semibold text-[10px]"
-                />
+                  <ErrorMessage
+                    name="title"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
+                  />
+                </div>
+
+                <div>
+                  <Field
+                    disabled={isSubmitting}
+                    name="date"
+                    as={Input}
+                    type="date"
+                    placeholder="تاريخ حدوث المجزرة"
+                    label="تاريخ المجزرة"
+                    className={`focus:border-secondary`}
+                    required={true}
+                  />
+                  <ErrorMessage
+                    name="date"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
+                  />
+                </div>
               </div>
 
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="date"
-                  as={Input}
-                  type="date"
-                  placeholder="تاريخ حدوث المجزرة"
-                  label="تاريخ المجزرة"
-                  className={`focus:border-secondary`}
-                  required={true}
-                />
-                <ErrorMessage
-                  name="date"
-                  component="div"
-                  className="text-red-500 mt-2 font-semibold text-[10px]"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="cards-grid-2 gap-4">
                 {/* City and Neighbourhood Fields */}
                 <div>
                   <Select
@@ -288,11 +275,13 @@ const AddMassacres = ({ setLoading, setIsOpen, id_number, data }: Props) => {
                     className="text-red-500 font-semibold text-[10px]"
                   />
 
-                  <div className="text-[10px] text-gray-500 self-end">
+                  <div
+                    dir="ltr"
+                    className="text-[10px] text-gray-500 text-left"
+                  >
                     عدد الكلمات:{" "}
                     {values.description?.trim().split(/\s+/).filter(Boolean)
-                      .length || 0}{" "}
-                    / 200
+                      .length || 0}
                   </div>
                 </div>
               </div>
@@ -362,7 +351,7 @@ const AddMassacres = ({ setLoading, setIsOpen, id_number, data }: Props) => {
                   placeholder="عنوان الرابط (ويكيبيديا)"
                   label="ويكيبيديا"
                   className={`focus:border-secondary`}
-                  required={true}
+                  required={false}
                 />
                 <ErrorMessage
                   name="externalLinks.wikipedia"
@@ -380,7 +369,7 @@ const AddMassacres = ({ setLoading, setIsOpen, id_number, data }: Props) => {
                   placeholder="عنوان الرابط (قناة الجزيرة)"
                   label="قناة الجزيرة"
                   className={`focus:border-secondary`}
-                  required={true}
+                  required={false}
                 />
                 <ErrorMessage
                   name="externalLinks.alJazeera"
@@ -398,7 +387,7 @@ const AddMassacres = ({ setLoading, setIsOpen, id_number, data }: Props) => {
                   placeholder="عنوان الرابط (الإحصاء الفلسطيني)"
                   label="الإحصاء الفلسطيني"
                   className={`focus:border-secondary`}
-                  required={true}
+                  required={false}
                 />
                 <ErrorMessage
                   name="externalLinks.stateOfPalestine"
@@ -407,104 +396,147 @@ const AddMassacres = ({ setLoading, setIsOpen, id_number, data }: Props) => {
                 />
               </div>
 
-              <div
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault(); // Prevent newline
-                    const form = e.currentTarget.closest("form");
-                    if (form)
-                      form.dispatchEvent(
-                        new Event("submit", { cancelable: true, bubbles: true })
-                      );
-                  }
-                }}
-              >
-                <Field
-                  disabled={isSubmitting}
-                  name="internationalReactions"
-                  as={Input}
-                  type="text"
-                  placeholder="قم بكتابة الرد ثم الضغط على زر ENTER"
-                  label="ردود الفعل الدولية"
-                  icon={<BiUser />}
-                  className={`focus:border-secondary`}
-                  aria-label=""
-                  required={true}
-                />
-
-                <ErrorMessage
-                  name="internationalReactions"
-                  component="div"
-                  className="text-red-500 mt-2 font-semibold text-[10px]"
-                />
-              </div>
+              <FieldArray name="internationalReactions">
+                {({ push, remove, form }) => (
+                  <div>
+                    <Input
+                      type="text"
+                      placeholder="أضف نص رد الفعل ثم اضغط Enter"
+                      label="ردود الفعل الدولية"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && e.currentTarget.value.trim()) {
+                          e.preventDefault();
+                          push(e.currentTarget.value.trim());
+                          e.currentTarget.value = "";
+                        }
+                      }}
+                      required={false}
+                      className="focus:border-secondary"
+                    />
+                    <div className="cards-grid-2 gap-4 mt-4 ">
+                      {form.values.internationalReactions.map(
+                        (reaction: string, index: number) => (
+                          <div
+                            key={index}
+                            className="relative bg-background_light p-6 rouned-md flex items-center text-sm rounded-[30px] rounded-tr-none border h-fit"
+                          >
+                            {reaction}
+                            <button type="button" onClick={() => remove(index)}>
+                              <FaTimes
+                                title="حذف النص"
+                                className="absolute top-2 right-2 ml-2 hover:text-rejected duration-150"
+                                size={14}
+                              />
+                            </button>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+              </FieldArray>
 
               <fieldset
                 disabled={isSubmitting}
-                className="relative group disabled:opacity-50 disabled:cursor-not-allowed"
+                className="relative group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ReactImageUploading
-                  multiple={false} // Allow only one image
+                  multiple
                   value={images}
-                  onChange={async (imageList: ImageListType) => {
+                  onChange={(imageList) => {
                     setImages(imageList);
                     if (imageList.length > 0) {
-                      setFieldValue("image", imageList[0].data_url); // ✅ store base64
+                      // First image is default cover
+                      setFieldValue("cover_image", imageList[0].data_url);
                     } else {
-                      setFieldValue("image", null); // ✅ reset on remove
+                      setFieldValue("cover_image", "");
                     }
+                    setFieldValue(
+                      "media",
+                      imageList.map((img) => img.data_url)
+                    );
                   }}
                   maxNumber={maxNumber}
                   dataURLKey="data_url"
-                  acceptType={["jpg", "gif", "png", "JFIF", "webp"]}
+                  acceptType={["jpg", "jpeg", "png", "webp"]}
                 >
-                  {({
-                    onImageUpload,
-                    onImageRemove,
-                    isDragging,
-                    dragProps,
-                  }) => (
-                    <div>
+                  {({ onImageUpload, dragProps }) => (
+                    <div className="flex flex-col gap-4">
+                      {/* Upload Trigger */}
                       <div
-                        className="flex flex-col items-center justify-center gap-2 border p-4 rounded-xl cursor-pointer group-disabled:cursor-not-allowed"
-                        style={isDragging ? { color: "red" } : undefined}
+                        className="flex flex-col items-center justify-center gap-2 border-2 border-dashed p-6 rounded-xl hover:border-primary"
                         onClick={onImageUpload}
                         {...dragProps}
                       >
-                        <CiImageOn size={70} className="text-gray-200" />
-                        <span className="text-[11px] text-theme text-center">
-                          اضغط هنا لإرفاق صورة الشهيد
+                        <CiImageOn size={50} className="text-gray-300" />
+                        <span className="text-xs text-theme text-center">
+                          اضغط هنا لإرفاق الصور (حد أقصى 5 صور)
                         </span>
                       </div>
 
-                      {images.map((image, index) => (
-                        <div
-                          key={index}
-                          className="relative w-fit mt-4 border rounded-lg"
-                        >
-                          <Image
-                            src={image.data_url}
-                            alt="صورة الشهيد"
-                            width={200}
-                            height={200}
-                          />
+                      {/* Image Preview Grid */}
+                      <div className="flex flex-wrap gap-4">
+                        {images.map((image, index) => (
                           <div
-                            onClick={() => {
-                              onImageRemove(index);
-                              setFieldValue("image", null);
-                            }}
-                            className="absolute -top-1 -right-1 bg-white border shadow-md p-1 rounded-md cursor-pointer hover:text-[red]"
+                            key={index}
+                            className={`relative w-[100px] h-[100px] rounded-xl cursor-pointer z-0`}
+                            onClick={() =>
+                              setFieldValue("cover_image", image.data_url)
+                            }
+                            title="انقر لتعيين كصورة غلاف"
                           >
-                            <FaTimes size={10} />
+                            <Image
+                              src={image.data_url}
+                              alt={`صورة ${index + 1}`}
+                              fill
+                              className="object-cover rounded-xl"
+                            />
+
+                            {image.data_url === values.cover_image && (
+                              <span className="absolute text-[12px] flex items-center justify-center bg-[#1e272e40] backdrop-blur-sm text-white font-semibold w-full h-full rounded-xl">
+                                صورة الغلاف
+                              </span>
+                            )}
+
+                            {/* Remove Button */}
+                            <button
+                              disabled={isSubmitting}
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent cover selection
+                                const newImages = [...images];
+                                newImages.splice(index, 1);
+                                setImages(newImages);
+                                setFieldValue(
+                                  "media",
+                                  newImages.map((img) => img.data_url)
+                                );
+                                // Reset cover_image if it was removed
+                                if (image.data_url === values.cover_image) {
+                                  setFieldValue(
+                                    "cover_image",
+                                    newImages[0]?.data_url || ""
+                                  );
+                                }
+                              }}
+                              className="absolute -top-2 -right-2 bg-white p-1 rounded-full shadow-md border hover:text-red-500 z-10"
+                            >
+                              <FaTimes size={10} />
+                            </button>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   )}
                 </ReactImageUploading>
 
                 <ErrorMessage
-                  name="image"
+                  name="media"
+                  component="div"
+                  className="text-red-500 mt-2 font-semibold text-[10px]"
+                />
+                <ErrorMessage
+                  name="cover_image"
                   component="div"
                   className="text-red-500 mt-2 font-semibold text-[10px]"
                 />
@@ -514,7 +546,7 @@ const AddMassacres = ({ setLoading, setIsOpen, id_number, data }: Props) => {
               <Button
                 title={"إرسال"}
                 type="submit"
-                className="bg-primary w-full hover:shadow-lg text-sm mt-6"
+                className="bg-secondary w-full hover:shadow-lg text-sm"
                 icon={<BiSend className="rotate-180" />}
                 loading={isSubmitting}
                 disabled={isSubmitting}

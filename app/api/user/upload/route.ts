@@ -4,10 +4,12 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { image } = await req.json(); // base64 string or remote URL
+    const { image, folder } = await req.json(); // base64 string or remote URL
+
+    const extractedFolder = folder || "stories";
 
     const uploadResponse = await cloudinary.uploader.upload(image, {
-      folder: "stories",
+      folder: extractedFolder,
       transformation: [{ width: 500, height: 500, crop: "limit" }],
     });
 

@@ -80,8 +80,6 @@ const MassacreDetails = async ({ id }: Props) => {
 
         <h4 className="text-2xl font-bold mt-6">{data?.title}</h4>
 
-        {/* {data?.key} */}
-
         <div className="flex items-center flex-wrap gap-2 mt-4">
           {data.tags?.map((keywrod, index) => {
             return (
@@ -118,7 +116,7 @@ const MassacreDetails = async ({ id }: Props) => {
         </div>
       </div>
 
-      {data.media.length > 0 && <MassacreMediaSwiper data={data.media} />}
+      {data.media.length > 0 && <MassacreMediaSwiper data={data?.media} />}
 
       {/* massacres results section */}
       <div className="relative w-full mt-24 cards-grid-3 gap-3">
@@ -153,7 +151,7 @@ const MassacreDetails = async ({ id }: Props) => {
             <Link
               title={key}
               key={key}
-              href={link.href}
+              href={link}
               target="_blank"
               rel="noopener noreferrer"
               className="p-4 rounded-xl border border-gray-200 hover:border-secondary shadow-sm hover:shadow-md duration-200 bg-white"
@@ -161,16 +159,13 @@ const MassacreDetails = async ({ id }: Props) => {
               <div className="relative w-8 h-8 flex-shrink-0">
                 <Image
                   src={`/icons/${key}.svg`} // assumes your image is named like the key
-                  alt={`${link.title} logo`}
+                  alt={`${link} logo`}
                   fill
                   className="object-contain"
                 />
               </div>
 
-              <h3 className="text-sm mt-3">{link.title}</h3>
-              <p className="text-sm text-gray-500 mt-1">
-                {new URL(link.href).hostname}
-              </p>
+              <h3 className="text-sm mt-3">{data.title}</h3>
             </Link>
           ))}
         </div>

@@ -63,7 +63,10 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
                 {
                   method: "POST",
-                  body: JSON.stringify({ image: values.image }),
+                  body: JSON.stringify({
+                    image: values.image,
+                    folder: "users",
+                  }),
                   headers: { "Content-Type": "application/json" },
                 }
               );

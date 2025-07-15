@@ -1,15 +1,11 @@
-import PageTitles from "@/components/UI/typography/pageTitles";
+import Hero from "@/components/layout/hero";
 import EventsCards from "@/containers/events/eventsCards";
-import Hero from "@/containers/events/hero";
 
 const page = () => {
   return (
-    <div className="relative container">
-      <div className="mt-24">
-        <PageTitles />
-      </div>
-
+    <div className="relative container mt-24">
       <Hero />
+
       <EventsCards />
     </div>
   );

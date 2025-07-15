@@ -157,12 +157,32 @@ export const ContactFormSchema = Yup.object({
 
 export const MassacresValidationSchema = Yup.object({
   title: Yup.string().required("يرجى إدخال عنوان المجزرة"),
-  date: Yup.string().required("يرجى إدخال تاريخ حدوث المجزرة"),
-  cover_image: Yup.mixed().required("يرجى إضافة صورة"),
 
-  deaths: Yup.mixed().required(""),
-  injuries: Yup.mixed().required(""),
-  destroyedHouses: Yup.mixed().required(""),
+  date: Yup.date()
+    .required("يرجى إدخال تاريخ حدوث المجزرة")
+    .max(new Date(), "لا يمكن إدخال تاريخ مستقبلي"),
+
+  cover_image: Yup.string()
+    .required("يرجى تحديد صورة الغلاف")
+    .matches(
+      /^data:image\/(png|jpg|jpeg|webp);base64,/,
+      "صورة الغلاف غير صالحة"
+    ),
+
+  deaths: Yup.number()
+    .required("يرجى إدخال عدد الشهداء")
+    .min(1, "يجب أن يكون عدد الشهداء 1 على الأقل")
+    .integer("الرقم يجب أن يكون عدداً صحيحاً"),
+
+  injuries: Yup.number()
+    .required("يرجى إدخال عدد الإصابات")
+    .min(0, "لا يمكن أن يكون سالباً")
+    .integer("الرقم يجب أن يكون عدداً صحيحاً"),
+
+  destroyedHouses: Yup.number()
+    .required("يرجى إدخال عدد المنازل المدمرة")
+    .min(0, "لا يمكن أن يكون سالباً")
+    .integer("الرقم يجب أن يكون عدداً صحيحاً"),
 
   location: Yup.object({
     city: Yup.string().required("يرجى اختيار المدينة"),
@@ -172,20 +192,48 @@ export const MassacresValidationSchema = Yup.object({
   description: Yup.string()
     .required("يرجى إدخال تفاصيل المجزرة")
     .test(
-      "min-words",
-      "يجب أن تحتوي تفاصيل المجزرة على 200 كلمة على الأقل",
+      "word-count-range",
+      "يجب أن تحتوي تفاصيل المجزرة على ما بين 200 إلى 1000 كلمة",
       function (value) {
         const wordCount =
           value?.trim().split(/\s+/).filter(Boolean).length || 0;
-        return wordCount >= 200;
+
+        if (wordCount < 200) {
+          return this.createError({
+            message: `يجب ألا يقل عن 200 كلمة`,
+          });
+        }
+
+        if (wordCount > 1000) {
+          return this.createError({
+            message: `يجب ألا يزيد عن 1000 كلمة`,
+          });
+        }
+
+        return true;
       }
     ),
 
+  media: Yup.array()
+    .of(
+      Yup.string().matches(
+        /^data:image\/(png|jpg|jpeg|webp);base64,/,
+        "صورة غير صالحة"
+      )
+    )
+    .min(1, "يرجى رفع صورة واحدة على الأقل")
+    .max(5, "لا يمكن رفع أكثر من 5 صور"),
+
   externalLinks: Yup.object({
-    wikipedia: Yup.string().required("يرجى إدخال رابط ويكيبيديا للمجزرة"),
-    alJazeera: Yup.string().required("يرجى إدخال رابط قناة الجزيرة للمجزرة"),
-    stateOfPalestine: Yup.string().required(
-      "يرجى إدخال رابط الإحصاء الفلسطيني للمجزرة"
-    ),
+    wikipedia: Yup.string().notRequired(),
+
+    alJazeera: Yup.string().notRequired(),
+
+    stateOfPalestine: Yup.string().notRequired(),
   }),
+
+  internationalReactions: Yup.array()
+    .of(Yup.string().min(3, "رد الفعل قصير جداً"))
+    .min(1, "يرجى إضافة رد فعل دولي واحد على الأقل")
+    .max(10, "لا يمكن إضافة أكثر من 10 ردود فعل"),
 });

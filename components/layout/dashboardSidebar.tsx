@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"; // Import usePathname
 import { BiLineChart } from "react-icons/bi";
 import { BsCalendar4Week } from "react-icons/bs";
 import { FiHome, FiUsers } from "react-icons/fi";
+import { GiBlood } from "react-icons/gi";
 import { MdOutlineReport } from "react-icons/md";
 
 type DashboardSidebarProps = {
@@ -53,6 +54,19 @@ const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
             >
               <FiUsers size={18} />
               <p className="hidden lg:block text-[13px] ">المستخدمون</p>
+            </li>
+          </Link>
+
+          <Link href={"/admin/dashboard/massacres"}>
+            <li
+              className={`list-none cursor-pointer duration-100 p-4 w-full rounded-lg flex items-center lg:justify-normal justify-center gap-2 ${
+                pathname === "/admin/dashboard/events"
+                  ? "bg-primary text-white"
+                  : "bg-gray-100"
+              }`}
+            >
+              <GiBlood size={18} />
+              <p className="hidden lg:block text-[13px] ">المجازر</p>
             </li>
           </Link>
 

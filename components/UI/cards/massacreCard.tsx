@@ -12,6 +12,7 @@ export default function MassacreCard({ data }: Props) {
   const {
     _id,
     title,
+    cover_image,
     date,
     location,
     description,
@@ -86,13 +87,14 @@ export default function MassacreCard({ data }: Props) {
         </div>
       </div>
 
-      <Image
-        src={"/donation.png"}
-        width={500}
-        height={500}
-        alt="صورة حملة التبرع"
-        className="shadow-xl rounded-xl self-center w-full"
-      />
+      <div className="relative w-full h-[65vh]">
+        <Image
+          src={cover_image || "/notFound.png"}
+          alt={`صورة ${title}`}
+          fill
+          className="rounded-xl w-full"
+        />{" "}
+      </div>
     </Link>
   );
 }
