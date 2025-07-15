@@ -1,9 +1,9 @@
 import Heading from "@/components/UI/typography/heading";
-import ActiveUsers from "@/containers/analytics/activeUsers";
-import StoriesAnalytics from "@/containers/analytics/storiesAnalytics";
-import TrendingStories from "@/containers/analytics/trendingStories";
-import UsersCount from "@/containers/analytics/usersCount";
-import VisitsAnalytics from "@/containers/analytics/visitsAnalytics";
+import ActiveUsers from "@/containers/dashboard/analytics/activeUsers";
+import StoriesAnalytics from "@/containers/dashboard/analytics/storiesAnalytics";
+import TrendingStories from "@/containers/dashboard/analytics/trendingStories";
+import UsersCount from "@/containers/dashboard/analytics/usersCount";
+import VisitsAnalytics from "@/containers/dashboard/analytics/visitsAnalytics";
 
 const Analytics = () => {
   return (
