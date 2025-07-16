@@ -1,5 +1,5 @@
 type TextAreaProps = {
-  value: string;
+  value?: string;
   placeholder: string;
   style?: string;
   label?: string;
@@ -18,7 +18,7 @@ const TextArea = ({
       {label && (
         <div className="flex items-center gap-1">
           {required && <span className="text-[red]">*</span>}
-          <p className="text-[12px] mb-1">{label}</p>
+          <p className="text-[12px] mb-2">{label}</p>
         </div>
       )}
 

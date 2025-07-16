@@ -37,7 +37,6 @@ export async function POST(originalReq: Request) {
       cover_image,
       media,
       internationalReactions,
-      externalLinks,
     }: Partial<MassacreInterface> = body;
 
     if (!title || !date || !location?.city || !description || !cover_image) {
@@ -59,9 +58,7 @@ export async function POST(originalReq: Request) {
       cover_image,
       media,
       internationalReactions,
-      externalLinks,
       createdAt: new Date(),
-      updatedAt: new Date(),
       publisher_id: new ObjectId(token.id),
       status: StoryStatus.PENDING,
     };

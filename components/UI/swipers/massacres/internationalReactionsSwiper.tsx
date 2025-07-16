@@ -30,7 +30,7 @@ const breakboints = {
 
 const InternationalReactionsSwiper = ({ data }: Props) => {
   return (
-    <div className="mt-14">
+    <div className="mt-24">
       <h2 className="font-bold text-lg">ردود الفعل العالمية</h2>
 
       <Swiper
@@ -43,7 +43,7 @@ const InternationalReactionsSwiper = ({ data }: Props) => {
         {data?.map((elem, index) => {
           return (
             <SwiperSlide key={index} className="py-6 pb-10">
-              <InternationalReactionCard />
+              <InternationalReactionCard text={elem} />
             </SwiperSlide>
           );
         })}

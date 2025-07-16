@@ -231,11 +231,6 @@ export interface MassacreInterface {
   description: string;
   media: string[];
   tags?: string[];
-  externalLinks: {
-    wikipedia: string;
-    alJazeera: string;
-    stateOfPalestine: string;
-  };
   internationalReactions?: string[];
   visits?: number;
   createdAt: Date;

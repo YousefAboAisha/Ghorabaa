@@ -1,7 +1,11 @@
 import React from "react";
 import { FaQuoteLeft, FaQuoteRight, FaUserCircle } from "react-icons/fa";
 
-const InternationalReactionCard = () => {
+type Props = {
+  text: string;
+};
+
+const InternationalReactionCard = ({ text }: Props) => {
   return (
     <div
       style={{
@@ -9,10 +13,7 @@ const InternationalReactionCard = () => {
       }}
       className="relative flex flex-col gap-4 p-8 rounded-[50px] rounded-tr-none bg-white border w-full hover:cursor-grab"
     >
-      <p className="font-light">
-        ارتكبت قوات الاحتلال الإسرائيلي واحدة من أفظع المجازر في حي الشجاعية شرق
-        مدينة غزة، هذا شيء مؤسف!
-      </p>
+      <p className="font-light">{text}</p>
 
       <div className="flex items-center gap-3 mt-2">
         <FaUserCircle className="text-gray_dark" size={40} />

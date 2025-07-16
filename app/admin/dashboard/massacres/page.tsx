@@ -3,7 +3,7 @@ import React from "react";
 
 const Page = () => {
   return (
-    <Link href={"admin/dashboard/massacres/addMassacre"}>
+    <Link href={"massacres/addMassacre"}>
       إضافة مجزرة جديدة
     </Link>
   );

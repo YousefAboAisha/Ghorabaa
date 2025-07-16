@@ -4,7 +4,6 @@ import Image from "next/image";
 import React from "react";
 import { FaEye } from "react-icons/fa";
 import { GrCalendar, GrLocation } from "react-icons/gr";
-import Link from "next/link";
 import MassacreStatisticsCard from "@/components/UI/cards/massacreStatisticsCard";
 import { notFound } from "next/navigation";
 import MassacreMediaSwiper from "@/components/UI/swipers/massacres/massacreMediaSwiper";
@@ -80,24 +79,27 @@ const MassacreDetails = async ({ id }: Props) => {
 
         <h4 className="text-2xl font-bold mt-6">{data?.title}</h4>
 
-        <div className="flex items-center flex-wrap gap-2 mt-4">
-          {data.tags?.map((keywrod, index) => {
-            return (
-              <div
-                key={index}
-                className="border bg-white rounded-xl p-1.5 px-3 text-[10px]"
-              >
-                #{keywrod}
-              </div>
-            );
-          })}
-        </div>
+        {data.tags && (
+          <div className="flex items-center flex-wrap gap-2 mt-4">
+            {data.tags?.map((keywrod, index) => {
+              return (
+                <div
+                  key={index}
+                  className="border bg-white rounded-xl p-1.5 px-3 text-[10px]"
+                >
+                  #{keywrod}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         <div className="flex gap-6 mt-4 text-[12px]">
           <div className="flex items-center gap-2">
             <GrLocation size={18} className="text-gray_dark" />
             <div className="flex items-center gap-1">
               <p>{data.location.city}</p>
+              {" - "}
               <p>{data.location.neighborhood}</p>
             </div>
           </div>
@@ -110,6 +112,30 @@ const MassacreDetails = async ({ id }: Props) => {
           </div>
         </div>
 
+        {/* massacres results section */}
+        <div className="relative w-full mt-8 cards-grid-3 gap-3">
+          <MassacreStatisticsCard
+            label="الشهداء"
+            icon={dead}
+            classname="bg-[#c2361620]"
+            count={data.deaths}
+          />
+
+          <MassacreStatisticsCard
+            icon={injury}
+            label="المصابين"
+            classname="bg-[#f39c1220]"
+            count={data.injuries}
+          />
+
+          <MassacreStatisticsCard
+            icon={house}
+            label="المنازل المدمرة"
+            classname="bg-[#1e272e20]"
+            count={data.destroyedHouses}
+          />
+        </div>
+
         <div className="mt-8">
           <h2 className="font-bold text-lg">تفاصيل المجزرة</h2>
           <p className="text-md font-light mt-2">{data.description}</p>
@@ -118,58 +144,7 @@ const MassacreDetails = async ({ id }: Props) => {
 
       {data.media.length > 0 && <MassacreMediaSwiper data={data?.media} />}
 
-      {/* massacres results section */}
-      <div className="relative w-full mt-24 cards-grid-3 gap-3">
-        <MassacreStatisticsCard
-          label="الشهداء"
-          icon={dead}
-          classname="bg-[#c2361620]"
-          count={data.deaths}
-        />
-
-        <MassacreStatisticsCard
-          icon={injury}
-          label="المصابين"
-          classname="bg-[#f39c1220]"
-          count={data.injuries}
-        />
-
-        <MassacreStatisticsCard
-          icon={house}
-          label="المنازل المدمرة"
-          classname="bg-[#1e272e20]"
-          count={data.destroyedHouses}
-        />
-      </div>
-
       <InternationalReactionsSwiper data={data?.internationalReactions} />
-
-      <div className="mt-6">
-        <h2 className="font-bold text-lg">روابط خارجية</h2>
-        <div className="cards-grid-3 gap-4 mt-4">
-          {Object.entries(data.externalLinks).map(([key, link]) => (
-            <Link
-              title={key}
-              key={key}
-              href={link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-4 rounded-xl border border-gray-200 hover:border-secondary shadow-sm hover:shadow-md duration-200 bg-white"
-            >
-              <div className="relative w-8 h-8 flex-shrink-0">
-                <Image
-                  src={`/icons/${key}.svg`} // assumes your image is named like the key
-                  alt={`${link} logo`}
-                  fill
-                  className="object-contain"
-                />
-              </div>
-
-              <h3 className="text-sm mt-3">{data.title}</h3>
-            </Link>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };

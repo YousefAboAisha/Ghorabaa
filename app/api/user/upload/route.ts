@@ -1,19 +1,33 @@
-// app/api/upload/route.ts (for App Router)
+// app/api/upload/route.ts
 import cloudinary from "@/app/lib/cloudinary";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { image, folder } = await req.json(); // base64 string or remote URL
+    // Handle both JSON and FormData
+    const contentType = req.headers.get("content-type");
 
-    const extractedFolder = folder || "stories";
+    let imageData: string;
+    let folder = "stories";
 
-    const uploadResponse = await cloudinary.uploader.upload(image, {
-      folder: extractedFolder,
+    if (contentType?.includes("multipart/form-data")) {
+      const formData = await req.formData();
+      const file = formData.get("image") as File;
+      const buffer = await file.arrayBuffer();
+      imageData = `data:${file.type};base64,${Buffer.from(buffer).toString(
+        "base64"
+      )}`;
+      folder = formData.get("folder")?.toString() || folder;
+    } else {
+      const { image, folder: reqFolder } = await req.json();
+      imageData = image;
+      folder = reqFolder || folder;
+    }
+
+    const uploadResponse = await cloudinary.uploader.upload(imageData, {
+      folder,
       transformation: [{ width: 500, height: 500, crop: "limit" }],
     });
-
-    console.log("Upload Response:", uploadResponse);
 
     return NextResponse.json(
       { url: uploadResponse.secure_url },
@@ -21,6 +35,9 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error("Upload Error:", error);
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "فشل رفع الصورة" },
+      { status: 500 }
+    );
   }
 }

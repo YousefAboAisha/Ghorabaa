@@ -162,12 +162,7 @@ export const MassacresValidationSchema = Yup.object({
     .required("يرجى إدخال تاريخ حدوث المجزرة")
     .max(new Date(), "لا يمكن إدخال تاريخ مستقبلي"),
 
-  cover_image: Yup.string()
-    .required("يرجى تحديد صورة الغلاف")
-    .matches(
-      /^data:image\/(png|jpg|jpeg|webp);base64,/,
-      "صورة الغلاف غير صالحة"
-    ),
+  cover_image: Yup.string().required("يرجى اختيار صورة الغلاف للمجزرة"),
 
   deaths: Yup.number()
     .required("يرجى إدخال عدد الشهداء")
@@ -176,7 +171,7 @@ export const MassacresValidationSchema = Yup.object({
 
   injuries: Yup.number()
     .required("يرجى إدخال عدد الإصابات")
-    .min(0, "لا يمكن أن يكون سالباً")
+    .min(1, "يجب أن يكون عدد الإصابات 1 على الأقل")
     .integer("الرقم يجب أن يكون عدداً صحيحاً"),
 
   destroyedHouses: Yup.number()
@@ -215,24 +210,12 @@ export const MassacresValidationSchema = Yup.object({
     ),
 
   media: Yup.array()
-    .of(
-      Yup.string().matches(
-        /^data:image\/(png|jpg|jpeg|webp);base64,/,
-        "صورة غير صالحة"
-      )
-    )
+    .of(Yup.string().url("يجب أن تكون الصورة رابطًا صالحًا"))
     .min(1, "يرجى رفع صورة واحدة على الأقل")
     .max(5, "لا يمكن رفع أكثر من 5 صور"),
 
-  externalLinks: Yup.object({
-    wikipedia: Yup.string().notRequired(),
-
-    alJazeera: Yup.string().notRequired(),
-
-    stateOfPalestine: Yup.string().notRequired(),
-  }),
-
   internationalReactions: Yup.array()
+    .notRequired()
     .of(Yup.string().min(3, "رد الفعل قصير جداً"))
     .min(1, "يرجى إضافة رد فعل دولي واحد على الأقل")
     .max(10, "لا يمكن إضافة أكثر من 10 ردود فعل"),

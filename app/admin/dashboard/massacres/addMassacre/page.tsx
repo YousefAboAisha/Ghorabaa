@@ -3,7 +3,7 @@ import React from "react";
 
 const Page = () => {
   return (
-    <div className="relative w-full lg:w-3/4">
+    <div className="relative w-full lg:w-[70%]">
       <AddMassacres />
     </div>
   );

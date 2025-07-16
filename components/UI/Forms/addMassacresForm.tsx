@@ -1,7 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiSend, BiUser } from "react-icons/bi";
-import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
+import {
+  Formik,
+  Form,
+  Field,
+  ErrorMessage,
+  FieldArray,
+  FormikHelpers,
+} from "formik";
 import Button from "@/components/UI/inputs/button";
 import Heading from "@/components/UI/typography/heading";
 import Select from "@/components/UI/inputs/selectInput";
@@ -16,14 +23,34 @@ import { MassacreInterface } from "@/app/interfaces";
 import { toast } from "react-toastify";
 import { MassacresValidationSchema } from "@/utils/validators";
 import Input from "../inputs/input";
+import imageCompression from "browser-image-compression";
+import { getFileUniqueKey } from "@/utils/file";
 
 const AddMassacres = () => {
+  // Constants
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const MAX_NUMBER = 5; // Max 5 images
+  const ALLOWED_FILE_TYPES = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/jpg",
+  ];
+
+  // State
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
-  const maxNumber = 5; // Allow only one image
+  const [isUploadCompleted, setIsUploadCompleted] = useState<boolean>(false);
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]); // Track already uploaded URLs
 
-  // Updated initialValues to include image
+  const [uploadedImageKeys, setUploadedImageKeys] = useState<Set<string>>(
+    new Set()
+  );
+
   const initialValues: Partial<MassacreInterface> = {
     cover_image: "",
     title: "",
@@ -38,82 +65,202 @@ const AddMassacres = () => {
     injuries: 0,
     destroyedHouses: 0,
     internationalReactions: [],
-    externalLinks: {
-      wikipedia: "",
-      alJazeera: "",
-      stateOfPalestine: "",
-    },
+  };
+
+  // Image compression helper
+  const compressImage = async (file: File): Promise<File> => {
+    try {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      };
+      return await imageCompression(file, options);
+    } catch (error) {
+      console.error("Error compressing image:", error);
+      return file; // Fallback to original
+    }
+  };
+
+  // Image validation
+  const validateImage = (image: ImageListType[0]) => {
+    if (!image.file) {
+      throw new Error("ملف الصورة غير موجود");
+    }
+
+    // Check file type
+    if (!ALLOWED_FILE_TYPES.includes(image.file.type)) {
+      throw new Error(
+        `نوع الملف غير مدعوم. يرجى تحميل صورة بصيغة ${ALLOWED_FILE_TYPES.join(
+          " أو "
+        )}`
+      );
+    }
+
+    // Check file size
+    if (image.file.size > MAX_FILE_SIZE) {
+      throw new Error(
+        `حجم الملف كبير جدًا. الحد الأقصى للحجم هو ${
+          MAX_FILE_SIZE / (1024 * 1024)
+        }MB`
+      );
+    }
+
+    // Additional checks
+    if (!image.data_url || !image.data_url.startsWith("data:image")) {
+      throw new Error("صيغة الصورة غير صالحة");
+    }
+
+    return true;
+  };
+
+  const uploadMediaHandler = async (
+    imagesList: ImageListType,
+    setFieldValue: (field: string, value: string[]) => void
+  ) => {
+    if (!imagesList || imagesList.length === 0) {
+      throw new Error("يجب إرفاق صورة واحدة على الأقل");
+    }
+
+    setIsUploadCompleted(false);
+    setUploadLoading(true);
+    setUploadError(null);
+
+    try {
+      const newUploadedUrls: string[] = [];
+      const newUploadedKeys = new Set(uploadedImageKeys);
+
+      for (let i = 0; i < imagesList.length; i++) {
+        const image = imagesList[i];
+        if (!image.file) continue;
+
+        const fileUniqueKey = getFileUniqueKey(image.file);
+
+        // Skip if already uploaded
+        if (newUploadedKeys.has(fileUniqueKey)) {
+          console.log(`Skipping duplicate image: ${image.file.name || "N/A"}`);
+          continue;
+        }
+
+        validateImage(image);
+
+        let file = image.file;
+        if (file.size > 1 * 1024 * 1024) {
+          file = await compressImage(file);
+        }
+
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("folder", "massacres");
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
+          {
+            method: "POST",
+            credentials: "include",
+            body: formData,
+          }
+        );
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData?.message || `فشل رفع الصورة ${i + 1}`);
+        }
+
+        const data = await res.json();
+        newUploadedUrls.push(data.url);
+        newUploadedKeys.add(fileUniqueKey);
+        setUploadProgress(Math.round(((i + 1) / imagesList.length) * 100));
+      }
+
+      // Update state with new uploads
+      const allUrls = [...uploadedImages, ...newUploadedUrls];
+      setUploadedImages(allUrls);
+      setUploadedImageKeys(newUploadedKeys);
+      setFieldValue("media", allUrls);
+      setIsUploadCompleted(true);
+      toast.success("✅ تم رفع الصور بنجاح!");
+
+      return allUrls;
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "فشل رفع الصور بسبب خطأ غير معروف";
+      setUploadError(message);
+      toast.error(message);
+      throw error;
+    } finally {
+      setUploadLoading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const handleImageChange = async (
+    imageList: ImageListType,
+    setFieldValue: (field: string, value: unknown) => void
+  ) => {
+    // Filter out duplicates based on data_url (preview) and file unique key
+    const uniqueImages = imageList.filter((img, index, self) => {
+      if (!img.file) return false;
+
+      const fileKey = getFileUniqueKey(img.file);
+      const isUniqueDataUrl =
+        self.findIndex((i) => i.data_url === img.data_url) === index;
+      const isUniqueFile = !uploadedImageKeys.has(fileKey);
+
+      return isUniqueDataUrl && isUniqueFile;
+    });
+
+    setImages(uniqueImages);
+
+    if (uniqueImages.length > 0) {
+      try {
+        await uploadMediaHandler(uniqueImages, setFieldValue);
+      } catch (error) {
+        console.error("Upload error:", error);
+      }
+    }
+  };
+
+  const handleRemoveImage = (
+    index: number,
+    setFieldValue: (field: string, value: unknown) => void
+  ) => {
+    const newImages = [...uploadedImages];
+    const removedImage = newImages.splice(index, 1)[0];
+
+    // Remove from uploadedImageKeys if exists
+    const newUploadedKeys = new Set(uploadedImageKeys);
+    const imageToRemove = images[index];
+    if (imageToRemove?.file) {
+      const fileKey = getFileUniqueKey(imageToRemove.file);
+      newUploadedKeys.delete(fileKey);
+      setUploadedImageKeys(newUploadedKeys);
+    }
+
+    // Update cover image if needed
+    if (removedImage === initialValues.cover_image) {
+      setFieldValue("cover_image", "");
+    }
+
+    // Update state
+    setUploadedImages(newImages);
+    setFieldValue("media", newImages);
+    setImages(images.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (
     values: typeof initialValues,
-    {
-      setSubmitting,
-    }: {
-      setSubmitting: (isSubmitting: boolean) => void;
-    }
+    { setSubmitting }: FormikHelpers<typeof initialValues>
   ) => {
     setFormErrors("");
     setSubmitting(true);
 
     try {
-      // 1. Upload cover image
-      const coverUploadRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
-        {
-          credentials: "include",
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            image: values.cover_image,
-            folder: "massacres",
-          }),
-        }
-      );
-
-      const coverUploadData = await coverUploadRes.json();
-      if (!coverUploadRes.ok) {
-        throw new Error(coverUploadData?.error || "فشل رفع صورة الغلاف");
+      if (!values.cover_image) {
+        throw new Error("يجب اختيار صورة غلاف للمجزرة");
       }
-      const coverImageUrl = coverUploadData.url;
-
-      // 2. Upload media images (excluding cover image)
-      const mediaImagesToUpload = (values.media || []).filter(
-        (img) => img !== values.cover_image
-      );
-
-      const mediaUploadUrls = await Promise.all(
-        mediaImagesToUpload.map(async (image) => {
-          const mediaRes = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
-            {
-              credentials: "include",
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                image,
-                folder: "massacres",
-              }),
-            }
-          );
-
-          const mediaData = await mediaRes.json();
-          if (!mediaRes.ok) {
-            throw new Error(mediaData?.error || "فشل رفع إحدى الصور");
-          }
-          return mediaData.url;
-        })
-      );
-
-      // Include the cover image in the media list (first position)
-      const fullMediaUrls = [coverImageUrl, ...mediaUploadUrls];
-
-      // 3. Send to backend
-      const payload = {
-        ...values,
-        cover_image: coverImageUrl,
-        media: fullMediaUrls,
-      };
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/massacres/create`,
@@ -121,13 +268,13 @@ const AddMassacres = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify(payload),
+          body: JSON.stringify(values),
         }
       );
 
-      const result = await response.json();
       if (!response.ok) {
-        throw new Error(result?.error || "حدث خطأ أثناء إرسال البيانات");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData?.error || "حدث خطأ أثناء إرسال البيانات");
       }
 
       toast.success("✅ تم إرسال المجزرة بنجاح!");
@@ -141,406 +288,416 @@ const AddMassacres = () => {
     }
   };
 
-  return (
-    <div className="relative w-full border rounded-xl p-8 bg-white">
-      <Heading
-        title=""
-        highLightText="مجزرة جديدة"
-        highlightColor="before:bg-primary"
-        className="mb-8 mx-auto text-center !text-2xl"
-      />
+  useEffect(() => {
+    setIsUploadCompleted(false);
+  }, [images]);
 
+  return (
+    <div className="relative w-full">
       <Formik
         initialValues={initialValues}
         validationSchema={MassacresValidationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, errors, values, setFieldValue }) => {
-          console.log("Errors:", errors);
+        {({ isSubmitting, values, setFieldValue, errors }) => {
+          console.log("Form Errors", errors);
           console.log("Form Values", values);
 
           return (
-            <Form className="flex flex-col gap-5">
-              <div className="cards-grid-2 gap-4">
-                {/* title Field */}
-                <div>
-                  <Field
-                    disabled={isSubmitting}
-                    name="title"
-                    as={Input}
-                    type="text"
-                    placeholder="عنوان المجزرة"
-                    label="عنوان المجزرة"
-                    icon={<BiUser />}
-                    className={`focus:border-secondary`}
-                    aria-label="عنوان المجزرة"
-                    required={true}
-                  />
-
-                  <ErrorMessage
-                    name="title"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-                </div>
-
-                <div>
-                  <Field
-                    disabled={isSubmitting}
-                    name="date"
-                    as={Input}
-                    type="date"
-                    placeholder="تاريخ حدوث المجزرة"
-                    label="تاريخ المجزرة"
-                    className={`focus:border-secondary`}
-                    required={true}
-                  />
-                  <ErrorMessage
-                    name="date"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-                </div>
-              </div>
-
-              <div className="cards-grid-2 gap-4">
-                {/* City and Neighbourhood Fields */}
-                <div>
-                  <Select
-                    disabled={isSubmitting}
-                    label="المدينة"
-                    options={CountriesData}
-                    title="اختر المدينة"
-                    onChange={(e) => {
-                      const selectedCity = e.target.value;
-                      setFieldValue("location.city", selectedCity);
-
-                      // Find the city object that contains the selected city
-                      const cityObj = CitiesData.find(
-                        (city) => city[selectedCity as keyof typeof city]
-                      );
-
-                      // If found, update the cities state
-                      setCities(
-                        cityObj
-                          ? cityObj[selectedCity as keyof typeof cityObj] || []
-                          : []
-                      );
-                    }}
-                    className={`focus:border-secondary`}
-                  />
-
-                  <ErrorMessage
-                    name="location.city"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-                </div>
-
-                <div>
-                  <Select
-                    disabled={isSubmitting}
-                    label="الحي"
-                    options={cities}
-                    title="اختر الحي"
-                    onChange={(e) =>
-                      setFieldValue("location.neighborhood", e.target.value)
-                    }
-                    className={`focus:border-secondary`}
-                  />
-                  <ErrorMessage
-                    name="location.neighborhood"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-                </div>
-              </div>
-
-              {/* Notes Field with Word Counter */}
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="description"
-                  as={TextArea}
-                  placeholder="قم بكتابة تفاصيل وأحداث المجزرة"
-                  label="تفاصيل المجزرة"
-                  className={`w-full focus:border-secondary`}
+            <Form className="flex flex-col gap-8">
+              {/* Massacre Details Section */}
+              <div className="flex flex-col gap-6 w-full border rounded-xl p-8 bg-white">
+                <Heading
+                  title=""
+                  highLightText="تفاصيل المجزرة"
+                  highlightColor="before:bg-primary"
+                  className="mb-4 !text-2xl z-10"
                 />
-                {/* Word Counter */}
 
-                <div className="flex justify-between mt-1">
-                  <ErrorMessage
+                <div className="cards-grid-2 gap-4">
+                  {/* Title Field */}
+                  <div>
+                    <Field
+                      disabled={isSubmitting}
+                      name="title"
+                      as={Input}
+                      type="text"
+                      placeholder="عنوان المجزرة"
+                      label="عنوان المجزرة"
+                      icon={<BiUser />}
+                      className={`focus:border-secondary`}
+                      aria-label="عنوان المجزرة"
+                      required={true}
+                    />
+                    <ErrorMessage
+                      name="title"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
+                    />
+                  </div>
+
+                  {/* Date Field */}
+                  <div>
+                    <Field
+                      disabled={isSubmitting}
+                      name="date"
+                      as={Input}
+                      type="date"
+                      placeholder="تاريخ حدوث المجزرة"
+                      label="تاريخ المجزرة"
+                      className={`focus:border-secondary`}
+                      required={true}
+                    />
+                    <ErrorMessage
+                      name="date"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
+                    />
+                  </div>
+                </div>
+
+                {/* Location Fields */}
+                <div className="cards-grid-2 gap-4">
+                  <div>
+                    <Select
+                      disabled={isSubmitting}
+                      label="المدينة"
+                      options={CountriesData}
+                      title="اختر المدينة"
+                      onChange={(e) => {
+                        const selectedCity = e.target.value;
+                        setFieldValue("location.city", selectedCity);
+                        const cityObj = CitiesData.find(
+                          (city) => city[selectedCity as keyof typeof city]
+                        );
+                        setCities(
+                          cityObj
+                            ? cityObj[selectedCity as keyof typeof cityObj] ||
+                                []
+                            : []
+                        );
+                      }}
+                      className={`focus:border-secondary`}
+                    />
+                    <ErrorMessage
+                      name="location.city"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
+                    />
+                  </div>
+
+                  <div>
+                    <Select
+                      disabled={isSubmitting}
+                      label="الحي"
+                      options={cities}
+                      title="اختر الحي"
+                      onChange={(e) =>
+                        setFieldValue("location.neighborhood", e.target.value)
+                      }
+                      className={`focus:border-secondary`}
+                    />
+                    <ErrorMessage
+                      name="location.neighborhood"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
+                    />
+                  </div>
+                </div>
+
+                {/* Description Field */}
+                <div>
+                  <Field
+                    disabled={isSubmitting}
                     name="description"
+                    as={TextArea}
+                    placeholder="قم بكتابة تفاصيل وأحداث المجزرة"
+                    label="تفاصيل المجزرة"
+                    className={`w-full focus:border-secondary`}
+                  />
+                  <div className="flex justify-between mt-1">
+                    <ErrorMessage
+                      name="description"
+                      component="div"
+                      className="text-red-500 font-semibold text-[10px]"
+                    />
+                    <div
+                      dir="ltr"
+                      className="text-[10px] text-gray-500 text-left"
+                    >
+                      عدد الكلمات:{" "}
+                      {values.description?.trim().split(/\s+/).filter(Boolean)
+                        .length || 0}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Massacre Results Section */}
+              <div className="flex flex-col gap-5 w-full border rounded-xl p-8 bg-white">
+                <Heading
+                  title=""
+                  highLightText="نتائج المجزرة"
+                  highlightColor="before:bg-primary"
+                  className="mb-4 !text-2xl z-10"
+                />
+
+                <div className="cards-grid-3">
+                  {/* Deaths Field */}
+                  <div>
+                    <Field
+                      disabled={isSubmitting}
+                      name="deaths"
+                      as={Input}
+                      type="number"
+                      placeholder="عدد الشهداء"
+                      label="عدد الشهداء"
+                      className={`focus:border-secondary`}
+                      required={true}
+                    />
+                    <ErrorMessage
+                      name="deaths"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
+                    />
+                  </div>
+
+                  {/* Injuries Field */}
+                  <div>
+                    <Field
+                      disabled={isSubmitting}
+                      name="injuries"
+                      as={Input}
+                      type="number"
+                      placeholder="عدد الإصابات"
+                      label="عدد الإصابات"
+                      className={`focus:border-secondary`}
+                      required={true}
+                    />
+                    <ErrorMessage
+                      name="injuries"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
+                    />
+                  </div>
+
+                  {/* Destroyed Houses Field */}
+                  <div>
+                    <Field
+                      disabled={isSubmitting}
+                      name="destroyedHouses"
+                      as={Input}
+                      type="number"
+                      placeholder="المنازل المدمرة"
+                      label="المنازل المدمرة"
+                      className={`focus:border-secondary`}
+                      required={true}
+                    />
+                    <ErrorMessage
+                      name="destroyedHouses"
+                      component="div"
+                      className="text-red-500 mt-2 font-semibold text-[10px]"
+                    />
+                  </div>
+                </div>
+
+                {/* International Reactions */}
+                <div>
+                  <FieldArray name="internationalReactions">
+                    {({ push, remove, form }) => (
+                      <div>
+                        <TextArea
+                          placeholder="أضف نص رد الفعل ثم اضغط Enter"
+                          label="ردود الفعل الدولية"
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === "Enter" &&
+                              e.currentTarget.value.trim()
+                            ) {
+                              e.preventDefault();
+                              push(e.currentTarget.value.trim());
+                              e.currentTarget.value = "";
+                            }
+                          }}
+                          required={false}
+                          className="focus:border-secondary"
+                        />
+
+                        <div className="cards-grid-2 gap-4 mt-4 ">
+                          {form.values.internationalReactions.map(
+                            (reaction: string, index: number) => (
+                              <div
+                                key={index}
+                                className="relative bg-background_light p-6 rouned-md flex items-center text-sm rounded-[30px] rounded-tr-none border h-fit"
+                              >
+                                {reaction}
+                                <button
+                                  type="button"
+                                  onClick={() => remove(index)}
+                                >
+                                  <FaTimes
+                                    title="حذف النص"
+                                    className="absolute top-2 right-2 ml-2 hover:text-rejected duration-150"
+                                    size={14}
+                                  />
+                                </button>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </FieldArray>
+                  <ErrorMessage
+                    name="internationalReactions"
                     component="div"
                     className="text-red-500 font-semibold text-[10px]"
                   />
-
-                  <div
-                    dir="ltr"
-                    className="text-[10px] text-gray-500 text-left"
-                  >
-                    عدد الكلمات:{" "}
-                    {values.description?.trim().split(/\s+/).filter(Boolean)
-                      .length || 0}
-                  </div>
-                </div>
-              </div>
-
-              <div className="cards-grid-3">
-                <div>
-                  <Field
-                    disabled={isSubmitting}
-                    name="deaths"
-                    as={Input}
-                    type="number"
-                    placeholder="عدد الشهداء"
-                    label="عدد الشهداء"
-                    className={`focus:border-secondary`}
-                    required={true}
-                  />
-                  <ErrorMessage
-                    name="deaths"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
                 </div>
 
-                <div>
-                  <Field
-                    disabled={isSubmitting}
-                    name="injuries"
-                    as={Input}
-                    type="number"
-                    placeholder="عدد الإصابات"
-                    label="عدد الإصابات"
-                    className={`focus:border-secondary`}
-                    required={true}
-                  />
-                  <ErrorMessage
-                    name="injuries"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-                </div>
-
-                <div>
-                  <Field
-                    disabled={isSubmitting}
-                    name="destroyedHouses"
-                    as={Input}
-                    type="number"
-                    placeholder="المنازل المدمرة"
-                    label="المنازل المدمرة"
-                    className={`focus:border-secondary`}
-                    required={true}
-                  />
-                  <ErrorMessage
-                    name="destroyedHouses"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="externalLinks.wikipedia"
-                  as={Input}
-                  type="url"
-                  placeholder="عنوان الرابط (ويكيبيديا)"
-                  label="ويكيبيديا"
-                  className={`focus:border-secondary`}
-                  required={false}
-                />
-                <ErrorMessage
-                  name="externalLinks.wikipedia"
-                  component="div"
-                  className="text-red-500 mt-2 font-semibold text-[10px]"
-                />
-              </div>
-
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="externalLinks.alJazeera"
-                  as={Input}
-                  type="url"
-                  placeholder="عنوان الرابط (قناة الجزيرة)"
-                  label="قناة الجزيرة"
-                  className={`focus:border-secondary`}
-                  required={false}
-                />
-                <ErrorMessage
-                  name="externalLinks.alJazeera"
-                  component="div"
-                  className="text-red-500 mt-2 font-semibold text-[10px]"
-                />
-              </div>
-
-              <div>
-                <Field
-                  disabled={isSubmitting}
-                  name="externalLinks.stateOfPalestine"
-                  as={Input}
-                  type="url"
-                  placeholder="عنوان الرابط (الإحصاء الفلسطيني)"
-                  label="الإحصاء الفلسطيني"
-                  className={`focus:border-secondary`}
-                  required={false}
-                />
-                <ErrorMessage
-                  name="externalLinks.stateOfPalestine"
-                  component="div"
-                  className="text-red-500 mt-2 font-semibold text-[10px]"
-                />
-              </div>
-
-              <FieldArray name="internationalReactions">
-                {({ push, remove, form }) => (
-                  <div>
-                    <Input
-                      type="text"
-                      placeholder="أضف نص رد الفعل ثم اضغط Enter"
-                      label="ردود الفعل الدولية"
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && e.currentTarget.value.trim()) {
-                          e.preventDefault();
-                          push(e.currentTarget.value.trim());
-                          e.currentTarget.value = "";
-                        }
-                      }}
-                      required={false}
-                      className="focus:border-secondary"
-                    />
-                    <div className="cards-grid-2 gap-4 mt-4 ">
-                      {form.values.internationalReactions.map(
-                        (reaction: string, index: number) => (
-                          <div
-                            key={index}
-                            className="relative bg-background_light p-6 rouned-md flex items-center text-sm rounded-[30px] rounded-tr-none border h-fit"
-                          >
-                            {reaction}
-                            <button type="button" onClick={() => remove(index)}>
-                              <FaTimes
-                                title="حذف النص"
-                                className="absolute top-2 right-2 ml-2 hover:text-rejected duration-150"
-                                size={14}
-                              />
-                            </button>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </div>
-                )}
-              </FieldArray>
-
-              <fieldset
-                disabled={isSubmitting}
-                className="relative group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ReactImageUploading
-                  multiple
-                  value={images}
-                  onChange={(imageList) => {
-                    setImages(imageList);
-                    if (imageList.length > 0) {
-                      // First image is default cover
-                      setFieldValue("cover_image", imageList[0].data_url);
-                    } else {
-                      setFieldValue("cover_image", "");
-                    }
-                    setFieldValue(
-                      "media",
-                      imageList.map((img) => img.data_url)
-                    );
-                  }}
-                  maxNumber={maxNumber}
-                  dataURLKey="data_url"
-                  acceptType={["jpg", "jpeg", "png", "webp"]}
+                {/* Image Upload Section */}
+                <fieldset
+                  disabled={isSubmitting || uploadLoading}
+                  className="relative group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {({ onImageUpload, dragProps }) => (
-                    <div className="flex flex-col gap-4">
-                      {/* Upload Trigger */}
-                      <div
-                        className="flex flex-col items-center justify-center gap-2 border-2 border-dashed p-6 rounded-xl hover:border-primary"
-                        onClick={onImageUpload}
-                        {...dragProps}
-                      >
-                        <CiImageOn size={50} className="text-gray-300" />
-                        <span className="text-xs text-theme text-center">
-                          اضغط هنا لإرفاق الصور (حد أقصى 5 صور)
-                        </span>
-                      </div>
-
-                      {/* Image Preview Grid */}
-                      <div className="flex flex-wrap gap-4">
-                        {images.map((image, index) => (
-                          <div
-                            key={index}
-                            className={`relative w-[100px] h-[100px] rounded-xl cursor-pointer z-0`}
-                            onClick={() =>
-                              setFieldValue("cover_image", image.data_url)
-                            }
-                            title="انقر لتعيين كصورة غلاف"
-                          >
-                            <Image
-                              src={image.data_url}
-                              alt={`صورة ${index + 1}`}
-                              fill
-                              className="object-cover rounded-xl"
+                  <ReactImageUploading
+                    multiple
+                    value={images}
+                    onChange={(imageList) =>
+                      handleImageChange(imageList, setFieldValue)
+                    }
+                    maxNumber={MAX_NUMBER}
+                    dataURLKey="data_url"
+                    acceptType={["jpg", "jpeg", "png", "webp"]}
+                  >
+                    {({ onImageUpload, dragProps }) => (
+                      <div className="flex flex-col gap-4">
+                        {/* Upload Trigger */}
+                        <div
+                          className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed p-6 rounded-xl ${
+                            images.length > 0
+                              ? "border-gray-300"
+                              : "border-primary/50 hover:border-primary"
+                          } cursor-pointer transition-colors`}
+                          onClick={onImageUpload}
+                          {...dragProps}
+                        >
+                          <div className="relative w-16 h-16">
+                            <CiImageOn
+                              size={64}
+                              className="text-gray-300 absolute inset-0"
                             />
-
-                            {image.data_url === values.cover_image && (
-                              <span className="absolute text-[12px] flex items-center justify-center bg-[#1e272e40] backdrop-blur-sm text-white font-semibold w-full h-full rounded-xl">
-                                صورة الغلاف
+                            {uploadedImages.length > 0 && (
+                              <span className="absolute -top-2 -right-2 bg-primary text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                                {uploadedImages.length}
                               </span>
                             )}
-
-                            {/* Remove Button */}
-                            <button
-                              disabled={isSubmitting}
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation(); // Prevent cover selection
-                                const newImages = [...images];
-                                newImages.splice(index, 1);
-                                setImages(newImages);
-                                setFieldValue(
-                                  "media",
-                                  newImages.map((img) => img.data_url)
-                                );
-                                // Reset cover_image if it was removed
-                                if (image.data_url === values.cover_image) {
-                                  setFieldValue(
-                                    "cover_image",
-                                    newImages[0]?.data_url || ""
-                                  );
-                                }
-                              }}
-                              className="absolute -top-2 -right-2 bg-white p-1 rounded-full shadow-md border hover:text-red-500 z-10"
-                            >
-                              <FaTimes size={10} />
-                            </button>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </ReactImageUploading>
+                          <span className="text-sm text-theme text-center">
+                            اسحب وأفلت الصور هنا أو انقر للاختيار
+                          </span>
+                          <div className="text-xs text-gray-500 mt-2">
+                            <p>✓ الصور المدعومة: JPEG, PNG, Jpg, WebP</p>
+                            <p>✓ الحد الأقصى للحجم: 5MB لكل صورة</p>
+                            <p>✓ الحد الأقصى للعدد: 5 صور</p>
+                            {uploadError && (
+                              <p className="text-red-500">✗ {uploadError}</p>
+                            )}
+                          </div>
+                        </div>
 
-                <ErrorMessage
-                  name="media"
-                  component="div"
-                  className="text-red-500 mt-2 font-semibold text-[10px]"
-                />
-                <ErrorMessage
-                  name="cover_image"
-                  component="div"
-                  className="text-red-500 mt-2 font-semibold text-[10px]"
-                />
-              </fieldset>
+                        {/* Upload Progress */}
+                        {uploadLoading && (
+                          <div className="flex flex-col gap-2">
+                            <div className="w-full bg-gray-200 rounded-full h-2.5">
+                              <div
+                                className="bg-primary h-2.5 rounded-full transition-all duration-300"
+                                style={{ width: `${uploadProgress}%` }}
+                              ></div>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                              <span className="animate-pulse">⏳</span>
+                              جاري رفع {images.length} صورة... ({uploadProgress}
+                              %)
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Image Preview Grid */}
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
+                          {uploadedImages?.map((image, index) => (
+                            <div
+                              onClick={() =>
+                                setFieldValue("cover_image", image)
+                              }
+                              key={index}
+                              className={`relative w-full aspect-square rounded-xl cursor-pointer overflow-hidden `}
+                            >
+                              <Image
+                                src={image}
+                                alt={`صورة ${index + 1}`}
+                                fill
+                                className="object-cover"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              />
+
+                              {image === values.cover_image && (
+                                <span className="absolute flex flex-col justify-center items-center gap-2 bottom-0 left-0 right-0 w-full h-full bg-[#1e272eb6] backdrop-blur text-white font-semibold text-xs p-1 text-center">
+                                  <CiImageOn size={40} />
+                                  صورة الغلاف
+                                </span>
+                              )}
+
+                              {/* Image index */}
+                              <span className="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
+                                {index + 1}
+                              </span>
+
+                              {/* Remove button */}
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleRemoveImage(index, setFieldValue)
+                                }
+                                className="absolute top-1 right-1 bg-white p-1 rounded shadow hover:bg-gray-100 transition-colors"
+                                aria-label="حذف الصورة"
+                                title="حذف الصورة"
+                              >
+                                <FaTimes size={12} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Status Messages */}
+                        {isUploadCompleted && (
+                          <div className="flex items-center gap-2 text-sm text-green-600">
+                            <span>✅</span>
+                            تم رفع {images.length} صورة بنجاح!
+                          </div>
+                        )}
+                        {uploadError && (
+                          <div className="rounded-lg p-4 w-full bg-red-100 text-red-600 text-sm">
+                            {uploadError}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </ReactImageUploading>
+
+                  <ErrorMessage
+                    name="media"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
+                  />
+
+                  <ErrorMessage
+                    name="cover_image"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
+                  />
+                </fieldset>
+              </div>
 
               {/* Submit Button */}
               <Button
@@ -549,12 +706,12 @@ const AddMassacres = () => {
                 className="bg-secondary w-full hover:shadow-lg text-sm"
                 icon={<BiSend className="rotate-180" />}
                 loading={isSubmitting}
-                disabled={isSubmitting}
+                disabled={isSubmitting || uploadLoading}
               />
 
               {/* Form Errors */}
               {formErrors && (
-                <div className="rounded-lg p-4 w-full bg-red-100 text-[red] text-sm">
+                <div className="rounded-lg p-4 w-full bg-red-100 text-red-600 text-sm">
                   {formErrors}
                 </div>
               )}

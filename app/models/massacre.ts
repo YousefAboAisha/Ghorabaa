@@ -17,21 +17,6 @@ const MassacreSchema = new Schema<MassacreInterface>(
     media: [{ type: String }],
     tags: [{ type: String }],
     internationalReactions: [{ type: String }], // should be an array of strings
-
-    externalLinks: {
-      wikipedia: {
-        title: { type: String },
-        href: { type: String },
-      },
-      alJazeera: {
-        title: { type: String },
-        href: { type: String },
-      },
-      stateOfPalestine: {
-        title: { type: String },
-        href: { type: String },
-      },
-    },
   },
   { timestamps: true }
 );
