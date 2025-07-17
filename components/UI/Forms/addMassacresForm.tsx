@@ -23,19 +23,12 @@ import { MassacreInterface } from "@/app/interfaces";
 import { toast } from "react-toastify";
 import { MassacresValidationSchema } from "@/utils/validators";
 import Input from "../inputs/input";
-import imageCompression from "browser-image-compression";
 import { getFileUniqueKey } from "@/utils/file";
+import { useRouter } from "next/navigation";
+import { compressImage, validateImage } from "@/utils/image";
 
 const AddMassacres = () => {
-  // Constants
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
   const MAX_NUMBER = 5; // Max 5 images
-  const ALLOWED_FILE_TYPES = [
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-    "image/jpg",
-  ];
 
   // State
   const [formErrors, setFormErrors] = useState<string>("");
@@ -46,6 +39,7 @@ const AddMassacres = () => {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]); // Track already uploaded URLs
+  const router = useRouter();
 
   const [uploadedImageKeys, setUploadedImageKeys] = useState<Set<string>>(
     new Set()
@@ -65,53 +59,6 @@ const AddMassacres = () => {
     injuries: 0,
     destroyedHouses: 0,
     internationalReactions: [],
-  };
-
-  // Image compression helper
-  const compressImage = async (file: File): Promise<File> => {
-    try {
-      const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1920,
-        useWebWorker: true,
-      };
-      return await imageCompression(file, options);
-    } catch (error) {
-      console.error("Error compressing image:", error);
-      return file; // Fallback to original
-    }
-  };
-
-  // Image validation
-  const validateImage = (image: ImageListType[0]) => {
-    if (!image.file) {
-      throw new Error("ملف الصورة غير موجود");
-    }
-
-    // Check file type
-    if (!ALLOWED_FILE_TYPES.includes(image.file.type)) {
-      throw new Error(
-        `نوع الملف غير مدعوم. يرجى تحميل صورة بصيغة ${ALLOWED_FILE_TYPES.join(
-          " أو "
-        )}`
-      );
-    }
-
-    // Check file size
-    if (image.file.size > MAX_FILE_SIZE) {
-      throw new Error(
-        `حجم الملف كبير جدًا. الحد الأقصى للحجم هو ${
-          MAX_FILE_SIZE / (1024 * 1024)
-        }MB`
-      );
-    }
-
-    // Additional checks
-    if (!image.data_url || !image.data_url.startsWith("data:image")) {
-      throw new Error("صيغة الصورة غير صالحة");
-    }
-
-    return true;
   };
 
   const uploadMediaHandler = async (
@@ -263,7 +210,7 @@ const AddMassacres = () => {
       }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/massacres/create`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/massacres/create`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -277,7 +224,11 @@ const AddMassacres = () => {
         throw new Error(errorData?.error || "حدث خطأ أثناء إرسال البيانات");
       }
 
-      toast.success("✅ تم إرسال المجزرة بنجاح!");
+      toast.success("✅ تم أضافة المجزرة بنجاح!");
+
+      setTimeout(() => {
+        router.push("/admin/dashboard/massacres");
+      }, 500);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";

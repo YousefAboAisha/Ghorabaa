@@ -9,6 +9,7 @@ import {
   StoryStatus,
   NotificationTypes,
   Gender,
+  MassacreStatus,
 } from "./enums";
 
 // Define the User interface
@@ -233,5 +234,7 @@ export interface MassacreInterface {
   tags?: string[];
   internationalReactions?: string[];
   visits?: number;
+  highlight: Highlight[];
+  status: MassacreStatus;
   createdAt: Date;
 }

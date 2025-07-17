@@ -331,7 +331,7 @@ const AllStoriesTable = () => {
         <div className="w-full lg:w-fit">
           <Button
             onClick={() => setIsOpenStorySearch(true)}
-            title="بحث عن قصة"
+            title="البحث"
             className="bg-secondary text-white px-4"
             icon={<CiSearch size={20} />}
           />

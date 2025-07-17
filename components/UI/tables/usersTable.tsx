@@ -218,7 +218,7 @@ const UsersTable = () => {
         <div className="w-full lg:w-fit">
           <Button
             onClick={() => setIsOpenUserSearch(true)}
-            title="بحث عن مستخدم"
+            title="البحث"
             className="bg-secondary text-white px-4"
             icon={<CiSearch size={20} />}
           />

@@ -1,12 +1,16 @@
 "use client";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, EffectCards, Navigation } from "swiper/modules";
+import {
+  Autoplay,
+  EffectCreative,
+  Navigation,
+  Pagination,
+} from "swiper/modules";
 import "swiper/css";
+import "swiper/css/effect-creative";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import "swiper/css/scrollbar";
-import "swiper/css/effect-coverflow";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import Image from "next/image";
 
@@ -16,49 +20,74 @@ type Props = {
 
 const MassacreMediaSwiper = ({ data }: Props) => {
   return (
-    <div className="relative w-full h-[350px] mt-8">
+    <div className="relative w-full h-[400px] mt-8">
       <Swiper
-        modules={[Autoplay, Navigation, EffectCards]}
-        speed={700}
-        effect="cards" // 👈 Add this
-        cardsEffect={{ perSlideOffset: 1 }} // 👈 Optional: enables smooth crossfade
-        spaceBetween={20}
-        pagination={{ clickable: true }}
-        autoplay={{ delay: 5000 }}
+        modules={[Autoplay, Navigation, EffectCreative, Pagination]}
+        speed={1000}
+        effect={"creative"}
+        creativeEffect={{
+          prev: {
+            shadow: true,
+            translate: ["-120%", 0, -500],
+            rotate: [0, 0, -15],
+          },
+          next: {
+            shadow: true,
+            translate: ["120%", 0, -500],
+            rotate: [0, 0, 15],
+          },
+        }}
+        grabCursor={true}
+        spaceBetween={30}
+        pagination={{
+          clickable: true,
+          dynamicBullets: true,
+          renderBullet: (index, className) => {
+            return `<span key=${index} class="${className} bg-primary !w-3 !h-3"></span>`;
+          },
+        }}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        }}
         navigation={{
           nextEl: ".custom-next",
           prevEl: ".custom-prev",
         }}
-        className="relative py-10"
-        style={{
-          direction: "ltr",
-        }}
+        className="relative h-full"
+        style={{ direction: "ltr" }}
       >
-        {data?.map((elem, index) => {
-          return (
-            <SwiperSlide key={index} className="py-6 pb-10">
-              <div className="relative w-full overflow-hidden group h-[350px] hover:cursor-grab">
-                <Image
-                  src={elem}
-                  alt="Event Title"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 768px"
-                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                  priority
-                />
+        {data?.map((elem, index) => (
+          <SwiperSlide key={index} className="relative">
+            <div className="relative w-full h-full overflow-hidden rounded-xl shadow-xl group">
+              <Image
+                src={elem}
+                alt={`Massacre media ${index + 1}`}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover transition-all duration-700 group-hover:scale-105"
+                priority={index < 3}
+              />
+              <div
+                dir="rtl"
+                className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-start p-6"
+              >
+                <span className="text-white font-medium text-lg">
+                  صورة {index + 1}
+                </span>
               </div>
-            </SwiperSlide>
-          );
-        })}
+            </div>
+          </SwiperSlide>
+        ))}
 
-        {/* Custom Prev Button */}
-        <button className="custom-prev absolute top-1/2 left-2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-30">
-          <HiChevronLeft size={20} />
+        {/* Custom Navigation Buttons */}
+        <button className="custom-prev absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110">
+          <HiChevronLeft size={24} className="text-gray-800" />
         </button>
 
-        {/* Custom Next Button */}
-        <button className="custom-next absolute top-1/2 right-2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-30">
-          <HiChevronRight size={20} />
+        <button className="custom-next absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110">
+          <HiChevronRight size={24} className="text-gray-800" />
         </button>
       </Swiper>
     </div>

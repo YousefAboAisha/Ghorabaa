@@ -77,3 +77,12 @@ export enum Gender {
   MALE = "MALE",
   FEMALE = "FEMALE",
 }
+
+
+// Story Status Enums
+export enum MassacreStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  ARCHIVED = "ARCHIVED",
+}
+

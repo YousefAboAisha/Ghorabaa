@@ -10,6 +10,10 @@ const MassacreSchema = new Schema<MassacreInterface>(
       city: { type: String, required: true },
       neighborhood: { type: String },
     },
+    visits: {
+      type: Number,
+      default: 0,
+    },
     deaths: { type: Number },
     injuries: { type: Number },
     destroyedHouses: { type: Number },

@@ -47,20 +47,23 @@ const MassacreDetails = async ({ id }: Props) => {
   console.log("Massacres Error:", error);
   console.log("Massacres Data:", data);
 
+  const imageUrl = data?.cover_image || "/notFound.png";
+
+  // Generate placeholder
   return (
     <div className="flex flex-col gap-2 mt-24">
       <LogVisit massacreId={id} />
       <PageTitles storyName={data.title} />
 
-      <div className="relative w-full h-[70vh] rounded-xl overflow-hidden">
+      <div className="relative w-full h-[60vh] rounded-xl overflow-hidden">
         <Image
-          src={data?.cover_image || "/notFound.png"}
+          src={imageUrl || "/notFound.png"}
           alt="Massacres cover"
           fill
-          sizes="(max-width: 768px) 100vw, 768px"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 768px"
           className="object-cover object-center"
           priority
-          quality={100}
+          quality={75}
         />
       </div>
 

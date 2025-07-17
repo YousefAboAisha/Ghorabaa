@@ -1,11 +1,15 @@
-import Link from "next/link";
+import MassacresTable from "@/components/UI/tables/massacresTable";
 import React from "react";
 
 const Page = () => {
   return (
-    <Link href={"massacres/addMassacre"}>
-      إضافة مجزرة جديدة
-    </Link>
+    <div className="relative h-screen">
+     
+
+      <div className="relative mt-12">
+        <MassacresTable />
+      </div>
+    </div>
   );
 };
 

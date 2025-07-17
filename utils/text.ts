@@ -1,6 +1,7 @@
 import {
   ContentType,
   Gender,
+  MassacreStatus,
   NotificationTypes,
   ReportReasons,
   ReportStatus,
@@ -239,5 +240,16 @@ export const getResponseMessage = (status: number) => {
       return "تعذر الوصول إلى السيرفر";
     default:
       return "حدث خطأ أثناء جلب البيانات!";
+  }
+};
+
+export const getMassacreStatusLabel = (status: MassacreStatus) => {
+  switch (status) {
+    case MassacreStatus.PENDING:
+      return "قيد المراجعة";
+    case MassacreStatus.APPROVED:
+      return "مقبولة";
+    case MassacreStatus.ARCHIVED:
+      return "مؤرشفة";
   }
 };

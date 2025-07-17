@@ -63,7 +63,7 @@ const Users = () => {
       return (
         <ErrorMessage
           error={userCountsError}
-          className="!min-h-full !border-none"
+          className="!border-none !min-h-[40vh]"
         />
       );
     if (usersData.length > 0) return <UserGrowthLineChart data={usersData} />;

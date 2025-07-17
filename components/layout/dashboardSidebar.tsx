@@ -60,7 +60,7 @@ const DashboardSidebar = ({ session }: DashboardSidebarProps) => {
           <Link href={"/admin/dashboard/massacres"}>
             <li
               className={`list-none cursor-pointer duration-100 p-4 w-full rounded-lg flex items-center lg:justify-normal justify-center gap-2 ${
-                pathname === "/admin/dashboard/events"
+                pathname === "/admin/dashboard/massacres"
                   ? "bg-primary text-white"
                   : "bg-gray-100"
               }`}

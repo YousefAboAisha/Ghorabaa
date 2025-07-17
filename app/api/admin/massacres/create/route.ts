@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 import { MassacreInterface } from "@/app/interfaces";
-import { StoryStatus } from "@/app/enums";
+import { MassacreStatus } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -60,7 +60,8 @@ export async function POST(originalReq: Request) {
       internationalReactions,
       createdAt: new Date(),
       publisher_id: new ObjectId(token.id),
-      status: StoryStatus.PENDING,
+      visits: 0,
+      status: MassacreStatus.PENDING,
     };
 
     await massacresCollection.insertOne(massacreDoc);
