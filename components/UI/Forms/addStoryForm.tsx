@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { StoryValidationSchema } from "@/utils/validators";
 import Input from "../inputs/input";
+import { WarsData } from "@/data/warsData";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -53,6 +54,7 @@ const AddStoryForm = ({
     neighborhood: "",
     bio: "",
     image: "",
+    warTitle: "",
   };
 
   const birth_date = data?.birth_date;
@@ -295,6 +297,22 @@ const AddStoryForm = ({
                       className="text-red-500 mt-2 font-semibold text-[10px]"
                     />
                   </div>
+                </div>
+
+                <div>
+                  <Select
+                    disabled={isSubmitting}
+                    label="العُدوان"
+                    options={WarsData}
+                    title="اختر العُدوان.."
+                    onChange={(e) => setFieldValue("warTitle", e.target.value)}
+                    className={`focus:border-primary`}
+                  />
+                  <ErrorMessage
+                    name="warTitle"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
+                  />
                 </div>
 
                 {/* Notes Field with Word Counter */}

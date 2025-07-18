@@ -99,7 +99,7 @@ const Navbar = ({ session }: NavbarProps) => {
                 href={"/signin"}
                 className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
-                <BsPersonAdd size={22} />
+                <BsPersonAdd size={24} />
               </Link>
 
               <Link
@@ -108,7 +108,7 @@ const Navbar = ({ session }: NavbarProps) => {
                 href={"/search"}
                 className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
-                <BsSearch />
+                <BsSearch size={18} />
               </Link>
             </div>
           ) : (

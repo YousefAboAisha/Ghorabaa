@@ -75,6 +75,7 @@ export interface StoryInterface extends Document {
   keywords: string[];
   rejectReason?: string;
   reports?: ReportInterface[];
+  warTitle?: string;
   createdAt: Date;
   updatedAt?: Date;
   effectiveDate?: Date; // The date used for sorting and filtering, can be updated to the latest update date if available.
