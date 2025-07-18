@@ -80,7 +80,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
           <Button
             onClick={handleClearFilters}
             title="مسح المحددات"
-            className="bg-white !border-gray_light !text-[red] shadow-none hover:shadow-sm duration-150 w-fit px-4 !text-[10px]"
+            className="bg-white !border-gray_light !text-rejected shadow-none hover:shadow-sm duration-150 w-fit px-4 !text-[10px]"
             icon={<GrClearOption size={12} />}
           />
         </div>
@@ -106,7 +106,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
           <div
             onClick={() => setGender(Gender.FEMALE)}
             className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
-              gender === Gender.FEMALE && "bg-[#ff5982] text-white"
+              gender === Gender.FEMALE && "!bg-[#ff5982] text-white"
             }`}
           >
             <GiFemale size={30} />

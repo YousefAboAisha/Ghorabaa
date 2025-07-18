@@ -1,100 +1,97 @@
-import Link from "next/link";
+import { MassacreInterface } from "@/app/interfaces";
 import Image from "next/image";
+import React from "react";
+import { HighlightedText } from "../typography/highlightText";
 import { GrCalendar, GrLocation } from "react-icons/gr";
 import { arabicDateConversion } from "@/utils/format";
-import { MassacreInterface } from "@/app/interfaces";
+import Link from "next/link";
+import Button from "../inputs/button";
+import { FaEye } from "react-icons/fa";
+import image from "@/public/uploads/5.jpg";
 
 type Props = {
-  data: MassacreInterface;
+  data?: MassacreInterface;
 };
 
-export default function MassacreCard({ data }: Props) {
-  const {
-    _id,
-    title,
-    cover_image,
-    date,
-    location,
-    description,
-    deaths,
-    injuries,
-    destroyedHouses,
-  } = data;
-
+const MassacreCard = ({ data }: Props) => {
   return (
-    <Link
-      href={`/massacres/${_id}`}
-      style={{
-        direction: "rtl",
-      }}
-      className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white border rounded-xl overflow-hidden p-10 px-16 hover:shadow-md duration-300"
-    >
-      <div className="flex flex-col w-full">
-        <div className="flex flex-col gap-2 mt-4 ">
-          {/* title */}
+    <div className="relative group w-full flex flex-col border bg-white hover:shadow-xl duration-500 rounded-2xl overflow-hidden">
+      <Link href={`/massacres/${data?._id}`} title="عرض تفاصيل المجزرة">
+        <div className="flex items-center justify-center relative h-[270px] w-full overflow-hidden">
+          <Image
+            src={image}
+            alt="صورة المجزرة"
+            className="w-full rounded-b-none object-cover min-h-full group-hover:scale-150 duration-[2s]"
+            width={1000}
+            height={1000}
+          />
+        </div>
+      </Link>
 
-          <h2 className="text-2xl font-semibold mb-2">{title}</h2>
+      <div className="relative p-4">
+        <div className="flex items-center gap-2 text-[10px] text-gray_dark">
+          <p> تاريخ النشر:</p>
+          <p>{arabicDateConversion(new Date())}</p>
+        </div>
 
-          <div className="flex items-center flex-wrap gap-2">
-            {["مقاومة", "حصار", "غزة", "مجزرة"]?.map((keywrod, index) => {
-              return (
-                <div
-                  key={index}
-                  className="border bg-[#5b913b40] rounded-xl p-1.5 px-3 text-[10px]"
-                >
-                  #{keywrod}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="flex gap-6 mt-2 text-[12px]">
-            <div className="flex items-center gap-2">
-              <GrCalendar size={20} className="text-primary" />
-              <p className="text-[12px]">
-                {arabicDateConversion(date as Date)}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <GrLocation size={20} className="text-primary font-bold" />
-              <div className="flex items-center gap-1">
-                <p>{location.city}</p>-<p>{location.neighborhood}</p>
-              </div>
-            </div>
-          </div>
-
-          <p className="font-light mt-2 line-clamp-[10] text-[15px]">
-            {description}
+        <div className="flex items-center gap-2 text-sm mb-2 mt-2">
+          <p className="text-lg font-bold text-secondary truncate">
+            <HighlightedText
+              highlights={data?.highlight}
+              field="title"
+              fallback={data?.title ?? "مجزرة الشجاعية"}
+            />
           </p>
         </div>
 
-        <div className="flex items-center flex-wrap gap-2 mt-4">
-          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
-            <p className="text-[12px]">شهداء</p>
-            <p className="font-bold text-rejected">{deaths}+</p>
+        <div className="flex flex-wrap gap-6 mt-2 text-[12px]">
+          <div className="flex items-center gap-2">
+            <GrLocation size={16} className="text-primary" />
+            <div className="flex items-center gap-1">
+              <p>{data?.location.city || "غزة"}</p>
+              {" - "}
+              <p>{data?.location.neighborhood || "حي الشجاعية"}</p>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
-            <p className="text-[12px]">إصابات</p>
-            <p className="font-bold text-pending">{injuries}+</p>
-          </div>
-
-          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
-            <p className="text-[12px] ">منازل مدمرة</p>
-            <p className="font-bold text-secondary">{destroyedHouses}+</p>
+          <div className="flex items-center gap-2">
+            <GrCalendar size={16} className="text-primary" />
+            <p className="text-[12px]">{arabicDateConversion(new Date())}</p>
           </div>
         </div>
+
+        {/* Bio with highlighting */}
+        <p
+          style={{
+            lineHeight: "20px",
+          }}
+          className="text-gray-600 text-[13px] mt-3 line-clamp-2 h-10"
+        >
+          <HighlightedText
+            highlights={data?.highlight}
+            field="description"
+            fallback={
+              data?.description ??
+              "هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة "
+            }
+          />
+        </p>
       </div>
 
-      <div className="relative w-full h-[65vh]">
-        <Image
-          src={cover_image || "/notFound.png"}
-          alt={`صورة ${title}`}
-          fill
-          className="rounded-xl w-full"
-        />{" "}
-      </div>
-    </Link>
+      <Link
+        href={`/massacres/${data?._id}`}
+        title="عرض تفاصيل المجزرة"
+        className="w-full px-4 pb-4"
+      >
+        <Button
+          title="تفاصيل المجزرة"
+          icon={<FaEye size={17} />}
+          className="bg-secondary"
+          hasShiningBar={false}
+        />
+      </Link>
+    </div>
   );
-}
+};
+
+export default MassacreCard;

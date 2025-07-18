@@ -1,6 +1,6 @@
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
-import ImagesSwiper from "@/components/UI/imagesSwiper";
+import RecentlyAddedStoriesSwiper from "@/components/UI/swipers/home/recentlyAddedStoriesSwiper";
 import { Session } from "next-auth";
 import { cookies } from "next/headers"; // App Router only
 import Link from "next/link";
@@ -41,7 +41,7 @@ const RecentlyAddedStories = async ({ session }: RecentlyAddedStories) => {
   if (data) {
     return (
       <div className="flex flex-col">
-        <ImagesSwiper data={data} session={session} />
+        <RecentlyAddedStoriesSwiper data={data} session={session} />
         <Link
           href={"/stories"}
           className="text-primary flex items-center gap-2 justify-center hover:underline text-sm w-fit mx-auto"

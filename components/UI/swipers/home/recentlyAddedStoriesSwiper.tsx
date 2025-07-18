@@ -7,15 +7,15 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { StoryInterface } from "@/app/interfaces";
-import StoryCard from "./cards/storyCard";
 import { Session } from "next-auth";
+import StoryCard from "../../cards/storyCard";
 
-type ImagesSwiperProps = {
+type Props = {
   data?: StoryInterface[];
   session: Session | null;
 };
 
-const ImagesSwiper = ({ data, session }: ImagesSwiperProps) => {
+const RecentlyAddedStoriesSwiper = ({ data, session }: Props) => {
   const breakboints = {
     // When window width is >= 640px
     200: {
@@ -54,4 +54,4 @@ const ImagesSwiper = ({ data, session }: ImagesSwiperProps) => {
   );
 };
 
-export default ImagesSwiper;
+export default RecentlyAddedStoriesSwiper;

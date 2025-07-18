@@ -1,7 +1,7 @@
 import Landing from "@/containers/home/landing";
 import MartyrsStatistics from "@/containers/home/martyersStatistics";
 import TodaysMartyr from "@/containers/home/todaysMartyer";
-import AddStoryBanner from "@/containers/home/addStoryBanner";
+import AddStoryBanner from "@/components/UI/banners/addStoryBanner";
 import RecentlyAddedStories from "@/containers/home/recentlyAddedStories";
 import { Suspense } from "react";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";

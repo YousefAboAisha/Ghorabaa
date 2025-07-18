@@ -11,11 +11,11 @@ import { Role } from "@/app/enums";
 import { PiGearLight } from "react-icons/pi";
 import { toast } from "react-toastify";
 
-type ProfilePopperProps = {
+type Props = {
   session: Session | null;
 };
 
-function ProfilePopper({ session }: ProfilePopperProps) {
+function ProfileMenu({ session }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const profileImage = session?.user?.image || "/notFound.png"; // Fallback image
   const user_id = session?.user.id;
@@ -134,4 +134,4 @@ function ProfilePopper({ session }: ProfilePopperProps) {
   );
 }
 
-export default ProfilePopper;
+export default ProfileMenu;

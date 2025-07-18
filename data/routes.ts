@@ -12,6 +12,10 @@ export const Routes = [
     href: "/search",
   },
   {
+    title: "المجازر الصهيونية",
+    href: "/massacres",
+  },
+  {
     title: "الإحصائيات",
     href: "/statistics",
   },

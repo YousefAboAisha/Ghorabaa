@@ -1,7 +1,7 @@
-import PageTitles from "@/components/UI/typography/pageTitles";
 import SearchSection from "@/containers/search/searchSection";
 import { SearchMetadata } from "../lib/metadata";
 import { getSessionAction } from "../actions/registerActions";
+import Hero from "@/components/layout/hero";
 
 export const generateMetadata = async () => SearchMetadata;
 
@@ -10,8 +10,11 @@ const Page = async () => {
 
   return (
     <div className="container min-h-screen mt-24">
-      <PageTitles />
-      <SearchSection session={session} />
+      <Hero />
+
+      <div className="mt-16">
+        <SearchSection session={session} />
+      </div>
     </div>
   );
 };

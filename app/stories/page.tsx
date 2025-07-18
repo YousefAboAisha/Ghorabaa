@@ -1,11 +1,11 @@
 import Heading from "@/components/UI/typography/heading";
-import PageTitles from "@/components/UI/typography/pageTitles";
 import { Suspense } from "react";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import StoriesSection from "@/containers/stories/storiesSection";
 import { StoriesMetadata } from "../lib/metadata";
 import { getSessionAction } from "../actions/registerActions";
 import FilterButton from "@/containers/stories/filterButton";
+import Hero from "@/components/layout/hero";
 
 export const generateMetadata = async () => StoriesMetadata;
 
@@ -14,9 +14,9 @@ export default async function Page() {
 
   return (
     <div className="container mt-24 min-h-screen">
-      <PageTitles />
+      <Hero />
 
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4 mt-16">
         <Heading
           title=""
           highLightText="شهداؤنا الأبرار"

@@ -15,7 +15,7 @@ import "swiper/css/effect-coverflow";
 
 import { MassacreInterface } from "@/app/interfaces";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
-import MassacreCard from "../../cards/massacreCard";
+import MassacreBanner from "../../banners/massacreBanner";
 
 type Props = {
   data?: MassacreInterface[];
@@ -41,7 +41,7 @@ const RecentlyAddedSwiper = ({ data }: Props) => {
     >
       {data?.map((item: MassacreInterface) => (
         <SwiperSlide key={item._id as string} className="overflow-hidden">
-          <MassacreCard data={item} />
+          <MassacreBanner data={item} />
         </SwiperSlide>
       ))}
 

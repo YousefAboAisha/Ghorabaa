@@ -6,7 +6,6 @@ import Sidebar from "./sidebar";
 import { Fade as Hamburger } from "hamburger-react";
 import { usePathname } from "next/navigation";
 import Button from "../UI/inputs/button";
-import ProfilePopper from "../UI/modals/profilePopper";
 import { FiUser } from "react-icons/fi";
 import Logo from "../UI/logo";
 import NotificationPopper from "../UI/modals/notificationPopper";
@@ -14,6 +13,8 @@ import { BsBookmark, BsPersonAdd, BsSearch } from "react-icons/bs";
 import { Session } from "next-auth";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useFavoriteStore } from "@/stores/favoriteStore";
+import ProfileMenu from "../UI/menues/profileMenu";
+import DropdownMenu from "../UI/menues/dropdownMenu";
 
 type NavbarProps = {
   session: Session | null;
@@ -27,21 +28,26 @@ const Navbar = ({ session }: NavbarProps) => {
 
   const { count, fetchAndUpdateCount } = useFavoriteStore();
 
+  const hiddenRoutes = ["/massacres", "/statistics", "/events", "/about"];
+
   // Memoize the routes to avoid unnecessary re-renders
   const renderedRoutes = useMemo(
     () =>
-      Routes.map(({ title, href }, index) => (
-        <Link
-          key={index}
-          href={href}
-          className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-sm font-primary outline-none font-noto_kufi ${
-            pathname === href ? "text-primary font-normal" : ""
-          }`}
-          title={title}
-        >
-          {title}
-        </Link>
-      )),
+      Routes.map(({ title, href }, index) => {
+        if (hiddenRoutes.includes(href)) return;
+        return (
+          <Link
+            key={index}
+            href={href}
+            className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-sm font-primary outline-none font-noto_kufi ${
+              pathname === href ? "text-primary font-normal" : ""
+            }`}
+            title={title}
+          >
+            {title}
+          </Link>
+        );
+      }),
     [pathname]
   );
 
@@ -108,7 +114,7 @@ const Navbar = ({ session }: NavbarProps) => {
           ) : (
             <div className="flex items-center">
               {/* Profile popper */}
-              <ProfilePopper session={session} />
+              <ProfileMenu session={session} />
 
               {/* Notifications popper */}
               <NotificationPopper session={session} />
@@ -147,7 +153,9 @@ const Navbar = ({ session }: NavbarProps) => {
           )}
 
           {/* Routes */}
-          <div className="hidden lg:flex gap-6 mr-4">{renderedRoutes}</div>
+          <div className="hidden lg:flex gap-6 mr-4">
+            {renderedRoutes} <DropdownMenu />
+          </div>
         </div>
 
         {/* Logo */}
