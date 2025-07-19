@@ -117,28 +117,12 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
                   label="تفاصيل إضافية (اختياري)"
                   className={`w-full focus:border-primary text-[13px] font-light`}
                 />
-
-                {/* Word Counter */}
-                <div className="flex justify-between mt-1">
-                  <ErrorMessage
-                    name="rejectDetails"
-                    component="div"
-                    className="text-red-500 font-semibold text-[10px]"
-                  />
-
-                  <div className="text-[10px] text-gray-500 self-end">
-                    عدد الكلمات:{" "}
-                    {values.rejectDetails?.trim().split(/\s+/).filter(Boolean)
-                      .length || 0}{" "}
-                    / 5
-                  </div>
-                </div>
               </div>
 
               <Button
                 type="submit"
                 title="إبلاغ الآن"
-                className="bg-[red] mt-4"
+                className="bg-rejected mt-4"
                 disabled={isSubmitting}
                 loading={isSubmitting}
               />

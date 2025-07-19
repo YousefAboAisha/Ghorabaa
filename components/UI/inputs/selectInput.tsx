@@ -24,7 +24,7 @@ const Select = ({
     <div>
       {label && (
         <div className="flex items-center gap-1">
-          {required && <span className="text-[red]">*</span>}
+          {required && <span className="text-rejected">*</span>}
           <p className="text-[12px] mb-1">{label}</p>
         </div>
       )}

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { CommentInterface } from "@/app/interfaces";
 import { Session } from "next-auth";
+import { toast } from "react-toastify";
 
 type CommentFormProps = {
   session: Session | null;
@@ -44,6 +45,7 @@ const CommentForm = ({ session, id, refetchData }: CommentFormProps) => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm, setSubmitting }) => {
+            if (values.text?.trim() === "") return;
             try {
               const response = await fetch(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/comments/create`,
@@ -60,6 +62,7 @@ const CommentForm = ({ session, id, refetchData }: CommentFormProps) => {
               if (response.ok) {
                 console.log("Comment added:", data);
                 resetForm(); // ✅ This clears the form
+                toast.success("تمت إضافة تعليق بنجاح!");
                 if (refetchData) refetchData();
               } else {
                 console.error("Failed to add comment:", data.error);
@@ -99,7 +102,7 @@ const CommentForm = ({ session, id, refetchData }: CommentFormProps) => {
                 title={"إضافة"}
                 type="submit"
                 className="bg-secondary text-white text-sm w-8/12 md:w-4/12 lg:w-2/12 mt-2"
-                disabled={isSubmitting || values.text == ""}
+                disabled={isSubmitting || values.text?.trim() === ""}
                 hasShiningBar={false}
                 icon={<FiPlus />}
                 loading={isSubmitting}

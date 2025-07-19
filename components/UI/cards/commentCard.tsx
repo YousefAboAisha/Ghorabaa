@@ -118,7 +118,7 @@ const CommentCard = ({
               <div
                 onClick={() => setIsOpenDeleteComment(true)}
                 title="حذف التعليق"
-                className="opacity-0 group-hover:opacity-100 items-center justify-center p-1.5 text-[red] hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+                className="opacity-0 group-hover:opacity-100 items-center justify-center p-1.5 text-rejected hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
                 <BsTrash size={15} />
               </div>

@@ -250,7 +250,7 @@ const Page = () => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
-              fetchStoryDetails(values.id_number).finally(() =>
+              fetchStoryDetails(values.id_number.trim()).finally(() =>
                 setSubmitting(false)
               );
             }}

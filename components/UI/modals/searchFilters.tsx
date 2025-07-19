@@ -1,3 +1,5 @@
+// Add A valiadtion schema for these filter Inputs
+
 "use client";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Button from "../inputs/button";
@@ -37,6 +39,9 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
   );
 
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
+
+  const [showNeighborhoodError, setShowNeighborhoodError] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (city) {
@@ -160,6 +165,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
             setCities(
               cityObj ? cityObj[selectedCity as keyof typeof cityObj] || [] : []
             );
+            setShowNeighborhoodError(false);
           }}
         />
 
@@ -170,8 +176,20 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
           className="focus:border-secondary"
           required={false}
           value={neighborhood}
-          onChange={(e) => setNeighborhood(e.target.value)}
+          onFocus={() => {
+            if (!city) setShowNeighborhoodError(true);
+          }}
+          onChange={(e) => {
+            setNeighborhood(e.target.value);
+            if (city) setShowNeighborhoodError(false);
+          }}
         />
+
+        {showNeighborhoodError && (
+          <p className="text-rejected text-[10px] w-fit right-1 top-[52px]">
+            يجب اختيار المدينة أولاً
+          </p>
+        )}
       </div>
 
       {/* Apply button */}

@@ -24,7 +24,7 @@ const SearchSection = ({ session }: SearchSectionProps) => {
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      if (searchQuery.length > 1) {
+      if (searchQuery.length > 2) {
         const fetchStoriesByQuery = async () => {
           setLoading(true);
           setError(null);
@@ -99,7 +99,7 @@ const SearchSection = ({ session }: SearchSectionProps) => {
       <div className="flex items-center justify-between w-full mt-8 gap-4">
         <div className="relative w-full md:w-8/12">
           <Input
-            placeholder="قم بكتابة اسم الشهيد.."
+            placeholder="اسم الشهيد - 3 حروف على الأقل"
             className="bg-white w-full border"
             type="text"
             icon={

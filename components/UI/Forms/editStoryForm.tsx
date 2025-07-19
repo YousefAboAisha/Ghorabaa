@@ -377,7 +377,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
                                   onImageRemove(index);
                                   setFieldValue("image", null);
                                 }}
-                                className="absolute -top-1 -right-1 bg-white border shadow-md p-1 rounded-md cursor-pointer hover:text-[red]"
+                                className="absolute -top-1 -right-1 bg-white border shadow-md p-1 rounded-md cursor-pointer hover:text-rejected"
                               >
                                 <FaTimes size={10} />
                               </div>
@@ -406,7 +406,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
 
                 {/* Form Errors */}
                 {formErrors && (
-                  <div className="rounded-lg p-4 w-full bg-red-100 text-[red] text-sm">
+                  <div className="rounded-lg p-4 w-full bg-red-100 text-rejected text-sm">
                     {formErrors}
                   </div>
                 )}

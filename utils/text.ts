@@ -200,13 +200,13 @@ export const getNotificationIcon = (type: NotificationTypes) => {
     case NotificationTypes.REJECT:
       return {
         Icon: MdOutlineClose,
-        className: "text-[red] ",
+        className: "text-rejected ",
         size: "27",
       }; // Reject
     case NotificationTypes.DELETE:
       return {
         Icon: GiTrashCan,
-        className: "text-[red]",
+        className: "text-rejected",
         size: "25",
       }; // Delete
     case NotificationTypes.UPDATE:

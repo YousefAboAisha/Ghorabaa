@@ -49,7 +49,7 @@ const Header = () => {
               </MenuItem>
 
               <MenuItem>
-                <div className="flex items-center gap-2 p-3 cursor-pointer text-sm rounded-lg bg-[red] text-white">
+                <div className="flex items-center gap-2 p-3 cursor-pointer text-sm rounded-lg bg-rejected text-white">
                   <CiLogout size={20} />
                   <p>تسجيل الخروج</p>
                 </div>

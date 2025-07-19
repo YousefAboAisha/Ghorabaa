@@ -115,17 +115,7 @@ export const ReportValidationSchema = Yup.object({
       ],
       "يرجى اختيار سبب الإبلاغ من القائمة"
     ),
-  rejectDetails: Yup.string()
-    .required("يُرجى إدخال سبب الرفض")
-    .test(
-      "min-words",
-      "يجب أن تحتوي السيرة الذاتية على 5 كلمات على الأقل",
-      function (value) {
-        const wordCount =
-          value?.trim().split(/\s+/).filter(Boolean).length || 0;
-        return wordCount >= 5;
-      }
-    ),
+  rejectDetails: Yup.string().notRequired(),
 });
 
 export const EditUserValidationSchema = Yup.object({

@@ -78,7 +78,7 @@ const ReportPreview = ({
       </Link>
 
       <div className="flex flex-col gap-2">
-        <div className="gap-1 text-[red] bg-red-200 w-fit p-1.5 px-2.5 rounded-md text-[12px] mt-2">
+        <div className="gap-1 text-rejected bg-red-200 w-fit p-1.5 px-2.5 rounded-md text-[12px] mt-2">
           {getReportReasonLabel(data?.reason)}
         </div>
 
@@ -89,7 +89,7 @@ const ReportPreview = ({
         <Button
           title="حذف المحتوى"
           onClick={() => AcceptReportHandler()}
-          className="bg-[red] text-white"
+          className="bg-rejected text-white"
           icon={<FaTrash />}
           loading={loading}
         />

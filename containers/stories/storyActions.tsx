@@ -57,7 +57,7 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
           {(isStoryOwner || isAdmin) && (
             <div
               title="حذف القصة"
-              className="flex items-center justify-center border bg-white p-2 text-secondary hover:text-[red] duration-100 cursor-pointer rounded-lg shadow-sm"
+              className="flex items-center justify-center border bg-white p-2 text-secondary hover:text-rejected duration-100 cursor-pointer rounded-lg shadow-sm"
               onClick={() => setIsDeleteModalOpen(true)}
             >
               <CiTrash size={30} />

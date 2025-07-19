@@ -40,7 +40,7 @@ export const RejectStory = ({
 
       <p className="mt-6 text-[15px] font-light">
         سيترتب على هذا الإجراء رفض طلب إضافة قصة الشهيد{" "}
-        <span className="inline text-[red] font-semibold">{data?.name}</span>{" "}
+        <span className="inline text-rejected font-semibold">{data?.name}</span>{" "}
         المقدمة من قِبل المستخدم{" "}
         <span className="font-semibold inline">{data?.publisher_name}</span>. هل
         أنت متأكد من رغبتك في المتابعة؟
@@ -124,7 +124,7 @@ export const RejectStory = ({
               <Button
                 type="submit"
                 title="رفض القصة"
-                className="bg-[red] mt-4"
+                className="bg-rejected mt-4"
                 disabled={isSubmitting}
                 loading={isSubmitting}
               />

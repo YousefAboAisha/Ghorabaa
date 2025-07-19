@@ -14,7 +14,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
     <div
       className={`relative flex flex-col justify-center items-center gap-3 min-h-[50vh] bg-white rounded-md border ${className}`}
     >
-      <BiErrorCircle size={30} className="text-[red]" />
+      <BiErrorCircle size={30} className="text-rejected" />
       <p className="text-sm">{error}</p>
     </div>
   );

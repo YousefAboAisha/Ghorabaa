@@ -114,7 +114,7 @@ export const VerifyEmail = ({
       </div>
 
       {error && (
-        <div className="rounded-lg p-4 mt-4 w-full bg-red-100 text-[red] text-[12px]">
+        <div className="rounded-lg p-4 mt-4 w-full bg-red-100 text-rejected text-[12px]">
           {error}
         </div>
       )}

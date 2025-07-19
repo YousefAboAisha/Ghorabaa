@@ -82,6 +82,7 @@ const ShareStory = ({ story_title }: ShareModalProps) => {
         <div className="flex flex-row items-center gap-3 mt-2 text-secondary">
           <div
             className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200"
+            title="مشاركة عبر فيسبوك"
             onClick={() =>
               openShareWindow(
                 `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
@@ -92,7 +93,9 @@ const ShareStory = ({ story_title }: ShareModalProps) => {
           >
             <FaFacebook size={25} />
           </div>
+
           <div
+            title="مشاركة عبر منصة إكس"
             className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200"
             onClick={() =>
               openShareWindow(
@@ -104,7 +107,9 @@ const ShareStory = ({ story_title }: ShareModalProps) => {
           >
             <FaXTwitter size={25} />
           </div>
+
           <div
+            title="مشاركة عبر لينكد إن"
             className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200"
             onClick={() =>
               openShareWindow(
@@ -116,7 +121,9 @@ const ShareStory = ({ story_title }: ShareModalProps) => {
           >
             <FaLinkedin size={25} />
           </div>
+
           <div
+            title="مشاركة عبر واتساب"
             className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200"
             onClick={() =>
               openShareWindow(
@@ -128,7 +135,9 @@ const ShareStory = ({ story_title }: ShareModalProps) => {
           >
             <FaWhatsapp size={25} />
           </div>
+
           <div
+            title="مشاركة عبر تيليغرام"
             className="bg-gray_light rounded-md border cursor-pointer p-2 hover:shadow-md duration-200"
             onClick={() =>
               openShareWindow(

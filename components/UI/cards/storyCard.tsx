@@ -47,21 +47,26 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
             />
           </p>
 
-          <p className="text-gray_dark font-normal inline min-w-fit">
-            &quot;
-            <HighlightedText
-              highlights={data?.highlight}
-              field="nickname"
-              fallback={data?.nickname ?? ""}
-            />
-            &quot;
-          </p>
+          {data?.nickname && (
+            <p className="text-gray_dark font-normal inline min-w-fit">
+              &quot;
+              <HighlightedText
+                highlights={data?.highlight}
+                field="nickname"
+                fallback={data?.nickname ?? ""}
+              />
+              &quot;
+            </p>
+          )}
         </div>
 
         {/* Bio with highlighting */}
-        <p style={{
-          lineHeight: "20px",
-        }} className="text-gray-600 text-[13px] mt-2 line-clamp-2 h-10">
+        <p
+          style={{
+            lineHeight: "20px",
+          }}
+          className="text-gray-600 text-[13px] mt-2 line-clamp-2 h-10"
+        >
           <HighlightedText
             highlights={data?.highlight}
             field="bio"

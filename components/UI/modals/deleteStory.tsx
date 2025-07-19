@@ -75,7 +75,7 @@ export const DeleteStory = ({
       <div className="flex items-center gap-4 mt-8">
         <Button
           title="حذف الآن"
-          className="bg-[red] text-white"
+          className="bg-rejected text-white"
           loading={loading}
           onClick={() => deleteStory()}
           disabled={loading}

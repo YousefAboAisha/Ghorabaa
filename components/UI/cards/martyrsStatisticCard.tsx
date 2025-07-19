@@ -70,7 +70,7 @@ const MartyrsStatisticCard = ({ label, number }: LeasingCardProps) => {
         <p className="text-5xl md:text-5xl lg:text-4xl font-extrabold">
           {animatedNumber.toLocaleString()}
         </p>
-        <p className="text-4xl text-[red] font-bold">&#43;</p>
+        <p className="text-4xl text-rejected font-bold">&#43;</p>
       </div>
     </div>
   );

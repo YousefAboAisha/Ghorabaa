@@ -142,7 +142,7 @@ const AllStoriesTable = () => {
 
           <MdOutlineClose
             title="رفض القصة"
-            className="text-[red] cursor-pointer"
+            className="text-rejected cursor-pointer"
             onClick={() => {
               setIsOpenStoryReject(true);
               setStoryData(story);
