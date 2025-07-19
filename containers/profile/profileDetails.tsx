@@ -52,14 +52,13 @@ const ProfileDetails = async ({ user_id }: ProfileDetailsProps) => {
         ) : null}
 
         <div className="flex flex-col items-center gap-6">
-          <div className="relative flex items-center justify-center w-full bg-secondary-banner p-4 rounded-md">
-            <div className="flex items-center justify-center bg-white w-[100px] h-[100px] rounded-full p-1 border translate-y-16">
+          <div className="relative flex items-center justify-center w-full bg-secondary-pattern bg-fixed h-[25vh] rounded-md">
+            <div className="relative flex items-center justify-center bg-white w-[120px] h-[120px] rounded-full translate-y-[12vh]">
               <Image
                 src={data?.image || "/notFound.png"}
-                width={100}
-                height={100}
+                fill
                 alt="صورة الملف الشخصي"
-                className="rounded-full"
+                className="w-full rounded-full p-1"
               />
             </div>
           </div>

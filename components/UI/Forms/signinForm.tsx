@@ -74,8 +74,7 @@ const SigninForm = () => {
   };
 
   return (
-    <>
-      <div className="w-11/12 md:w-7/12 lg:w-[35%] border p-8 rounded-3xl shadow-sm bg-white mt-[70px]">
+      <div className="w-11/12 md:w-7/12 lg:w-[35%] border p-8 rounded-3xl shadow-sm bg-white mt-[70px] z-10">
         <Heading
           title="تسجيل الدخول"
           highlightColor="before:bg-primary"
@@ -176,7 +175,6 @@ const SigninForm = () => {
           )}
         </Formik>
       </div>
-    </>
   );
 };
 

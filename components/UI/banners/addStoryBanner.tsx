@@ -12,7 +12,7 @@ const AddStoryBanner = async () => {
     : `/signin?callbackUrl=${encodeURIComponent("/addStory")}`;
 
   return (
-    <div className="relative bg-event-banner w-full min-h-[40vh] lg:bg-cover bg-center rounded-lg flex flex-col justify-center p-8 before:absolute before:w-full before:h-full before:left-0 before:top-0 before:bg-overlay before:rounded-lg mt-24 bg-fixed">
+    <div className="relative bg-addStory-banner w-full min-h-[40vh] lg:bg-cover bg-center rounded-lg flex flex-col justify-center p-8 before:absolute before:w-full before:h-full before:left-0 before:top-0 before:bg-overlay before:rounded-lg mt-24 bg-fixed">
       <div className="flex flex-col z-10">
         <Heading
           title="ساهم في تخليد إرث أقمارنا"

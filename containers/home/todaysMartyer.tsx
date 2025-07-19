@@ -55,8 +55,6 @@ const TodaysMartyr = async () => {
             height={350}
             alt="Today's martyr"
             className="shadow-2xl self-center h-[350px] rounded-xl object-cover object-center"
-            blurDataURL="https://reactnative-examples.com/wp-content/uploads/2022/02/default-loading-image.png"
-            placeholder="blur"
             priority
             quality={100}
           />

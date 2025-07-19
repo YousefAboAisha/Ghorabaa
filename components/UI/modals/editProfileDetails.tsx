@@ -21,7 +21,7 @@ type EditProfileFormPDetails = {
   };
 };
 
-const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
+const EditProfileDetails = ({ data, setLoading }: EditProfileFormPDetails) => {
   const { name, phone_number, id_number, image } = data;
   const [images, setImages] = useState<ImageListType>([]);
   const [isNewImageUploaded, setIsNewImageUploaded] = useState(false);
@@ -54,6 +54,7 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
         validationSchema={ProfileValidationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true);
+          setLoading(true);
           try {
             let finalImageUrl = values.image;
 
@@ -95,15 +96,19 @@ const EditProfileDetails = ({ data }: EditProfileFormPDetails) => {
             const data = await response.json();
 
             if (response.ok) {
+              setLoading(true);
               console.log("User details updated:", data);
               window.location.reload();
             } else {
               console.error("Failed to update user details:", data.error);
+              setLoading(false);
             }
           } catch (error) {
             console.error("Error updating user details:", error);
+            setLoading(false);
           } finally {
             setSubmitting(false);
+            setLoading(false);
           }
         }}
       >

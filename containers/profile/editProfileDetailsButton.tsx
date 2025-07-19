@@ -33,7 +33,7 @@ const EditProfileDetailsButton = ({ data }: editProfileDetailsButtonProps) => {
         loading={loading}
         containerClassName="lg:w-[28%]"
       >
-        <EditProfileDetails loading setLoading={setLoading} data={data} />
+        <EditProfileDetails loading={loading} setLoading={setLoading} data={data} />
       </Modal>
     </>
   );

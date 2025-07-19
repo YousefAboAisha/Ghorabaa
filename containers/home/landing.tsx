@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const Landing = () => {
   return (
-    <div className="relative flex flex-col justify-center items-start w-full min-h-[90vh] mt-[70px] bg-home-landing2 bg-cover before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#0000009a] bg-fixed">
+    <div className="relative flex flex-col justify-center items-start w-full min-h-[90vh] mt-[70px] bg-home-landing bg-cover before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[#0000009a] bg-fixed">
       <div className="container flex flex-col gap-4 absolute right-0 h-full w-full backdrop-blur-none md:w-[50%] md:backdrop-blur-sm lg:w-[50%] lg:backdrop-blur-sm items-center justify-center">
         <div className="flex flex-col w-10/12 md:w-8/12 lg:w-6/12">
           <Heading
