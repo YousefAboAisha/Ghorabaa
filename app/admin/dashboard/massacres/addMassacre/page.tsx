@@ -1,5 +1,4 @@
 import AddMassacres from "@/components/UI/forms/addMassacresForm";
-import React from "react";
 
 const Page = () => {
   return (

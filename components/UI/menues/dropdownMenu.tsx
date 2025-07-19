@@ -18,7 +18,7 @@ const DropdownMenu = () => {
       </MenuButton>
 
       <MenuItems
-        anchor={{ to: "bottom start", gap: "24px" }}
+        anchor={{ to: "bottom start", gap: "25px" }}
         transition
         className="flex flex-col w-48 bg-white z-[100000] rounded-b-md border shadow-2xl origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 outline-none"
       >

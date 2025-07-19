@@ -1,11 +1,11 @@
 "use client";
 import { CommentInterface } from "@/app/interfaces";
 import CommentCard from "@/components/UI/cards/commentCard";
-import CommentForm from "@/components/UI/forms/commentForm";
 import React, { useEffect, useState } from "react";
 import { Session } from "next-auth";
 import CommentSkeletonLoader from "@/components/UI/loaders/commentSkeletonLoader";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
+import CommentForm from "@/components/UI/forms/commentForm";
 
 type CommentSectionProps = {
   session: Session | null;

@@ -2,8 +2,8 @@ import { StoryInterface } from "@/app/interfaces";
 import { FaCircle } from "react-icons/fa";
 import Modal from "../modals/modal";
 import { useState } from "react";
-import EditRejectedStoryForm from "../forms/editRejectedStoryModal";
 import { dateConversion } from "@/utils/format";
+import EditRejectedStoryForm from "../forms/editRejectedStoryModal";
 
 interface StoryCardsProps {
   data: StoryInterface;
