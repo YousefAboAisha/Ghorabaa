@@ -66,12 +66,7 @@ export const VerifyEmail = ({
         toast.error("تم إنشاء الحساب، لكن فشل تسجيل الدخول");
       } else {
         toast.success("تم تسجيل الدخول بنجاح!");
-
-        const session = await (
-          await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/session`)
-        ).json();
-
-        window.location.href = `/profile/${session?.user?.id}`;
+        window.location.reload();
       }
 
       setIsOpen(false);

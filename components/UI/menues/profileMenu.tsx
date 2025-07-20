@@ -62,7 +62,7 @@ function ProfileMenu({ session }: Props) {
                   src={profileImage}
                   fill
                   alt="صورة الملف الشخصي"
-                  className="rounded-full"
+                  className="rounded-full w-full h-full"
                   priority
                 />
               )}
