@@ -140,9 +140,13 @@ const EditProfileDetails = ({ data, setLoading }: EditProfileFormPDetails) => {
                   {/* 📸 Custom image uploader circle */}
                   <div
                     title="تغيير صورة الملف الشخصي"
-                    onClick={onImageUpload}
-                    {...dragProps}
-                    className="relative group flex items-center justify-center bg-background_light w-[100px] h-[100px] rounded-full p-1 shadow-md mx-auto before:absolute before:w-full before:h-full before:rounded-full before:opacity-0 before:bg-[#00000092] hover:before:opacity-100 before:z-10 before:duration-300 cursor-pointer before:backdrop-blur-md z-0 transition-all duration-300"
+                    onClick={isSubmitting ? undefined : onImageUpload} // 👈 Disable click during submission
+                    {...(!isSubmitting ? dragProps : {})} // 👈 Only apply drag props when enabled
+                    className={`relative group flex items-center justify-center bg-background_light w-[100px] h-[100px] rounded-full p-1 shadow-md mx-auto before:absolute before:w-full before:h-full before:rounded-full before:opacity-0 before:bg-[#00000092] hover:before:opacity-100 before:z-10 before:duration-300 ${
+                      isSubmitting
+                        ? "cursor-not-allowed opacity-70"
+                        : "cursor-pointer"
+                    } transition-all duration-300 overflow-hidden`}
                   >
                     <Image
                       src={
@@ -150,10 +154,9 @@ const EditProfileDetails = ({ data, setLoading }: EditProfileFormPDetails) => {
                           ? images[0].data_url
                           : placeholderImage // ✅ always fallback to user image or notFound
                       }
-                      width={100}
-                      height={100}
+                      fill
                       alt="صورة الملف الشخصي"
-                      className="rounded-full object-cover"
+                      className="object-cover"
                     />
 
                     <CiCamera
@@ -166,13 +169,22 @@ const EditProfileDetails = ({ data, setLoading }: EditProfileFormPDetails) => {
                   {isNewImageUploaded && images.length > 0 && (
                     <button
                       type="button"
-                      className="absolute top-0 right-[calc(50%-10px)] -translate-y-[10px] bg-white border shadow p-1 rounded-full text-red-500 z-20"
-                      onClick={() => {
-                        onImageRemove(0);
-                        setFieldValue("image", null);
-                        setIsNewImageUploaded(false);
-                        setImages([]); // ✅ Clear the uploaded image
-                      }}
+                      className={`absolute top-0 right-[calc(50%-10px)] -translate-y-[10px] bg-white border shadow p-1 rounded-full z-20 ${
+                        isSubmitting
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-red-500"
+                      }`}
+                      onClick={
+                        isSubmitting
+                          ? undefined
+                          : () => {
+                              onImageRemove(0);
+                              setFieldValue("image", null);
+                              setIsNewImageUploaded(false);
+                              setImages([]);
+                            }
+                      }
+                      disabled={isSubmitting}
                     >
                       <FaTimes size={10} />
                     </button>

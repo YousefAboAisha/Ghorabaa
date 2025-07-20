@@ -76,8 +76,8 @@ export enum ProviderTypes {
 export enum Gender {
   MALE = "MALE",
   FEMALE = "FEMALE",
+  BOTH = "",
 }
-
 
 // Story Status Enums
 export enum MassacreStatus {
@@ -85,4 +85,3 @@ export enum MassacreStatus {
   APPROVED = "APPROVED",
   ARCHIVED = "ARCHIVED",
 }
-

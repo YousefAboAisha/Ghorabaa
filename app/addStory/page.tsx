@@ -32,7 +32,7 @@ const Page = () => {
   };
 
   const validationSchema = Yup.object({
-    id_number: Yup.string()
+    id_number: Yup.string().trim()
       .required("يرجى إدخال رقم الهوية")
       .matches(/^\d{9}$/, "يجب أن يتكون رقم الهوية من 9 أرقام بالضبط"),
   });

@@ -1,5 +1,3 @@
-// Add A valiadtion schema for these filter Inputs
-
 "use client";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Button from "../inputs/button";
@@ -12,10 +10,43 @@ import Input from "../inputs/input";
 import { CiSearch } from "react-icons/ci";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GrClearOption } from "react-icons/gr";
+import * as yup from "yup";
+import { BiMaleFemale } from "react-icons/bi";
 
 type SearchFilterProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
+
+// Define validation schema
+const filterSchema = yup.object().shape({
+  gender: yup.mixed<Gender>().oneOf(Object.values(Gender)),
+  age: yup.object().shape({
+    from: yup
+      .number()
+      .typeError("يجب أن يكون العمر رقماً")
+      .min(0, "العمر الابتدائي لا يمكن أن يكون أقل من 0")
+      .max(120, "العمر الابتدائي لا يمكن أن يكون أكثر من 120")
+      .test(
+        "is-less-than-to",
+        "العمر الابتدائي يجب أن يكون أقل من أو يساوي العمر النهائي",
+        function (value) {
+          const { to } = this.parent;
+          return !value || !to || value <= to;
+        }
+      ),
+    to: yup
+      .number()
+      .typeError("يجب أن يكون العمر رقماً")
+      .min(0, "العمر النهائي لا يمكن أن يكون أقل من 0")
+      .max(120, "العمر النهائي لا يمكن أن يكون أكثر من 120"),
+  }),
+  city: yup.string(),
+  neighborhood: yup.string().when("city", {
+    is: (city: string) => !!city,
+    then: (schema) => schema.required("يجب اختيار الحي عند اختيار المدينة"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+});
 
 const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
   const searchParams = useSearchParams();
@@ -39,9 +70,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
   );
 
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
-
-  const [showNeighborhoodError, setShowNeighborhoodError] =
-    useState<boolean>(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (city) {
@@ -50,7 +79,37 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
     }
   }, [city]);
 
-  const handleApplyFilters = () => {
+  const validateForm = async () => {
+    try {
+      await filterSchema.validate(
+        {
+          gender,
+          age,
+          city,
+          neighborhood,
+        },
+        { abortEarly: false }
+      );
+      setErrors({});
+      return true;
+    } catch (err) {
+      if (err instanceof yup.ValidationError) {
+        const newErrors: Record<string, string> = {};
+        err.inner.forEach((error) => {
+          if (error.path) {
+            newErrors[error.path] = error.message;
+          }
+        });
+        setErrors(newErrors);
+      }
+      return false;
+    }
+  };
+
+  const handleApplyFilters = async () => {
+    const isValid = await validateForm();
+    if (!isValid) return;
+
     const params = new URLSearchParams();
 
     if (gender) params.set("gender", gender);
@@ -69,7 +128,8 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
     setCity("");
     setNeighborhood("");
     setCities([]);
-    router.push("/stories"); // remove search params
+    setErrors({});
+    router.push("/stories");
     setIsOpen(false);
   };
 
@@ -94,12 +154,16 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
       <hr className="my-4" />
 
       {/* Gender selection */}
-
       <div className="mt-4">
         <p className="text-[12px] mb-1.5">الجنس</p>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <div
-            onClick={() => setGender(Gender.MALE)}
+            onClick={() => {
+              setGender(Gender.MALE);
+              if (errors["gender"]) {
+                setErrors((prev) => ({ ...prev, gender: "" }));
+              }
+            }}
             className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
               gender === Gender.MALE && "bg-blueColor text-white"
             }`}
@@ -109,7 +173,12 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
           </div>
 
           <div
-            onClick={() => setGender(Gender.FEMALE)}
+            onClick={() => {
+              setGender(Gender.FEMALE);
+              if (errors["gender"]) {
+                setErrors((prev) => ({ ...prev, gender: "" }));
+              }
+            }}
             className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
               gender === Gender.FEMALE && "!bg-[#ff5982] text-white"
             }`}
@@ -117,7 +186,25 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
             <GiFemale size={30} />
             <h2>أنثى</h2>
           </div>
+
+          <div
+            onClick={() => {
+              setGender(Gender.BOTH);
+              if (errors["gender"]) {
+                setErrors((prev) => ({ ...prev, gender: "" }));
+              }
+            }}
+            className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
+              gender === Gender.BOTH && "bg-secondary text-white"
+            }`}
+          >
+            <BiMaleFemale size={30} />
+            <h2>غير محدد</h2>
+          </div>
         </div>
+        {errors["gender"] && (
+          <p className="text-rejected text-xs mt-1">{errors["gender"]}</p>
+        )}
       </div>
 
       {/* Age inputs */}
@@ -129,9 +216,13 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
           className="focus:border-secondary w-full"
           required={false}
           value={age.from || ""}
-          onChange={(e) =>
-            setAge((prev) => ({ ...prev, from: Number(e.target.value) }))
-          }
+          onChange={(e) => {
+            setAge((prev) => ({ ...prev, from: Number(e.target.value) }));
+            if (errors["age.from"]) {
+              setErrors((prev) => ({ ...prev, "age.from": "" }));
+            }
+          }}
+          error={errors["age.from"]}
         />
 
         <Input
@@ -141,55 +232,78 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
           className="focus:border-secondary w-full"
           required={false}
           value={age.to || ""}
-          onChange={(e) =>
-            setAge((prev) => ({ ...prev, to: Number(e.target.value) }))
-          }
+          onChange={(e) => {
+            setAge((prev) => ({ ...prev, to: Number(e.target.value) }));
+            if (errors["age.to"]) {
+              setErrors((prev) => ({ ...prev, "age.to": "" }));
+            }
+          }}
+          error={errors["age.to"]}
         />
       </div>
 
       {/* City and neighborhood */}
       <div className="flex flex-col gap-2 mt-6">
-        <Select
-          label="المدينة"
-          title="اختر المدينة"
-          options={CountriesData}
-          className="focus:border-secondary"
-          required={false}
-          value={city}
-          onChange={(e) => {
-            const selectedCity = e.target.value;
-            setCity(selectedCity);
-            const cityObj = CitiesData.find(
-              (c) => c[selectedCity as keyof typeof c]
-            );
-            setCities(
-              cityObj ? cityObj[selectedCity as keyof typeof cityObj] || [] : []
-            );
-            setShowNeighborhoodError(false);
-          }}
-        />
+        <div className="relative">
+          <GrClearOption
+            title="مسح محدد البحث "
+            onClick={() => setCity("")}
+            size={18}
+            className="absolute z-10 top-[52%] left-4 text-rejected cursor-pointer"
+          />
 
-        <Select
-          label="الحي"
-          title="اختر الحي"
-          options={cities}
-          className="focus:border-secondary"
-          required={false}
-          value={neighborhood}
-          onFocus={() => {
-            if (!city) setShowNeighborhoodError(true);
-          }}
-          onChange={(e) => {
-            setNeighborhood(e.target.value);
-            if (city) setShowNeighborhoodError(false);
-          }}
-        />
+          <Select
+            label="المدينة"
+            title="اختر المدينة"
+            options={CountriesData}
+            className="focus:border-secondary"
+            required={false}
+            value={city}
+            onChange={(e) => {
+              const selectedCity = e.target.value;
+              setCity(selectedCity);
+              const cityObj = CitiesData.find(
+                (c) => c[selectedCity as keyof typeof c]
+              );
+              setCities(
+                cityObj
+                  ? cityObj[selectedCity as keyof typeof cityObj] || []
+                  : []
+              );
+              if (errors["neighborhood"]) {
+                setErrors((prev) => ({ ...prev, neighborhood: "" }));
+              }
+              if (errors["city"]) {
+                setErrors((prev) => ({ ...prev, city: "" }));
+              }
+            }}
+            error={errors["city"]}
+          />
+        </div>
 
-        {showNeighborhoodError && (
-          <p className="text-rejected text-[10px] w-fit right-1 top-[52px]">
-            يجب اختيار المدينة أولاً
-          </p>
-        )}
+        <div className="relative">
+          <GrClearOption
+            title="مسح محدد البحث "
+            onClick={() => setNeighborhood("")}
+            size={18}
+            className="absolute z-10 top-[52%] left-4 text-rejected cursor-pointer"
+          />
+          <Select
+            label="الحي"
+            title="اختر الحي"
+            options={cities}
+            className="focus:border-secondary"
+            required={false}
+            value={neighborhood}
+            onChange={(e) => {
+              setNeighborhood(e.target.value);
+              if (errors["neighborhood"]) {
+                setErrors((prev) => ({ ...prev, neighborhood: "" }));
+              }
+            }}
+            error={errors["neighborhood"]}
+          />{" "}
+        </div>
       </div>
 
       {/* Apply button */}

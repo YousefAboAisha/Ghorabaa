@@ -8,6 +8,7 @@ type SelectProps = {
   }[];
   additionalStyles?: string;
   label?: string;
+  error?: string;
   required?: boolean;
 } & React.ComponentProps<"select">;
 
@@ -17,6 +18,7 @@ const Select = ({
   additionalStyles = "",
   className = "",
   label,
+  error,
   required = true,
   ...rest
 }: SelectProps) => {
@@ -50,6 +52,9 @@ const Select = ({
           ))}
         </select>
       </div>
+      {error && (
+        <p className=" mt-1 text-rejected !text-[10px] w-fit">{error}</p>
+      )}
     </div>
   );
 };

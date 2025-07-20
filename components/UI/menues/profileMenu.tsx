@@ -54,14 +54,13 @@ function ProfileMenu({ session }: Props) {
       >
         {() => (
           <div className="flex items-center gap-1">
-            <p className="flex items-center justify-center w-10 h-10 text-secondary border rounded-full">
+            <p className="relative flex items-center justify-center w-10 h-10 text-secondary border rounded-full">
               {loading ? (
                 <AiOutlineLoading3Quarters size={17} className="animate-spin" />
               ) : (
                 <Image
                   src={profileImage}
-                  width={100}
-                  height={100}
+                  fill
                   alt="صورة الملف الشخصي"
                   className="rounded-full"
                   priority

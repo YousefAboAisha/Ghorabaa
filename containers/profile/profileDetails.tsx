@@ -58,7 +58,7 @@ const ProfileDetails = async ({ user_id }: ProfileDetailsProps) => {
                 src={data?.image || "/notFound.png"}
                 fill
                 alt="صورة الملف الشخصي"
-                className="w-full rounded-full p-1"
+                className="p-1 w-full rounded-full object-cover"
               />
             </div>
           </div>
