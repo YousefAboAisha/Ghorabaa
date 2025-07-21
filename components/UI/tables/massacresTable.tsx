@@ -11,18 +11,29 @@ import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Pagination from "./pagination";
 import Button from "../inputs/button";
 import Modal from "@/components/UI/modals/modal";
-import { CiEdit, CiSearch, CiTrash } from "react-icons/ci";
+import { CiEdit, CiSearch } from "react-icons/ci";
 import { BsArchive, BsPlus } from "react-icons/bs";
 import MassacreSearch from "../modals/massacreSearch";
-import { HiCheck } from "react-icons/hi";
+import ApproveMassacre from "../dialogs/approveMassacre";
+import { GrCheckmark } from "react-icons/gr";
+import ArchiveMassacre from "../dialogs/archiveMassacre";
 
 const MassacresTable = () => {
   const [tableData, setTableData] = useState<MassacreInterface[]>([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState(1);
+  const [massacreData, setMassacreData] = useState<MassacreInterface | null>(
+    null
+  );
 
   const [isOpenMassacreSearch, setIsOpenMassacreSearch] = useState(false);
+
+  const [isOpenMassacreApprove, setIsOpenMassacreApprove] = useState(false);
+  const [approveLoading, setApproveLoading] = useState<boolean>(false);
+
+  const [isOpenMassacreArchive, setIsOpenMassacreArchive] = useState(false);
+  const [archiveLoading, setArchiveLoading] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -87,10 +98,20 @@ const MassacresTable = () => {
 
     if (status == MassacreStatus.APPROVED)
       return (
-        <p>
+        <>
+          <BsArchive
+            title="أرشفة المجزرة"
+            className="cursor-pointer text-rejected"
+            size={17}
+            onClick={() => {
+              setMassacreData(massacre);
+              setIsOpenMassacreArchive(true);
+            }}
+          />
+
           <CiEdit
             title="تعديل البيانات"
-            className="cursor-pointer text-approved"
+            className="cursor-pointer"
             onClick={() => {
               router.push(
                 `/admin/dashboard/massacres/editMassacre?id=${massacre._id}`
@@ -98,15 +119,20 @@ const MassacresTable = () => {
             }}
             size={22}
           />
-        </p>
+        </>
       );
+
     if (status == MassacreStatus.PENDING) {
       return (
         <>
-          <HiCheck
+          <GrCheckmark
             title="قبول المجزرة"
             className="cursor-pointer text-[green]"
-            size={22}
+            size={18}
+            onClick={() => {
+              setMassacreData(massacre);
+              setIsOpenMassacreApprove(true);
+            }}
           />
 
           <Link
@@ -118,12 +144,6 @@ const MassacresTable = () => {
               size={22}
             />
           </Link>
-
-          <BsArchive
-            title="أرشفة المجزرة"
-            className="text-rejected cursor-pointer"
-            size={15}
-          />
         </>
       );
     }
@@ -131,17 +151,25 @@ const MassacresTable = () => {
     if (status == MassacreStatus.ARCHIVED) {
       return (
         <>
-          <HiCheck
-            title="قبول القصة"
-            className="cursor-pointer text-approved"
-            size={22}
+          <GrCheckmark
+            title="قبول المجزرة"
+            className="cursor-pointer text-[green]"
+            size={18}
+            onClick={() => {
+              setMassacreData(massacre);
+              setIsOpenMassacreApprove(true);
+            }}
           />
 
-          <CiTrash
-            title="حذف القصة"
-            className="cursor-pointer text-rejected"
-            size={22}
-          />
+          <Link
+            href={`/admin/dashboard/massacres/editMassacre/${massacre._id}`}
+          >
+            <CiEdit
+              title="تعديل البيانات"
+              className="cursor-pointer"
+              size={22}
+            />
+          </Link>
         </>
       );
     }
@@ -231,17 +259,17 @@ const MassacresTable = () => {
                   </span>
                 ) : massacre.status === MassacreStatus.APPROVED ? (
                   <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-approved">
-                    مقبول
+                    مقبولة
                   </span>
                 ) : (
                   <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-rejected">
-                    مرفوض
+                    مؤرشفة
                   </span>
                 )}
               </td>
 
               <td className="py-3 px-4 border-b text-right">
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-4">
                   {renderTableActions(massacre)}
                 </div>
               </td>
@@ -300,6 +328,38 @@ const MassacresTable = () => {
         containerClassName="!lg:w-3/12"
       >
         <MassacreSearch />
+      </Modal>
+
+      {/* Approve massacre Modal */}
+      <Modal
+        isOpen={isOpenMassacreApprove}
+        setIsOpen={setIsOpenMassacreApprove}
+        containerClassName="lg:w-[25%]"
+        loading={approveLoading}
+      >
+        <ApproveMassacre
+          data={massacreData!}
+          setIsOpen={setIsOpenMassacreApprove}
+          refetchData={fetchTableData}
+          setLoading={setApproveLoading}
+          loading={approveLoading}
+        />
+      </Modal>
+
+      {/* Archive massacre Modal */}
+      <Modal
+        isOpen={isOpenMassacreArchive}
+        setIsOpen={setIsOpenMassacreArchive}
+        containerClassName="lg:w-[25%]"
+        loading={approveLoading}
+      >
+        <ArchiveMassacre
+          data={massacreData!}
+          setIsOpen={setIsOpenMassacreArchive}
+          refetchData={fetchTableData}
+          setLoading={setArchiveLoading}
+          loading={archiveLoading}
+        />
       </Modal>
     </>
   );

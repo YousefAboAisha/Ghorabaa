@@ -1,4 +1,4 @@
-import StoryDetailsSkeletonLoader from "@/components/UI/loaders/storyDetailsSkeletonLoader";
+import MassacreDetailsSkeletonLoader from "@/components/UI/loaders/massacreDetailsSkeletonLoader";
 import MassacreDetails from "@/containers/masscares/massacreDetails";
 import React, { Suspense } from "react";
 
@@ -14,7 +14,7 @@ export default async function Page({ params }: Props) {
   return (
     <div className="mt-[70px] min-h-screen">
       <div className="container lg:w-6/12 mt-24">
-        <Suspense fallback={<StoryDetailsSkeletonLoader />}>
+        <Suspense fallback={<MassacreDetailsSkeletonLoader />}>
           <MassacreDetails id={id} />
         </Suspense>
       </div>

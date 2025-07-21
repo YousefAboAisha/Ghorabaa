@@ -1,6 +1,6 @@
 import Hero from "@/components/layout/hero";
-import MassacreCard from "@/components/UI/cards/massacreCard";
 import Heading from "@/components/UI/typography/heading";
+import MassacresSection from "@/containers/masscares/massacresSection";
 import React from "react";
 
 const Page = () => {
@@ -11,14 +11,7 @@ const Page = () => {
       <div className="flex flex-col gap-2 mt-16">
         <Heading title="المجازر الصهيونية" />
 
-        <div className="cards-grid-3 mt-4">
-          <MassacreCard />
-          <MassacreCard />
-          <MassacreCard />
-          <MassacreCard />
-          <MassacreCard />
-          <MassacreCard />
-        </div>
+        <MassacresSection />
       </div>
     </div>
   );
