@@ -61,12 +61,11 @@ const EditProfileDetails = ({ data, setLoading }: EditProfileFormPDetails) => {
             // 👇 Upload image only if it's a new base64 image (not an existing URL)
             if (isNewImageUploaded && values.image?.startsWith("data:image")) {
               const imageUploadRes = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/users`,
                 {
                   method: "POST",
                   body: JSON.stringify({
                     image: values.image,
-                    folder: "users",
                   }),
                   headers: { "Content-Type": "application/json" },
                 }

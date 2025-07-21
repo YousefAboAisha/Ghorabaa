@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const contentType = req.headers.get("content-type");
 
     let imageData: string;
-    let folder = "stories";
+    const folder = "stories";
 
     if (contentType?.includes("multipart/form-data")) {
       const formData = await req.formData();
@@ -17,11 +17,9 @@ export async function POST(req: Request) {
       imageData = `data:${file.type};base64,${Buffer.from(buffer).toString(
         "base64"
       )}`;
-      folder = formData.get("folder")?.toString() || folder;
     } else {
-      const { image, folder: reqFolder } = await req.json();
+      const { image } = await req.json();
       imageData = image;
-      folder = reqFolder || folder;
     }
 
     const uploadResponse = await cloudinary.uploader.upload(imageData, {

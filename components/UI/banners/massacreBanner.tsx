@@ -87,13 +87,15 @@ export default function MassacreBanner({ data }: Props) {
         </div>
       </div>
 
-      <div className="relative w-full h-[65vh]">
+      <div className="relative w-full h-[65vh] min-h-[300px]">
         <Image
           src={cover_image || "/notFound.png"}
           alt={`صورة ${title}`}
           fill
-          className="rounded-xl w-full"
-        />{" "}
+          sizes="100vw"
+          quality={80}
+          className="rounded-xl object-cover"
+        />
       </div>
     </Link>
   );

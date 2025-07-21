@@ -170,7 +170,7 @@ const EditMassacreForm = ({ id }: Props) => {
         formData.append("folder", "massacres");
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/massacres`,
           {
             method: "POST",
             credentials: "include",

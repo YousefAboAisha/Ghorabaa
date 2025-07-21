@@ -77,7 +77,7 @@ const AddStoryForm = ({
     try {
       // 1. Upload image to Cloudinary
       const imageUploadRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/stories`,
         {
           credentials: "include",
           method: "POST",

@@ -19,7 +19,7 @@ const Hero = () => {
 
   return (
     <>
-      <div className="relative overflow-hidden flex items-center justify-center p-8 min-h-[45vh] bg-secondary-pattern bg-fixed bg-center before:bg-[#1e272e30] before:absolute before:w-full before:h-full rounded-2xl ">
+      <div className="relative overflow-hidden flex items-center justify-center p-8 min-h-[350px] bg-secondary-pattern bg-fixed bg-center before:bg-[#1e272e30] before:absolute before:w-full before:h-full rounded-2xl ">
         <div className="flex flex-col justify-center items-center gap-6 z-10">
           <h2 className="font-bold text-white text-5xl">منصة غُربَاء</h2>
           <div className="flex items-center gap-2 text-white text-md">

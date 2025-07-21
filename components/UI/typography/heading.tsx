@@ -35,7 +35,7 @@ const Heading = ({
         <p
           className={`text-sm font-normal my-3 w-full ${detailsStyles}`}
         >
-          &quot; {details} &quot;
+          &quot;{details}&quot;
         </p>
       ) : null}
     </h4>

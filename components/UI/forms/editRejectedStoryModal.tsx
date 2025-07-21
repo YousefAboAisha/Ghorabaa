@@ -70,7 +70,7 @@ const EditRejectedStoryForm = ({
     try {
       // 1. Upload image to Cloudinary first
       const imageUploadRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/upload`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/stories`,
         {
           method: "POST",
           body: JSON.stringify({ image: values.image }), // base64 image

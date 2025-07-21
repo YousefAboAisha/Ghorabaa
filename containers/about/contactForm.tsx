@@ -18,12 +18,7 @@ const ContactForm = () => {
   return (
     <div className="relative cards-grid-2 gap-10 min-h-[30vh] mt-32">
       <div className="flex flex-col gap-4">
-        <Heading
-          title=""
-          highLightText="تواصل معنا"
-          highlightColor="before:bg-blueColor"
-          className="z-10"
-        />
+        <Heading title="تواصل معنا" className="z-10" />
 
         <Formik
           initialValues={initialValues}
@@ -102,7 +97,7 @@ const ContactForm = () => {
                 <Button
                   title={"إرسال"}
                   type="submit"
-                  className="bg-blueColor text-white "
+                  className="bg-secondary text-white "
                   disabled={isSubmitting}
                   hasShiningBar={false}
                   loading={isSubmitting}
