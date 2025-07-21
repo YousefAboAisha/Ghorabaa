@@ -1,7 +1,7 @@
 "use client";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Link from "next/link";
-import { CiCirclePlus, CiLogout, CiUser } from "react-icons/ci";
+import { CiLogout, CiUser } from "react-icons/ci";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -83,6 +83,17 @@ function ProfileMenu({ session }: Props) {
         </MenuItem>
 
         <div className="p-1 flex flex-col gap-2">
+          <MenuItem>
+            <Link
+              href={`/profile/${user_id}`}
+              className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
+              prefetch
+            >
+              <CiUser size={20} />
+              <span>الملف الشخصي</span>
+            </Link>
+          </MenuItem>
+
           {session?.user?.role === Role.ADMIN && (
             <MenuItem>
               <Link
@@ -95,28 +106,6 @@ function ProfileMenu({ session }: Props) {
               </Link>
             </MenuItem>
           )}
-
-          <MenuItem>
-            <Link
-              href={"/addStory"}
-              className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
-              prefetch
-            >
-              <CiCirclePlus size={20} />
-              <span>قصة جديدة</span>
-            </Link>
-          </MenuItem>
-
-          <MenuItem>
-            <Link
-              href={`/profile/${user_id}`}
-              className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
-              prefetch
-            >
-              <CiUser size={20} />
-              <span>الملف الشخصي</span>
-            </Link>
-          </MenuItem>
 
           <MenuItem>
             <div

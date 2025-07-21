@@ -9,7 +9,12 @@ import Button from "../UI/inputs/button";
 import { FiUser } from "react-icons/fi";
 import Logo from "../UI/logo";
 import NotificationPopper from "../UI/modals/notificationPopper";
-import { BsBookmark, BsPersonAdd, BsSearch } from "react-icons/bs";
+import {
+  BsBookmark,
+  BsPersonAdd,
+  BsPlusCircle,
+  BsSearch,
+} from "react-icons/bs";
 import { Session } from "next-auth";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useFavoriteStore } from "@/stores/favoriteStore";
@@ -113,8 +118,32 @@ const Navbar = ({ session }: NavbarProps) => {
             </div>
           ) : (
             <div className="flex items-center">
+              {session && (
+                <Link
+                  href={"/addStory"}
+                  className="outline-none hidden lg:flex !min-w-fit ml-4"
+                  prefetch
+                >
+                  <Button
+                    title="قصة جديدة"
+                    className="bg-primary px-4 lg:px-3 !min-w-fit"
+                    icon={<BsPlusCircle size={16} />}
+                    hasShiningBar={false}
+                  />
+                </Link>
+              )}
+
               {/* Profile popper */}
               <ProfileMenu session={session} />
+
+              <Link
+                title="إضافة قصة جديدة"
+                prefetch
+                href={"/savedStories"}
+                className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+              >
+                <BsPlusCircle size={20} />
+              </Link>
 
               {/* Notifications popper */}
               <NotificationPopper session={session} />
