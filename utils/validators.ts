@@ -1,5 +1,18 @@
 import * as Yup from "yup";
 
+export const SignupvalidationSchema = Yup.object({
+  name: Yup.string().required("يرجى إدخال الاسم رباعي"),
+  email: Yup.string()
+    .email("البريد الإلكتروني غير صالح")
+    .required("يرجى إدخال البريد الإلكتروني"),
+  password: Yup.string()
+    .min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل")
+    .required("يرجى إدخال كلمة المرور"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "كلمة المرور غير متطابقة")
+    .required("يرجى تأكيد كلمة المرور"),
+});
+
 export const StoryValidationSchema = Yup.object({
   city: Yup.string().required("يرجى اختيار المدينة"),
 

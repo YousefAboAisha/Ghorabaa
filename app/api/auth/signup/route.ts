@@ -6,9 +6,9 @@ import { sendEmailOTP } from "@/utils/email";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, phoneNumber, password } = await req.json();
+    const { name, email, password } = await req.json();
 
-    if (!name || !email || !phoneNumber || !password) {
+    if (!name || !email || !password) {
       return NextResponse.json({ error: "بعض الحقول مفقودة" }, { status: 400 });
     }
 
@@ -41,7 +41,6 @@ export async function POST(req: NextRequest) {
       tempData: {
         name,
         email,
-        phoneNumber,
         password: hashedPassword,
       },
     });

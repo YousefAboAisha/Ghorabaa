@@ -1,9 +1,7 @@
 "use client";
-
-import { BiLock, BiMailSend, BiPhone, BiUser } from "react-icons/bi";
+import { BiLock, BiMailSend, BiUser } from "react-icons/bi";
 import { PiShootingStarThin } from "react-icons/pi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import Button from "@/components/UI/inputs/button";
 import Input from "@/components/UI/inputs/input";
 import Heading from "@/components/UI/typography/heading";
@@ -12,6 +10,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import Modal from "@/components/UI/modals/modal";
 import VerifyEmail from "@/components/UI/modals/verifyEmail";
+import { SignupvalidationSchema } from "@/utils/validators";
 
 const Signup = () => {
   const [error, setError] = useState<string>("");
@@ -24,27 +23,9 @@ const Signup = () => {
   const initialValues = {
     name: "",
     email: "",
-    phoneNumber: "",
     password: "",
     confirmPassword: "",
   };
-
-  const validationSchema = Yup.object({
-    name: Yup.string().required("يرجى إدخال الاسم رباعي"),
-    email: Yup.string()
-      .email("البريد الإلكتروني غير صالح")
-      .required("يرجى إدخال البريد الإلكتروني"),
-    phoneNumber: Yup.string()
-      .matches(/^[0-9]+$/, "يرجى إدخال أرقام فقط")
-      .min(10, "رقم الهاتف يجب أن يكون 10 أرقام على الأقل")
-      .required("يرجى إدخال رقم الهاتف"),
-    password: Yup.string()
-      .min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل")
-      .required("يرجى إدخال كلمة المرور"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "كلمة المرور غير متطابقة")
-      .required("يرجى تأكيد كلمة المرور"),
-  });
 
   const handleSubmit = async (
     values: typeof initialValues,
@@ -96,7 +77,7 @@ const Signup = () => {
 
           <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema}
+            validationSchema={SignupvalidationSchema}
             onSubmit={handleSubmit}
           >
             {({ isSubmitting, errors }) => (
@@ -108,11 +89,11 @@ const Signup = () => {
                     name="name"
                     as={Input}
                     type="text"
-                    placeholder="الاسم رباعي"
-                    label="الاسم رباعي"
+                    placeholder="الاسم ثلاثي"
+                    label="الاسم ثلاثي"
                     icon={<BiUser size={20} />}
                     className="focus:border-primary"
-                    aria-label="الاسم رباعي"
+                    aria-label="الاسم ثلاثي"
                     aria-invalid={!!errors.name}
                   />
                   <ErrorMessage
@@ -138,27 +119,6 @@ const Signup = () => {
                   />
                   <ErrorMessage
                     name="email"
-                    component="div"
-                    className="text-rejected font-bold text-[10px] mt-1"
-                  />
-                </div>
-
-                <div>
-                  {/* Phone Number Field */}
-                  <Field
-                    disabled={isSubmitting}
-                    name="phoneNumber"
-                    as={Input}
-                    type="text"
-                    placeholder="رقم الجوال"
-                    label="رقم الجوال"
-                    icon={<BiPhone size={20} />}
-                    className="focus:border-primary"
-                    aria-label="رقم الجوال"
-                    aria-invalid={!!errors.phoneNumber}
-                  />
-                  <ErrorMessage
-                    name="phoneNumber"
                     component="div"
                     className="text-rejected font-bold text-[10px] mt-1"
                   />
