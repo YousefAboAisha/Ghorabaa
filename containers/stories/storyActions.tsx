@@ -4,7 +4,7 @@ import { StoryInterface } from "@/app/interfaces";
 import EditStoryForm from "@/components/UI/forms/editStoryForm";
 import { DeleteStory } from "@/components/UI/modals/deleteStory";
 import Modal from "@/components/UI/modals/modal";
-import ShareStory from "@/components/UI/modals/shareStory";
+import ShareContent from "@/components/UI/modals/shareContent";
 import { Session } from "next-auth";
 import { useState } from "react";
 import { CiEdit, CiShare2, CiTrash } from "react-icons/ci";
@@ -81,7 +81,7 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
         setIsOpen={setIsShareModalOpen}
         containerClassName="lg:w-[35%]"
       >
-        <ShareStory story_title={data.name} />
+        <ShareContent type="الشهيد" story_title={data.name} />
       </Modal>
 
       {/* Delete Story Modal */}

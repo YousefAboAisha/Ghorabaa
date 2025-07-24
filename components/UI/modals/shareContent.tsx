@@ -8,9 +8,10 @@ import { FiCheck, FiCopy } from "react-icons/fi";
 
 type ShareModalProps = {
   story_title: string;
+  type: "الشهيد" | "المجزرة";
 };
 
-const ShareStory = ({ story_title }: ShareModalProps) => {
+const ShareContent = ({ story_title, type }: ShareModalProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [shareIcon, setShareIcon] = useState(<FiCopy size={18} />);
   const [sharedLink, setSharedLink] = useState("");
@@ -46,10 +47,10 @@ const ShareStory = ({ story_title }: ShareModalProps) => {
     <div className="relative flex flex-col gap-2 p-6">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-semibold min-w-fit">مشاركة القصة</h2>
+          <h2 className="text-xl font-semibold min-w-fit">مشاركة الصفحة</h2>
 
           <p className="mx-auto text-center text-gray_dark text-[12px] mt-2">
-            الشهيد/ {story_title || "عنوان القصة غير معرّف"}
+            / {story_title || `عنوان ${type} غير معرّف`}
           </p>
         </div>
       </div>
@@ -155,4 +156,4 @@ const ShareStory = ({ story_title }: ShareModalProps) => {
   );
 };
 
-export default ShareStory;
+export default ShareContent;

@@ -16,6 +16,7 @@ import injury from "@/public/icons/injury.png";
 import { getSessionAction } from "@/app/actions/registerActions";
 import { MassacreStatus, Role } from "@/app/enums";
 import { BsExclamationTriangle } from "react-icons/bs";
+import MassacreActions from "./massacreActions";
 
 type Props = {
   id: string;
@@ -73,6 +74,8 @@ const MassacreDetails = async ({ id }: Props) => {
     data && (
       <div className="flex flex-col gap-2 mt-24">
         <LogVisit massacreId={id} />
+
+        <MassacreActions data={data!} />
 
         {data.status === MassacreStatus.PENDING && (
           <div className="relative flex items-center gap-2 bg-pending text-white border rounded-md shadow-sm p-3 mb-4 w-full font-semibold">

@@ -7,7 +7,6 @@ import { arabicDateConversion } from "@/utils/format";
 import Link from "next/link";
 import Button from "../inputs/button";
 import { FaEye } from "react-icons/fa";
-import image from "@/public/uploads/5.jpg";
 
 type Props = {
   data?: MassacreInterface;
@@ -19,7 +18,7 @@ const MassacreCard = ({ data }: Props) => {
       <Link href={`/massacres/${data?._id}`} title="عرض تفاصيل المجزرة">
         <div className="flex items-center justify-center relative h-[270px] w-full overflow-hidden">
           <Image
-            src={image}
+            src={data?.cover_image || "/notFound.png"}
             alt="صورة المجزرة"
             className="w-full rounded-b-none object-cover min-h-full group-hover:scale-150 duration-[2s]"
             width={1000}
@@ -31,7 +30,7 @@ const MassacreCard = ({ data }: Props) => {
       <div className="relative p-4">
         <div className="flex items-center gap-2 text-[10px] text-gray_dark">
           <p> تاريخ النشر:</p>
-          <p>{arabicDateConversion(new Date())}</p>
+          <p>{arabicDateConversion(data?.date as Date)}</p>
         </div>
 
         <div className="flex items-center gap-2 text-sm mb-2 mt-2">
