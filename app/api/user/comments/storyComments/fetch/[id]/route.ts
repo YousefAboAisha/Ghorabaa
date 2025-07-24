@@ -53,6 +53,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
             author_name: "$authorInfo.name",
             author_image: "$authorInfo.image",
             author_role: "$authorInfo.role",
+            author_email:"$authorInfo.email",
           },
         },
       ])

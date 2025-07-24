@@ -17,15 +17,6 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
 
   try {
     const token = await getToken({ req, secret });
-    // const isOwner = id === token?.id;
-    // const isAdmin = token?.role == Role.ADMIN;
-
-    // if (!(isOwner || isAdmin)) {
-    //   return NextResponse.json(
-    //     { error: "غير مصرح لك، الرجاء تسجيل الدخول!" },
-    //     { status: 401 }
-    //   );
-    // }
 
     if (!token) {
       return NextResponse.json(
@@ -65,6 +56,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
             author_name: "$authorInfo.name",
             author_image: "$authorInfo.image",
             author_role: "$authorInfo.role",
+            author_email: "$authorInfo.email",
           },
         },
       ])

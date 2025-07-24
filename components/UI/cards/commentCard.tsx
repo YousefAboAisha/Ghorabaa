@@ -1,7 +1,6 @@
 "use client";
 import { CommentInterface } from "@/app/interfaces";
 import { dateConversion } from "@/utils/format";
-import { getRoleInArabic } from "@/utils/text";
 import Image from "next/image";
 import { useState } from "react";
 import { BsTrash } from "react-icons/bs";
@@ -15,7 +14,7 @@ import ReportComment from "../modals/reportComment";
 import Link from "next/link";
 
 type CommentCardProps = {
-  data: CommentInterface;
+  data: CommentInterface & { author_email?: string };
   session: Session | null;
   refetchData?: () => void;
   showActionButtons?: boolean;
@@ -36,7 +35,7 @@ const CommentCard = ({
     author_name,
     text,
     createdAt,
-    author_role,
+    author_email,
   } = data;
 
   const current_user_id = session?.user.id;
@@ -84,9 +83,7 @@ const CommentCard = ({
             >
               {author_name}
             </Link>
-            <p className="text-primary text-[10px] font-semibold">
-              {getRoleInArabic(author_role!)}
-            </p>
+            <p className="text-[10px] font-light truncate">{author_email}</p>
           </div>
         </div>
 
