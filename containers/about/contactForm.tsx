@@ -8,6 +8,7 @@ import Image from "next/image";
 import React from "react";
 import { BsSendFill } from "react-icons/bs";
 import { ContactFormSchema } from "@/utils/validators";
+import { toast } from "react-toastify";
 
 const initialValues = {
   title: "",
@@ -23,12 +24,12 @@ const ContactForm = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={ContactFormSchema}
-          onSubmit={async (values, { setSubmitting }) => {
+          onSubmit={async (values, { setSubmitting, resetForm }) => {
             setSubmitting(true);
             try {
               // 👇 Send updated form data with uploaded image URL
               const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/users/update`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/contact/create`,
                 {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
@@ -41,7 +42,8 @@ const ContactForm = () => {
 
               if (response.ok) {
                 console.log("User details updated:", data);
-                window.location.reload();
+                toast.success("تم إرسال رسالتك بنجاح!");
+                resetForm(); // Reset the form after successful submission
               } else {
                 console.error("Failed to update user details:", data.error);
               }
@@ -52,60 +54,65 @@ const ContactForm = () => {
             }
           }}
         >
-          {({ isSubmitting, errors }) => (
-            <Form className="relative flex flex-col gap-4">
-              {/* name Field */}
-              <div>
-                <Field
-                  name="title"
-                  type="text"
-                  as={Input}
-                  placeholder="عنوان الرسالة"
-                  className={`focus:!border-blueColor !bg-white`}
-                  aria-label="عنوان الرسالة"
-                  required={false}
-                />
+          {({ isSubmitting, errors, values }) => {
+            console.log("Form Errors: ", errors);
+            console.log("Form Values: ", values);
 
-                <ErrorMessage
-                  name="title"
-                  component="div"
-                  className="text-red-500 mt-2 font-semibold text-[10px]"
-                />
-              </div>
+            return (
+              <Form className="relative flex flex-col gap-4">
+                {/* Message title Field */}
+                <div>
+                  <Field
+                    name="title"
+                    type="text"
+                    as={Input}
+                    placeholder="عنوان الرسالة"
+                    className={`focus:!border-secondary !bg-white`}
+                    aria-label="عنوان الرسالة"
+                    required={false}
+                  />
 
-              {/* phone number Field */}
-              <div>
-                <Field
-                  required={false}
-                  name="details"
-                  as={TextArea}
-                  type="text"
-                  placeholder="تفاصيل الرسالة.."
-                  className={`focus:!border-blueColor bg-white border`}
-                  aria-label="تفاصيل الرسالة.."
-                  aria-invalid={!!errors.details}
-                />
+                  <ErrorMessage
+                    name="title"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
+                  />
+                </div>
 
-                <ErrorMessage
-                  name="details"
-                  component="div"
-                  className="text-red-500 mt-2 font-semibold text-[10px]"
-                />
-              </div>
+                {/* Message Details Field */}
+                <div>
+                  <Field
+                    required={false}
+                    name="details"
+                    as={TextArea}
+                    type="text"
+                    placeholder="تفاصيل الرسالة.."
+                    className={`focus:!border-secondary bg-white border`}
+                    aria-label="تفاصيل الرسالة.."
+                    aria-invalid={!!errors.details}
+                  />
 
-              <div className="lg:w-1/3 md:w-1/2 w-full">
-                <Button
-                  title={"إرسال"}
-                  type="submit"
-                  className="bg-secondary text-white "
-                  disabled={isSubmitting}
-                  hasShiningBar={false}
-                  loading={isSubmitting}
-                  icon={<BsSendFill />}
-                />
-              </div>
-            </Form>
-          )}
+                  <ErrorMessage
+                    name="details"
+                    component="div"
+                    className="text-red-500 mt-2 font-semibold text-[10px]"
+                  />
+                </div>
+
+                <div className="lg:w-1/3 md:w-1/2 w-full">
+                  <Button
+                    title={"إرسال"}
+                    type="submit"
+                    className="bg-secondary text-white "
+                    disabled={isSubmitting}
+                    hasShiningBar={false}
+                    loading={isSubmitting}
+                    icon={<BsSendFill />}
+                  />
+                </div>
+              </Form>
+            );
+          }}
         </Formik>
       </div>
 

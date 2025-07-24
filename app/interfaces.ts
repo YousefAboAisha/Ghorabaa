@@ -239,3 +239,10 @@ export interface MassacreInterface {
   status: MassacreStatus;
   createdAt: Date;
 }
+
+export interface ContactMessageInterface {
+  title: string;
+  details: string;
+  createdAt: Date;
+  read: boolean;
+}

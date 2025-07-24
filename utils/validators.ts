@@ -137,12 +137,7 @@ export const EditUserValidationSchema = Yup.object({
 
 export const ContactFormSchema = Yup.object({
   title: Yup.string().required("يرجى كتابة عنوان الرسالة"),
-
   details: Yup.string().required("يرجى كتابة تفاصيل الرسالة"),
-
-  id_number: Yup.string()
-    .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام")
-    .required("يُرجى إضافة رقم الهوية"),
 });
 
 export const MassacresValidationSchema = Yup.object({
