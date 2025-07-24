@@ -51,7 +51,7 @@ export const DeleteComment = ({
 
       setIsOpen(false); // Close the modal
       refetchData?.(); // Refetch data
-      toast.warn("تم حذف التعليق بنجاح!");
+      toast.success("تم حذف التعليق بنجاح!");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";

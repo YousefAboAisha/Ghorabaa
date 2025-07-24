@@ -8,7 +8,7 @@ const CommentSkeletonLoader = ({
   ...rest
 }: CommentSkeletonLoaderType) => {
   return (
-    <div {...rest} className={`cards-grid-2 ${className}`}>
+    <div {...rest} className={`cards-grid-3 ${className}`}>
       {Array.from({ length: length }).map((_, index) => (
         <div
           key={index}
