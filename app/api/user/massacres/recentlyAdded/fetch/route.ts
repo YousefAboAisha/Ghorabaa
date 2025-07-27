@@ -10,8 +10,8 @@ export async function GET() {
     // ✅ Fetch massacres with status APPROVED (10 recent)
     const massacres = await massacresCollection
       .find({})
-      .sort({ createdAt: -1, _id: -1 })
-      .limit(10)
+      .sort({ createdAt: -1, updatedAt: -1 })
+      .limit(5)
       .toArray();
 
     return NextResponse.json(

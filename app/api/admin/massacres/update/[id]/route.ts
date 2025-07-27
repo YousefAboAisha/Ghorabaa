@@ -19,7 +19,7 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     const body = await req.json();
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _id, ...updateData } = body;
+    const { _id, description, ...updateData } = body;
 
     if (!id || !ObjectId.isValid(id)) {
       return NextResponse.json(
@@ -46,11 +46,14 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
 
     const updateResult = await massacresCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: updateData }
+      { $set: { ...updateData, updatedAt: new Date() } } // ✅ include tags here
     );
 
     if (updateResult.modifiedCount === 0) {
-      return NextResponse.json({ error: "No changes made" }, { status: 400 });
+      return NextResponse.json(
+        { error: "لم يتم القيام بأي تغييرات" },
+        { status: 400 }
+      );
     }
 
     return NextResponse.json({ message: "Massacre updated successfully" });

@@ -19,6 +19,7 @@ export default function MassacreBanner({ data }: Props) {
     deaths,
     injuries,
     destroyedHouses,
+    tags,
   } = data;
 
   return (
@@ -27,7 +28,7 @@ export default function MassacreBanner({ data }: Props) {
       style={{
         direction: "rtl",
       }}
-      className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white border rounded-xl overflow-hidden p-10 px-16 hover:shadow-md duration-300"
+      className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white border rounded-xl overflow-hidden md:p-10 md:px-16 p-4 hover:shadow-md duration-300"
     >
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-2 mt-4 ">
@@ -35,18 +36,20 @@ export default function MassacreBanner({ data }: Props) {
 
           <h2 className="text-2xl font-semibold mb-2">{title}</h2>
 
-          <div className="flex items-center flex-wrap gap-2">
-            {["مقاومة", "حصار", "غزة", "مجزرة"]?.map((keywrod, index) => {
-              return (
-                <div
-                  key={index}
-                  className="border bg-[#5b913b40] rounded-xl p-1.5 px-3 text-[10px]"
-                >
-                  #{keywrod}
-                </div>
-              );
-            })}
-          </div>
+          {tags && tags?.length > 0 && (
+            <div className="flex items-center flex-wrap gap-2">
+              {tags.slice(0, 5).map((keywrod, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="border bg-[#5b913b40] rounded-xl p-1.5 px-3 text-[10px]"
+                  >
+                    #{keywrod}
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           <div className="flex gap-6 mt-2 text-[12px]">
             <div className="flex items-center gap-2">

@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import Input from "@/components/UI/inputs/input";
 import { compressImage, validateImage } from "@/utils/image";
 import MassacreFormLoader from "../loaders/massacreFormLoader";
+import extractTags from "@/utils/extractTags";
 
 type Props = {
   id: string;
@@ -194,7 +195,7 @@ const EditMassacreForm = ({ id }: Props) => {
       setUploadedImageKeys(newUploadedKeys);
       setFieldValue("media", allUrls);
       setIsUploadCompleted(true);
-      toast.success("✅ تم رفع الصور بنجاح!");
+      toast.success("تم رفع الصور بنجاح!");
 
       return allUrls;
     } catch (error) {
@@ -289,7 +290,7 @@ const EditMassacreForm = ({ id }: Props) => {
         throw new Error(errorData?.error || "حدث خطأ أثناء تحديث البيانات");
       }
 
-      toast.success("✅ تم تحديث المجزرة بنجاح!");
+      toast.success("تم تحديث المجزرة بنجاح!");
 
       setTimeout(() => {
         router.push("/admin/dashboard/massacres");
@@ -322,6 +323,25 @@ const EditMassacreForm = ({ id }: Props) => {
           {({ isSubmitting, values, setFieldValue, errors }) => {
             console.log("Form Errors: ", errors);
             console.log("Form Values: ", values);
+
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const [tags, setTags] = useState<string[]>([]);
+
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            useEffect(() => {
+              const timeout = setTimeout(() => {
+                if (values.description && values.description.length > 20) {
+                  const extractedTags = extractTags(values.description);
+                  setTags(extractedTags);
+                  setFieldValue("tags", extractedTags); // Also update Formik's tags field
+                } else {
+                  setTags([]);
+                  setFieldValue("tags", []);
+                }
+              }, 400); // debounce
+
+              return () => clearTimeout(timeout);
+            }, [values.description, setFieldValue]);
 
             return (
               <Form className="flex flex-col gap-8">
@@ -453,6 +473,21 @@ const EditMassacreForm = ({ id }: Props) => {
                       </div>
                     </div>
                   </div>
+
+                  {tags && tags?.length > 0 && (
+                    <div className="flex items-center flex-wrap gap-2">
+                      {tags.map((keywrod, index) => {
+                        return (
+                          <div
+                            key={index}
+                            className="border bg-[#5b913b40] rounded-xl p-1.5 px-3 text-[10px]"
+                          >
+                            #{keywrod}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 {/* Massacre Results Section */}

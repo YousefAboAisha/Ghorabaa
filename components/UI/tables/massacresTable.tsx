@@ -114,7 +114,7 @@ const MassacresTable = () => {
             className="cursor-pointer"
             onClick={() => {
               router.push(
-                `/admin/dashboard/massacres/editMassacre?id=${massacre._id}`
+                `/admin/dashboard/massacres/editMassacre/${massacre._id}`
               );
             }}
             size={22}

@@ -36,6 +36,7 @@ export async function POST(originalReq: Request) {
       destroyedHouses,
       cover_image,
       media,
+      tags,
       internationalReactions,
     }: Partial<MassacreInterface> = body;
 
@@ -57,6 +58,7 @@ export async function POST(originalReq: Request) {
       destroyedHouses: destroyedHouses ?? 0,
       cover_image,
       media,
+      tags,
       internationalReactions,
       createdAt: new Date(),
       publisher_id: new ObjectId(token.id),
