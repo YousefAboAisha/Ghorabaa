@@ -50,7 +50,7 @@ export const metadata: Metadata = {
 const Statistics = () => {
   return (
     <div className="container min-h-screen mt-24">
-      <Hero />
+      <Hero pattern="bg-statistics-pattern" className="bg-top" />
       <Categories />
     </div>
   );

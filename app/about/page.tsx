@@ -55,7 +55,7 @@ const SupportUs = () => {
   return (
     <div className="container min-h-screen mt-24">
       {/* Hero section */}
-      <Hero />
+      <Hero pattern="bg-about-pattern" />
 
       {/* About us grid Cards */}
       <AboutCards />

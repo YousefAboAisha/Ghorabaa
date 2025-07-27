@@ -28,14 +28,15 @@ export default async function Home() {
         <MartyrsStatistics />
       </div>
 
-      <div className="container">
+      <div className="container ">
         {/* todays martyr */}
-        <div className="section">
+        <div className="section bg-white p-6 border rounded-xl">
           <Heading
             title=""
             highLightText="شهيد اليوم"
             details="وَلَا تَقُولُوا لِمَن يُقْتَلُ فِي سَبِيلِ اللَّهِ أَمْوَاتٌ ۚ بَلْ أَحْيَاءٌ وَلَٰكِن لّا تَشْعُرُونَ"
             highlightColor="before:bg-primary"
+            className="z-10"
           />
           <TodaysMartyr />
         </div>

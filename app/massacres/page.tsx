@@ -52,7 +52,7 @@ export const metadata: Metadata = {
 const Page = () => {
   return (
     <div className="container mt-24 min-h-screen">
-      <Hero />
+      <Hero pattern="bg-massacres-pattern" className="bg-top" />
 
       <div className="flex flex-col gap-2 mt-16">
         <Heading title="المجازر الصهيونية" />

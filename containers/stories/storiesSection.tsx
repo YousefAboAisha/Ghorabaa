@@ -153,11 +153,7 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
             {/* Observed loader div for infinite scroll */}
             <div ref={lastElementRef} className="h-10 mt-10 bg-transparent" />
 
-            {!hasMore ? (
-              <p className="text-center text-sm text-gray-500">
-                لا توجد قصص إضافية!
-              </p>
-            ) : (
+            {!hasMore ? null : (
               <div className="mt-4 flex justify-center gap-2 text-gray_dark text-[14px]">
                 جارٍ جلب البيانات
                 <AiOutlineLoading3Quarters size={16} className="animate-spin" />

@@ -28,7 +28,7 @@ const TodaysMartyr = async () => {
 
   if (data) {
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 ">
         <div className="flex flex-col items-start">
           <div className="flex flex-col gap-2 mt-4">
             <div className="flex flex-row items-center gap-4 text-[14px]">
@@ -48,7 +48,7 @@ const TodaysMartyr = async () => {
           </Link>
         </div>
 
-        <div className="relative flex flex-col justify-center w-full min-h-[60vh] rounded-md bg-[#1e272e30]  ">
+        <div className="relative flex flex-col justify-center">
           <Image
             src={data?.image || "/notFound.png"}
             width={350}
