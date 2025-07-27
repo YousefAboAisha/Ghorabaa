@@ -199,6 +199,9 @@ const AllStoriesTable = () => {
           <thead>
             <tr className="bg-gray-100">
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
+                رقم الهوية
+              </th>
+              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
                 اسم الشهيد
               </th>
 
@@ -231,6 +234,10 @@ const AllStoriesTable = () => {
           <tbody>
             {tableData?.map((story) => (
               <tr key={story._id as string} className="hover:bg-gray-50">
+                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                  {story.id_number || "غير محدد"}
+                </td>
+
                 <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
                   {story.status == StoryStatus.APPROVED ||
                   StoryStatus.PENDING ? (

@@ -28,7 +28,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
   const [images, setImages] = useState<ImageListType>([]);
-  const maxNumber = 1; // Allow only one image
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const { name, nickname, social_media, city, neighborhood, bio, image } = data;
 
@@ -78,7 +78,7 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
       const { url } = await imageUploadRes.json();
       console.log("Image URL:", url);
       if (!imageUploadRes.ok) {
-        setFormErrors("Error uploading image");
+        setUploadError("Error uploading image");
         console.log("Image Upload Error:", url);
         setLoading(false);
         return;
@@ -326,67 +326,99 @@ const EditStoryForm = ({ setLoading, data }: AddStoryPrpos) => {
                   disabled={isSubmitting}
                   className="relative group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <div className="App">
-                    <ReactImageUploading
-                      multiple={false} // Allow only one image
-                      value={images}
-                      onChange={async (imageList: ImageListType) => {
-                        setImages(imageList);
-                        if (imageList.length > 0) {
-                          setFieldValue("image", imageList[0].data_url); // ✅ store base64
-                        } else {
-                          setFieldValue("image", null); // ✅ reset on remove
-                        }
-                      }}
-                      maxNumber={maxNumber}
-                      dataURLKey="data_url"
-                      acceptType={["jpg", "gif", "png", "JFIF", "webp"]}
-                    >
-                      {({
-                        onImageUpload,
-                        onImageRemove,
-                        isDragging,
-                        dragProps,
-                      }) => (
-                        <div>
-                          <div
-                            className="flex flex-col items-center justify-center gap-2 border p-4 rounded-xl cursor-pointer group-disabled:cursor-not-allowed"
-                            style={isDragging ? { color: "red" } : undefined}
-                            onClick={onImageUpload}
-                            {...dragProps}
-                          >
-                            <CiImageOn size={70} className="text-gray-200" />
-                            <span className="text-[11px] text-theme text-center">
-                              اضغط هنا لإرفاق صورة الشهيد
-                            </span>
+                  <ReactImageUploading
+                    multiple={false} // Single image upload
+                    value={images}
+                    onChange={(imageList) => {
+                      setImages(imageList);
+                      if (imageList.length > 0) {
+                        setFieldValue("image", imageList[0].data_url); // ✅ store base64
+                      } else {
+                        setFieldValue("image", null); // ✅ reset on remove
+                      }
+                    }}
+                    maxNumber={1}
+                    dataURLKey="data_url"
+                    acceptType={["jpg", "jpeg", "png", "webp"]}
+                  >
+                    {({
+                      onImageUpload,
+                      onImageRemove,
+                      isDragging,
+                      dragProps,
+                    }) => (
+                      <div className="flex flex-col gap-4">
+                        {/* Upload Trigger */}
+                        <div
+                          className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed p-6 rounded-xl ${
+                            images.length > 0
+                              ? "border-gray-300"
+                              : "border-primary/50 hover:border-primary"
+                          } cursor-pointer transition-colors`}
+                          style={
+                            isDragging ? { borderColor: "red" } : undefined
+                          }
+                          onClick={onImageUpload}
+                          {...dragProps}
+                        >
+                          <div className="relative w-16 h-16">
+                            <CiImageOn
+                              size={64}
+                              className="text-gray-300 absolute inset-0"
+                            />
                           </div>
-
-                          {images.map((image, index) => (
-                            <div
-                              key={index}
-                              className="relative w-fit mt-4 border rounded-lg"
-                            >
-                              <Image
-                                src={image.data_url}
-                                alt="صورة الشهيد"
-                                width={200}
-                                height={200}
-                              />
-                              <div
-                                onClick={() => {
-                                  onImageRemove(index);
-                                  setFieldValue("image", null);
-                                }}
-                                className="absolute -top-1 -right-1 bg-white border shadow-md p-1 rounded-md cursor-pointer hover:text-rejected"
-                              >
-                                <FaTimes size={10} />
-                              </div>
-                            </div>
-                          ))}
+                          <span className="text-sm text-theme text-center">
+                            اسحب وأفلت الصورة هنا أو انقر للاختيار
+                          </span>
+                          <div className="text-xs text-gray-500 mt-2">
+                            <p>✓ الصور المدعومة: JPEG, PNG, GIF, JFIF, WebP</p>
+                            <p>✓ الحد الأقصى للحجم: 5MB</p>
+                            {uploadError && (
+                              <p className="text-red-500">✗ {uploadError}</p>
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </ReactImageUploading>
-                  </div>
+
+                        {/* Image Preview */}
+                        {images.map((image, index) => (
+                          <div
+                            key={index}
+                            className="relative w-full max-w-xs aspect-square rounded-xl overflow-hidden border"
+                          >
+                            <Image
+                              src={image.data_url}
+                              alt="صورة الشهيد"
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
+
+                            {/* Remove button */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                onImageRemove(index);
+                                setFieldValue("image", null);
+                              }}
+                              className="absolute top-2 right-2 bg-white p-1 rounded-full shadow hover:bg-gray-100 transition-colors"
+                              aria-label="حذف الصورة"
+                              title="حذف الصورة"
+                              disabled={isSubmitting}
+                            >
+                              <FaTimes size={12} />
+                            </button>
+                          </div>
+                        ))}
+
+                        {uploadError && (
+                          <div className="rounded-lg p-4 w-full bg-red-100 text-red-600 text-sm">
+                            {uploadError}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </ReactImageUploading>
+
                   <ErrorMessage
                     name="image"
                     component="div"

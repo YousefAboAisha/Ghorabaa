@@ -9,6 +9,8 @@ import Heading from "@/components/UI/typography/heading";
 import { HomeMetadata } from "./lib/metadata";
 import { getSessionAction } from "./actions/registerActions";
 import RecentlyAddedMasscares from "@/containers/home/recentlyAddedMasscares";
+import Link from "next/link";
+import { BsArrowLeft } from "react-icons/bs";
 
 export const generateMetadata = async () => HomeMetadata;
 
@@ -69,6 +71,14 @@ export default async function Home() {
           />
 
           <RecentlyAddedMasscares />
+
+          <Link
+            href={"/massacres"}
+            className="text-primary flex items-center gap-2 justify-center hover:underline text-sm w-fit mx-auto mt-8"
+          >
+            <p>عرض الكل</p>
+            <BsArrowLeft />
+          </Link>
         </div>
       </div>
     </>

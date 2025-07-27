@@ -51,6 +51,7 @@ export async function GET(req: NextRequest) {
       {
         $project: {
           _id: 1,
+          id_number: 1,
           name: 1,
           nickname: 1,
           social_media: 1,

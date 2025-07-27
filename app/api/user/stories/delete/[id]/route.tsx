@@ -47,7 +47,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
       // Create notification
       const storyNotificationPayload = {
         user_id: existingStory.publisher_id,
-        message: `تم حذف قصة الشهيد ${existingStory.name} بنجاح!`,
+        message: `تمت إزالة قصة الشهيد ${existingStory.name} من المنصة بواسطة المشرف`,
         href: `/stories/${existingStory._id}`,
         notification_type: NotificationTypes.DELETE,
         createdAt: new Date(),
