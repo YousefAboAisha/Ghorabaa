@@ -139,7 +139,7 @@ const Navbar = ({ session }: NavbarProps) => {
               <Link
                 title="إضافة قصة جديدة"
                 prefetch
-                href={"/savedStories"}
+                href={"/addStory"}
                 className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
               >
                 <BsPlusCircle size={20} />
