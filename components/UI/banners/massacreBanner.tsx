@@ -28,10 +28,10 @@ export default function MassacreBanner({ data }: Props) {
       style={{
         direction: "rtl",
       }}
-      className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white border rounded-xl overflow-hidden md:p-10 md:px-16 p-4 hover:shadow-md duration-300"
+      className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-secondary border rounded-xl overflow-hidden md:p-10 md:px-16 p-4 hover:shadow-md duration-300"
     >
       <div className="flex flex-col w-full">
-        <div className="flex flex-col gap-2 mt-4 ">
+        <div className="flex flex-col gap-2 mt-4 text-white ">
           {/* title */}
 
           <h2 className="text-2xl font-semibold mb-2">{title}</h2>
@@ -42,7 +42,7 @@ export default function MassacreBanner({ data }: Props) {
                 return (
                   <div
                     key={index}
-                    className="border bg-[#5b913b40] rounded-xl p-1.5 px-3 text-[10px]"
+                    className="bg-primary/50 text-white rounded-xl p-1.5 px-3 text-[10px]"
                   >
                     #{keywrod}
                   </div>
@@ -52,7 +52,7 @@ export default function MassacreBanner({ data }: Props) {
           )}
 
           <div className="flex gap-6 mt-2 text-[12px]">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-white">
               <GrCalendar size={20} className="text-primary" />
               <p className="text-[12px]">
                 {arabicDateConversion(date as Date)}
@@ -60,32 +60,32 @@ export default function MassacreBanner({ data }: Props) {
             </div>
 
             <div className="flex items-center gap-2">
-              <GrLocation size={20} className="text-primary font-bold" />
-              <div className="flex items-center gap-1">
+              <GrLocation size={20} className="text-primary" />
+              <div className="flex items-center gap-1 text-white">
                 <p>{location.city}</p>-<p>{location.neighborhood}</p>
               </div>
             </div>
           </div>
 
-          <p className="font-light mt-2 line-clamp-[10] text-[15px]">
+          <p className="font-light mt-2 line-clamp-[10] text-[15px] text-white">
             {description}
           </p>
         </div>
 
-        <div className="flex items-center flex-wrap gap-2 mt-4">
-          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
+        <div className="flex items-center flex-wrap gap-2 mt-4 text-white">
+          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 border border-[#dddddd46] items-center rounded-md ">
             <p className="text-[12px]">شهداء</p>
-            <p className="font-bold text-rejected">{deaths}+</p>
+            <p className="font-bold text-xl">{deaths}+</p>
           </div>
 
-          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
+          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 border border-[#dddddd46] items-center rounded-md ">
             <p className="text-[12px]">إصابات</p>
-            <p className="font-bold text-pending">{injuries}+</p>
+            <p className="font-bold text-xl">{injuries}+</p>
           </div>
 
-          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 shadow-sm items-center rounded-md ">
+          <div className="flex flex-col gap-2 flex-1 flex-grow p-6 border border-[#dddddd46] items-center rounded-md ">
             <p className="text-[12px] ">منازل مدمرة</p>
-            <p className="font-bold text-secondary">{destroyedHouses}+</p>
+            <p className="font-bold text-xl">{destroyedHouses}+</p>
           </div>
         </div>
       </div>

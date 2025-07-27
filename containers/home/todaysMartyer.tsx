@@ -35,7 +35,7 @@ const TodaysMartyr = async () => {
               <h4 className="font-bold text-lg  ">{data?.name}</h4>
             </div>
 
-            <p className="text-md font-light line-clamp-[13]">{data?.bio}</p>
+            <p className="text-md font-light line-clamp-[12]">{data?.bio}</p>
           </div>
 
           <Link href={`/stories/${data?._id}`} className="mt-4">
@@ -51,10 +51,10 @@ const TodaysMartyr = async () => {
         <div className="relative flex flex-col justify-center">
           <Image
             src={data?.image || "/notFound.png"}
-            width={350}
-            height={350}
+            width={400}
+            height={400}
             alt="Today's martyr"
-            className="shadow-2xl self-center h-[350px] rounded-xl object-cover object-center"
+            className="shadow-2xl self-center h-[400px] rounded-xl object-cover object-center w-full md:w-auto"
             priority
             quality={100}
           />

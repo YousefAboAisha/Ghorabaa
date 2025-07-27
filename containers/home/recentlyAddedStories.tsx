@@ -46,7 +46,7 @@ const RecentlyAddedStories = async ({ session }: RecentlyAddedStories) => {
           href={"/stories"}
           className="text-primary flex items-center gap-2 justify-center hover:underline text-sm w-fit mx-auto"
         >
-          <p>عرض الكل</p>
+          <p>كافة القصص</p>
           <BsArrowLeft />
         </Link>
       </div>
