@@ -5,13 +5,12 @@ import { Gender } from "@/app/enums";
 import Select from "../inputs/selectInput";
 import { CitiesData } from "@/data/citiesData";
 import { CountriesData } from "@/data/countriesData";
-import { GiFemale, GiMale } from "react-icons/gi";
 import Input from "../inputs/input";
 import { CiSearch } from "react-icons/ci";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GrClearOption } from "react-icons/gr";
 import * as yup from "yup";
-import { BiMaleFemale } from "react-icons/bi";
+import { GenderData } from "@/data/genderData";
 
 type SearchFilterProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -65,6 +64,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
   const [city, setCity] = useState<string>(
     () => searchParams.get("city") || ""
   );
+
   const [neighborhood, setNeighborhood] = useState<string>(
     () => searchParams.get("neighborhood") || ""
   );
@@ -155,60 +155,41 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
 
       {/* Gender selection */}
       <div className="mt-4">
-        <p className="text-[12px] mb-1.5">الجنس</p>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="relative">
           <div
-            onClick={() => {
-              setGender(Gender.MALE);
+            onClick={() => setGender(Gender.NONE)}
+            className="absolute z-10 top-[44%] left-2 rounded-xl flex items-center justify-center p-2 cursor-pointer hover:bg-[#eaeaea] duration-200"
+          >
+            <GrClearOption
+              title="مسح محدد البحث "
+              size={15}
+              className="text-rejected "
+            />
+          </div>
+          <Select
+            label="الجنس"
+            title="اختر جنس الشهيد.."
+            options={GenderData}
+            className="focus:border-secondary"
+            required={false}
+            value={gender}
+            onChange={(e) => {
+              setGender(e.target.value as Gender);
               if (errors["gender"]) {
                 setErrors((prev) => ({ ...prev, gender: "" }));
               }
             }}
-            className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
-              gender === Gender.MALE && "bg-blueColor text-white"
-            }`}
-          >
-            <GiMale size={30} />
-            <h2>ذكر</h2>
-          </div>
-
-          <div
-            onClick={() => {
-              setGender(Gender.FEMALE);
-              if (errors["gender"]) {
-                setErrors((prev) => ({ ...prev, gender: "" }));
-              }
-            }}
-            className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
-              gender === Gender.FEMALE && "!bg-[#ff5982] text-white"
-            }`}
-          >
-            <GiFemale size={30} />
-            <h2>أنثى</h2>
-          </div>
-
-          <div
-            onClick={() => {
-              setGender(Gender.BOTH);
-              if (errors["gender"]) {
-                setErrors((prev) => ({ ...prev, gender: "" }));
-              }
-            }}
-            className={`flex flex-col items-center justify-center gap-2 p-6 bg-background_light border rounded-md cursor-pointer w-full ${
-              gender === Gender.BOTH && "bg-secondary text-white"
-            }`}
-          >
-            <BiMaleFemale size={30} />
-            <h2>غير محدد</h2>
-          </div>
+            error={errors["gender"]}
+          />{" "}
         </div>
+
         {errors["gender"] && (
           <p className="text-rejected text-xs mt-1">{errors["gender"]}</p>
         )}
       </div>
 
       {/* Age inputs */}
-      <div className="flex items-center gap-2 mt-6">
+      <div className="cards-grid-2 mt-6">
         <Input
           label="العُمر الابتدائي"
           placeholder="مثال: 14"
@@ -245,12 +226,17 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
       {/* City and neighborhood */}
       <div className="flex flex-col gap-2 mt-6">
         <div className="relative">
-          <GrClearOption
-            title="مسح محدد البحث "
-            onClick={() => setCity("")}
-            size={18}
-            className="absolute z-10 top-[52%] left-4 text-rejected cursor-pointer"
-          />
+          <div
+            onClick={() => setGender(Gender.NONE)}
+            className="absolute z-10 top-[44%] left-2 rounded-xl flex items-center justify-center p-2 cursor-pointer hover:bg-[#eaeaea] duration-200"
+          >
+            <GrClearOption
+              title="مسح محدد البحث "
+              onClick={() => setCity("")}
+              size={15}
+              className="text-rejected "
+            />
+          </div>
 
           <Select
             label="المدينة"
@@ -282,12 +268,18 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
         </div>
 
         <div className="relative">
-          <GrClearOption
-            title="مسح محدد البحث "
-            onClick={() => setNeighborhood("")}
-            size={18}
-            className="absolute z-10 top-[52%] left-4 text-rejected cursor-pointer"
-          />
+          <div
+            onClick={() => setGender(Gender.NONE)}
+            className="absolute z-10 top-[44%] left-2 rounded-xl flex items-center justify-center p-2 cursor-pointer hover:bg-[#eaeaea] duration-200"
+          >
+            {" "}
+            <GrClearOption
+              title="مسح محدد البحث "
+              onClick={() => setNeighborhood("")}
+              size={15}
+              className="text-rejected "
+            />
+          </div>
           <Select
             label="الحي"
             title="اختر الحي"

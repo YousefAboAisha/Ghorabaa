@@ -6,7 +6,7 @@ import React from "react";
 import { FaEye } from "react-icons/fa";
 import { GrLocation } from "react-icons/gr";
 
-const PlatformVideo = () => {
+const MartyrBanner = () => {
   return (
     <div className="relative cards-grid-2 gap-8 rounded-md border bg-white p-8 -translate-y-20">
       <div className="relative order-2 md:order-1 flex flex-col gap-2">
@@ -61,7 +61,7 @@ const PlatformVideo = () => {
         </div>
 
         <Link
-          href={"/stories/6832db7efb30ee41b7badd59"}
+          href={"/stories/686f8239277517371d13858f"}
           className="relative md:w-fit w-full mt-4"
         >
           <Button
@@ -86,4 +86,4 @@ const PlatformVideo = () => {
   );
 };
 
-export default PlatformVideo;
+export default MartyrBanner;

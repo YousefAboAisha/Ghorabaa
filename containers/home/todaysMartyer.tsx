@@ -23,7 +23,7 @@ const TodaysMartyr = async () => {
   // console.log("Todays martyr error: ", error);
 
   if (error) {
-    return <ErrorMessage error={error} className="mt-4" />;
+    return <ErrorMessage error={error} className="mt-4 !border-none" />;
   }
 
   if (data) {

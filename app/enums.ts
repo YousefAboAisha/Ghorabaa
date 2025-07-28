@@ -74,9 +74,9 @@ export enum ProviderTypes {
 }
 
 export enum Gender {
-  MALE = "MALE",
-  FEMALE = "FEMALE",
-  BOTH = "",
+  MALE = "male",
+  FEMALE = "female",
+  NONE = "",
 }
 
 // Story Status Enums
