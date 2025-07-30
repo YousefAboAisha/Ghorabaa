@@ -58,9 +58,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     }
 
     const isOwner = existingStory.publisher_id?.toString() === token.id;
-    const isAdmin = token.role === Role.ADMIN;
+    const isAuthenticated = token.role === Role.ADMIN || token.role === Role.EDITOR;
 
-    if (!isOwner && !isAdmin) {
+    if (!isOwner && !isAuthenticated) {
       return NextResponse.json(
         { error: "غير مصرح لك بحذف هذه القصة." },
         { status: 403 }

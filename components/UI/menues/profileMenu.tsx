@@ -94,7 +94,8 @@ function ProfileMenu({ session }: Props) {
             </Link>
           </MenuItem>
 
-          {session?.user?.role === Role.ADMIN && (
+          {(session?.user?.role === Role.ADMIN ||
+            session?.user?.role === Role.EDITOR) && (
             <MenuItem>
               <Link
                 href={"/admin/dashboard"}

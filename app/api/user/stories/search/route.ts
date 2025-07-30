@@ -75,6 +75,8 @@ export async function GET(req: NextRequest) {
             nickname: 1,
             image: 1,
             bio: 1,
+            city: 1,
+            neighborhood: 1,
             highlight: { $meta: "searchHighlights" },
             birth_date: 1,
             death_date: 1,

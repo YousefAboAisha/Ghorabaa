@@ -49,7 +49,7 @@ const StoryTabs = ({ session, user_id }: SubmittedStoriesProps) => {
     setLoading(true);
     setError(null);
 
-    if (!(isAdmin || isOwner) && status !== StoryStatus.APPROVED) {
+    if (!isOwner && status !== StoryStatus.APPROVED) {
       setStories([]);
       setError("غير مصرح لك بمشاهدة هذه القصص");
       setLoading(false);

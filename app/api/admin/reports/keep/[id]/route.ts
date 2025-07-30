@@ -12,7 +12,7 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
   try {
     const token = await getToken({ req, secret });
 
-    if (!token || token.role !== Role.ADMIN) {
+    if (!token || token.role === Role.USER) {
       return NextResponse.json({ error: "غير مصرح لك" }, { status: 403 });
     }
 

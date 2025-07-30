@@ -41,9 +41,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     }
 
     const isOwner = comment.author_id?.toString() === token.id;
-    const isAdmin = token.role === Role.ADMIN;
+    const isAuthenticated = token.role === Role.ADMIN || token.role === Role.EDITOR;
 
-    if (!isOwner && !isAdmin) {
+    if (!isOwner && !isAuthenticated) {
       return NextResponse.json(
         { error: "غير مصرح لك بحذف هذا التعليق" },
         { status: 403 }
@@ -61,7 +61,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     );
 
     // 🔔 Add notification if admin deleted another user's comment
-    if (isAdmin && !isOwner && comment.author_id) {
+    if (isAuthenticated && !isOwner && comment.author_id) {
       const storyNotificationPayload = {
         user_id: comment.author_id,
         message: `تم حذف تعلقيك على قصة الشهيد ${story?.name} بسبب مخالفته لمعايير المنصة`,

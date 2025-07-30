@@ -27,7 +27,6 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     }
 
     const userId = token.id;
-    const userRole = token.role;
 
     const body = await req.json();
     const { bio, birth_date, death_date, ...updateFields } = body;
@@ -51,9 +50,10 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
 
     // ✅ Authorization check: allow publisher or admin
     const isPublisher = existingStory.publisher_id?.toString() === userId;
-    const isAdmin = userRole === Role.ADMIN;
+    const isAuthenticated =
+      token.role === Role.ADMIN || token.role === Role.EDITOR;
 
-    if (!isPublisher && !isAdmin) {
+    if (!isPublisher && !isAuthenticated) {
       return NextResponse.json({ error: "Not authorized!" }, { status: 403 });
     }
 

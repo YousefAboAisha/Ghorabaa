@@ -18,7 +18,7 @@ export async function POST(
 
   const token = await getToken({ req: nextReq, secret });
 
-  if (!token || token.role !== Role.ADMIN) {
+  if (!token || token.role === Role.USER) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

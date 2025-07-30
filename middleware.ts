@@ -38,9 +38,15 @@ export async function middleware(request: NextRequest) {
   // Authenticated user visiting an auth page — redirect based on role
   if (isAuthPage) {
     const redirectUrl =
-      token.role === Role.ADMIN ? "/admin/dashboard" : `/profile/${token.id}`;
+      token.role === Role.ADMIN || token.role === Role.EDITOR
+        ? "/admin/dashboard"
+        : `/profile/${token.id}`;
 
     return NextResponse.redirect(new URL(redirectUrl, request.url));
+  }
+
+  if ("/admin/dashboard/users" === pathname) {
+    return NextResponse.redirect(new URL("/unauthorized", request.url));
   }
 
   // Handle auth-redirect route
@@ -50,13 +56,15 @@ export async function middleware(request: NextRequest) {
     }
 
     const redirectUrl =
-      token.role === Role.ADMIN ? "/admin/dashboard" : `/profile/${token.id}`;
+      token.role === Role.ADMIN || token.role === Role.EDITOR
+        ? "/admin/dashboard"
+        : `/profile/${token.id}`;
 
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 
   // Authenticated but not admin trying to access admin route
-  if (isAdminPage && token.role !== Role.ADMIN) {
+  if (isAdminPage && token.role === Role.USER) {
     return NextResponse.redirect(new URL("/unauthorized", request.url));
   }
 

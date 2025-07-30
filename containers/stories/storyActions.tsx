@@ -26,10 +26,10 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
 
-  const current_user_id = session?.user.id;
+  // const current_user_id = session?.user.id;
   const current_user_role = session?.user.role;
 
-  const isStoryOwner = data.publisher_id === current_user_id;
+  // const isStoryOwner = data.publisher_id === current_user_id;
   const isAdmin = current_user_role === Role.ADMIN;
 
   return (
@@ -44,7 +44,7 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
             <CiShare2 size={30} />
           </div>
 
-          {(isStoryOwner || isAdmin) && (
+          {isAdmin && (
             <div
               title="تعديل القصة"
               className="flex items-center justify-center border bg-white p-2 text-secondary hover:text-blueColor duration-100 cursor-pointer rounded-lg shadow-sm"
@@ -54,7 +54,7 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
             </div>
           )}
 
-          {(isStoryOwner || isAdmin) && (
+          {isAdmin && (
             <div
               title="حذف القصة"
               className="flex items-center justify-center border bg-white p-2 text-secondary hover:text-rejected duration-100 cursor-pointer rounded-lg shadow-sm"

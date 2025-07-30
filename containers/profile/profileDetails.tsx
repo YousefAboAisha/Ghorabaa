@@ -40,7 +40,7 @@ const ProfileDetails = async ({ user_id }: ProfileDetailsProps) => {
   if (data) {
     return (
       <div className="relative w-full bg-white border rounded-md min-h-[30vh] mb-6 p-4">
-        {isAdmin || isOwner ? (
+        {isOwner ? (
           <EditProfileDetailsButton
             data={{
               name: data?.name,

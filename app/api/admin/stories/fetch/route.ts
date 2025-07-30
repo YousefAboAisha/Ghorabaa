@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     const db = client.db("ghorabaa");
     const token = await getToken({ req, secret });
 
-    if (!token || token.role !== Role.ADMIN) {
+    if (!token || token.role === Role.USER) {
       return NextResponse.json(
         { error: "غير مصرح لك بالوصول إلى هذه الصفحة" },
         { status: 403 }
