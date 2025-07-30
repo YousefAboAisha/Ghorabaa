@@ -8,6 +8,8 @@ import { FaEye } from "react-icons/fa";
 import FavoriteButton from "@/containers/storyDetails/favoriteButton";
 import { Session } from "next-auth";
 import { HighlightedText } from "../typography/highlightText";
+import { dateConversion } from "@/utils/format";
+import { FiMapPin } from "react-icons/fi";
 
 interface StoryCardsProps {
   data?: StoryInterface & { favorite?: boolean };
@@ -38,6 +40,11 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
       </Link>
 
       <div className="relative p-4">
+        <div className="flex items-center gap-1 text-[12px] mb-2 font-light">
+          <FiMapPin />
+          <p>{data?.city}</p>-<p>{data?.neighborhood}</p>
+        </div>
+
         <div className="flex items-center gap-2 text-sm mb-2">
           <p className="font-bold text-secondary truncate">
             <HighlightedText
@@ -86,7 +93,7 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
             size={22}
             className="text-primary"
           />
-          <p>{data?.death_date}</p>
+          <p>{dateConversion(data?.death_date as Date)}</p>
         </div>
 
         <div className="flex items-center gap-3 text-[13px]">

@@ -30,7 +30,7 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     const userRole = token.role;
 
     const body = await req.json();
-    const { bio, ...updateFields } = body;
+    const { bio, birth_date, death_date, ...updateFields } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Missing story ID" }, { status: 400 });
@@ -75,6 +75,8 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
           publisher_id: new ObjectId(existingStory.publisher_id),
           keywords,
           status: StoryStatus.PENDING,
+          death_date: new Date(death_date),
+          birth_date: new Date(birth_date),
           updatedAt: new Date(),
         },
       },

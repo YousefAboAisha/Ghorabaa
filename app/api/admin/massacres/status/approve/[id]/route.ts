@@ -56,6 +56,7 @@ export async function PUT(
       {
         $set: {
           status: MassacreStatus.APPROVED,
+          approvedBy: new ObjectId(token.id),
           updatedAt: new Date(),
         },
       }

@@ -154,7 +154,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
                   تاريخ الميلاد
                 </td>
                 <td className="py-3 px-4 border-b text-right text-sm">
-                  {data.birth_date}
+                  {dateConversion(data.birth_date as Date)}
                 </td>
               </tr>
 
@@ -163,7 +163,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
                   تاريخ الاستشهاد
                 </td>
                 <td className="py-3 px-4 border-b text-right text-sm">
-                  {data.death_date}
+                  {dateConversion(data.death_date as Date)}
                 </td>
               </tr>
 

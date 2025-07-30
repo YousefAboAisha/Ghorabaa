@@ -7,8 +7,4 @@ export const GenderData = [
     value: "female",
     title: "أنثى",
   },
-  {
-    value: "",
-    title: "غير محدد",
-  },
 ];

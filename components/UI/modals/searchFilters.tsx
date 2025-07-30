@@ -39,6 +39,26 @@ const filterSchema = yup.object().shape({
       .min(0, "العمر النهائي لا يمكن أن يكون أقل من 0")
       .max(120, "العمر النهائي لا يمكن أن يكون أكثر من 120"),
   }),
+
+  date: yup.object().shape({
+    day: yup
+      .number()
+      .typeError("يجب أن يكون اليوم رقماً")
+      .min(0, "اليوم لا يمكن أن يكون أقل من 0")
+      .max(31, "اليوم لا يمكن أن يكون أكثر من 31"),
+
+    month: yup
+      .number()
+      .typeError("يجب أن يكون الشهر رقماً")
+      .min(0, "الشهر لا يمكن أن يكون أقل من 0")
+      .max(12, "الشهر لا يمكن أن يكون أكثر من 12"),
+
+    year: yup
+      .number()
+      .typeError("يجب أن يكون السنة رقماً")
+      .min(0, "السنة لا يمكن أن يكون أقل من 0")
+      .max(new Date().getFullYear(), "لا يمكن اختيار سنة لم تأتِ بعد"),
+  }),
   city: yup.string(),
   neighborhood: yup.string().when("city", {
     is: (city: string) => !!city,
@@ -59,6 +79,12 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
   const [age, setAge] = useState(() => ({
     from: Number(searchParams.get("ageFrom") || 0),
     to: Number(searchParams.get("ageTo") || 0),
+  }));
+
+  const [date, setDate] = useState(() => ({
+    day: Number(searchParams.get("day") || 0),
+    month: Number(searchParams.get("month") || 0),
+    year: Number(searchParams.get("year") || 0),
   }));
 
   const [city, setCity] = useState<string>(
@@ -87,6 +113,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
           age,
           city,
           neighborhood,
+          date,
         },
         { abortEarly: false }
       );
@@ -113,8 +140,14 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
     const params = new URLSearchParams();
 
     if (gender) params.set("gender", gender);
+
     if (age.from) params.set("ageFrom", age.from.toString());
     if (age.to) params.set("ageTo", age.to.toString());
+
+    if (date.day) params.set("day", date.day.toString());
+    if (date.month) params.set("month", date.month.toString());
+    if (date.year) params.set("year", date.year.toString());
+
     if (city) params.set("city", city);
     if (neighborhood) params.set("neighborhood", neighborhood);
 
@@ -125,6 +158,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
   const handleClearFilters = () => {
     setGender(undefined);
     setAge({ from: 0, to: 0 });
+    setDate({ day: 0, month: 0, year: 0 });
     setCity("");
     setNeighborhood("");
     setCities([]);
@@ -157,7 +191,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
       <div className="mt-4">
         <div className="relative">
           <div
-            onClick={() => setGender(Gender.NONE)}
+            onClick={() => setGender(undefined)}
             className="absolute z-10 top-[44%] left-2 rounded-xl flex items-center justify-center p-2 cursor-pointer hover:bg-[#eaeaea] duration-200"
           >
             <GrClearOption
@@ -172,7 +206,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
             options={GenderData}
             className="focus:border-secondary"
             required={false}
-            value={gender}
+            value={gender || ""}
             onChange={(e) => {
               setGender(e.target.value as Gender);
               if (errors["gender"]) {
@@ -227,12 +261,11 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
       <div className="flex flex-col gap-2 mt-6">
         <div className="relative">
           <div
-            onClick={() => setGender(Gender.NONE)}
+            onClick={() => setCity("")}
             className="absolute z-10 top-[44%] left-2 rounded-xl flex items-center justify-center p-2 cursor-pointer hover:bg-[#eaeaea] duration-200"
           >
             <GrClearOption
               title="مسح محدد البحث "
-              onClick={() => setCity("")}
               size={15}
               className="text-rejected "
             />
@@ -269,13 +302,12 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
 
         <div className="relative">
           <div
-            onClick={() => setGender(Gender.NONE)}
+            onClick={() => setNeighborhood("")}
             className="absolute z-10 top-[44%] left-2 rounded-xl flex items-center justify-center p-2 cursor-pointer hover:bg-[#eaeaea] duration-200"
           >
             {" "}
             <GrClearOption
               title="مسح محدد البحث "
-              onClick={() => setNeighborhood("")}
               size={15}
               className="text-rejected "
             />
@@ -296,6 +328,57 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
             error={errors["neighborhood"]}
           />{" "}
         </div>
+      </div>
+
+      {/* Date inputs */}
+      <div className="cards-grid-3 mt-6">
+        <Input
+          label="اليوم"
+          placeholder="مثال: 17"
+          type="number"
+          className="focus:border-secondary w-full"
+          required={false}
+          value={date.day || ""}
+          onChange={(e) => {
+            setDate((prev) => ({ ...prev, day: Number(e.target.value) }));
+            if (errors["date.day"]) {
+              setErrors((prev) => ({ ...prev, "date.day": "" }));
+            }
+          }}
+          error={errors["date.day"]}
+        />
+
+        <Input
+          label="الشهر"
+          placeholder="مثال: 9"
+          type="number"
+          className="focus:border-secondary w-full"
+          required={false}
+          value={date.month || ""}
+          onChange={(e) => {
+            setDate((prev) => ({ ...prev, month: Number(e.target.value) }));
+            if (errors["date.month"]) {
+              setErrors((prev) => ({ ...prev, "date.month": "" }));
+            }
+          }}
+          error={errors["date.month"]}
+        />
+
+        <Input
+          label="السنة"
+          placeholder="مثال: 2023"
+          type="number"
+          className="focus:border-secondary w-full"
+          required={false}
+          value={date.year || ""}
+          onChange={(e) => {
+            setDate((prev) => ({ ...prev, year: Number(e.target.value) }));
+            if (errors["date.year"]) {
+              setErrors((prev) => ({ ...prev, "date.year": "" }));
+            }
+          }}
+          error={errors["date.year"]}
+        />
       </div>
 
       {/* Apply button */}

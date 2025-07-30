@@ -54,6 +54,7 @@ export async function PUT(
         $set: {
           status: StoryStatus.REJECTED,
           rejectReason: rejectReason,
+          approvedBy: new ObjectId(token.id),
           updatedAt: new Date(),
         },
       }

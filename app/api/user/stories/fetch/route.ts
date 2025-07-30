@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
     const query: Record<string, unknown> = { status };
 
     // ✅ Add filters if present
-    if (gender) query["gender"] = gender;
+    if (gender) query["gender"] = gender.toUpperCase();
     if (!isNaN(ageFrom)) {
       query["age"] = { ...(query["age"] || {}), $gte: ageFrom };
     }
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
     // ✅ Fetch stories with pagination
     const stories = await storiesCollection
       .find(query)
-      .sort({ createdAt: -1, _id: -1 })
+      .sort({ createdAt: -1, updatedAt: -1 })
       .skip(skip)
       .limit(limit)
       .toArray();
@@ -89,6 +89,9 @@ export async function GET(req: NextRequest) {
     );
   } catch (error) {
     console.error("Error fetching stories:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

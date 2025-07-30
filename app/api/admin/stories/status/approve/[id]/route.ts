@@ -66,6 +66,7 @@ export async function POST(
         $set: {
           ...sanitizedUpdate,
           status: StoryStatus.APPROVED,
+          approvedBy: new ObjectId(token.id),
           updatedAt: new Date(),
         },
       }

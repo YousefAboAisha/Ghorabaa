@@ -40,7 +40,7 @@ const CommentForm = ({ session, id, refetchData }: CommentFormProps) => {
 
   return (
     <div>
-      {session && session.user ? (
+      {session ? (
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}

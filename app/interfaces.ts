@@ -62,8 +62,8 @@ export interface StoryInterface extends Document {
   highlight: Highlight[];
   social_media?: SocialMediaLinks;
   nickname?: string;
-  birth_date: string;
-  death_date: string;
+  birth_date: Date | string;
+  death_date: Date | string;
   age: number;
   visits: number;
   city: string;
@@ -78,6 +78,7 @@ export interface StoryInterface extends Document {
   warTitle?: string;
   createdAt: Date;
   updatedAt?: Date;
+  approvedBy: Types.ObjectId | string;
   effectiveDate?: Date; // The date used for sorting and filtering, can be updated to the latest update date if available.
 }
 

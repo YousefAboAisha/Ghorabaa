@@ -59,7 +59,13 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     // Step 3: Optionally update report status
     await reportsCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: { status: ReportStatus.DELETED } }
+      {
+        $set: {
+          status: ReportStatus.DELETED,
+          approvedBy: new ObjectId(token.id),
+          updatedAt: new Date(),
+        },
+      }
     );
 
     if (report) {

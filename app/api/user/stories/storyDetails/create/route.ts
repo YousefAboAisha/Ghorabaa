@@ -28,7 +28,7 @@ export async function POST(originalReq: Request) {
     const notificationsCollection = db.collection("notifications");
 
     const body = await originalReq.json();
-    const { id_number, age, bio, ...rest } = body;
+    const { id_number, age, bio, death_date, birth_date, ...rest } = body;
 
     if (!id_number) {
       return NextResponse.json(
@@ -46,6 +46,7 @@ export async function POST(originalReq: Request) {
     }
 
     let keywords: string[] = [];
+
     if (bio && typeof bio === "string") {
       try {
         keywords = await extractArabicKeywords(bio);
@@ -61,6 +62,8 @@ export async function POST(originalReq: Request) {
       publisher_id: new ObjectId(token.id),
       status: StoryStatus.PENDING,
       age,
+      death_date: new Date(death_date),
+      birth_date: new Date(birth_date),
       updatedAt: new Date(),
     };
 
