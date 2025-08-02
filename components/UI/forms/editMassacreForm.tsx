@@ -205,6 +205,12 @@ const EditMassacreForm = ({ id }: Props) => {
           : "فشل رفع الصور بسبب خطأ غير معروف";
       setUploadError(message);
       toast.error(message);
+
+      // 🔽 Clear images that caused the failure
+      setImages([]);
+      setUploadProgress(0);
+      setIsUploadCompleted(false);
+
       throw error;
     } finally {
       setUploadLoading(false);
@@ -216,25 +222,35 @@ const EditMassacreForm = ({ id }: Props) => {
     imageList: ImageListType,
     setFieldValue: (field: string, value: unknown) => void
   ) => {
-    const uniqueImages = imageList.filter((img, index, self) => {
-      if (!img.file) return false;
+    try {
+      const uniqueImages = imageList.filter((img, index, self) => {
+        if (!img.file) return false;
 
-      const fileKey = getFileUniqueKey(img.file);
-      const isUniqueDataUrl =
-        self.findIndex((i) => i.data_url === img.data_url) === index;
-      const isUniqueFile = !uploadedImageKeys.has(fileKey);
+        const fileKey = getFileUniqueKey(img.file);
+        const isUniqueDataUrl =
+          self.findIndex((i) => i.data_url === img.data_url) === index;
+        const isUniqueFile = !uploadedImageKeys.has(fileKey);
 
-      return isUniqueDataUrl && isUniqueFile;
-    });
+        return isUniqueDataUrl && isUniqueFile;
+      });
 
-    setImages(uniqueImages);
+      // Validate all images before setting state
+      uniqueImages.forEach((image) => {
+        if (image.file) {
+          validateImage(image); // This should throw if validation fails
+        }
+      });
 
-    if (uniqueImages.length > 0) {
-      try {
+      setImages(uniqueImages);
+
+      if (uniqueImages.length > 0) {
         await uploadMediaHandler(uniqueImages, setFieldValue);
-      } catch (error) {
-        console.error("Upload error:", error);
       }
+    } catch (error) {
+      // Clear invalid images on error
+      setImages([]);
+      console.error("Upload error:", error);
+      toast.error(error instanceof Error ? error.message : "Invalid image");
     }
   };
 

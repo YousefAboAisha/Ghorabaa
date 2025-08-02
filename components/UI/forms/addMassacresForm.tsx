@@ -149,26 +149,35 @@ const AddMassacres = () => {
     imageList: ImageListType,
     setFieldValue: (field: string, value: unknown) => void
   ) => {
-    // Filter out duplicates based on data_url (preview) and file unique key
-    const uniqueImages = imageList.filter((img, index, self) => {
-      if (!img.file) return false;
+    try {
+      const uniqueImages = imageList.filter((img, index, self) => {
+        if (!img.file) return false;
 
-      const fileKey = getFileUniqueKey(img.file);
-      const isUniqueDataUrl =
-        self.findIndex((i) => i.data_url === img.data_url) === index;
-      const isUniqueFile = !uploadedImageKeys.has(fileKey);
+        const fileKey = getFileUniqueKey(img.file);
+        const isUniqueDataUrl =
+          self.findIndex((i) => i.data_url === img.data_url) === index;
+        const isUniqueFile = !uploadedImageKeys.has(fileKey);
 
-      return isUniqueDataUrl && isUniqueFile;
-    });
+        return isUniqueDataUrl && isUniqueFile;
+      });
 
-    setImages(uniqueImages);
+      // Validate all images before setting state
+      uniqueImages.forEach((image) => {
+        if (image.file) {
+          validateImage(image); // This should throw if validation fails
+        }
+      });
 
-    if (uniqueImages.length > 0) {
-      try {
+      setImages(uniqueImages);
+
+      if (uniqueImages.length > 0) {
         await uploadMediaHandler(uniqueImages, setFieldValue);
-      } catch (error) {
-        console.error("Upload error:", error);
       }
+    } catch (error) {
+      // Clear invalid images on error
+      setImages([]);
+      console.error("Upload error:", error);
+      toast.error(error instanceof Error ? error.message : "Invalid image");
     }
   };
 
