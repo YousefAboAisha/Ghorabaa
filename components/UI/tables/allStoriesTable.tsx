@@ -199,6 +199,10 @@ const AllStoriesTable = () => {
           <thead>
             <tr className="bg-gray-100">
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
+                #
+              </th>
+
+              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
                 اسم الناشر
               </th>
 
@@ -237,8 +241,12 @@ const AllStoriesTable = () => {
           </thead>
 
           <tbody>
-            {tableData?.map((story) => (
+            {tableData?.map((story, index) => (
               <tr key={story._id as string} className="hover:bg-gray-50">
+                <td className="py-3 px-4 border-b text-center text-sm text-gray-700">
+                  {(page - 1) * 10 + index + 1}
+                </td>
+
                 <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
                   <Link
                     title="عرض القصة"
@@ -291,13 +299,16 @@ const AllStoriesTable = () => {
                     : "غير محدد"}
                 </td>
                 <td className="py-3 px-4 border-b text-right">
-                  <Image
-                    src={story.image}
-                    alt={story.name}
-                    width={40}
-                    height={40}
-                    className="rounded"
-                  />
+                  <div className="relative w-12 h-12 overflow-hidden rounded">
+                    <Image
+                      src={story.image}
+                      alt={story.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, (max-width:  768px) 50vw, 33vw"
+                      loading="lazy"
+                    />
+                  </div>
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-[12px]">

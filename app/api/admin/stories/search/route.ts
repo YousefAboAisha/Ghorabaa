@@ -42,26 +42,15 @@ export async function GET(req: NextRequest) {
                     query,
                     path: "name",
                     fuzzy: {
-                      maxEdits: 2,
-                      prefixLength: 2,
+                      maxEdits: 1,
+                      prefixLength: 3,
                     },
                     score: { boost: { value: 3 } },
                   },
                 },
-                {
-                  text: {
-                    query,
-                    path: "bio",
-                    fuzzy: {
-                      maxEdits: 1,
-                      prefixLength: 2,
-                    },
-                    score: { boost: { value: 1 } },
-                  },
-                },
               ],
             },
-            highlight: { path: ["name", "bio"] },
+            highlight: { path: ["name"] },
           },
         },
         {

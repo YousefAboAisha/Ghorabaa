@@ -185,6 +185,7 @@ const MassacresTable = () => {
         <thead>
           <tr className="bg-gray-100">
             {[
+              "#",
               "صورة الغلاف",
               "عنوان المجزرة",
               "تاريخ الحدوث",
@@ -205,15 +206,21 @@ const MassacresTable = () => {
         </thead>
 
         <tbody>
-          {tableData.map((massacre: MassacreInterface) => (
+          {tableData.map((massacre: MassacreInterface, index) => (
             <tr key={massacre._id as string} className="hover:bg-gray-50">
+              <td className="py-3 px-4 border-b text-center text-sm text-gray-700">
+                {(page - 1) * 10 + index + 1}
+              </td>
+
               <td className="py-3 px-4 border-b text-right">
-                <div className="relative w-14 h-14 rounded-sm overflow-hidden">
+                <div className="relative w-12 h-12 overflow-hidden rounded">
                   <Image
                     src={massacre.cover_image}
                     alt={massacre.title}
-                    className="w-full"
                     fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width:  768px) 50vw, 33vw"
+                    loading="lazy"
                   />
                 </div>
               </td>

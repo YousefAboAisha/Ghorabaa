@@ -114,6 +114,7 @@ const UsersTable = () => {
         <thead>
           <tr className="bg-gray-100">
             {[
+              "#",
               "الصورة",
               "اسم المستخدم",
               "البريد الالكتروني",
@@ -133,16 +134,23 @@ const UsersTable = () => {
         </thead>
 
         <tbody>
-          {tableData.map((user) => (
+          {tableData.map((user, index) => (
             <tr key={user._id as string} className="hover:bg-gray-50">
+              <td className="py-3 px-4 border-b text-center text-sm text-gray-700">
+                {(page - 1) * 10 + index + 1}
+              </td>
+
               <td className="py-3 px-4 border-b text-right">
-                <Image
-                  src={user.image}
-                  alt={user.name}
-                  width={50}
-                  height={50}
-                  className="rounded-full border"
-                />
+                <div className="relative w-12 h-12 overflow-hidden rounded">
+                  <Image
+                    src={user.image}
+                    alt={user.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width:  768px) 50vw, 33vw"
+                    loading="lazy"
+                  />
+                </div>
               </td>
               <td className="py-3 px-4 border-b text-right text-sm text-gray-700 hover:underline">
                 <Link
