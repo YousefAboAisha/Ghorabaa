@@ -4,16 +4,16 @@ export const StoryTabsData = [
   {
     label: "الطلبات المقبولة",
     status: StoryStatus.APPROVED,
-    color: "approved",
+    color: "text-approved",
   },
   {
     label: "قيد المراجعة",
     status: StoryStatus.PENDING,
-    color: "pending",
+    color: "text-pending",
   },
   {
     label: "الطلبات المرفوضة",
     status: StoryStatus.REJECTED,
-    color: "rejected",
+    color: "text-rejected",
   },
 ];

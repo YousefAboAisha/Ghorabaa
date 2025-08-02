@@ -95,9 +95,33 @@ const StoryTabs = ({ session, user_id }: SubmittedStoriesProps) => {
     }
   };
 
+  // New function to fetch all counts at once
+  const fetchStoryCounts = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/userStories/fetch/${user_id}?countsOnly=true`,
+        {
+          credentials: "include",
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch story counts");
+      }
+
+      const data = await res.json();
+      setStoryCounts(data.data);
+    } catch (error) {
+      console.error("Error fetching story counts:", error);
+      // Optionally handle error, but don't block the UI
+    }
+  };
+
   console.log("All Stories data", stories);
 
   useEffect(() => {
+    fetchStoryCounts();
+
     fetchStories(currentTap);
   }, [currentTap]);
 
@@ -213,8 +237,8 @@ const StoryTabs = ({ session, user_id }: SubmittedStoriesProps) => {
             >
               <p>{label}</p>
               <p
-                className={`text-gray_dark text-[13px] font-semibold ${
-                  currentTap === status ? `text-${color}` : ""
+                className={`text-[13px] font-semibold ${
+                  currentTap === status ? color : "text-gray_dark"
                 }`}
               >
                 +{storyCounts[status] ?? 0}

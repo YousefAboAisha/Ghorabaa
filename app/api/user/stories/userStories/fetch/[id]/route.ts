@@ -2,6 +2,7 @@ import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
+import { StoryStatus } from "@/app/enums";
 // import { Role } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
@@ -22,15 +23,6 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     const storiesCollection = db.collection("stories");
     const usersCollection = db.collection("users");
     const token = await getToken({ req, secret });
-    // const isOwner = id === token?.id;
-    // const isAdmin = token?.role == Role.ADMIN;
-
-    // if (!(isOwner || isAdmin)) {
-    //   return NextResponse.json(
-    //     { error: "غير مصرح لك، الرجاء تسجيل الدخول!" },
-    //     { status: 401 }
-    //   );
-    // }
 
     if (!token) {
       return NextResponse.json(
@@ -60,6 +52,36 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     // ✅ Read status from query param
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status")?.trim();
+    const countsOnly = searchParams.get("countsOnly") === "true";
+
+    if (countsOnly) {
+      // Get counts for all statuses in a single query
+      const counts = await storiesCollection
+        .aggregate([
+          { $match: { publisher_id: new ObjectId(id) } },
+          { $group: { _id: "$status", count: { $sum: 1 } } },
+        ])
+        .toArray();
+
+      // Convert to the format expected by frontend
+      const result: Record<string, number> = {
+        [StoryStatus.APPROVED]: 0,
+        [StoryStatus.PENDING]: 0,
+        [StoryStatus.REJECTED]: 0,
+        [StoryStatus.IMPORTED]: 0,
+      };
+
+      counts.forEach(({ _id, count }) => {
+        if (_id in result) {
+          result[_id] = count;
+        }
+      });
+
+      return NextResponse.json(
+        { message: "تم جلب العدد بنجاح", data: result },
+        { status: 200 }
+      );
+    }
 
     // ✅ Build query
     const query: Record<string, unknown> = {
