@@ -13,37 +13,59 @@ export async function GET(req: NextRequest) {
     const usersCollection = db.collection("users");
 
     const { searchParams } = new URL(req.url);
+
     const status = searchParams.get("status")?.trim();
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
-    // ✅ Filters
+    // Filters
     const gender = searchParams.get("gender")?.trim();
     const ageFrom = parseInt(searchParams.get("ageFrom") || "", 10);
     const ageTo = parseInt(searchParams.get("ageTo") || "", 10);
     const city = searchParams.get("city")?.trim();
     const neighborhood = searchParams.get("neighborhood")?.trim();
 
-    // Base query
-    const query: Record<string, unknown> = { status };
+    const day = parseInt(searchParams.get("day") || "", 10);
+    const month = parseInt(searchParams.get("month") || "", 10);
+    const year = parseInt(searchParams.get("year") || "", 10);
 
-    // ✅ Add filters if present
+    console.log("Date Filters:", { day, month, year });
+
+    // Base query
+    const query: Record<string, unknown> = {};
+
+    if (status) query["status"] = status;
     if (gender) query["gender"] = gender.toUpperCase();
-    if (!isNaN(ageFrom)) {
+    if (!isNaN(ageFrom))
       query["age"] = { ...(query["age"] || {}), $gte: ageFrom };
-    }
-    if (!isNaN(ageTo)) {
-      query["age"] = { ...(query["age"] || {}), $lte: ageTo };
-    }
+    if (!isNaN(ageTo)) query["age"] = { ...(query["age"] || {}), $lte: ageTo };
     if (city) query["city"] = city;
     if (neighborhood) query["neighborhood"] = neighborhood;
 
-    if (!status) {
-      return NextResponse.json({ error: "معرف الحالة مفقود" }, { status: 400 });
+    // death_date filtering logic
+    if (!isNaN(year)) {
+      const from = new Date(
+        year,
+        !isNaN(month) ? month - 1 : 0,
+        !isNaN(day) ? day : 1
+      );
+      const to = new Date(from); // clone
+
+      if (!isNaN(day)) {
+        to.setDate(to.getDate() + 1); // Next day
+      } else if (!isNaN(month)) {
+        to.setMonth(to.getMonth() + 1); // Next month
+      } else {
+        to.setFullYear(to.getFullYear() + 1); // Next year
+      }
+
+      query["death_date"] = { $gte: from, $lt: to };
     }
 
-    // ✅ Get session token
+    console.log("Final Mongo Query:", JSON.stringify(query, null, 2));
+
+    // Get session token
     const token = await getToken({ req, secret });
 
     let favoritesArray: ObjectId[] = [];
@@ -53,7 +75,7 @@ export async function GET(req: NextRequest) {
       favoritesArray = user?.favoritesArray || [];
     }
 
-    // ✅ Fetch stories with pagination
+    // Fetch stories
     const stories = await storiesCollection
       .find(query)
       .sort({ createdAt: -1, updatedAt: -1 })

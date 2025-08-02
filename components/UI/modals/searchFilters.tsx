@@ -333,7 +333,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
       {/* Date inputs */}
       <div className="cards-grid-3 mt-6">
         <Input
-          label="اليوم"
+          label="يوم الاستشهاد"
           placeholder="مثال: 17"
           type="number"
           className="focus:border-secondary w-full"
@@ -349,7 +349,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
         />
 
         <Input
-          label="الشهر"
+          label="شهر الاستشهاد"
           placeholder="مثال: 9"
           type="number"
           className="focus:border-secondary w-full"
@@ -365,7 +365,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
         />
 
         <Input
-          label="السنة"
+          label="سنة الاستشهاد"
           placeholder="مثال: 2023"
           type="number"
           className="focus:border-secondary w-full"

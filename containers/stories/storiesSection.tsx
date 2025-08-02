@@ -29,6 +29,9 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
   const ageTo = searchParams.get("ageTo");
   const city = searchParams.get("city");
   const neighborhood = searchParams.get("neighborhood");
+  const day = searchParams.get("day");
+  const month = searchParams.get("month");
+  const year = searchParams.get("year");
 
   const fetchStories = async (pageToFetch: number) => {
     console.log("hasMore: ", hasMore);
@@ -50,6 +53,9 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
     if (ageTo) params.set("ageTo", ageTo);
     if (city) params.set("city", city);
     if (neighborhood) params.set("neighborhood", neighborhood);
+    if (day) params.set("day", day);
+    if (month) params.set("month", month);
+    if (year) params.set("year", year);
 
     try {
       const res = await fetch(
