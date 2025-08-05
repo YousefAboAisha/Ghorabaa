@@ -28,23 +28,28 @@ import { useRouter } from "next/navigation";
 import { compressImage, validateImage } from "@/utils/image";
 import extractTags from "@/utils/extractTags";
 
+interface ImageData {
+  data_url: string;
+  image_url: string;
+}
+
+interface ImagesObject {
+  [key: string]: ImageData;
+}
+
 const AddMassacres = () => {
-  const MAX_NUMBER = 5; // Max 5 images
+  const MAX_IMAGES = 5;
+  const router = useRouter();
 
   // State
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
-  const [images, setImages] = useState<ImageListType>([]);
-  const [isUploadCompleted, setIsUploadCompleted] = useState<boolean>(false);
-  const [uploadLoading, setUploadLoading] = useState<boolean>(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]); // Track already uploaded URLs
-  const router = useRouter();
-
-  const [uploadedImageKeys, setUploadedImageKeys] = useState<Set<string>>(
-    new Set()
-  );
+  const [images, setImages] = useState<ImagesObject>({});
+  const [uploadStatus, setUploadStatus] = useState<{
+    loading: boolean;
+    progress: number;
+    error: string | null;
+  }>({ loading: false, progress: 0, error: null });
 
   const initialValues: Partial<MassacreInterface> = {
     cover_image: "",
@@ -59,155 +64,109 @@ const AddMassacres = () => {
     deaths: 0,
     injuries: 0,
     destroyedHouses: 0,
-    tags: [], // Add this line
+    tags: [],
     internationalReactions: [],
   };
 
-  const uploadMediaHandler = async (
-    imagesList: ImageListType,
-    setFieldValue: (field: string, value: string[]) => void
-  ) => {
-    if (!imagesList || imagesList.length === 0) {
-      throw new Error("يجب إرفاق صورة واحدة على الأقل");
+  // Upload a single image
+  const uploadSingleImage = async (file: File): Promise<string> => {
+    let processedFile = file;
+
+    if (file.size > 1 * 1024 * 1024) {
+      processedFile = await compressImage(file);
     }
 
-    setIsUploadCompleted(false);
-    setUploadLoading(true);
-    setUploadError(null);
+    const formData = new FormData();
+    formData.append("image", processedFile);
+    formData.append("folder", "massacres");
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/massacres`,
+      {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      }
+    );
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData?.message || "Failed to upload image");
+    }
+
+    const data = await res.json();
+    return data.url;
+  };
+
+  // Handle image upload
+  const handleImageUpload = async (
+    imageList: ImageListType,
+    setFieldValue: (
+      field: string,
+      value: Partial<MassacreInterface> | string | number | string[] | number[]
+    ) => void,
+    values: typeof initialValues
+  ) => {
+    if (!imageList || imageList.length === 0) return;
+
+    // Check if we're exceeding the max number of images
+    const currentImageCount = Object.keys(images).length;
+    if (currentImageCount > MAX_IMAGES) {
+      throw new Error(`الحد الأقصى للصور المرفوعة هو ${MAX_IMAGES} صور`);
+    }
+
+    setUploadStatus({ loading: true, progress: 0, error: null });
 
     try {
-      const newUploadedUrls: string[] = [];
-      const newUploadedKeys = new Set(uploadedImageKeys);
+      const newImages: ImagesObject = {};
+      const mediaUrls: string[] = [];
 
-      for (let i = 0; i < imagesList.length; i++) {
-        const image = imagesList[i];
+      // Process each image
+      for (let i = 0; i < imageList.length; i++) {
+        const image = imageList[i];
         if (!image.file) continue;
 
-        const fileUniqueKey = getFileUniqueKey(image.file);
-
-        // Skip if already uploaded
-        if (newUploadedKeys.has(fileUniqueKey)) {
-          console.log(`Skipping duplicate image: ${image.file.name || "N/A"}`);
-          continue;
-        }
-
+        // Validate the image
         validateImage(image);
 
-        let file = image.file;
-        if (file.size > 1 * 1024 * 1024) {
-          file = await compressImage(file);
-        }
+        // Generate unique key
+        const uniqueKey = getFileUniqueKey(image.file);
 
-        const formData = new FormData();
-        formData.append("image", file);
-        formData.append("folder", "massacres");
+        // Upload the image
+        const imageUrl = await uploadSingleImage(image.file);
 
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/massacres`,
-          {
-            method: "POST",
-            credentials: "include",
-            body: formData,
-          }
-        );
+        // Add to our images object
+        newImages[uniqueKey] = {
+          data_url: image.data_url || "",
+          image_url: imageUrl,
+        };
 
-        if (!res.ok) {
-          const errorData = await res.json().catch(() => ({}));
-          throw new Error(errorData?.message || `فشل رفع الصورة ${i + 1}`);
-        }
+        // Add to media URLs array
+        mediaUrls.push(imageUrl);
 
-        const data = await res.json();
-        newUploadedUrls.push(data.url);
-        newUploadedKeys.add(fileUniqueKey);
-        setUploadProgress(Math.round(((i + 1) / imagesList.length) * 100));
+        // Update progress
+        setUploadStatus((prev) => ({
+          ...prev,
+          progress: Math.round(((i + 1) / imageList.length) * 100),
+        }));
       }
 
-      // Update state with new uploads
-      const allUrls = [...uploadedImages, ...newUploadedUrls];
-      setUploadedImages(allUrls);
-      setUploadedImageKeys(newUploadedKeys);
-      setFieldValue("media", allUrls);
-      setIsUploadCompleted(true);
-      toast.success("✅ تم رفع الصور بنجاح!");
+      // Update state
+      setImages((prev) => ({ ...prev, ...newImages }));
+      setFieldValue("media", [...(values.media || []), ...mediaUrls]);
 
-      return allUrls;
+      toast.success("تم رفع الصور بنجاح!");
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "فشل رفع الصور بسبب خطأ غير معروف";
-      setUploadError(message);
+      const message = error instanceof Error ? error.message : "Upload failed";
+      setUploadStatus((prev) => ({ ...prev, error: message }));
       toast.error(message);
       throw error;
     } finally {
-      setUploadLoading(false);
-      setUploadProgress(0);
+      setUploadStatus((prev) => ({ ...prev, loading: false }));
     }
   };
 
-  const handleImageChange = async (
-    imageList: ImageListType,
-    setFieldValue: (field: string, value: unknown) => void
-  ) => {
-    try {
-      const uniqueImages = imageList.filter((img, index, self) => {
-        if (!img.file) return false;
-
-        const fileKey = getFileUniqueKey(img.file);
-        const isUniqueDataUrl =
-          self.findIndex((i) => i.data_url === img.data_url) === index;
-        const isUniqueFile = !uploadedImageKeys.has(fileKey);
-
-        return isUniqueDataUrl && isUniqueFile;
-      });
-
-      // Validate all images before setting state
-      uniqueImages.forEach((image) => {
-        if (image.file) {
-          validateImage(image); // This should throw if validation fails
-        }
-      });
-
-      setImages(uniqueImages);
-
-      if (uniqueImages.length > 0) {
-        await uploadMediaHandler(uniqueImages, setFieldValue);
-      }
-    } catch (error) {
-      // Clear invalid images on error
-      setImages([]);
-      console.error("Upload error:", error);
-      toast.error(error instanceof Error ? error.message : "Invalid image");
-    }
-  };
-
-  const handleRemoveImage = (
-    index: number,
-    setFieldValue: (field: string, value: unknown) => void
-  ) => {
-    const newImages = [...uploadedImages];
-    const removedImage = newImages.splice(index, 1)[0];
-
-    // Remove from uploadedImageKeys if exists
-    const newUploadedKeys = new Set(uploadedImageKeys);
-    const imageToRemove = images[index];
-    if (imageToRemove?.file) {
-      const fileKey = getFileUniqueKey(imageToRemove.file);
-      newUploadedKeys.delete(fileKey);
-      setUploadedImageKeys(newUploadedKeys);
-    }
-
-    // Update cover image if needed
-    if (removedImage === initialValues.cover_image) {
-      setFieldValue("cover_image", "");
-    }
-
-    // Update state
-    setUploadedImages(newImages);
-    setFieldValue("media", newImages);
-    setImages(images.filter((_, i) => i !== index));
-  };
-
+  // Handle form submission
   const handleSubmit = async (
     values: typeof initialValues,
     { setSubmitting }: FormikHelpers<typeof initialValues>
@@ -232,27 +191,23 @@ const AddMassacres = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData?.error || "حدث خطأ أثناء إرسال البيانات");
+        throw new Error(errorData?.error || "Submission failed");
       }
 
-      toast.success("تم أضافة المجزرة بنجاح!");
-
-      setTimeout(() => {
-        router.push("/admin/dashboard/massacres");
-      }, 500);
+      toast.success("تمت إضافة مجزرة جديدة بنجاح!");
+      router.push("/admin/dashboard/massacres");
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+        error instanceof Error ? error.message : "An error occurred";
       setFormErrors(message);
-      console.error("❌ Error:", message);
+      console.error("Error:", message);
     } finally {
       setSubmitting(false);
     }
   };
 
-  useEffect(() => {
-    setIsUploadCompleted(false);
-  }, [images]);
+  console.log("Images array", images);
+  console.log("Upload Status", uploadStatus);
 
   return (
     <div className="relative w-full">
@@ -264,6 +219,39 @@ const AddMassacres = () => {
         {({ isSubmitting, values, setFieldValue, errors }) => {
           console.log("Form Errors", errors);
           console.log("Form Values", values);
+
+          // Handle image removal
+          const handleRemoveImage = (
+            uniqueKey: string,
+            setFieldValue: (
+              field: string,
+              value:
+                | Partial<MassacreInterface>
+                | string
+                | number
+                | string[]
+                | number[]
+            ) => void
+          ) => {
+            if (!images[uniqueKey]) return;
+
+            // Create new objects without the removed image
+            const { [uniqueKey]: removedImage, ...remainingImages } = images;
+            const updatedMediaUrls = (values.media || []).filter(
+              (url) => url !== removedImage.image_url
+            );
+
+            // Update cover image if needed
+            let updatedCoverImage: string = values.cover_image || "";
+            if (removedImage.image_url === values.cover_image) {
+              updatedCoverImage = "";
+            }
+
+            // Update state
+            setImages(remainingImages);
+            setFieldValue("media", updatedMediaUrls);
+            setFieldValue("cover_image", updatedCoverImage);
+          };
 
           // eslint-disable-next-line react-hooks/rules-of-hooks
           const [tags, setTags] = useState<string[]>([]);
@@ -553,16 +541,18 @@ const AddMassacres = () => {
 
                 {/* Image Upload Section */}
                 <fieldset
-                  disabled={isSubmitting || uploadLoading}
+                  disabled={isSubmitting || uploadStatus.loading}
                   className="relative group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ReactImageUploading
                     multiple
-                    value={images}
+                    value={Object.values(images).map((img) => ({
+                      data_url: img.data_url,
+                    }))}
                     onChange={(imageList) =>
-                      handleImageChange(imageList, setFieldValue)
+                      handleImageUpload(imageList, setFieldValue, values)
                     }
-                    maxNumber={MAX_NUMBER}
+                    maxNumber={MAX_IMAGES}
                     dataURLKey="data_url"
                     acceptType={["jpg", "jpeg", "png", "webp"]}
                   >
@@ -571,7 +561,7 @@ const AddMassacres = () => {
                         {/* Upload Trigger */}
                         <div
                           className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed p-6 rounded-xl ${
-                            images.length > 0
+                            Object.keys(images).length > 0
                               ? "border-gray-300"
                               : "border-primary/50 hover:border-primary"
                           } cursor-pointer transition-colors`}
@@ -583,9 +573,9 @@ const AddMassacres = () => {
                               size={64}
                               className="text-gray-300 absolute inset-0"
                             />
-                            {uploadedImages.length > 0 && (
-                              <span className="absolute -top-2 -right-2 bg-primary text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                                {uploadedImages.length}
+                            {Object.keys(images).length > 0 && (
+                              <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                                {Object.keys(images).length}
                               </span>
                             )}
                           </div>
@@ -595,88 +585,77 @@ const AddMassacres = () => {
                           <div className="text-xs text-gray-500 mt-2">
                             <p>✓ الصور المدعومة: JPEG, PNG, Jpg, WebP</p>
                             <p>✓ الحد الأقصى للحجم: 5MB لكل صورة</p>
-                            <p>✓ الحد الأقصى للعدد: 5 صور</p>
-                            {uploadError && (
-                              <p className="text-red-500">✗ {uploadError}</p>
+                            <p>✓ الحد الأقصى للعدد: {MAX_IMAGES} صور</p>
+                            {uploadStatus.error && (
+                              <p className="text-red-500">
+                                ✗ {uploadStatus.error}
+                              </p>
                             )}
                           </div>
                         </div>
 
                         {/* Upload Progress */}
-                        {uploadLoading && (
+                        {uploadStatus.loading && (
                           <div className="flex flex-col gap-2">
                             <div className="w-full bg-gray-200 rounded-full h-2.5">
                               <div
                                 className="bg-primary h-2.5 rounded-full transition-all duration-300"
-                                style={{ width: `${uploadProgress}%` }}
+                                style={{ width: `${uploadStatus.progress}%` }}
                               ></div>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-gray-600">
                               <span className="animate-pulse">⏳</span>
-                              جاري رفع {images.length} صورة... ({uploadProgress}
-                              %)
+                              جارٍ رفع الصور... ({uploadStatus.progress}%)
                             </div>
                           </div>
                         )}
 
                         {/* Image Preview Grid */}
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
-                          {uploadedImages?.map((image, index) => (
-                            <div
-                              onClick={() =>
-                                setFieldValue("cover_image", image)
-                              }
-                              key={index}
-                              className={`relative w-full aspect-square rounded-xl cursor-pointer overflow-hidden `}
-                            >
-                              <Image
-                                src={image}
-                                alt={`صورة ${index + 1}`}
-                                fill
-                                className="object-cover"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              />
-
-                              {image === values.cover_image && (
-                                <span className="absolute flex flex-col justify-center items-center gap-2 bottom-0 left-0 right-0 w-full h-full bg-[#1e272eb6] backdrop-blur text-white font-semibold text-xs p-1 text-center">
-                                  <CiImageOn size={40} />
-                                  صورة الغلاف
-                                </span>
-                              )}
-
-                              {/* Image index */}
-                              <span className="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
-                                {index + 1}
-                              </span>
-
-                              {/* Remove button */}
-                              <button
-                                type="button"
+                        <div className="flex items-center flex-wrap gap-4 mt-4">
+                          {Object.entries(images).map(
+                            ([uniqueKey, imageData]) => (
+                              <div
                                 onClick={() =>
-                                  handleRemoveImage(index, setFieldValue)
+                                  setFieldValue(
+                                    "cover_image",
+                                    imageData.image_url
+                                  )
                                 }
-                                className="absolute top-1 right-1 bg-white p-1 rounded shadow hover:bg-gray-100 transition-colors"
-                                aria-label="حذف الصورة"
-                                title="حذف الصورة"
+                                key={uniqueKey}
+                                className={`relative w-24 h-24 aspect-square rounded-xl cursor-pointer overflow-hidden`}
                               >
-                                <FaTimes size={12} />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
+                                <Image
+                                  src={imageData.data_url}
+                                  alt={`Uploaded image ${uniqueKey}`}
+                                  fill
+                                  className="object-cover"
+                                  sizes="(max-width: 100px) 20vw, (max-width: 100px) 20vw, 20vw"
+                                />
 
-                        {/* Status Messages */}
-                        {isUploadCompleted && (
-                          <div className="flex items-center gap-2 text-sm text-green-600">
-                            <span>✅</span>
-                            تم رفع {images.length} صورة بنجاح!
-                          </div>
-                        )}
-                        {uploadError && (
-                          <div className="rounded-lg p-4 w-full bg-red-100 text-red-600 text-sm">
-                            {uploadError}
-                          </div>
-                        )}
+                                {imageData.image_url === values.cover_image && (
+                                  <span className="absolute flex flex-col justify-center items-center gap-2 bottom-0 left-0 right-0 w-full h-full bg-[#1e272eb6] backdrop-blur text-white font-semibold text-[10px] p-1 text-center">
+                                    <CiImageOn size={35} />
+                                    صورة الغلاف
+                                  </span>
+                                )}
+
+                                {/* Remove button */}
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRemoveImage(uniqueKey, setFieldValue);
+                                  }}
+                                  className="absolute top-1 right-1 bg-white text-rejected p-1 rounded shadow hover:bg-gray-100 transition-colors"
+                                  aria-label="إزالة الصورة"
+                                  title="إزالة الصورة"
+                                >
+                                  <FaTimes size={10} />
+                                </button>
+                              </div>
+                            )
+                          )}
+                        </div>
                       </div>
                     )}
                   </ReactImageUploading>
@@ -702,7 +681,7 @@ const AddMassacres = () => {
                 className="bg-secondary w-full hover:shadow-lg text-sm"
                 icon={<BiSend className="rotate-180" />}
                 loading={isSubmitting}
-                disabled={isSubmitting || uploadLoading}
+                disabled={isSubmitting || uploadStatus.loading}
               />
 
               {/* Form Errors */}

@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           alt: `صورة المجزرة ${data.title}`,
         },
       ],
-      url: `https://ghorabaa.com/stories/${id}`,
+      url: `https://ghorabaa.com/massacres/${id}`,
       type: "article",
     },
     twitter: {
