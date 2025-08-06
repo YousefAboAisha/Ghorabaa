@@ -17,11 +17,7 @@ interface StoryCardsProps {
 }
 
 const StoryCard = ({ data, session }: StoryCardsProps) => {
-  const age =
-    data?.death_date && data?.birth_date
-      ? new Date(data.death_date).getFullYear() -
-        new Date(data.birth_date).getFullYear()
-      : "";
+
 
   return (
     <div className="relative group w-full flex flex-col border bg-white hover:shadow-xl duration-500 rounded-2xl overflow-hidden">
@@ -99,7 +95,7 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
         <div className="flex items-center gap-3 text-[13px]">
           <HiUser size={22} className="text-primary" />
           <div className="flex items-center gap-1  ">
-            <p>{age}</p>
+            <p>{data?.age}</p>
             <p>عاماً</p>
           </div>
         </div>

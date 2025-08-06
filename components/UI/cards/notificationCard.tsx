@@ -1,5 +1,5 @@
 import { NotificationTypes } from "@/app/enums";
-import { dateConversion } from "@/utils/format";
+import { fullDateConversion } from "@/utils/format";
 import { getNotificationColor, getNotificationIcon } from "@/utils/text";
 
 type NotificationTypesProps = {
@@ -22,7 +22,7 @@ const NotificationCard = ({
 
   const { Icon, className, size } = getNotificationIcon(type);
 
-  const iconSize = isPopperNotification ? 25 : size;
+  const iconSize = isPopperNotification ? 27 : size;
 
   return (
     <div
@@ -37,7 +37,7 @@ const NotificationCard = ({
       </div>
 
       <div className="absolute bottom-1 left-3 flex items-center gap-1 text-gray_dark text-[10px]">
-        {dateConversion(createdAt)}
+        {fullDateConversion(createdAt)}
       </div>
 
       {!is_read && (

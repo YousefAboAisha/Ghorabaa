@@ -9,7 +9,8 @@ import {
   StoryStatus,
 } from "@/app/enums";
 import { ReportReasonsData } from "@/data/reportReasonsData";
-import { BiBell, BiCheckCircle, BiComment } from "react-icons/bi";
+import { AiOutlineComment } from "react-icons/ai";
+import { BiBell, BiCheckCircle } from "react-icons/bi";
 import { BsSend } from "react-icons/bs";
 import { GiTrashCan } from "react-icons/gi";
 import { MdOutlineClose } from "react-icons/md";
@@ -133,9 +134,9 @@ export const getStatusBorderColor = (status: StoryStatus): string => {
 
 export const getGenderLabel = (gender: Gender) => {
   switch (gender) {
-    case Gender.MALE:
+    case Gender.MALE.toUpperCase():
       return "ذكر";
-    case Gender.FEMALE:
+    case Gender.FEMALE.toUpperCase():
       return "أنثى";
   }
 };
@@ -188,7 +189,7 @@ export const getNotificationIcon = (type: NotificationTypes) => {
     case NotificationTypes.REQUEST:
       return {
         Icon: BsSend,
-        className: "text-[orange]",
+        className: "text-orange-500",
         size: "22",
       }; // request
     case NotificationTypes.ACCEPT:
@@ -217,14 +218,14 @@ export const getNotificationIcon = (type: NotificationTypes) => {
       }; // Update
     case NotificationTypes.COMMENT:
       return {
-        Icon: BiComment,
-        className: "text-blueColor",
-        size: "22",
+        Icon: AiOutlineComment,
+        className: "text-gray_dark",
+        size: "27",
       }; // Comment
     default:
       return {
         Icon: BiBell,
-        className: "text-yellow-600",
+        className: "text-gray_dark",
         size: "27",
       }; // Default
   }

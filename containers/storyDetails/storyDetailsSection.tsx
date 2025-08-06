@@ -3,7 +3,7 @@ import Image from "next/image";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { notFound } from "next/navigation";
 import { getSessionAction } from "@/app/actions/registerActions";
-import { dateConversion } from "@/utils/format";
+import { dateConversion, fullDateConversion } from "@/utils/format";
 import StoryActions from "../stories/storyActions";
 import Link from "next/link";
 import { FaFacebook, FaInstagram, FaXTwitter } from "react-icons/fa6";
@@ -107,12 +107,12 @@ const StoryDetailsSection = async ({ id }: Props) => {
                 {data.publisherName}
               </Link>
               <p> | </p>
-              <p>{dateConversion(data.createdAt)}</p>
+              <p>{fullDateConversion(data.createdAt)}</p>
             </div>
 
             <div className="flex items-center gap-2 text-gray_dark">
-              <p>{data?.visits || 0}</p>
-              <BsEye size={18} />
+              <p title="المشاهدات">{data?.visits || 0}</p>
+              <BsEye title="المشاهدات" size={18} />
             </div>
           </div>
 
