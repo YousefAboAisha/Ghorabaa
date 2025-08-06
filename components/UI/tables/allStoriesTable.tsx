@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { StoryInterface } from "@/app/interfaces";
-import Image from "next/image";
 import { StoryStatus } from "@/app/enums";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
@@ -203,10 +202,6 @@ const AllStoriesTable = () => {
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                اسم الناشر
-              </th>
-
-              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
                 رقم الهوية
               </th>
 
@@ -227,11 +222,11 @@ const AllStoriesTable = () => {
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                الصورة
+                الحالة
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                الحالة
+                الناشر
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
@@ -245,17 +240,6 @@ const AllStoriesTable = () => {
               <tr key={story._id as string} className="hover:bg-gray-50">
                 <td className="py-3 px-4 border-b text-center text-sm text-gray-700">
                   {(page - 1) * 10 + index + 1}
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  <Link
-                    title="عرض القصة"
-                    className="hover:underline"
-                    href={`/profile/${story.publisher_id}`}
-                    target="_blank"
-                  >
-                    {story.publisher_name.split(" ").slice(0, 1) || "غير محدد"}
-                  </Link>
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
@@ -298,18 +282,6 @@ const AllStoriesTable = () => {
                       )
                     : "غير محدد"}
                 </td>
-                <td className="py-3 px-4 border-b text-right">
-                  <div className="relative w-12 h-12 overflow-hidden rounded">
-                    <Image
-                      src={story.image}
-                      alt={story.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 100vw, (max-width:  768px) 50vw, 33vw"
-                      loading="lazy"
-                    />
-                  </div>
-                </td>
 
                 <td className="py-3 px-4 border-b text-right text-[12px]">
                   {story.status === StoryStatus.PENDING ? (
@@ -325,6 +297,17 @@ const AllStoriesTable = () => {
                       مرفوض
                     </span>
                   )}
+                </td>
+
+                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                  <Link
+                    title="عرض القصة"
+                    className="hover:underline"
+                    href={`/profile/${story.publisher_id}`}
+                    target="_blank"
+                  >
+                    {story.publisher_name.split(" ").slice(0, 1) || "غير محدد"}
+                  </Link>
                 </td>
 
                 <td className="py-3 px-4 border-b text-right">

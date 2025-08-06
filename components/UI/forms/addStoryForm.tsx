@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { StoryValidationSchema } from "@/utils/validators";
 import Input from "../inputs/input";
 import { WarsData } from "@/data/warsData";
+import { compressImage, validateImage } from "@/utils/image";
 
 type AddStoryPrpos = {
   loading?: boolean;
@@ -72,35 +73,33 @@ const AddStoryForm = ({
     setLoading(true);
     setFormErrors("");
     setSubmitting(true);
-    console.log("Submit handler started!");
-    console.log("Values", values);
+    setUploadError(null); // Reset upload error
 
     try {
-      // 1. Upload image to Cloudinary
-      const imageUploadRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/stories`,
-        {
-          credentials: "include",
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: values.image }),
+      // 2. Upload image if present
+      let imageUrl = "";
+      if (images.length > 0 && images[0].file) {
+        const formData = new FormData();
+        formData.append("image", images[0].file); // Use the compressed file
+
+        const imageUploadRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/stories`,
+          {
+            method: "POST",
+            credentials: "include",
+            body: formData,
+          }
+        );
+
+        if (!imageUploadRes.ok) {
+          const errorData = await imageUploadRes.json().catch(() => ({}));
+          throw new Error(errorData?.error || "فشل رفع الصورة");
         }
-      );
 
-      let imageUploadData;
-      try {
-        imageUploadData = await imageUploadRes.json();
-      } catch {
-        imageUploadData = {};
+        const uploadData = await imageUploadRes.json();
+        imageUrl = uploadData.url;
       }
 
-      if (!imageUploadRes.ok) {
-        const errorMsg = imageUploadData?.error || "حدث خطأ أثناء رفع الصورة";
-        setUploadError(errorMsg);
-        throw new Error(errorMsg);
-      }
-
-      const imageUrl = imageUploadData.url;
       console.log("Image URL:", imageUrl);
 
       const age =
@@ -352,12 +351,46 @@ const AddStoryForm = ({
                   <ReactImageUploading
                     multiple={false} // Single image upload
                     value={images}
-                    onChange={(imageList) => {
-                      setImages(imageList);
-                      if (imageList.length > 0) {
-                        setFieldValue("image", imageList[0].data_url); // ✅ store base64
-                      } else {
-                        setFieldValue("image", null); // ✅ reset on remove
+                    onChange={async (imageList) => {
+                      setUploadError(null); // Reset upload error
+                      try {
+                        if (imageList.length > 0) {
+                          const image = imageList[0];
+
+                          // Validate the image first
+                          validateImage(image);
+
+                          // If validation passes, compress the image
+                          const compressedFile = await compressImage(
+                            image.file!
+                          );
+
+                          // Create a new image object with the compressed file
+                          const compressedImage = {
+                            ...image,
+                            file: compressedFile,
+                            data_url: await new Promise<string>((resolve) => {
+                              const reader = new FileReader();
+                              reader.onload = () =>
+                                resolve(reader.result as string);
+                              reader.readAsDataURL(compressedFile);
+                            }),
+                          };
+
+                          setImages([compressedImage]);
+                          setFieldValue("image", compressedImage.data_url);
+                        } else {
+                          setImages([]);
+                          setFieldValue("image", null);
+                        }
+                      } catch (error) {
+                        setUploadError(
+                          error instanceof Error
+                            ? error.message
+                            : "حدث خطأ غير متوقع"
+                        );
+                        setImages([]);
+                        setFieldValue("image", null);
                       }
                     }}
                     maxNumber={1}
@@ -396,6 +429,7 @@ const AddStoryForm = ({
                           <div className="text-xs text-gray-500 mt-2">
                             <p>✓ الصور المدعومة: JPEG, PNG, GIF, JFIF, WebP</p>
                             <p>✓ الحد الأقصى للحجم: 5MB</p>
+                            <p>✓ قم بإرفاق صورة واحدة فقط </p>
                             {uploadError && (
                               <p className="text-red-500">✗ {uploadError}</p>
                             )}
@@ -406,7 +440,7 @@ const AddStoryForm = ({
                         {images.map((image, index) => (
                           <div
                             key={index}
-                            className="relative w-full max-w-xs aspect-square rounded-xl overflow-hidden border"
+                            className="relative w-32 h-32 aspect-square rounded-xl overflow-hidden border"
                           >
                             <Image
                               src={image.data_url}
@@ -432,12 +466,6 @@ const AddStoryForm = ({
                             </button>
                           </div>
                         ))}
-
-                        {uploadError && (
-                          <div className="rounded-lg p-4 w-full bg-red-100 text-red-600 text-sm">
-                            {uploadError}
-                          </div>
-                        )}
                       </div>
                     )}
                   </ReactImageUploading>
