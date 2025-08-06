@@ -6,7 +6,7 @@ import TextArea from "@/components/UI/inputs/textArea";
 import { CitiesData } from "@/data/citiesData";
 import { CountriesData } from "@/data/countriesData";
 import { useStatisticsStore } from "@/stores/storiesTableStore";
-import { dateConversion } from "@/utils/format";
+import { fullDateConversion } from "@/utils/format";
 import { StoryPreviewValidationSchema } from "@/utils/validators";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Image from "next/image";
@@ -57,8 +57,6 @@ const StoryPreview = ({
 
   return (
     <div className="relative p-8 flex flex-col gap-2">
-      {/* <Heading title="قبول/تعديل القصة" className="mb-4 mx-auto !text-2xl" /> */}
-
       <div className="relative flex flex-col justify-center items-start w-full min-h-[50vh] bg-secondary rounded-2xl">
         <Image
           src={data?.image || "/notFound.png"}
@@ -75,7 +73,7 @@ const StoryPreview = ({
         <p>بواسطة: </p>
         <p>{data?.publisher_name}</p>
         <p> | </p>
-        <p>{dateConversion(data?.createdAt)}</p>
+        <p>{fullDateConversion(data?.createdAt)}</p>
       </div>
 
       <div className="flex flex-col gap-2 mt-2">
@@ -83,7 +81,9 @@ const StoryPreview = ({
           <div className="flex items-center justify-between gap-2">
             <h2 className="font-semibold flex items-center gap-2 flex-wrap">
               {data?.name}{" "}
-              <p className="text-gray_dark text-sm"> [ {data?.nickname} ] </p>
+              {data?.nickname && (
+                <p className="text-gray_dark text-sm"> [ {data?.nickname} ] </p>
+              )}
             </h2>
 
             {/* Social Media Links */}

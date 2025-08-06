@@ -66,7 +66,7 @@ export async function PUT(
       const storyNotificationPayload = {
         user_id: story.publisher_id,
         message: `تم رفض طلبك لإضافة قصة عن الشهيد ${story?.name} من قبل المشرفين!`,
-        href: `/profile?activeTap=${StoryStatus.REJECTED}#storyContainer`,
+        href: `/profile/${story.publisher_id}?activeTap=${StoryStatus.REJECTED}#storyContainer`,
         notification_type: NotificationTypes.REJECT,
         createdAt: new Date(),
         is_read: false,

@@ -26,7 +26,7 @@ const NotificationCard = ({
 
   return (
     <div
-      className={`relative flex items-center gap-4 border p-6 rounded-md hover:shadow-md duration-300 cursor-pointer ${
+    className={`relative flex items-center gap-4 border p-6 rounded-md hover:shadow-md duration-300 cursor-pointer ${
         is_read ? "bg-white" : "bg-[#e9e9e9]"
       }`}
     >
