@@ -36,7 +36,8 @@ const StoryDetailsSection = async ({ id }: Props) => {
     await storyResponse.json();
 
   const isStoryOwner = data?.publisher_id === user_id;
-  const isAdmin = session?.user.role === Role.ADMIN;
+  const isAdmin =
+    session?.user.role === Role.ADMIN || session?.user.role === Role.EDITOR;
   const isApproved = data.status === StoryStatus.APPROVED;
 
   if (!isApproved && !isStoryOwner && !isAdmin) {
@@ -59,24 +60,32 @@ const StoryDetailsSection = async ({ id }: Props) => {
           <div className="relative flex items-center gap-2 bg-pending text-white border rounded-md shadow-sm p-3 mt-4 mb-4 w-full font-semibold">
             <BsExclamationTriangle size={20} />
             <p className="text-[13px]">
-              طلبك لإضافة القصة قيد المراجعة حالياً، ويجري التأكد من صحة
-              البيانات المُدخلة من قبل المشرفين
+              هذه القصة قيد المراجعة حالياً، وسيتم نشرها بعد الموافقة عليها من
+              قبل المشرفين!
             </p>
           </div>
         )}
 
-        {data.status == StoryStatus.REJECTED && (
-          <Link
-            target="_blank"
-            href={`/profile/${user_id}?activeTap=${StoryStatus.REJECTED}#storyContainer`}
-            className="group relative flex items-center gap-2 bg-rejected text-white border rounded-md shadow-sm p-3 mt-4 mb-4 w-full font-semibold"
-          >
-            <BiInfoCircle size={20} />
-            <p className="text-[13px] group-hover:underline">
-              تم رفض طلبك لإضافة قصة الشهيد!
-            </p>
-          </Link>
-        )}
+        {data.status === StoryStatus.REJECTED &&
+          (isStoryOwner ? (
+            <Link
+              target="_blank"
+              href={`/profile/${user_id}?activeTap=${StoryStatus.REJECTED}#storyContainer`}
+              className="group relative flex items-center gap-2 bg-rejected text-white border rounded-md shadow-sm p-3 mt-4 mb-4 w-full font-semibold"
+            >
+              <BiInfoCircle size={20} />
+              <p className="text-[13px] group-hover:underline">
+                تم رفض طلبك لإضافة قصة الشهيد!
+              </p>
+            </Link>
+          ) : (
+            <div className="relative flex items-center gap-2 bg-rejected text-white border rounded-md shadow-sm p-3 mt-4 mb-4 w-full font-semibold">
+              <BiInfoCircle size={20} />
+              <p className="text-[13px]">
+                هذه القصة مرفوضة حالياً، ولم يتم نشرها رسمياً بعد!
+              </p>
+            </div>
+          ))}
 
         <div className="flex flex-col gap-2">
           <PageTitles storyName={data.name} />

@@ -1,5 +1,5 @@
 import PageTitles from "@/components/UI/typography/pageTitles";
-import { arabicDateConversion, dateConversion } from "@/utils/format";
+import { arabicDateConversion, fullDateConversion } from "@/utils/format";
 import Image from "next/image";
 import React from "react";
 import { FaEye } from "react-icons/fa";
@@ -58,7 +58,7 @@ const MassacreDetails = async ({ id }: Props) => {
 
   // Determine user role (default to normal user if no session)
   const userRole = session?.user.role || Role.USER;
-  const isAdmin = userRole === Role.ADMIN;
+  const isAdmin = userRole === Role.ADMIN || userRole === Role.EDITOR;
 
   // Check massacre status
   const isApproved = data.status === MassacreStatus.APPROVED;
@@ -117,7 +117,7 @@ const MassacreDetails = async ({ id }: Props) => {
         <div className="flex flex- justify-between text-[11px]">
           <div className="flex items-center gap-2 text-gray_dark">
             <p>تاريخ النشر: </p>
-            <p> {dateConversion(data?.createdAt)} </p>
+            <p> {fullDateConversion(data?.createdAt)} </p>
           </div>
 
           <div className="flex items-center gap-2 text-gray_dark">

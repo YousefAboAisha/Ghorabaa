@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
-import { Role } from "@/app/enums";
+import { MassacreStatus, Role } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 type Params = Promise<{ id: string }>;
@@ -46,7 +46,13 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
 
     const updateResult = await massacresCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: { ...updateData, updatedAt: new Date() } } // ✅ include tags here
+      {
+        $set: {
+          ...updateData,
+          status: MassacreStatus.PENDING,
+          updatedAt: new Date(),
+        },
+      } // ✅ include tags here
     );
 
     if (updateResult.modifiedCount === 0) {

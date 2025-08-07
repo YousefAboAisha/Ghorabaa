@@ -4,7 +4,10 @@ import { getToken } from "next-auth/jwt";
 import { Role } from "./app/enums";
 
 const ADMIN_PATH = "/admin";
-
+const RESTRICTED_EDITOR_PATHS = [
+  "/admin/dashboard/users", // Block this specific route for EDITORS
+  // Add more restricted paths if needed
+];
 export async function middleware(request: NextRequest) {
   const token = await getToken({
     req: request,
@@ -35,10 +38,20 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Block EDITORS from restricted paths
+  if (
+    RESTRICTED_EDITOR_PATHS.some((path) => pathname.startsWith(path)) &&
+    token.role === Role.EDITOR
+  ) {
+    return NextResponse.redirect(new URL("/unauthorized", request.url));
+  }
+
   // Authenticated user visiting an auth page — redirect based on role
   if (isAuthPage) {
     const redirectUrl =
-      token.role === Role.ADMIN ? "/admin/dashboard" : `/profile/${token.id}`;
+      token.role === Role.ADMIN || token.role === Role.EDITOR
+        ? "/admin/dashboard"
+        : `/profile/${token.id}`;
 
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
@@ -50,13 +63,15 @@ export async function middleware(request: NextRequest) {
     }
 
     const redirectUrl =
-      token.role === Role.ADMIN ? "/admin/dashboard" : `/profile/${token.id}`;
+      token.role === Role.ADMIN || token.role === Role.EDITOR
+        ? "/admin/dashboard"
+        : `/profile/${token.id}`;
 
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 
-  // Authenticated but not admin trying to access admin route
-  if (isAdminPage && token.role !== Role.ADMIN) {
+  // Authenticated but not admin or editor trying to access admin route
+  if (isAdminPage && token.role !== Role.ADMIN && token.role !== Role.EDITOR) {
     return NextResponse.redirect(new URL("/unauthorized", request.url));
   }
 

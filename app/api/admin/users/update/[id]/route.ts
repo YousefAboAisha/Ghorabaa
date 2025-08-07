@@ -16,7 +16,7 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
   try {
     const token = await getToken({ req, secret });
 
-    if (!token || token.role === Role.USER) {
+    if (!token || token.role !== Role.ADMIN) {
       return NextResponse.json(
         { error: "غير مصرح لك بالوصول إلى هذه الصفحة" },
         { status: 403 }

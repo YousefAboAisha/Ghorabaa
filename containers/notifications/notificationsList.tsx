@@ -26,13 +26,9 @@ const NotificationsList = async () => {
 
   return (
     <div className="flex flex-col gap-2 pb-4 mt-6">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center gap-2">
         <h2 className="text-xl font-semibold">كافة الإشعارات</h2>
-
-        <div className="flex items-center gap-2">
-          <p className="text-gray_dark text-sm">عدد الإشعارات:</p>
-          <p>{notificationData?.length}</p>
-        </div>
+        <h2 className="text-xl font-semibold">({notificationData?.length})</h2>
       </div>
 
       <div className="relative flex flex-col gap-2 mt-4">

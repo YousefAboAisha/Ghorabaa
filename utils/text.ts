@@ -14,7 +14,7 @@ import { BiBell, BiCheckCircle } from "react-icons/bi";
 import { BsSend } from "react-icons/bs";
 import { GiTrashCan } from "react-icons/gi";
 import { MdOutlineClose } from "react-icons/md";
-import { RxUpdate } from "react-icons/rx";
+import { PiUserGear } from "react-icons/pi";
 
 export const getStoryStatusToArabic = (status: StoryStatus): string => {
   switch (status) {
@@ -189,13 +189,13 @@ export const getNotificationIcon = (type: NotificationTypes) => {
     case NotificationTypes.REQUEST:
       return {
         Icon: BsSend,
-        className: "text-orange-500",
+        className: "text-pending",
         size: "22",
       }; // request
     case NotificationTypes.ACCEPT:
       return {
         Icon: BiCheckCircle,
-        className: "text-[green]",
+        className: "text-approve",
         size: "27",
       }; // Accept
     case NotificationTypes.REJECT:
@@ -212,9 +212,9 @@ export const getNotificationIcon = (type: NotificationTypes) => {
       }; // Delete
     case NotificationTypes.UPDATE:
       return {
-        Icon: RxUpdate,
-        className: "text-[orange]",
-        size: "27",
+        Icon: PiUserGear,
+        className: "text-gray_dark",
+        size: "25",
       }; // Update
     case NotificationTypes.COMMENT:
       return {

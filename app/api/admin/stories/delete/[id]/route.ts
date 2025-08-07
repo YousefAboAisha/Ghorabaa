@@ -12,9 +12,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
   try {
     const token = await getToken({ req, secret });
 
-    if (!token) {
+    if (!token || token.role === Role.USER) {
       return NextResponse.json(
-        { error: "غير مصرح. يرجى تسجيل الدخول." },
+        { error: "غير مصرح لك. يرجى تسجيل الدخول." },
         { status: 401 }
       );
     }
@@ -58,7 +58,8 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     }
 
     const isOwner = existingStory.publisher_id?.toString() === token.id;
-    const isAuthenticated = token.role === Role.ADMIN || token.role === Role.EDITOR;
+    const isAuthenticated =
+      token.role === Role.ADMIN || token.role === Role.EDITOR;
 
     if (!isOwner && !isAuthenticated) {
       return NextResponse.json(

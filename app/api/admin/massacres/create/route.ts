@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 import { MassacreInterface } from "@/app/interfaces";
-import { MassacreStatus } from "@/app/enums";
+import { MassacreStatus, Role } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -12,7 +12,7 @@ export async function POST(originalReq: Request) {
   const nextReq = new NextRequest(req);
   const token = await getToken({ req: nextReq, secret });
 
-  if (!token) {
+  if (!token || token.role === Role.USER) {
     return NextResponse.json(
       { error: "أنت غير مصرح لك، الرجاء تسجيل الدخول!" },
       { status: 401 }

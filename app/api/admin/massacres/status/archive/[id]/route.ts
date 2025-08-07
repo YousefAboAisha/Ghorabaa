@@ -19,7 +19,7 @@ export async function PUT(
   const token = await getToken({ req: nextReq, secret });
 
   if (!token || token.role === Role.USER) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "غير مصرح لك!" }, { status: 401 });
   }
 
   try {
