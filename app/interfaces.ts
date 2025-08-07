@@ -234,7 +234,10 @@ export interface MassacreInterface {
   description: string;
   media: string[];
   tags?: string[];
-  internationalReactions?: string[];
+  internationalReactions?: {
+    publisher_name: string;
+    reaction_text: string;
+  }[];
   visits?: number;
   highlight: Highlight[];
   status: MassacreStatus;

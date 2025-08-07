@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BiSend, BiUser } from "react-icons/bi";
 import {
   Formik,
@@ -17,7 +17,7 @@ import { CountriesData } from "@/data/countriesData";
 import { CitiesData } from "@/data/citiesData";
 import ReactImageUploading, { ImageListType } from "react-images-uploading";
 import { CiImageOn } from "react-icons/ci";
-import { FaTimes } from "react-icons/fa";
+import { FaQuoteLeft, FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { MassacreInterface } from "@/app/interfaces";
 import { toast } from "react-toastify";
@@ -27,6 +27,7 @@ import { getFileUniqueKey } from "@/utils/file";
 import { useRouter } from "next/navigation";
 import { compressImage, validateImage } from "@/utils/image";
 import extractTags from "@/utils/extractTags";
+import { BsPlus } from "react-icons/bs";
 
 interface ImageData {
   data_url: string;
@@ -50,6 +51,9 @@ const AddMassacres = () => {
     progress: number;
     error: string | null;
   }>({ loading: false, progress: 0, error: null });
+
+  const publisherRef = useRef<HTMLInputElement>(null);
+  const reactionRef = useRef<HTMLTextAreaElement>(null);
 
   const initialValues: Partial<MassacreInterface> = {
     cover_image: "",
@@ -417,6 +421,149 @@ const AddMassacres = () => {
                 )}
               </div>
 
+              <div className="flex flex-col gap-5 w-full border rounded-xl p-8 bg-white">
+                <Heading
+                  title=""
+                  highLightText="ردود الفعل الدولية"
+                  highlightColor="before:bg-primary"
+                  className="mb-4 !text-2xl z-10"
+                />
+
+                {/* International Reactions */}
+                <div>
+                  <FieldArray name="internationalReactions">
+                    {({ push, remove, form }) => {
+                      // Create refs for inputs
+
+                      const handleAddReaction = (
+                        e: React.MouseEvent | React.KeyboardEvent
+                      ) => {
+                        e.preventDefault();
+                        if ("stopPropagation" in e) e.stopPropagation();
+
+                        const publisherName =
+                          publisherRef.current?.value.trim() || "";
+                        const reactionText =
+                          reactionRef.current?.value.trim() || "";
+
+                        if (publisherName && reactionText) {
+                          push({
+                            publisher_name: publisherName,
+                            reaction_text: reactionText,
+                          });
+
+                          // Clear inputs
+                          if (publisherRef.current)
+                            publisherRef.current.value = "";
+                          if (reactionRef.current)
+                            reactionRef.current.value = "";
+
+                          // Focus back to publisher input
+                          publisherRef.current?.focus();
+                        } else {
+                          toast.error(
+                            "يرجى ملء جميع الحقول الخاصة بالردود الدولية"
+                          );
+                        }
+                      };
+
+                      return (
+                        <div>
+                          <div className="flex flex-col gap-4">
+                            {/* Publisher Name Input */}
+                            <Input
+                              ref={publisherRef}
+                              placeholder="اسم الناشر (مثال: الأمم المتحدة)"
+                              className="focus:border-secondary"
+                              id="publisherInput"
+                              required={false}
+                            />
+
+                            {/* Reaction Text Input */}
+                            <TextArea
+                              required={false}
+                              ref={reactionRef}
+                              placeholder="نص رد الفعل (مثال: أدان الهجوم)"
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  handleAddReaction(e);
+                                }
+                              }}
+                              className=" focus:border-secondary"
+                            />
+
+                            <ErrorMessage
+                              name="internationalReactions"
+                              component="div"
+                              className="text-red-500 font-semibold text-[10px]"
+                            />
+
+                            <div className="w-fit">
+                              <Button
+                                title="إضافة"
+                                className="bg-secondary px-6"
+                                icon={<BsPlus size={17} />}
+                                onClick={handleAddReaction}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Display Reactions */}
+                          <div className="cards-grid-2 gap-4 mt-6">
+                            {form.values.internationalReactions.map(
+                              (
+                                reaction: {
+                                  publisher_name: string;
+                                  reaction_text: string;
+                                },
+                                index: number
+                              ) => (
+                                <div
+                                  key={index}
+                                  style={{
+                                    direction: "rtl",
+                                  }}
+                                  className="relative flex flex-col gap-2 p-8 rounded-[50px] rounded-tr-none bg-background_light border w-full"
+                                >
+                                  <div className="text-md font-bold">
+                                    {reaction.publisher_name}
+                                  </div>
+
+                                  <p className="font-light text-sm">
+                                    {reaction.reaction_text}
+                                  </p>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => remove(index)}
+                                    className="absolute top-2 right-2 text-red-500"
+                                  >
+                                    <FaTimes size={14} />
+                                  </button>
+
+                                  {/* absolute icon */}
+                                  <FaQuoteLeft
+                                    className="absolute bottom-4 left-8 opacity-5"
+                                    size={20}
+                                  />
+                                </div>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }}
+                  </FieldArray>
+
+                  <ErrorMessage
+                    name="internationalReactions"
+                    component="div"
+                    className="text-red-500 font-semibold text-[10px]"
+                  />
+                </div>
+              </div>
+
               {/* Massacre Results Section */}
               <div className="flex flex-col gap-5 w-full border rounded-xl p-8 bg-white">
                 <Heading
@@ -485,64 +632,10 @@ const AddMassacres = () => {
                   </div>
                 </div>
 
-                {/* International Reactions */}
-                <div>
-                  <FieldArray name="internationalReactions">
-                    {({ push, remove, form }) => (
-                      <div>
-                        <TextArea
-                          placeholder="أضف نص رد الفعل ثم اضغط Enter"
-                          label="ردود الفعل الدولية"
-                          onKeyDown={(e) => {
-                            if (
-                              e.key === "Enter" &&
-                              e.currentTarget.value.trim()
-                            ) {
-                              e.preventDefault();
-                              push(e.currentTarget.value.trim());
-                              e.currentTarget.value = "";
-                            }
-                          }}
-                          required={false}
-                          className="focus:border-secondary"
-                        />
-
-                        <div className="cards-grid-2 gap-4 mt-4 ">
-                          {form.values.internationalReactions.map(
-                            (reaction: string, index: number) => (
-                              <div
-                                key={index}
-                                className="relative bg-background_light p-6 rouned-md flex items-center text-sm rounded-[30px] rounded-tr-none border h-fit"
-                              >
-                                {reaction}
-                                <button
-                                  type="button"
-                                  onClick={() => remove(index)}
-                                >
-                                  <FaTimes
-                                    title="حذف النص"
-                                    className="absolute top-2 right-2 ml-2 hover:text-rejected duration-150"
-                                    size={14}
-                                  />
-                                </button>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </FieldArray>
-                  <ErrorMessage
-                    name="internationalReactions"
-                    component="div"
-                    className="text-red-500 font-semibold text-[10px]"
-                  />
-                </div>
-
                 {/* Image Upload Section */}
                 <fieldset
                   disabled={isSubmitting || uploadStatus.loading}
-                  className="relative group disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="relative group disabled:opacity-50 disabled:cursor-not-allowed mt-4"
                 >
                   <ReactImageUploading
                     multiple

@@ -10,7 +10,10 @@ import "swiper/css/effect-coverflow";
 import InternationalReactionCard from "../../cards/internationalReactionCard";
 
 type Props = {
-  data?: string[];
+  data?: {
+    publisher_name: string;
+    reaction_text: string;
+  }[];
 };
 
 const breakboints = {
@@ -31,7 +34,7 @@ const breakboints = {
 const InternationalReactionsSwiper = ({ data }: Props) => {
   return (
     <div className="mt-24">
-      <h2 className="font-bold text-lg">ردود الفعل العالمية</h2>
+      <h2 className="font-bold text-lg">ردود الفعل الدولية</h2>
 
       <Swiper
         breakpoints={breakboints}
@@ -43,7 +46,10 @@ const InternationalReactionsSwiper = ({ data }: Props) => {
         {data?.map((elem, index) => {
           return (
             <SwiperSlide key={index} className="py-6 pb-10">
-              <InternationalReactionCard text={elem} />
+              <InternationalReactionCard
+                publisher_name={elem.publisher_name}
+                reaction_text={elem.reaction_text}
+              />
             </SwiperSlide>
           );
         })}

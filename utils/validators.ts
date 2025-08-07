@@ -213,8 +213,18 @@ export const MassacresValidationSchema = Yup.object({
     .max(5, "لا يمكن رفع أكثر من 5 صور"),
 
   internationalReactions: Yup.array()
-    .notRequired()
-    .of(Yup.string().min(3, "رد الفعل قصير جداً"))
+    .of(
+      Yup.object().shape({
+        publisher_name: Yup.string()
+          .notRequired()
+          .min(2, "اسم الناشر قصير جداً (حد أدنى حرفين)")
+          .max(100, "اسم الناشر طويل جداً (حد أقصى 100 حرف)"),
+        reaction_text: Yup.string()
+          .notRequired()
+          .min(10, "رد الفعل قصير جداً (حد أدنى 10 أحرف)")
+          .max(500, "رد الفعل طويل جداً (حد أقصى 500 حرف)"),
+      })
+    )
     .min(1, "يرجى إضافة رد فعل دولي واحد على الأقل")
     .max(10, "لا يمكن إضافة أكثر من 10 ردود فعل"),
 });
