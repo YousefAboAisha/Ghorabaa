@@ -195,7 +195,7 @@ export const getNotificationIcon = (type: NotificationTypes) => {
     case NotificationTypes.ACCEPT:
       return {
         Icon: BiCheckCircle,
-        className: "text-approve",
+        className: "text-primary",
         size: "27",
       }; // Accept
     case NotificationTypes.REJECT:

@@ -115,6 +115,8 @@ const AddStoryForm = ({
           credentials: "include",
           body: JSON.stringify({
             ...values,
+            birth_date,
+            death_date,
             age,
             image: imageUrl,
             id_number,

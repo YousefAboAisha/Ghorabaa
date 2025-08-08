@@ -1,6 +1,6 @@
 import { NotificationTypes } from "@/app/enums";
 import { fullDateConversion } from "@/utils/format";
-import { getNotificationColor, getNotificationIcon } from "@/utils/text";
+import { getNotificationIcon } from "@/utils/text";
 
 type NotificationTypesProps = {
   message: string;
@@ -17,16 +17,13 @@ const NotificationCard = ({
   isPopperNotification = false,
   createdAt,
 }: NotificationTypesProps) => {
-  const notificationColor = getNotificationColor(type);
-  console.log("Notification Color", notificationColor);
-
   const { Icon, className, size } = getNotificationIcon(type);
 
   const iconSize = isPopperNotification ? 27 : size;
 
   return (
     <div
-    className={`relative flex items-center gap-4 border p-6 rounded-md hover:shadow-md duration-300 cursor-pointer ${
+      className={`relative flex items-center gap-4 border p-6 rounded-md hover:shadow-md duration-300 cursor-pointer ${
         is_read ? "bg-white" : "bg-[#e9e9e9]"
       }`}
     >

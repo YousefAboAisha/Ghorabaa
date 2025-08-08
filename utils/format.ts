@@ -27,7 +27,7 @@ export const arabicDateConversion = (date: Date): string => {
   return formattedDate;
 };
 
-export const dateConversion = (date: Date): string => {
+export const dateConversion = (date: Date | string): string => {
   const d = new Date(date);
 
   const day = d.getDate();

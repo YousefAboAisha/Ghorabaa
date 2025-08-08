@@ -89,7 +89,7 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
             size={22}
             className="text-primary"
           />
-          <p>{dateConversion(data?.death_date as Date)}</p>
+          <p>{dateConversion(data?.death_date as string)}</p>
         </div>
 
         <div className="flex items-center gap-3 text-[13px]">

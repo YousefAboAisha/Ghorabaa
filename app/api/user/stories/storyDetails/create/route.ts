@@ -62,8 +62,8 @@ export async function POST(originalReq: Request) {
       publisher_id: new ObjectId(token.id),
       status: StoryStatus.PENDING,
       age,
-      death_date: new Date(death_date),
-      birth_date: new Date(birth_date),
+      death_date,
+      birth_date,
       updatedAt: new Date(),
     };
 
