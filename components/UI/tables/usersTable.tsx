@@ -141,9 +141,9 @@ const UsersTable = () => {
               </td>
 
               <td className="py-3 px-4 border-b text-right">
-                <div className="relative w-12 h-12 overflow-hidden rounded">
+                <div className="relative w-12 h-12 overflow-hidden rounded-full">
                   <Image
-                    src={user.image}
+                    src={user.image || "/notFound.png"}
                     alt={user.name}
                     fill
                     className="object-cover"

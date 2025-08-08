@@ -125,7 +125,18 @@ const AllStoriesTable = () => {
   ) => {
     const status = story.status;
 
-    if (status == StoryStatus.APPROVED) return <p>-</p>;
+    if (status == StoryStatus.APPROVED)
+      return (
+        <CiTrash
+          title="حذف القصة"
+          className="cursor-pointer text-rejected"
+          onClick={() => {
+            setIsDeleteModalOpen(true);
+            setStoryData(story);
+          }}
+          size={22}
+        />
+      );
     if (status == StoryStatus.PENDING) {
       return (
         <>
@@ -144,6 +155,16 @@ const AllStoriesTable = () => {
             className="text-rejected cursor-pointer"
             onClick={() => {
               setIsOpenStoryReject(true);
+              setStoryData(story);
+            }}
+            size={22}
+          />
+
+          <CiTrash
+            title="حذف القصة"
+            className="cursor-pointer text-rejected"
+            onClick={() => {
+              setIsDeleteModalOpen(true);
               setStoryData(story);
             }}
             size={22}
