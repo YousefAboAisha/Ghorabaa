@@ -38,7 +38,7 @@ const TableSkeletonLoader = () => {
       </table>
 
       {/* Button Skeleton */}
-      <div className="w-full md:w-4/12 mx-auto my-5">
+      <div className="w-full md:w-4/12 mx-auto p-4">
         <div className="h-10 bg-gray-200 rounded w-full"></div>
       </div>
     </div>

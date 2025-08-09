@@ -2,46 +2,9 @@ import React from "react";
 import Heading from "@/components/UI/typography/heading";
 import StorySearchSection from "@/containers/addStory/storySearchSection";
 import { Metadata } from "next";
+import { AddStoryMetadata } from "../lib/metadata";
 
-export const metadata: Metadata = {
-  title: "إضافة قصة شهيد جديد | توثيق قصص الشهداء - غرباء",
-  description:
-    "ساهم معنا في توثيق قصة شهيد فلسطيني عبر منصة غرباء لضمان بقاء الذكرى خالدة",
-  keywords: [
-    "إضافة قصة شهيد",
-    "توثيق الشهداء",
-    "نموذج إضافة قصة",
-    "سجل الشهداء",
-    "منصة غرباء",
-    "قصص الشهداء الفلسطينيين",
-  ],
-  openGraph: {
-    title: "إضافة قصة شهيد جديد | منصة غرباء",
-    description:
-      "ساهم في توثيق تاريخ الشهداء الفلسطينيين عبر إضافة قصصهم على منصة غرباء",
-    url: "https://ghorabaa.vercel.app/addStory",
-    images: [
-      {
-        url: "/images/add-story-og.jpg",
-        width: 1200,
-        height: 630,
-        alt: "نموذج إضافة قصة شهيد على منصة غرباء",
-      },
-    ],
-  },
-  alternates: {
-    canonical: "/addStory",
-  },
-  robots: {
-    index: false, // Recommended for form pages
-    follow: true,
-  },
-  other: {
-    privacy: "form-submission", // Indicates this is a form page
-    "cache-control": "private, no-store", // Sensitive form handling
-    "dc:rights": "جميع الحقوق محفوظة للمساهمين",
-  },
-};
+export const metadata: Metadata = AddStoryMetadata;
 
 const Page = () => {
   return (
