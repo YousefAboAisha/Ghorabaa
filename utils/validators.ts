@@ -1,24 +1,24 @@
 import * as Yup from "yup";
 
 export const SignupvalidationSchema = Yup.object({
-  name: Yup.string().required("يرجى إدخال الاسم رباعي"),
-  email: Yup.string()
+  name: Yup.string().trim().required("يرجى إدخال الاسم رباعي"),
+  email: Yup.string().trim()
     .email("البريد الإلكتروني غير صالح")
     .required("يرجى إدخال البريد الإلكتروني"),
-  password: Yup.string()
+  password: Yup.string().trim()
     .min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل")
     .required("يرجى إدخال كلمة المرور"),
-  confirmPassword: Yup.string()
+  confirmPassword: Yup.string().trim()
     .oneOf([Yup.ref("password")], "كلمة المرور غير متطابقة")
     .required("يرجى تأكيد كلمة المرور"),
 });
 
 export const StoryValidationSchema = Yup.object({
-  city: Yup.string().required("يرجى اختيار المدينة"),
+  city: Yup.string().trim().required("يرجى اختيار المدينة"),
 
-  neighborhood: Yup.string().required("يرجى اختيار الحي"),
+  neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
 
-  bio: Yup.string()
+  bio: Yup.string().trim()
     .required("يرجى إدخال السيرة الذاتية")
     .test(
       "min-words",
@@ -32,7 +32,7 @@ export const StoryValidationSchema = Yup.object({
 
   image: Yup.mixed().required("يرجى إضافة صورة"),
   social_media: Yup.object({
-    facebook: Yup.string()
+    facebook: Yup.string().trim()
       .nullable()
       .notRequired()
       .url("يرجى إدخال رابط فيسبوك صحيح")
@@ -41,7 +41,7 @@ export const StoryValidationSchema = Yup.object({
         "يجب أن يكون الرابط من فيسبوك",
         (value) => !value || value.includes("facebook.com")
       ),
-    instagram: Yup.string()
+    instagram: Yup.string().trim()
       .nullable()
       .notRequired()
       .url("يرجى إدخال رابط انستغرام صحيح")
@@ -50,7 +50,7 @@ export const StoryValidationSchema = Yup.object({
         "يجب أن يكون الرابط من انستغرام",
         (value) => !value || value.includes("instagram.com")
       ),
-    x: Yup.string()
+    x: Yup.string().trim()
       .nullable()
       .notRequired()
       .url("يرجى إدخال رابط إكس صحيح")
@@ -64,26 +64,26 @@ export const StoryValidationSchema = Yup.object({
 });
 
 export const ProfileValidationSchema = Yup.object({
-  name: Yup.string().required("يرجى كتابة الاسم"),
+  name: Yup.string().trim().required("يرجى كتابة الاسم"),
 
-  phone_number: Yup.string()
+  phone_number: Yup.string().trim()
     .matches(
       /^(059|056)\d{7}$/,
       "رقم الهاتف يجب أن يكون 10 أرقام ويبدأ بـ 059 أو 056"
     )
     .required("يُرجى إضافة رقم الهاتف"),
 
-  id_number: Yup.string()
+  id_number: Yup.string().trim()
     .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام")
     .required("يُرجى إضافة رقم الهوية"),
 });
 
 export const StoryPreviewValidationSchema = Yup.object({
-  city: Yup.string().required("يرجى اختيار المدينة"),
+  city: Yup.string().trim().required("يرجى اختيار المدينة"),
 
-  neighborhood: Yup.string().required("يرجى اختيار الحي"),
+  neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
 
-  bio: Yup.string()
+  bio: Yup.string().trim()
     .required("يرجى إدخال السيرة الذاتية")
     .test(
       "min-words",
@@ -97,7 +97,7 @@ export const StoryPreviewValidationSchema = Yup.object({
 });
 
 export const StoryRejectValidationSchema = Yup.object({
-  rejectReason: Yup.string()
+  rejectReason: Yup.string().trim()
     .required("يُرجى إدخال سبب الرفض")
     .test(
       "min-words",
@@ -111,7 +111,7 @@ export const StoryRejectValidationSchema = Yup.object({
 });
 
 export const ReportValidationSchema = Yup.object({
-  rejectReason: Yup.string()
+  rejectReason: Yup.string().trim()
     .required("يرجى اختيار سبب الإبلاغ")
     .oneOf(
       [
@@ -128,39 +128,39 @@ export const ReportValidationSchema = Yup.object({
       ],
       "يرجى اختيار سبب الإبلاغ من القائمة"
     ),
-  rejectDetails: Yup.string().notRequired(),
+  rejectDetails: Yup.string().trim().notRequired(),
 });
 
 export const EditUserValidationSchema = Yup.object({
-  name: Yup.string().required("يرجى كتابة الاسم"),
+  name: Yup.string().trim().required("يرجى كتابة الاسم"),
 
-  phone_number: Yup.string()
+  phone_number: Yup.string().trim()
     .matches(
       /^(059|056)\d{7}$/,
       "رقم الهاتف يجب أن يكون 10 أرقام ويبدأ بـ 059 أو 056"
     )
     .required("يُرجى إضافة رقم الهاتف"),
 
-  id_number: Yup.string()
+  id_number: Yup.string().trim()
     .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام")
     .required("يُرجى إضافة رقم الهوية"),
 
-  role: Yup.string().required("يرجى اختيار درجة الوصول للمستخدم"),
+  role: Yup.string().trim().required("يرجى اختيار درجة الوصول للمستخدم"),
 });
 
 export const ContactFormSchema = Yup.object({
-  title: Yup.string().required("يرجى كتابة عنوان الرسالة"),
-  details: Yup.string().required("يرجى كتابة تفاصيل الرسالة"),
+  title: Yup.string().trim().required("يرجى كتابة عنوان الرسالة"),
+  details: Yup.string().trim().required("يرجى كتابة تفاصيل الرسالة"),
 });
 
 export const MassacresValidationSchema = Yup.object({
-  title: Yup.string().required("يرجى إدخال عنوان المجزرة"),
+  title: Yup.string().trim().required("يرجى إدخال عنوان المجزرة"),
 
   date: Yup.date()
     .required("يرجى إدخال تاريخ حدوث المجزرة")
     .max(new Date(), "لا يمكن إدخال تاريخ مستقبلي"),
 
-  cover_image: Yup.string().required("يرجى اختيار صورة الغلاف للمجزرة"),
+  cover_image: Yup.string().trim().required("يرجى اختيار صورة الغلاف للمجزرة"),
 
   deaths: Yup.number()
     .required("يرجى إدخال عدد الشهداء")
@@ -178,11 +178,11 @@ export const MassacresValidationSchema = Yup.object({
     .integer("الرقم يجب أن يكون عدداً صحيحاً"),
 
   location: Yup.object({
-    city: Yup.string().required("يرجى اختيار المدينة"),
-    neighborhood: Yup.string().required("يرجى اختيار الحي"),
+    city: Yup.string().trim().required("يرجى اختيار المدينة"),
+    neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
   }),
 
-  description: Yup.string()
+  description: Yup.string().trim()
     .required("يرجى إدخال تفاصيل المجزرة")
     .test(
       "word-count-range",
@@ -208,18 +208,18 @@ export const MassacresValidationSchema = Yup.object({
     ),
 
   media: Yup.array()
-    .of(Yup.string().url("يجب أن تكون الصورة رابطًا صالحًا"))
+    .of(Yup.string().trim().url("يجب أن تكون الصورة رابطًا صالحًا"))
     .min(1, "يرجى رفع صورة واحدة على الأقل")
     .max(5, "لا يمكن رفع أكثر من 5 صور"),
 
   internationalReactions: Yup.array()
     .of(
       Yup.object().shape({
-        publisher_name: Yup.string()
+        publisher_name: Yup.string().trim()
           .notRequired()
           .min(2, "اسم الناشر قصير جداً (حد أدنى حرفين)")
           .max(100, "اسم الناشر طويل جداً (حد أقصى 100 حرف)"),
-        reaction_text: Yup.string()
+        reaction_text: Yup.string().trim()
           .notRequired()
           .min(10, "رد الفعل قصير جداً (حد أدنى 10 أحرف)")
           .max(500, "رد الفعل طويل جداً (حد أقصى 500 حرف)"),
