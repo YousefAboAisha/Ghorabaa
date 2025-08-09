@@ -10,6 +10,7 @@ import { Session } from "next-auth";
 import { HighlightedText } from "../typography/highlightText";
 import { dateConversion } from "@/utils/format";
 import { FiMapPin } from "react-icons/fi";
+import { getAgeLabel } from "@/utils/text";
 
 interface StoryCardsProps {
   data?: StoryInterface & { favorite?: boolean };
@@ -17,8 +18,6 @@ interface StoryCardsProps {
 }
 
 const StoryCard = ({ data, session }: StoryCardsProps) => {
-
-
   return (
     <div className="relative group w-full flex flex-col border bg-white hover:shadow-xl duration-500 rounded-2xl overflow-hidden">
       <Link href={`/stories/${data?._id}`} title="عرض الملف الشخصي">
@@ -94,10 +93,7 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
 
         <div className="flex items-center gap-3 text-[13px]">
           <HiUser size={22} className="text-primary" />
-          <div className="flex items-center gap-1  ">
-            <p>{data?.age}</p>
-            <p>عاماً</p>
-          </div>
+          <p>{getAgeLabel(data?.age as number)}</p>
         </div>
 
         <div className="w-full flex items-center gap-2 mt-2">

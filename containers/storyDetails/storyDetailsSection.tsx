@@ -12,6 +12,7 @@ import { Role, StoryStatus } from "@/app/enums";
 import { BsExclamationTriangle, BsEye } from "react-icons/bs";
 import { BiInfoCircle } from "react-icons/bi";
 import LogVisit from "@/containers/stories/logVisit";
+import { getAgeLabel } from "@/utils/text";
 
 type Props = {
   id: string;
@@ -181,10 +182,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
                   العمر
                 </td>
                 <td className="py-3 px-4 border-b text-right text-sm">
-                  <div className="flex items-center gap-1">
-                    <p>{data.age}</p>
-                    <p>عاماً</p>
-                  </div>
+                  {getAgeLabel(data?.age as number)}
                 </td>
               </tr>
 

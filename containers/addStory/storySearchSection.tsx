@@ -12,7 +12,7 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Input from "@/components/UI/inputs/input";
 import { arabicDateConversion } from "@/utils/format";
-import { getGenderLabel } from "@/utils/text";
+import { getAgeLabel, getGenderLabel } from "@/utils/text";
 import ErrorMessageContainer from "@/components/responseMessages/errorMessage";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import { BsExclamationTriangle } from "react-icons/bs";
@@ -182,7 +182,7 @@ const StorySearchSection = () => {
                 </td>
 
                 <td className="py-3 px-4 border-b text-right text-sm">
-                  {searchData.age} عاماً
+                  {getAgeLabel(searchData?.age as number)}
                 </td>
               </tr>
 
@@ -239,8 +239,6 @@ const StorySearchSection = () => {
   return (
     <div className="relative w-full lg:w-7/12 min-h-screen">
       <div className="flex flex-col justify-center items-center">
-       
-
         <div className="relative w-full overflow-hidden">
           <Formik
             initialValues={initialValues}

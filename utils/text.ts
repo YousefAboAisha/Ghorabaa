@@ -254,3 +254,12 @@ export const getMassacreStatusLabel = (status: MassacreStatus) => {
       return "مؤرشفة";
   }
 };
+
+export const getAgeLabel = (age: number) => {
+  if (age == 0) return "أقل من عام";
+  if (age == 1) return "عام";
+  if (age == 2) return "عامان";
+  if (age > 2 && age < 10) return `${age} أعوام`;
+  if (age > 10 && age < 100) return `${age} عاماً`;
+  if (age >= 100) return `${age} عام`;
+};
