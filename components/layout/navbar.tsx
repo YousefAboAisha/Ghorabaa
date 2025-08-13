@@ -53,6 +53,7 @@ const Navbar = ({ session }: NavbarProps) => {
           </Link>
         );
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [pathname]
   );
 
@@ -60,6 +61,7 @@ const Navbar = ({ session }: NavbarProps) => {
     setLoading(true);
     fetchAndUpdateCount();
     setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Only render the navbar if it's not an admin page

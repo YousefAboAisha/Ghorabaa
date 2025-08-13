@@ -58,6 +58,7 @@ function NotificationPopper({ session }: NotificationPopperProps) {
     }, 10000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_id]);
 
   // ✅ Mark notifications as read when menu opens

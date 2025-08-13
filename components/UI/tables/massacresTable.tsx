@@ -86,11 +86,13 @@ const MassacresTable = () => {
   // Initial URL sync
   useEffect(() => {
     router.push(`/admin/dashboard/massacres?page=${page}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Refetch on role/page change
   useEffect(() => {
     fetchTableData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const renderTableActions = (massacre: MassacreInterface) => {

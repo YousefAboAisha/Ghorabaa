@@ -64,10 +64,12 @@ const ReportsTable = () => {
 
   useEffect(() => {
     router.push(`/admin/dashboard/reports?page=${page}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     fetchTableData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const renderTableContent = () => {

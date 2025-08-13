@@ -100,10 +100,12 @@ const AllStoriesTable = () => {
 
   useEffect(() => {
     router.push(`/admin/dashboard?page=${page}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     fetchTableData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTap, page]);
 
   const getBorderColor = (status: StoryStatus) => {

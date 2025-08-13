@@ -83,11 +83,13 @@ const UsersTable = () => {
   // Initial URL sync
   useEffect(() => {
     router.push(`/admin/dashboard/users?page=${page}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Refetch on role/page change
   useEffect(() => {
     fetchTableData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRole, page]);
 
   const getBorderColor = (role: Role) => {
