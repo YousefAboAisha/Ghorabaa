@@ -12,13 +12,12 @@ import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoade
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Pagination from "./pagination";
-import Button from "../inputs/button";
 import Modal from "@/components/UI/modals/modal";
 import EditUser from "@/components/UI/modals/editUser";
-import UserSearch from "../modals/userSearch";
 
 import { getRoleColor, getRoleInArabic } from "@/utils/text";
 import { CiSearch } from "react-icons/ci";
+import Input from "../inputs/input";
 
 const UsersTable = () => {
   const [tableData, setTableData] = useState<UserInterface[]>([]);
@@ -28,7 +27,6 @@ const UsersTable = () => {
 
   const [userData, setUserData] = useState<UserInterface | null>(null);
   const [isOpenEditUser, setIsOpenEditUser] = useState(false);
-  const [isOpenUserSearch, setIsOpenUserSearch] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [currentRole, setCurrentRole] = useState<Role>(Role.ADMIN);
@@ -40,13 +38,19 @@ const UsersTable = () => {
     () => Number(searchParams.get("page")) || 1
   );
 
+  const [SearchValue, setSearchValue] = useState<string>("");
+
   const fetchTableData = async () => {
     setTableLoading(true);
     setError(null);
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/users/fetch?role=${currentRole}&page=${page}&limit=10`
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/admin/users/fetch?role=${currentRole}&page=${page}&limit=10&search=${encodeURIComponent(
+          SearchValue
+        )}`
       );
 
       if (!res.ok) {
@@ -202,6 +206,19 @@ const UsersTable = () => {
     );
   };
 
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (SearchValue.length > 1) {
+        fetchTableData();
+      } else if (SearchValue.length === 0) {
+        fetchTableData();
+      }
+    }, 500); // debounce
+
+    return () => clearTimeout(delayDebounce);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [SearchValue]);
+
   return (
     <>
       {/* Role Filter + Search */}
@@ -216,6 +233,7 @@ const UsersTable = () => {
               )}`}
               onClick={() => {
                 setPage(1);
+                setSearchValue("");
                 router.push(`/admin/dashboard/users?page=1`);
                 setCurrentRole(role);
               }}
@@ -225,14 +243,19 @@ const UsersTable = () => {
           ))}
         </div>
 
-        <div className="w-full lg:w-fit">
-          <Button
-            onClick={() => setIsOpenUserSearch(true)}
-            title="البحث"
-            className="bg-secondary text-white px-4"
-            icon={<CiSearch size={20} />}
-          />
-        </div>
+        <Input
+          placeholder="البحث عن الشهيد"
+          value={SearchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setPage(1);
+              fetchTableData();
+            }
+          }}
+          className="border bg-white focus:border-secondary"
+          icon={<CiSearch size={20} className="text-gray-500" />}
+        />
       </div>
 
       {/* Table */}
@@ -267,15 +290,6 @@ const UsersTable = () => {
             setLoading={setLoading}
           />
         )}
-      </Modal>
-
-      {/* Search Modal */}
-      <Modal
-        isOpen={isOpenUserSearch}
-        setIsOpen={setIsOpenUserSearch}
-        containerClassName="!lg:w-3/12"
-      >
-        <UserSearch />
       </Modal>
     </>
   );

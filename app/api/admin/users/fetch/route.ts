@@ -24,11 +24,11 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const role = searchParams.get("role")?.trim();
+    const search = searchParams.get("search")?.trim();
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
-    // Validate role if provided
     const validRoles = Object.values(Role);
     const matchStage: Record<string, unknown> = {};
 
@@ -36,7 +36,14 @@ export async function GET(req: NextRequest) {
       matchStage.role = role;
     }
 
-    // Get paginated users
+    if (search) {
+      matchStage.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // Fetch paginated + filtered users
     const users = await usersCollection
       .find(matchStage)
       .skip(skip)
@@ -44,7 +51,6 @@ export async function GET(req: NextRequest) {
       .sort({ createdAt: -1 })
       .toArray();
 
-    // Count total users for pagination metadata
     const totalDocs = await usersCollection.countDocuments(matchStage);
 
     return NextResponse.json(

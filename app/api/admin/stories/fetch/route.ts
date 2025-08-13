@@ -20,14 +20,24 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
+    const search = searchParams.get("search")?.trim();
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
     // Build match stage
     const matchStage: Record<string, unknown> = {};
+
     if (status && Object.values(StoryStatus).includes(status as StoryStatus)) {
       matchStage.status = status;
+    }
+
+    if (search) {
+      // Case-insensitive regex search across multiple fields
+      matchStage.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { nickname: { $regex: search, $options: "i" } },
+      ];
     }
 
     const pipeline = [
@@ -63,8 +73,8 @@ export async function GET(req: NextRequest) {
           publisher_id: 1,
           publisher_name: "$publisher.name",
           createdAt: 1,
-          updatedAt: 1, // optional: include it for reference
-          effectiveDate: 1, // optional: remove if not needed in result
+          updatedAt: 1,
+          effectiveDate: 1,
         },
       },
       { $sort: { effectiveDate: -1 } },
@@ -72,9 +82,7 @@ export async function GET(req: NextRequest) {
       { $limit: limit },
     ];
 
-    // Count total documents separately for pagination metadata
     const totalDocs = await db.collection("stories").countDocuments(matchStage);
-
     const stories = await db
       .collection("stories")
       .aggregate(pipeline)

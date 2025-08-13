@@ -14,11 +14,10 @@ import { StoryTabsData } from "@/data/storyTabsData";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "./pagination";
-import Button from "../inputs/button";
-import StorySearch from "../modals/storySearch";
 import { CiSearch, CiTrash } from "react-icons/ci";
 import { DeleteStory } from "../modals/deleteStory";
 import { useStatisticsStore } from "@/stores/storiesTableStore";
+import Input from "../inputs/input";
 
 const AllStoriesTable = () => {
   const [tableData, setTableData] = useState<
@@ -34,8 +33,6 @@ const AllStoriesTable = () => {
   const [isOpenStoryReject, setIsOpenStoryReject] = useState<boolean>(false);
   const [isStoryRejectLoading, setIsStoryRejectLoading] =
     useState<boolean>(false);
-
-  const [isOpenStorySearch, setIsOpenStorySearch] = useState<boolean>(false);
 
   // Delete Story Modal state variables
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -55,6 +52,8 @@ const AllStoriesTable = () => {
   );
   const [totalPages, setTotalPages] = useState(1);
 
+  const [SearchValue, setSearchValue] = useState<string>("");
+
   const { fetchStatistics } = useStatisticsStore();
 
   const fetchTableData = async () => {
@@ -63,7 +62,11 @@ const AllStoriesTable = () => {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/stories/fetch?status=${currentTap}&page=${page}&limit=10`
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/admin/stories/fetch?status=${currentTap}&page=${page}&limit=10&search=${encodeURIComponent(
+          SearchValue
+        )}`
       );
 
       if (!res.ok) {
@@ -74,20 +77,12 @@ const AllStoriesTable = () => {
         } catch {
           errorMsg = res.statusText || errorMsg;
         }
-
         throw new Error(errorMsg);
       }
 
       const { data, pagination } = await res.json();
-
-      if (data && Array.isArray(data)) {
-        console.log("pagination data", pagination);
-        setTableData(data);
-        setTotalPages(pagination.totalPages);
-        console.log("table's pagination", pagination);
-      } else {
-        setTableData([]);
-      }
+      setTableData(Array.isArray(data) ? data : []);
+      setTotalPages(pagination?.totalPages || 1);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
@@ -346,6 +341,19 @@ const AllStoriesTable = () => {
     }
   };
 
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (SearchValue.length > 1) {
+        fetchTableData();
+      } else if (SearchValue.length === 0) {
+        fetchTableData();
+      }
+    }, 500); // debounce
+
+    return () => clearTimeout(delayDebounce);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [SearchValue]);
+
   return (
     <>
       <div className="flex flex-col lg:flex-row items-center justify-between gap-6 text-sm mb-8">
@@ -359,6 +367,7 @@ const AllStoriesTable = () => {
               )}`}
               onClick={() => {
                 setPage(1);
+                setSearchValue("");
                 router.push(`/admin/dashboard?page=1`);
                 setCurrentTap(status);
               }}
@@ -368,14 +377,19 @@ const AllStoriesTable = () => {
           ))}
         </div>
 
-        <div className="w-full lg:w-fit">
-          <Button
-            onClick={() => setIsOpenStorySearch(true)}
-            title="البحث"
-            className="bg-secondary text-white px-4"
-            icon={<CiSearch size={20} />}
-          />
-        </div>
+        <Input
+          placeholder="البحث عن الشهيد"
+          value={SearchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setPage(1);
+              fetchTableData();
+            }
+          }}
+          className="border bg-white focus:border-secondary"
+          icon={<CiSearch size={20} className="text-gray-500" />}
+        />
       </div>
 
       {/* Render the table content */}
@@ -422,14 +436,6 @@ const AllStoriesTable = () => {
           setIsOpen={setIsOpenStoryReject}
           setLoading={setIsStoryRejectLoading}
         />
-      </Modal>
-
-      <Modal
-        isOpen={isOpenStorySearch}
-        setIsOpen={setIsOpenStorySearch}
-        containerClassName="!lg:w-3/12"
-      >
-        <StorySearch />
       </Modal>
 
       {/* Delete Story Modal */}
