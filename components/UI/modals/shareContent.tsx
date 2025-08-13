@@ -66,6 +66,7 @@ const ShareContent = ({ story_title, type }: ShareModalProps) => {
             readOnly
             className="border-none pr-8"
             value={sharedLink}
+            dir="ltr"
           />
 
           <div

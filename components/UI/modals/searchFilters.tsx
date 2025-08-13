@@ -238,6 +238,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
             }
           }}
           error={errors["age.from"]}
+          min={0}
         />
 
         <Input
@@ -254,6 +255,7 @@ const SearchFilters = ({ setIsOpen }: SearchFilterProps) => {
             }
           }}
           error={errors["age.to"]}
+          min={1}
         />
       </div>
 

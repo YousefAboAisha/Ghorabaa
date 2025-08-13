@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import DashboardHeaderWrapper from "@/containers/wrappers/dashboardHeaderWrapper";
 import DashboardSidebarWrapper from "@/containers/wrappers/dashboardSidebarWrapper";
 
 export default function AdminLayout({
@@ -7,11 +8,11 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative w-full flex h-full mt-0">
-      <div className="relative w-[17%] min-h-screen">
-        <DashboardSidebarWrapper />
-      </div>
-      <div className="w-[83%] min-h-screen p-8">{children}</div>
+    <div className="relative">
+      <DashboardSidebarWrapper />
+      <DashboardHeaderWrapper />
+
+      <main className="min-h-screen p-8 mr-0 md:mr-56 mt-16 md:mt-4">{children}</main>
     </div>
   );
 }

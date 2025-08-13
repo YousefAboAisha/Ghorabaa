@@ -197,6 +197,7 @@ const Navbar = ({ session }: NavbarProps) => {
       <Sidebar
         isOpen={sidebarIsOpen}
         setIsOpen={() => setSidebarIsOpen(false)}
+        routes={Routes}
       />
     </nav>
   );

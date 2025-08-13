@@ -1,4 +1,3 @@
-import { Routes } from "@/data/routes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
@@ -6,10 +5,11 @@ import Logo from "../UI/logo";
 
 type SidebarTypes = {
   isOpen: boolean;
+  routes: { title: string; href: string }[];
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const Sidebar = ({ isOpen, setIsOpen }: SidebarTypes) => {
+const Sidebar = ({ isOpen, setIsOpen, routes }: SidebarTypes) => {
   const date = new Date().getFullYear();
   const pathname = usePathname();
 
@@ -20,7 +20,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarTypes) => {
       }`}
     >
       <div className="flex flex-col gap-4 mt-6">
-        {Routes.map(({ href, title }, index) => {
+        {routes.map(({ href, title }, index) => {
           return (
             <Link
               key={index}

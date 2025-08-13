@@ -75,7 +75,7 @@ export default async function Home() {
 
           <Link
             href={"/massacres"}
-            className="text-primary flex items-center gap-2 justify-center hover:underline text-sm w-fit mx-auto mt-8"
+            className="text-secondary flex items-center gap-2 justify-center hover:underline text-sm w-fit mx-auto"
           >
             <p>كافة المجازر</p>
             <BsArrowLeft />

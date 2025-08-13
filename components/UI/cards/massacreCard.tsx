@@ -64,7 +64,7 @@ const MassacreCard = ({ data }: Props) => {
           style={{
             lineHeight: "20px",
           }}
-          className="text-gray-600 text-[13px] mt-3 line-clamp-2 h-10"
+          className="text-gray-600 text-[13px] mt-3 line-clamp-4"
         >
           <HighlightedText
             highlights={data?.highlight}

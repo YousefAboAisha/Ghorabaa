@@ -1,6 +1,6 @@
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
-import RecentlyAddedSwiper from "@/components/UI/swipers/massacres/recentlyAddedSwiper";
+import RecentlyAddedMassacresSwiper from "@/components/UI/swipers/massacres/recentlyAddedMassacresSwiper";
 
 const RecentlyAddedMasscares = async () => {
   // Fetch the data of recently added stories
@@ -25,7 +25,7 @@ const RecentlyAddedMasscares = async () => {
     return <NoDataMessage className="mt-8" />;
   }
 
-  return <RecentlyAddedSwiper data={data} />;
+  return <RecentlyAddedMassacresSwiper data={data} />;
 };
 
 export default RecentlyAddedMasscares;
