@@ -3,6 +3,7 @@ import { BiInfoCircle } from "react-icons/bi";
 import { toast } from "react-toastify";
 import Button from "../inputs/button";
 import { StoryInterface } from "@/app/interfaces";
+import { getFullName } from "@/utils/text";
 
 type DeleteStory = {
   data: StoryInterface & { publisher_name?: string };
@@ -20,7 +21,7 @@ export const DeleteStory = ({
   callback,
 }: DeleteStory) => {
   const story_id = data?._id;
-  const story_title = data?.name;
+  const story_title = getFullName(data?.name);
 
   const deleteStory = async () => {
     setLoading(true);

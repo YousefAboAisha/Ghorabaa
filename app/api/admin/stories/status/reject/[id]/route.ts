@@ -3,6 +3,7 @@ import { getToken } from "next-auth/jwt";
 import clientPromise from "@/app/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { StoryStatus, NotificationTypes, Role } from "@/app/enums";
+import { getFullName } from "@/utils/text";
 
 const secret = process.env.NEXTAUTH_SECRET;
 type Params = Promise<{ id: string }>;
@@ -65,7 +66,9 @@ export async function PUT(
       // Create notification
       const storyNotificationPayload = {
         user_id: story.publisher_id,
-        message: `تم رفض طلبك لإضافة قصة عن الشهيد ${story?.name} من قبل المشرفين!`,
+        message: `تم رفض طلبك لإضافة قصة عن الشهيد ${getFullName(
+          story?.name
+        )} من قبل المشرفين!`,
         href: `/profile/${story.publisher_id}?activeTap=${StoryStatus.REJECTED}#storyContainer`,
         notification_type: NotificationTypes.REJECT,
         createdAt: new Date(),

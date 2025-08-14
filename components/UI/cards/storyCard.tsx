@@ -10,14 +10,16 @@ import { Session } from "next-auth";
 import { HighlightedText } from "../typography/highlightText";
 import { dateConversion } from "@/utils/format";
 import { FiMapPin } from "react-icons/fi";
-import { getAgeLabel } from "@/utils/text";
+import { getAgeLabel, getFullName } from "@/utils/text";
 
-interface StoryCardsProps {
+interface Props {
   data?: StoryInterface & { favorite?: boolean };
   session: Session | null;
 }
 
-const StoryCard = ({ data, session }: StoryCardsProps) => {
+const StoryCard = ({ data, session }: Props) => {
+  const fullName = getFullName(data?.name);
+
   return (
     <div className="relative group w-full flex flex-col border bg-white hover:shadow-xl duration-500 rounded-2xl overflow-hidden">
       <Link href={`/stories/${data?._id}`} title="عرض الملف الشخصي">
@@ -45,7 +47,7 @@ const StoryCard = ({ data, session }: StoryCardsProps) => {
             <HighlightedText
               highlights={data?.highlight}
               field="name"
-              fallback={data?.name ?? ""}
+              fallback={fullName ?? ""}
             />
           </p>
 

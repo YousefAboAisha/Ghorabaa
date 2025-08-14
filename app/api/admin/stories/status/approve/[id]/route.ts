@@ -3,11 +3,12 @@ import { getToken } from "next-auth/jwt";
 import clientPromise from "@/app/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { StoryStatus, NotificationTypes, Role } from "@/app/enums";
+import { getFullName } from "@/utils/text";
 
 const secret = process.env.NEXTAUTH_SECRET;
 type Params = Promise<{ id: string }>;
 
-export async function POST(
+export async function PUT(
   originalReq: NextRequest,
   { params }: { params: Params }
 ) {
@@ -27,9 +28,6 @@ export async function POST(
     const db = client.db("ghorabaa");
     const storiesCollection = db.collection("stories");
     const notificationsCollection = db.collection("notifications");
-
-    const body = await originalReq.json();
-    const { ...fieldsToUpdate } = body;
 
     // Validate required inputs
     if (!id) {
@@ -51,20 +49,11 @@ export async function POST(
       );
     }
 
-    // Only allow specific fields to be updated
-    const allowedFields = ["bio", "city", "neighborhood"];
-    const sanitizedUpdate = Object.fromEntries(
-      Object.entries(fieldsToUpdate).filter(([key]) =>
-        allowedFields.includes(key)
-      )
-    );
-
     // Update the story
     await storiesCollection.updateOne(
       { _id: new ObjectId(id) },
       {
         $set: {
-          ...sanitizedUpdate,
           status: StoryStatus.APPROVED,
           approvedBy: new ObjectId(token.id),
           updatedAt: new Date(),
@@ -77,7 +66,9 @@ export async function POST(
       // Create notification
       const storyNotificationPayload = {
         user_id: story.publisher_id,
-        message: `تمت الموافقة على طلب إضافة قصة الشهيد ${story?.name} من قِبِل المشرف`,
+        message: `تمت الموافقة على طلب إضافة قصة الشهيد ${getFullName(
+          story?.name
+        )} من قِبِل المشرف`,
         href: `/stories/${story._id}`,
         notification_type: NotificationTypes.ACCEPT,
         createdAt: new Date(),

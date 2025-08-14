@@ -1,5 +1,6 @@
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Button from "@/components/UI/inputs/button";
+import { getFullName } from "@/utils/text";
 import Image from "next/image";
 import Link from "next/link";
 import { BsEye } from "react-icons/bs";
@@ -19,20 +20,18 @@ const TodaysMartyr = async () => {
 
   const { data, error } = await fetchTodaysMartyr();
 
-  // console.log("Todays martyr data: ", data);
-  // console.log("Todays martyr error: ", error);
-
   if (error) {
     return <ErrorMessage error={error} className="mt-4 !border-none" />;
   }
 
   if (data) {
+    const fullName = getFullName(data?.name);
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 ">
         <div className="flex flex-col items-start">
           <div className="flex flex-col gap-2 mt-4">
             <div className="flex flex-row items-center gap-4 text-[14px]">
-              <h4 className="font-bold text-lg  ">{data?.name}</h4>
+              <h4 className="font-bold text-lg  ">{fullName}</h4>
             </div>
 
             <p className="text-md font-light line-clamp-[12]">{data?.bio}</p>

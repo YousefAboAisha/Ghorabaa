@@ -27,7 +27,7 @@ const DashboardSidebar = ({ session }: Props) => {
   const menuItems = [
     {
       title: "كافة القصص",
-      href: "/admin/dashboard",
+      href: "/admin/dashboard/stories",
       icon: <FiHome size={20} />,
       show: true,
     },
@@ -105,7 +105,7 @@ const DashboardSidebar = ({ session }: Props) => {
     <div className="fixed top-0 bg-white shadow-sm h-full w-56 z-10 border-l hidden md:block">
       <div className="relative mt-16">
         <div className="w-fit mx-auto">
-          <Link href="/admin/dashboard?page=1">
+          <Link href="/admin/dashboard/stories?page=1">
             <Logo className="text-xl" />
           </Link>
         </div>

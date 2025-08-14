@@ -84,3 +84,13 @@ export enum MassacreStatus {
   APPROVED = "APPROVED",
   ARCHIVED = "ARCHIVED",
 }
+
+export enum Profession {
+  DOCTOR = "طبيب",
+  ENGINEERING = "مهندس",
+  JOURNALIST = "صحافي",
+  TEACHER = "معلم",
+  SCIENTIST = "عالِم",
+  FORIGEN = "أجنبي",
+  NONE = "غير ذلك",
+}

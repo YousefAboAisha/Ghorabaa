@@ -7,18 +7,19 @@ import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
 import { HiCheck } from "react-icons/hi";
 import { MdOutlineClose } from "react-icons/md";
-import PreviewStory from "@/components/UI/modals/storyPreview";
 import RejectStory from "@/components/UI/modals/rejectStory";
 import Link from "next/link";
 import { StoryStatusData } from "@/data/storyTabsData";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "./pagination";
-import { CiSearch, CiTrash } from "react-icons/ci";
+import { CiEdit, CiSearch, CiTrash } from "react-icons/ci";
 import { DeleteStory } from "../modals/deleteStory";
 import { useStatisticsStore } from "@/stores/storiesTableStore";
 import Input from "../inputs/input";
 import Select from "../inputs/selectInput";
+import ApproveStory from "../dialogs/approveStory";
+import { getFullName } from "@/utils/text";
 
 const AllStoriesTable = () => {
   const [tableData, setTableData] = useState<
@@ -27,8 +28,9 @@ const AllStoriesTable = () => {
   const [tableLoading, setTableLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [isOpenStoryPreview, setIsOpenStoryPreview] = useState<boolean>(false);
-  const [isStoryPreviewLoading, setIsStoryPreviewLoading] =
+  // Approve Story Modal state variables
+  const [isOpenStoryApprove, setIsOpenStoryApprove] = useState<boolean>(false);
+  const [isStoryApproveLoading, setIsStoryApproveLoading] =
     useState<boolean>(false);
 
   const [isOpenStoryReject, setIsOpenStoryReject] = useState<boolean>(false);
@@ -95,7 +97,7 @@ const AllStoriesTable = () => {
   };
 
   useEffect(() => {
-    router.push(`/admin/dashboard?page=${page}`);
+    router.push(`/admin/dashboard/stories?page=${page}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -111,16 +113,27 @@ const AllStoriesTable = () => {
 
     if (status == StoryStatus.APPROVED)
       return (
-        <CiTrash
-          title="حذف القصة"
-          className="cursor-pointer text-rejected"
-          onClick={() => {
-            setIsDeleteModalOpen(true);
-            setStoryData(story);
-          }}
-          size={22}
-        />
+        <>
+          <CiTrash
+            title="حذف القصة"
+            className="cursor-pointer text-rejected"
+            onClick={() => {
+              setIsDeleteModalOpen(true);
+              setStoryData(story);
+            }}
+            size={22}
+          />
+
+          <Link href={`/admin/dashboard/stories/editStory/${story?._id}`}>
+            <CiEdit
+              title="تعديل البيانات"
+              className="cursor-pointer"
+              size={22}
+            />
+          </Link>
+        </>
       );
+
     if (status == StoryStatus.PENDING) {
       return (
         <>
@@ -128,7 +141,7 @@ const AllStoriesTable = () => {
             title="قبول القصة"
             className="cursor-pointer text-[green]"
             onClick={() => {
-              setIsOpenStoryPreview(true);
+              setIsOpenStoryApprove(true);
               setStoryData(story);
             }}
             size={22}
@@ -153,6 +166,14 @@ const AllStoriesTable = () => {
             }}
             size={22}
           />
+
+          <Link href={`/admin/dashboard/stories/editStory/${story?._id}`}>
+            <CiEdit
+              title="تعديل البيانات"
+              className="cursor-pointer"
+              size={22}
+            />
+          </Link>
         </>
       );
     }
@@ -164,7 +185,7 @@ const AllStoriesTable = () => {
             title="قبول القصة"
             className="cursor-pointer text-approved"
             onClick={() => {
-              setIsOpenStoryPreview(true);
+              setIsOpenStoryApprove(true);
               setStoryData(story);
             }}
             size={22}
@@ -179,6 +200,14 @@ const AllStoriesTable = () => {
             }}
             size={22}
           />
+
+          <Link href={`/admin/dashboard/stories/editStory/${story?._id}`}>
+            <CiEdit
+              title="تعديل البيانات"
+              className="cursor-pointer"
+              size={22}
+            />
+          </Link>
         </>
       );
     }
@@ -198,6 +227,8 @@ const AllStoriesTable = () => {
     }
 
     if (tableData && tableData.length > 0) {
+      console.log("Table data", tableData);
+
       return (
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
@@ -241,87 +272,92 @@ const AllStoriesTable = () => {
           </thead>
 
           <tbody>
-            {tableData?.map((story, index) => (
-              <tr key={story._id as string} className="hover:bg-gray-50">
-                <td className="py-3 px-4 border-b text-center text-sm text-gray-700">
-                  {(page - 1) * 10 + index + 1}
-                </td>
+            {tableData?.map((story, index) => {
+              const fullName = getFullName(story.name);
 
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {story.id_number || "غير محدد"}
-                </td>
+              return (
+                <tr key={story._id as string} className="hover:bg-gray-50">
+                  <td className="py-3 px-4 border-b text-center text-sm text-gray-700">
+                    {(page - 1) * 10 + index + 1}
+                  </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {story.status == StoryStatus.APPROVED ||
-                  StoryStatus.PENDING ? (
+                  <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                    {story.id_number || "غير محدد"}
+                  </td>
+
+                  <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                    {story.status == StoryStatus.APPROVED ||
+                    StoryStatus.PENDING ? (
+                      <Link
+                        title="عرض القصة"
+                        className="hover:underline"
+                        href={`/stories/${story._id}`}
+                        target="_blank"
+                      >
+                        {fullName}
+                      </Link>
+                    ) : (
+                      fullName
+                    )}
+                  </td>
+
+                  <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                    {story.city || "غير محدد"}
+                  </td>
+
+                  <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                    {story.neighborhood || "غير محدد"}
+                  </td>
+
+                  <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                    {story.effectiveDate
+                      ? new Date(story.effectiveDate).toLocaleDateString(
+                          "ar-EG",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )
+                      : "غير محدد"}
+                  </td>
+
+                  <td className="py-3 px-4 border-b text-right text-[12px]">
+                    {story.status === StoryStatus.PENDING ? (
+                      <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-pending">
+                        قيد المراجعة
+                      </span>
+                    ) : story.status === StoryStatus.APPROVED ? (
+                      <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-approved">
+                        مقبول
+                      </span>
+                    ) : (
+                      <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-rejected">
+                        مرفوض
+                      </span>
+                    )}
+                  </td>
+
+                  <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
                     <Link
                       title="عرض القصة"
                       className="hover:underline"
-                      href={`/stories/${story._id}`}
+                      href={`/profile/${story.publisher_id}`}
                       target="_blank"
                     >
-                      {story.name}
+                      {story.publisher_name.split(" ").slice(0, 1) ||
+                        "غير محدد"}
                     </Link>
-                  ) : (
-                    story.name
-                  )}
-                </td>
+                  </td>
 
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {story.city || "غير محدد"}
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {story.neighborhood || "غير محدد"}
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  {story.effectiveDate
-                    ? new Date(story.effectiveDate).toLocaleDateString(
-                        "ar-EG",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
-                      )
-                    : "غير محدد"}
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-[12px]">
-                  {story.status === StoryStatus.PENDING ? (
-                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-pending">
-                      قيد المراجعة
-                    </span>
-                  ) : story.status === StoryStatus.APPROVED ? (
-                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-approved">
-                      مقبول
-                    </span>
-                  ) : (
-                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-rejected">
-                      مرفوض
-                    </span>
-                  )}
-                </td>
-
-                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                  <Link
-                    title="عرض القصة"
-                    className="hover:underline"
-                    href={`/profile/${story.publisher_id}`}
-                    target="_blank"
-                  >
-                    {story.publisher_name.split(" ").slice(0, 1) || "غير محدد"}
-                  </Link>
-                </td>
-
-                <td className="py-3 px-4 border-b text-right">
-                  <div className="flex items-center gap-2.5">
-                    {renderTableActions(story)}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  <td className="py-3 px-4 border-b text-right">
+                    <div className="flex items-center gap-2.5">
+                      {renderTableActions(story)}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       );
@@ -368,7 +404,7 @@ const AllStoriesTable = () => {
             onChange={(e) => {
               setPage(1);
               setSearchValue("");
-              router.push(`/admin/dashboard?page=1`);
+              router.push(`/admin/dashboard/stories?page=1`);
               setCurrentTap(e.target.value as StoryStatus);
             }}
             className="bg-white z-10 !pr-2 px-6 focus:border-secondary  text-right"
@@ -388,22 +424,24 @@ const AllStoriesTable = () => {
         onPageChange={(newPage) => {
           if (newPage !== page) {
             setPage(newPage);
-            router.push(`/admin/dashboard?page=${newPage}`);
+            router.push(`/admin/dashboard/stories?page=${newPage}`);
           }
         }}
       />
 
-      {/* Preview Story Modal */}
+      {/* Approve Story Modal */}
       <Modal
-        isOpen={isOpenStoryPreview}
-        setIsOpen={setIsOpenStoryPreview}
-        loading={isStoryPreviewLoading}
+        isOpen={isOpenStoryApprove}
+        setIsOpen={setIsOpenStoryApprove}
+        containerClassName="w-11/12 md:w-7/12 lg:w-[30%]"
+        loading={isStoryApproveLoading}
       >
-        <PreviewStory
+        <ApproveStory
           data={storyData!}
           refetchData={fetchTableData}
-          setIsOpen={setIsOpenStoryPreview}
-          setLoading={setIsStoryPreviewLoading}
+          setLoading={setIsStoryApproveLoading}
+          loading={isStoryApproveLoading}
+          setIsOpen={setIsOpenStoryApprove}
         />
       </Modal>
 

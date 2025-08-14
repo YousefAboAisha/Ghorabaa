@@ -263,3 +263,18 @@ export const getAgeLabel = (age: number) => {
   if (age > 10 && age < 100) return `${age} عاماً`;
   if (age >= 100) return `${age} عام`;
 };
+
+export const getFullName = (name?: {
+  first_name?: string;
+  father_name?: string;
+  grandFather_name?: string;
+  last_name?: string;
+}): string => {
+  if (!name) return "غير معروف";
+
+  return (
+    [name.first_name, name.father_name, name.last_name]
+      .filter(Boolean)
+      .join(" ") || "غير معروف"
+  );
+};

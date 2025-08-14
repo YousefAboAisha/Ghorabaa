@@ -1,4 +1,5 @@
 import { TrendingStoryInterface } from "@/app/interfaces";
+import { getFullName } from "@/utils/text";
 import Image from "next/image";
 import Link from "next/link";
 import { BiComment } from "react-icons/bi";
@@ -18,6 +19,7 @@ const TrendingStoryCard = ({
   total,
   className = "",
 }: TrendingStoryCardProps) => {
+  const fullName = getFullName(name);
   return (
     <div
       key={story_id}
@@ -43,7 +45,7 @@ const TrendingStoryCard = ({
             className="flex items-center gap-1 text-sm font-semibold hover:underline w-[200px]"
           >
             <p className="font-normal text-gray_dark">الشهيد/</p>
-            <p className="truncate">{name || "مستخدم غير معروف"}</p>
+            <p className="truncate">{fullName || "مستخدم غير معروف"}</p>
           </Link>
           <p className="font-light text-[12px] break-words">{age} عاماً</p>
         </div>

@@ -30,7 +30,7 @@ const DashboardHeader = ({ session }: Props) => {
           <AdminProfileMenu session={session} />
         </div>
 
-        <Link href="/admin/dashboard?page=1">
+        <Link href="/admin/dashboard/stories?page=1">
           <Logo className="text-xl" />
         </Link>
       </div>

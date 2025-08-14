@@ -2,23 +2,76 @@ import * as Yup from "yup";
 
 export const SignupvalidationSchema = Yup.object({
   name: Yup.string().trim().required("يرجى إدخال الاسم رباعي"),
-  email: Yup.string().trim()
+  email: Yup.string()
+    .trim()
     .email("البريد الإلكتروني غير صالح")
     .required("يرجى إدخال البريد الإلكتروني"),
-  password: Yup.string().trim()
+  password: Yup.string()
+    .trim()
     .min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل")
     .required("يرجى إدخال كلمة المرور"),
-  confirmPassword: Yup.string().trim()
+  confirmPassword: Yup.string()
+    .trim()
     .oneOf([Yup.ref("password")], "كلمة المرور غير متطابقة")
     .required("يرجى تأكيد كلمة المرور"),
 });
 
 export const StoryValidationSchema = Yup.object({
+  id_number: Yup.string()
+    .trim()
+    .required("رقم الهوية مطلوب")
+    .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام فقط"),
+
+  name: Yup.object({
+    first_name: Yup.string()
+      .trim()
+      .required("الاسم الأول مطلوب")
+      .matches(/^[\u0600-\u06FF\s]+$/, "يجب أن يحتوي الاسم على أحرف عربية فقط"),
+
+    father_name: Yup.string()
+      .trim()
+      .required("اسم الأب مطلوب")
+      .matches(/^[\u0600-\u06FF\s]+$/, "يجب أن يحتوي الاسم على أحرف عربية فقط"),
+
+    grandFather_name: Yup.string()
+      .trim()
+      .required("اسم الجد مطلوب")
+      .matches(/^[\u0600-\u06FF\s]+$/, "يجب أن يحتوي الاسم على أحرف عربية فقط"),
+
+    last_name: Yup.string()
+      .trim()
+      .required("اسم العائلة مطلوب")
+      .matches(/^[\u0600-\u06FF\s]+$/, "يجب أن يحتوي الاسم على أحرف عربية فقط"),
+  }),
+
+  nickname: Yup.string()
+    .trim()
+    .notRequired()
+    .matches(/^[\u0600-\u06FF\s]*$/, "يجب أن يحتوي اللقب على أحرف عربية فقط"),
+
+  profession: Yup.string().trim().notRequired(),
+
+  gender: Yup.string().required("يرجى تحديد الجنس"),
+
+  birth_date: Yup.date()
+    .required("تاريخ الميلاد مطلوب")
+    .max(new Date(), "تاريخ الميلاد لا يمكن أن يكون في المستقبل"),
+
+  death_date: Yup.date()
+    .required("تاريخ الاستشهاد مطلوب")
+    .min(
+      Yup.ref("birth_date"),
+      "تاريخ الاستشهاد يجب أن يكون بعد تاريخ الميلاد"
+    ),
+
   city: Yup.string().trim().required("يرجى اختيار المدينة"),
 
   neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
 
-  bio: Yup.string().trim()
+  warTitle: Yup.string().trim().required("يرجى اختيار العُدوان"),
+
+  bio: Yup.string()
+    .trim()
     .required("يرجى إدخال السيرة الذاتية")
     .test(
       "min-words",
@@ -31,8 +84,10 @@ export const StoryValidationSchema = Yup.object({
     ),
 
   image: Yup.mixed().required("يرجى إضافة صورة"),
+
   social_media: Yup.object({
-    facebook: Yup.string().trim()
+    facebook: Yup.string()
+      .trim()
       .nullable()
       .notRequired()
       .url("يرجى إدخال رابط فيسبوك صحيح")
@@ -41,7 +96,8 @@ export const StoryValidationSchema = Yup.object({
         "يجب أن يكون الرابط من فيسبوك",
         (value) => !value || value.includes("facebook.com")
       ),
-    instagram: Yup.string().trim()
+    instagram: Yup.string()
+      .trim()
       .nullable()
       .notRequired()
       .url("يرجى إدخال رابط انستغرام صحيح")
@@ -50,7 +106,8 @@ export const StoryValidationSchema = Yup.object({
         "يجب أن يكون الرابط من انستغرام",
         (value) => !value || value.includes("instagram.com")
       ),
-    x: Yup.string().trim()
+    x: Yup.string()
+      .trim()
       .nullable()
       .notRequired()
       .url("يرجى إدخال رابط إكس صحيح")
@@ -58,7 +115,7 @@ export const StoryValidationSchema = Yup.object({
         "is-x-url",
         "يجب أن يكون الرابط من X (تويتر سابقًا)",
         (value) =>
-          !value || value.includes("x.com") || value.includes("twitter.com") // some users might paste old Twitter links
+          !value || value.includes("x.com") || value.includes("twitter.com")
       ),
   }),
 });
@@ -66,14 +123,16 @@ export const StoryValidationSchema = Yup.object({
 export const ProfileValidationSchema = Yup.object({
   name: Yup.string().trim().required("يرجى كتابة الاسم"),
 
-  phone_number: Yup.string().trim()
+  phone_number: Yup.string()
+    .trim()
     .matches(
       /^(059|056)\d{7}$/,
       "رقم الهاتف يجب أن يكون 10 أرقام ويبدأ بـ 059 أو 056"
     )
     .required("يُرجى إضافة رقم الهاتف"),
 
-  id_number: Yup.string().trim()
+  id_number: Yup.string()
+    .trim()
     .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام")
     .required("يُرجى إضافة رقم الهوية"),
 });
@@ -83,7 +142,8 @@ export const StoryPreviewValidationSchema = Yup.object({
 
   neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
 
-  bio: Yup.string().trim()
+  bio: Yup.string()
+    .trim()
     .required("يرجى إدخال السيرة الذاتية")
     .test(
       "min-words",
@@ -97,7 +157,8 @@ export const StoryPreviewValidationSchema = Yup.object({
 });
 
 export const StoryRejectValidationSchema = Yup.object({
-  rejectReason: Yup.string().trim()
+  rejectReason: Yup.string()
+    .trim()
     .required("يُرجى إدخال سبب الرفض")
     .test(
       "min-words",
@@ -111,7 +172,8 @@ export const StoryRejectValidationSchema = Yup.object({
 });
 
 export const ReportValidationSchema = Yup.object({
-  rejectReason: Yup.string().trim()
+  rejectReason: Yup.string()
+    .trim()
     .required("يرجى اختيار سبب الإبلاغ")
     .oneOf(
       [
@@ -134,14 +196,16 @@ export const ReportValidationSchema = Yup.object({
 export const EditUserValidationSchema = Yup.object({
   name: Yup.string().trim().required("يرجى كتابة الاسم"),
 
-  phone_number: Yup.string().trim()
+  phone_number: Yup.string()
+    .trim()
     .matches(
       /^(059|056)\d{7}$/,
       "رقم الهاتف يجب أن يكون 10 أرقام ويبدأ بـ 059 أو 056"
     )
     .required("يُرجى إضافة رقم الهاتف"),
 
-  id_number: Yup.string().trim()
+  id_number: Yup.string()
+    .trim()
     .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام")
     .required("يُرجى إضافة رقم الهوية"),
 
@@ -182,7 +246,8 @@ export const MassacresValidationSchema = Yup.object({
     neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
   }),
 
-  description: Yup.string().trim()
+  description: Yup.string()
+    .trim()
     .required("يرجى إدخال تفاصيل المجزرة")
     .test(
       "word-count-range",
@@ -215,11 +280,13 @@ export const MassacresValidationSchema = Yup.object({
   internationalReactions: Yup.array()
     .of(
       Yup.object().shape({
-        publisher_name: Yup.string().trim()
+        publisher_name: Yup.string()
+          .trim()
           .notRequired()
           .min(2, "اسم الناشر قصير جداً (حد أدنى حرفين)")
           .max(100, "اسم الناشر طويل جداً (حد أقصى 100 حرف)"),
-        reaction_text: Yup.string().trim()
+        reaction_text: Yup.string()
+          .trim()
           .notRequired()
           .min(10, "رد الفعل قصير جداً (حد أدنى 10 أحرف)")
           .max(500, "رد الفعل طويل جداً (حد أقصى 500 حرف)"),

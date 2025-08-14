@@ -47,6 +47,10 @@ const StoryDetailsSection = async ({ id }: Props) => {
 
   console.log("Story Details Data", data);
 
+  const fullName = `${data.name?.first_name} ${data.name?.father_name || ""} ${
+    data.name?.last_name || ""
+  }`.trim();
+
   return (
     data && (
       <div className="mt-24">
@@ -89,7 +93,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
           ))}
 
         <div className="flex flex-col gap-2">
-          <PageTitles storyName={data.name} />
+          <PageTitles storyName={fullName} />
         </div>
 
         <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-martyr-pattern rounded-2xl">
@@ -127,7 +131,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
           </div>
 
           <div className="flex items-center gap-2 mt-6">
-            <h4 className="text-lg font-semibold">الشهيد | {data.name}</h4>
+            <h4 className="text-lg font-semibold">الشهيد | {fullName}</h4>
             {data.nickname && (
               <p className="text-gray_dark"> &quot; {data.nickname} &quot; </p>
             )}

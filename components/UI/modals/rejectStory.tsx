@@ -3,6 +3,7 @@ import { StoryInterface } from "@/app/interfaces";
 import Button from "@/components/UI/inputs/button";
 import TextArea from "@/components/UI/inputs/textArea";
 import { useStatisticsStore } from "@/stores/storiesTableStore";
+import { getFullName } from "@/utils/text";
 import { StoryRejectValidationSchema } from "@/utils/validators";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { Dispatch, SetStateAction } from "react";
@@ -25,6 +26,8 @@ export const RejectStory = ({
   const { fetchStatistics } = useStatisticsStore();
   const story_id = data?._id;
 
+  const fullName = getFullName(data?.name);
+
   const initialValues = {
     rejectReason: "",
   };
@@ -40,7 +43,7 @@ export const RejectStory = ({
 
       <p className="mt-6 text-[15px] font-light">
         سيترتب على هذا الإجراء رفض طلب إضافة قصة الشهيد{" "}
-        <span className="inline text-rejected font-semibold">{data?.name}</span>{" "}
+        <span className="inline text-rejected font-semibold">{fullName}</span>{" "}
         المقدمة من قِبل المستخدم{" "}
         <span className="font-semibold inline">{data?.publisher_name}</span>. هل
         أنت متأكد من رغبتك في المتابعة؟

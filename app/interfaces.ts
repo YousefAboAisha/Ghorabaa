@@ -10,6 +10,7 @@ import {
   NotificationTypes,
   Gender,
   MassacreStatus,
+  Profession,
 } from "./enums";
 
 // Define the User interface
@@ -54,11 +55,18 @@ export type Highlight = {
   }[];
 };
 
+export type MartyrName = {
+  first_name: string;
+  father_name: string;
+  grandFather_name: string;
+  last_name: string;
+};
+
 export interface StoryInterface extends Document {
   _id: Types.ObjectId | string;
   id_number: string;
+  name: MartyrName;
   gender: Gender;
-  name: string;
   highlight: Highlight[];
   social_media?: SocialMediaLinks;
   nickname?: string;
@@ -73,8 +81,8 @@ export interface StoryInterface extends Document {
   image: string;
   publisher_id: Types.ObjectId | string;
   keywords: string[];
+  profession: Profession | "";
   rejectReason?: string;
-  reports?: ReportInterface[];
   warTitle?: string;
   createdAt: Date;
   updatedAt?: Date;
@@ -84,7 +92,7 @@ export interface StoryInterface extends Document {
 
 export interface TrendingStoryInterface {
   story_id: string;
-  name: string;
+  name: MartyrName;
   age: number;
   image?: string;
   visits: number;

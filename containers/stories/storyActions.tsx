@@ -1,13 +1,13 @@
 "use client";
 import { Role } from "@/app/enums";
 import { StoryInterface } from "@/app/interfaces";
-import EditStoryForm from "@/components/UI/forms/editStoryForm";
 import { DeleteStory } from "@/components/UI/modals/deleteStory";
 import Modal from "@/components/UI/modals/modal";
 import ShareContent from "@/components/UI/modals/shareContent";
+import { getFullName } from "@/utils/text";
 import { Session } from "next-auth";
 import { useState } from "react";
-import { CiEdit, CiShare2, CiTrash } from "react-icons/ci";
+import { CiShare2, CiTrash } from "react-icons/ci";
 
 type StoryActionsProps = {
   data: StoryInterface;
@@ -17,10 +17,6 @@ type StoryActionsProps = {
 const StoryActions = ({ data, session }: StoryActionsProps) => {
   // Share Story Modal state variables
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
-
-  // Edit Story Modal state variables
-  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-  const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
 
   // Delete Story Modal state variables
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -46,16 +42,6 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
 
           {isAdmin && (
             <div
-              title="تعديل القصة"
-              className="flex items-center justify-center border bg-white p-2 text-secondary hover:text-blueColor duration-100 cursor-pointer rounded-lg shadow-sm"
-              onClick={() => setIsEditModalOpen(true)}
-            >
-              <CiEdit size={30} />
-            </div>
-          )}
-
-          {isAdmin && (
-            <div
               title="حذف القصة"
               className="flex items-center justify-center border bg-white p-2 text-secondary hover:text-rejected duration-100 cursor-pointer rounded-lg shadow-sm"
               onClick={() => setIsDeleteModalOpen(true)}
@@ -66,22 +52,13 @@ const StoryActions = ({ data, session }: StoryActionsProps) => {
         </div>
       </div>
 
-      {/* Edit Story Modal */}
-      <Modal isOpen={isEditModalOpen} setIsOpen={setIsEditModalOpen}>
-        <EditStoryForm
-          data={data}
-          setLoading={setIsEditLoading}
-          loading={isEditLoading}
-        />
-      </Modal>
-
       {/* Share Story Modal  */}
       <Modal
         isOpen={isShareModalOpen}
         setIsOpen={setIsShareModalOpen}
         containerClassName="lg:w-[35%]"
       >
-        <ShareContent type="الشهيد" story_title={data.name} />
+        <ShareContent type="الشهيد" story_title={getFullName(data.name)} />
       </Modal>
 
       {/* Delete Story Modal */}
