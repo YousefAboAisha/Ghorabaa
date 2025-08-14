@@ -2,15 +2,15 @@ import { Role } from "@/app/enums";
 
 export const UserRolesData = [
   {
-    label: "المشرفون",
-    role: Role.ADMIN,
+    title: "المشرفون",
+    value: Role.ADMIN,
   },
   {
-    label: "المحررون",
-    role: Role.EDITOR,
+    title: "المحررون",
+    value: Role.EDITOR,
   },
   {
-    label: "المستخدمون",
-    role: Role.USER,
+    title: "المستخدمون",
+    value: Role.USER,
   },
 ];

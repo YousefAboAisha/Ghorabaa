@@ -18,6 +18,7 @@ import EditUser from "@/components/UI/modals/editUser";
 import { getRoleColor, getRoleInArabic } from "@/utils/text";
 import { CiSearch } from "react-icons/ci";
 import Input from "../inputs/input";
+import Select from "../inputs/selectInput";
 
 const UsersTable = () => {
   const [tableData, setTableData] = useState<UserInterface[]>([]);
@@ -95,20 +96,6 @@ const UsersTable = () => {
     fetchTableData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRole, page]);
-
-  const getBorderColor = (role: Role) => {
-    if (role !== currentRole) return "";
-    switch (role) {
-      case Role.ADMIN:
-        return "border-primary";
-      case Role.EDITOR:
-        return "border-blueColor";
-      case Role.USER:
-        return "border-secondary";
-      default:
-        return "";
-    }
-  };
 
   const renderTableContent = () => {
     if (tableLoading) return <DashboardTableSkeletonLoader />;
@@ -222,40 +209,37 @@ const UsersTable = () => {
   return (
     <>
       {/* Role Filter + Search */}
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-6 text-sm mb-8">
-        <div className="flex items-center gap-4 overflow-auto scrollbar-hidden">
-          {UserRolesData.map(({ label, role }) => (
-            <div
-              key={role}
-              title={label}
-              className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
-                role
-              )}`}
-              onClick={() => {
+      <div className="relative w-full flex items-center justify-between gap-4 mb-8">
+        <div className="w-full md:w-1/2">
+          <Input
+            placeholder="البحث عن المستخدم "
+            value={SearchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
                 setPage(1);
-                setSearchValue("");
-                router.push(`/admin/dashboard/users?page=1`);
-                setCurrentRole(role);
-              }}
-            >
-              <p className="px-2">{label}</p>
-            </div>
-          ))}
+                fetchTableData();
+              }
+            }}
+            icon={<CiSearch size={20} className="text-gray-500" />}
+            className="border bg-white focus:border-secondary"
+          />
         </div>
 
-        <Input
-          placeholder="البحث عن الشهيد"
-          value={SearchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
+        <div className="border rounded-[8px] min-w-fit">
+          <Select
+            title="حالة القصص"
+            options={UserRolesData}
+            value={currentRole}
+            onChange={(e) => {
               setPage(1);
-              fetchTableData();
-            }
-          }}
-          className="border bg-white focus:border-secondary"
-          icon={<CiSearch size={20} className="text-gray-500" />}
-        />
+              setSearchValue("");
+              router.push(`/admin/dashboard/users?page=1`);
+              setCurrentRole(e.target.value as Role);
+            }}
+            className="bg-white z-10 !pr-2 px-6 focus:border-secondary  text-right"
+          />
+        </div>
       </div>
 
       {/* Table */}

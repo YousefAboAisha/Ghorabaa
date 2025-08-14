@@ -360,7 +360,7 @@ const AllStoriesTable = () => {
           />
         </div>
 
-        <div className="border rounded-[8px]">
+        <div className="border rounded-[8px] min-w-fit">
           <Select
             title="حالة القصص"
             options={StoryStatusData}
