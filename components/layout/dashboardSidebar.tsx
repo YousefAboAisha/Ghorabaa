@@ -83,7 +83,7 @@ const DashboardSidebar = ({ session }: Props) => {
           </Link>
         ))}
 
-      <div className="relative flex items-center mt-10 gap-2 bg-background_light rounded-2xl border p-2 shadow-sm">
+      <div className="relative flex items-center mt-6 gap-2 bg-background_light rounded-lg border p-2">
         <AdminProfileMenu session={session} />
 
         <div className="flex flex-col gap-1 text-xs">
@@ -103,7 +103,7 @@ const DashboardSidebar = ({ session }: Props) => {
 
   return (
     <div className="fixed top-0 bg-white shadow-sm h-full w-56 z-10 border-l hidden md:block">
-      <div className="relative mt-24">
+      <div className="relative mt-16">
         <div className="w-fit mx-auto">
           <Link href="/admin/dashboard?page=1">
             <Logo className="text-xl" />

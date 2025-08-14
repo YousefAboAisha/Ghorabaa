@@ -36,7 +36,7 @@ const Select = ({
         </div>
 
         <select
-          className={`relative text-[13px] h-[56px] pr-10 rounded-[8px] outline-none duration-300 w-full border-2 border-transparent focus:border-primary disabled:cursor-not-allowed bg-transparent cursor-pointer bg-gray-50 rounde-2xl disabled:bg-gray-300 disabled:opacity-50 ${additionalStyles} ${className}`}
+          className={`relative text-[13px] h-[52px] pr-10 rounded-[8px] outline-none duration-300 w-full border-2 border-transparent focus:border-primary disabled:cursor-not-allowed bg-transparent cursor-pointer bg-gray-50 disabled:bg-gray-300 disabled:opacity-50 ${additionalStyles} ${className}`}
           {...rest}
           name="studylevel"
           aria-label={title}

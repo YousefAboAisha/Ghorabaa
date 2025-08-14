@@ -10,7 +10,7 @@ import { MdOutlineClose } from "react-icons/md";
 import PreviewStory from "@/components/UI/modals/storyPreview";
 import RejectStory from "@/components/UI/modals/rejectStory";
 import Link from "next/link";
-import { StoryTabsData } from "@/data/storyTabsData";
+import { StoryStatusData } from "@/data/storyTabsData";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "./pagination";
@@ -18,6 +18,7 @@ import { CiSearch, CiTrash } from "react-icons/ci";
 import { DeleteStory } from "../modals/deleteStory";
 import { useStatisticsStore } from "@/stores/storiesTableStore";
 import Input from "../inputs/input";
+import Select from "../inputs/selectInput";
 
 const AllStoriesTable = () => {
   const [tableData, setTableData] = useState<
@@ -102,20 +103,6 @@ const AllStoriesTable = () => {
     fetchTableData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTap, page]);
-
-  const getBorderColor = (status: StoryStatus) => {
-    if (status !== currentTap) return ""; // ✅ Only add color to active tab
-    switch (status) {
-      case StoryStatus.APPROVED:
-        return "border-approved";
-      case StoryStatus.PENDING:
-        return "border-pending";
-      case StoryStatus.REJECTED:
-        return "border-rejected";
-      default:
-        return "";
-    }
-  };
 
   const renderTableActions = (
     story: StoryInterface & { publisher_name: string }
@@ -356,40 +343,37 @@ const AllStoriesTable = () => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-6 text-sm mb-8">
-        <div className="flex items-center gap-4 overflow-auto scrollbar-hidden ">
-          {StoryTabsData.map(({ label, status }) => (
-            <div
-              key={status}
-              title={label}
-              className={`flex items-center gap-2 bg-white p-3 border rounded-md cursor-pointer duration-200 border-r-4 min-w-fit select-none ${getBorderColor(
-                status
-              )}`}
-              onClick={() => {
+      <div className="relative w-full flex items-center justify-between gap-4 mb-8">
+        <div className="w-full md:w-1/2">
+          <Input
+            placeholder="البحث عن الشهيد"
+            value={SearchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
                 setPage(1);
-                setSearchValue("");
-                router.push(`/admin/dashboard?page=1`);
-                setCurrentTap(status);
-              }}
-            >
-              <p>{label}</p>
-            </div>
-          ))}
+                fetchTableData();
+              }
+            }}
+            icon={<CiSearch size={20} className="text-gray-500" />}
+            className="border bg-white focus:border-secondary"
+          />
         </div>
 
-        <Input
-          placeholder="البحث عن الشهيد"
-          value={SearchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
+        <div className="border rounded-[8px]">
+          <Select
+            title="حالة القصص"
+            options={StoryStatusData}
+            value={currentTap}
+            onChange={(e) => {
               setPage(1);
-              fetchTableData();
-            }
-          }}
-          className="border bg-white focus:border-secondary"
-          icon={<CiSearch size={20} className="text-gray-500" />}
-        />
+              setSearchValue("");
+              router.push(`/admin/dashboard?page=1`);
+              setCurrentTap(e.target.value as StoryStatus);
+            }}
+            className="bg-white z-10 !pr-2 px-6 focus:border-secondary  text-right"
+          />
+        </div>
       </div>
 
       {/* Render the table content */}

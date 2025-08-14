@@ -72,7 +72,7 @@ function AdminProfileMenu({ session }: Props) {
       <MenuItems
         anchor={{ to: "bottom start", gap: "4px" }}
         transition
-        className="flex flex-col gap-2 w-48 bg-white z-[100000] rounded-xl border shadow-2xl origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 outline-none"
+        className="flex flex-col w-48 bg-white z-[100000] rounded-xl border shadow-2xl origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 outline-none"
       >
         <div className="p-1 flex flex-col gap-2">
           <MenuItem>

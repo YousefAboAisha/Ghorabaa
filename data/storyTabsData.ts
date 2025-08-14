@@ -17,3 +17,18 @@ export const StoryTabsData = [
     color: "text-rejected",
   },
 ];
+
+export const StoryStatusData = [
+  {
+    title: " 🟢 الطلبات المقبولة",
+    value: StoryStatus.APPROVED,
+  },
+  {
+    title: " 🟠 قيد المراجعة ",
+    value: StoryStatus.PENDING,
+  },
+  {
+    title: " 🔴 الطلبات المرفوضة",
+    value: StoryStatus.REJECTED,
+  },
+];
