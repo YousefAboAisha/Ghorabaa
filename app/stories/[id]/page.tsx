@@ -4,6 +4,7 @@ import StoryDetailsSection from "@/containers/storyDetails/storyDetailsSection";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { StoryStatus } from "@/app/enums";
+import { getFullName } from "@/utils/text";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -30,18 +31,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (data.status !== StoryStatus.APPROVED) return {};
 
+  const fullName = getFullName(data.name);
+
   return {
-    title: `الشهيد ${data.name} | منصة الشهداء`,
+    title: `الشهيد ${fullName} | منصة الشهداء`,
     description: data.bio?.slice(0, 150) || "نبذة عن الشهيد",
     openGraph: {
-      title: `الشهيد ${data.name} | منصة الشهداء`,
+      title: `الشهيد ${fullName} | منصة الشهداء`,
       description: data.bio?.slice(0, 150) || "نبذة عن الشهيد",
       images: [
         {
           url: data.image || "/notFound.png",
           width: 800,
           height: 600,
-          alt: `صورة الشهيد ${data.name}`,
+          alt: `صورة الشهيد ${fullName}`,
         },
       ],
       url: `https://ghorabaa.com/stories/${id}`,
@@ -49,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: `الشهيد ${data.name} | منصة الشهداء`,
+      title: `الشهيد ${fullName} | منصة الشهداء`,
       description: data.bio?.slice(0, 150) || "نبذة عن الشهيد",
       images: [data.image || "/notFound.png"],
     },

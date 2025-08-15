@@ -3,7 +3,6 @@ import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 import { NotificationTypes, StoryStatus } from "@/app/enums";
-import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
 import { getFullName } from "@/utils/text";
 
 const secret = process.env.NEXTAUTH_SECRET;
@@ -28,7 +27,8 @@ export async function POST(originalReq: Request) {
     const notificationsCollection = db.collection("notifications");
 
     const body = await originalReq.json();
-    const { id_number, bio, birth_date, death_date, name, ...rest } = body;
+    const { id_number, keywords, bio, birth_date, death_date, name, ...rest } =
+      body;
 
     // Validate required fields
     if (!id_number) {
@@ -48,17 +48,6 @@ export async function POST(originalReq: Request) {
     const age = birth_date
       ? new Date(death_date).getFullYear() - new Date(birth_date).getFullYear()
       : null;
-
-    // Extract keywords from bio
-    let keywords: string[] = [];
-    if (bio && typeof bio === "string") {
-      try {
-        keywords = await extractArabicKeywords(bio);
-      } catch (err) {
-        console.error("Keyword extraction failed:", err);
-        // Continue without keywords if extraction fails
-      }
-    }
 
     // Create new story document
     const newStory = {

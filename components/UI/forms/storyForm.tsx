@@ -20,6 +20,7 @@ import { GenderData } from "@/data/genderData";
 import { Gender } from "@/app/enums";
 import SingleImageUploader from "../imageUploaders/singleImageUploader";
 import MassacreFormLoader from "../loaders/massacreFormLoader";
+import { extractMartyrStoryKeywords } from "@/utils/extractTags";
 
 type StoryFormProps = {
   id?: string; // For edit mode
@@ -56,6 +57,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
     city: "",
     neighborhood: "",
     bio: "",
+    keywords: [],
     image: "",
     warTitle: "",
   });
@@ -108,6 +110,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
               city: data.city || "",
               neighborhood: data.neighborhood || "",
               bio: data.bio || "",
+              keywords: data.keywords || [],
               warTitle: data.warTitle || "",
               image: data.image || "",
             });
@@ -259,6 +262,26 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
         {({ isSubmitting, errors, values, setFieldValue }) => {
           console.log("Errors:", errors);
           console.log("Form Values", values);
+
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const [tags, setTags] = useState<string[]>(values.keywords || []);
+
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          useEffect(() => {
+            const timeout = setTimeout(() => {
+              if (values.bio && values.bio.length > 20) {
+                const extractedTags = extractMartyrStoryKeywords(values.bio);
+                console.log("Extracted Tags:", extractedTags);
+                setTags(extractedTags);
+                setFieldValue("keywords", extractedTags); // Also update Formik's tags field
+              } else {
+                setTags([]);
+                setFieldValue("keywords", []);
+              }
+            }, 400); // debounce
+
+            return () => clearTimeout(timeout);
+          }, [values.bio, setFieldValue]);
 
           return (
             <Form className="flex flex-col gap-8">
@@ -628,6 +651,21 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                       / 200
                     </div>
                   </div>
+
+                  {tags && tags?.length > 0 && (
+                    <div className="flex items-center flex-wrap gap-2 mt-2">
+                      {tags.map((keywrod, index) => {
+                        return (
+                          <div
+                            key={index}
+                            className="border bg-[#5b913b40] rounded-xl p-1.5 px-3 text-[10px]"
+                          >
+                            #{keywrod}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 <SingleImageUploader

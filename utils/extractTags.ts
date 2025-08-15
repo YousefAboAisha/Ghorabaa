@@ -1,7 +1,7 @@
 // /app/utils/extractTags.ts
 
+// -------------------- STOPWORDS --------------------
 const arabicStopWords = new Set([
-  // Original words
   "في",
   "من",
   "على",
@@ -41,8 +41,6 @@ const arabicStopWords = new Set([
   "وهذه",
   "التي",
   "الذي",
-
-  // Added stopwords
   "و",
   "يا",
   "إلا",
@@ -72,9 +70,7 @@ const arabicStopWords = new Set([
   "فهو",
   "فهي",
   "إما",
-  "حتى",
   "حيث",
-  "أثناء",
   "أحد",
   "إحدى",
   "بعض",
@@ -101,8 +97,6 @@ const arabicStopWords = new Set([
   "لولا",
   "أما",
   "بل",
-  "ثم",
-  "قد",
   "ربما",
   "مثلا",
   "سوف",
@@ -120,8 +114,6 @@ const arabicStopWords = new Set([
   "أنتن",
   "هم",
   "هن",
-  "هو",
-  "هي",
   "إياك",
   "إياكم",
   "إياكن",
@@ -134,28 +126,128 @@ const arabicStopWords = new Set([
   "أنفسنا",
 ]);
 
+// -------------------- KEYWORDS --------------------
+const martyrStoryKeywords = new Set([
+  "شهيد",
+  "استشهاد",
+  "شهادة",
+  "بطل",
+  "فداء",
+  "جهاد",
+  "مقاومة",
+  "كفاح",
+  "وطن",
+  "دماء",
+  "قضية",
+  "عزة",
+  "كرامة",
+  "حزن",
+  "فراق",
+  "دموع",
+  "ذكرى",
+  "فقدان",
+  "فراغ",
+  "حنين",
+  "ألم",
+  "عتاب",
+  "وداع",
+  "احتلال",
+  "صمود",
+  "انتفاضة",
+  "مجزرة",
+  "قصف",
+  "اعتداء",
+  "أسير",
+  "حرية",
+  "حق العودة",
+  "أقصى",
+  "غزة",
+  "الضفة",
+  "القدس",
+  "جنة",
+  "لقاء",
+  "دعاء",
+  "صبر",
+  "رحمة",
+  "ثبات",
+  "شفاعة",
+  "قضاء وقدر",
+  "رباط",
+  "ثواب",
+  "ضحكة",
+  "صوت",
+  "عائلة",
+  "أم",
+  "أب",
+  "ولد",
+  "بنت",
+  "صديق",
+  "طفولة",
+  "حلم",
+  "رسالة",
+  "كلمات أخيرة",
+  "شفيع",
+]);
+
+// -------------------- NORMALIZATION --------------------
 const normalizeArabic = (text: string): string => {
   return text
-    .replace(/[\u064B-\u0652]/g, "") // remove diacritics (Tashkeel)
-    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()\[\]؟«»]/g, "") // remove punctuation
-    .replace(/\s{2,}/g, " ") // collapse spaces
+    .replace(/[\u064B-\u065F\u0610-\u061A]/g, "") // diacritics
+    .replace(/[إأآا]/g, "ا") // alef forms
+    .replace(/ى/g, "ي") // alef maqsura
+    .replace(/ة/g, "ه") // taa marbuta
+    .replace(/ؤ/g, "و") // hamza on waw
+    .replace(/ئ/g, "ي") // hamza on ya
+    .replace(/ـ/g, "") // tatweel
+    .replace(/[.,،؛!؟«»()#]/g, "") // punctuation
     .trim();
 };
 
-export default function extractTags(text: string, topK: number = 7): string[] {
-  const normalized = normalizeArabic(text);
-  const words = normalized.split(/\s+/);
+// -------------------- LIGHT STEMMER --------------------
+const stemArabic = (word: string): string => {
+  word = word.replace(/^(ال|وال|بال|كال|فال|لل)/, ""); // common prefixes
+  word = word.replace(/(ات|ون|ين|ان|ه|ها|هم|كم|نا|وا|ي)$/g, ""); // common suffixes
+  return word;
+};
 
-  const freqMap = new Map<string, number>();
+// -------------------- EXTRACTOR --------------------
+export const extractMartyrStoryKeywords = (storyDetails: string): string[] => {
+  if (!storyDetails || typeof storyDetails !== "string") return [];
 
-  for (const word of words) {
-    if (word.length < 3 || arabicStopWords.has(word)) continue;
-    freqMap.set(word, (freqMap.get(word) ?? 0) + 1);
+  const normalizedText = normalizeArabic(storyDetails.toLowerCase());
+
+  const words = normalizedText
+    .split(/\s+/)
+    .filter((word) => word.length > 1 && !arabicStopWords.has(word));
+
+  // Preprocess keywords
+  const normalizedKeywords = Array.from(martyrStoryKeywords).map((kw) =>
+    normalizeArabic(kw).toLowerCase()
+  );
+
+  const foundKeywords = new Set<string>();
+
+  // ---------------- Single words ----------------
+  words.forEach((word) => {
+    const stemmedWord = stemArabic(word);
+    normalizedKeywords.forEach((kw) => {
+      if (stemArabic(kw) === stemmedWord) {
+        foundKeywords.add(kw);
+      }
+    });
+  });
+
+  // ---------------- Multi-word phrases (2-3) ----------------
+  for (let n = 2; n <= 3; n++) {
+    for (let i = 0; i <= words.length - n; i++) {
+      const phrase = words.slice(i, i + n).join(" ");
+      normalizedKeywords.forEach((kw) => {
+        if (stemArabic(kw) === stemArabic(phrase)) {
+          foundKeywords.add(kw);
+        }
+      });
+    }
   }
 
-  // Sort by frequency descending
-  const sorted = [...freqMap.entries()].sort((a, b) => b[1] - a[1]);
-
-  // Return top K words
-  return sorted.slice(0, topK).map(([word]) => word);
-}
+  return Array.from(foundKeywords);
+};

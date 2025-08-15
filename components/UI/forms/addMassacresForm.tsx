@@ -26,8 +26,8 @@ import Input from "../inputs/input";
 import { getFileUniqueKey } from "@/utils/file";
 import { useRouter } from "next/navigation";
 import { compressImage, validateImage } from "@/utils/image";
-import extractTags from "@/utils/extractTags";
 import { BsPlus } from "react-icons/bs";
+import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
 
 interface ImageData {
   data_url: string;
@@ -264,7 +264,7 @@ const AddMassacres = () => {
           useEffect(() => {
             const timeout = setTimeout(() => {
               if (values.description && values.description.length > 20) {
-                const extractedTags = extractTags(values.description);
+                const extractedTags = extractArabicKeywords(values.description);
                 setTags(extractedTags);
                 setFieldValue("tags", extractedTags); // Also update Formik's tags field
               } else {

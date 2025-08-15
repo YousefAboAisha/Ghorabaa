@@ -7,12 +7,13 @@ import { Role, StoryStatus } from "@/app/enums";
 
 import type { NextRequest } from "next/server";
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+type Params = Promise<{ id: string }>;
+const secret = process.env.NEXTAUTH_SECRET;
+
+export async function PUT(req: NextRequest, { params }: { params: Params }) {
   try {
-    const token = await getToken({ req });
+    const token = await getToken({ req, secret });
+
     if (!token) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -20,8 +21,9 @@ export async function PUT(
       );
     }
 
-    const storyId = params.id;
-    if (!ObjectId.isValid(storyId)) {
+    const { id } = await params;
+
+    if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid story ID format" },
         { status: 400 }
@@ -34,14 +36,14 @@ export async function PUT(
 
     // Get existing story
     const existingStory = await storiesCollection.findOne({
-      _id: new ObjectId(storyId),
+      _id: new ObjectId(id),
     });
 
     if (!existingStory) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
-    // Authorization check - only allow updates by original publisher or admin
+    // Authorization check
     if (
       existingStory.publisher_id.toString() !== token.id &&
       token.role !== Role.ADMIN
@@ -67,7 +69,12 @@ export async function PUT(
       bio,
       image,
       warTitle,
+      ...rest
     } = body;
+
+    // Remove _id from rest if it exists
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _id, ...safeRest } = rest;
 
     const age = birth_date
       ? new Date(death_date).getFullYear() - new Date(birth_date).getFullYear()
@@ -82,6 +89,7 @@ export async function PUT(
     }
 
     const updateData: Partial<StoryInterface> = {
+      ...safeRest,
       id_number,
       name,
       age,
@@ -100,7 +108,6 @@ export async function PUT(
     };
 
     // For admin updates, preserve the original status
-    // For regular users, reset to pending if updating approved story
     if (
       token.role !== Role.ADMIN &&
       existingStory.status === StoryStatus.APPROVED
@@ -109,7 +116,7 @@ export async function PUT(
     }
 
     const result = await storiesCollection.updateOne(
-      { _id: new ObjectId(storyId) },
+      { _id: new ObjectId(id) },
       { $set: updateData }
     );
 
@@ -120,9 +127,8 @@ export async function PUT(
       );
     }
 
-    // Get updated story to return
     const updatedStory = await storiesCollection.findOne({
-      _id: new ObjectId(storyId),
+      _id: new ObjectId(id),
     });
 
     return NextResponse.json(
