@@ -100,7 +100,7 @@ const SearchSection = ({ session }: SearchSectionProps) => {
         <div className="relative w-full md:w-8/12">
           <Input
             placeholder="اسم الشهيد - 3 حروف على الأقل"
-            className="bg-white w-full border"
+            className="bg-white w-full border focus:border-secondary"
             type="text"
             icon={
               loading ? (

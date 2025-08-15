@@ -43,23 +43,11 @@ const StoryCard = ({ data, session }: Props) => {
         </div>
 
         <div className="flex items-center gap-2 text-sm mb-2">
-          <p className="font-bold text-secondary truncate">
-            <HighlightedText
-              highlights={data?.highlight}
-              field="name"
-              fallback={fullName ?? ""}
-            />
-          </p>
+          <p className="font-bold text-secondary truncate">{fullName}</p>
 
           {data?.nickname && (
             <p className="text-gray_dark font-normal inline min-w-fit">
-              &quot;
-              <HighlightedText
-                highlights={data?.highlight}
-                field="nickname"
-                fallback={data?.nickname ?? ""}
-              />
-              &quot;
+              &quot; {data?.nickname} &quot;
             </p>
           )}
         </div>

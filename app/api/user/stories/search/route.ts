@@ -9,22 +9,19 @@ const secret = process.env.NEXTAUTH_SECRET;
 export async function GET(req: NextRequest) {
   const client = await clientPromise;
   const db = client.db("ghorabaa");
-  const collection = db.collection("stories");
+  const storiesCollection = db.collection("stories");
   const usersCollection = db.collection("users");
 
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("query")?.trim();
-
-  console.log("Search Query", query);
 
   if (!query || query.length < 2) {
     return NextResponse.json([], { status: 200 });
   }
 
   try {
-    // ✅ Get session token
+    // Get session token
     const token = await getToken({ req, secret });
-
     let favoritesArray: string[] = [];
 
     if (token?.email) {
@@ -34,64 +31,148 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // ✅ Fetch search results
-    const data = await collection
-      .aggregate([
+    // Build the match stage with regex search
+    const matchStage: Record<string, unknown> = {
+      status: StoryStatus.APPROVED,
+      $or: [
+        { "name.first_name": { $regex: query, $options: "i" } },
+        { "name.father_name": { $regex: query, $options: "i" } },
+        { "name.grandFather_name": { $regex: query, $options: "i" } },
+        { "name.last_name": { $regex: query, $options: "i" } },
+        { nickname: { $regex: query, $options: "i" } },
         {
-          $search: {
-            index: "default",
-            compound: {
-              should: [
-                {
-                  text: {
-                    query,
-                    path: ["name", "nickname"], // <-- add "nickname" here
-                    fuzzy: {
-                      maxEdits: 1,
-                      prefixLength: 3,
-                    },
-                    score: { boost: { value: 3 } },
-                  },
-                },
-              ],
+          $expr: {
+            $regexMatch: {
+              input: {
+                $concat: [
+                  "$name.first_name",
+                  " ",
+                  "$name.father_name",
+                  " ",
+                  "$name.grandFather_name",
+                  " ",
+                  "$name.last_name",
+                ],
+              },
+              regex: query,
+              options: "i",
             },
-            highlight: { path: ["name", "nickname"] },
           },
         },
-        {
-          $match: {
-            status: StoryStatus.APPROVED,
-          },
-        },
-        {
-          $addFields: {
-            score: { $meta: "searchScore" },
-          },
-        },
-        {
-          $project: {
-            _id: 1,
-            name: 1,
-            nickname: 1,
-            image: 1,
-            bio: 1,
-            city: 1,
-            age: 1,
-            neighborhood: 1,
-            highlight: { $meta: "searchHighlights" },
-            birth_date: 1,
-            death_date: 1,
-          },
-        },
-        {
-          $sort: {
-            score: -1,
-          },
-        },
-      ])
-      .toArray();
+      ],
+    };
 
-    // ✅ Add "favorite" field
+    // Create text score for sorting (simulating search relevance)
+    const pipeline = [
+      { $match: matchStage },
+      {
+        $addFields: {
+          fullName: {
+            $concat: [
+              "$name.first_name",
+              " ",
+              "$name.father_name",
+              " ",
+              "$name.grandFather_name",
+              " ",
+              "$name.last_name",
+            ],
+          },
+          // Create a simple relevance score based on field matches
+          score: {
+            $add: [
+              {
+                $cond: [
+                  {
+                    $regexMatch: {
+                      input: "$name.first_name",
+                      regex: query,
+                      options: "i",
+                    },
+                  },
+                  4,
+                  0,
+                ],
+              },
+              {
+                $cond: [
+                  {
+                    $regexMatch: {
+                      input: "$name.last_name",
+                      regex: query,
+                      options: "i",
+                    },
+                  },
+                  3,
+                  0,
+                ],
+              },
+              {
+                $cond: [
+                  {
+                    $regexMatch: {
+                      input: "$nickname",
+                      regex: query,
+                      options: "i",
+                    },
+                  },
+                  3,
+                  0,
+                ],
+              },
+              {
+                $cond: [
+                  {
+                    $regexMatch: {
+                      input: "$name.father_name",
+                      regex: query,
+                      options: "i",
+                    },
+                  },
+                  2,
+                  0,
+                ],
+              },
+              {
+                $cond: [
+                  {
+                    $regexMatch: {
+                      input: "$name.grandFather_name",
+                      regex: query,
+                      options: "i",
+                    },
+                  },
+                  1,
+                  0,
+                ],
+              },
+            ],
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          fullName: 1,
+          nickname: 1,
+          image: 1,
+          bio: 1,
+          city: 1,
+          age: 1,
+          neighborhood: 1,
+          birth_date: 1,
+          death_date: 1,
+          score: 1,
+        },
+      },
+      { $sort: { score: -1, fullName: 1 } },
+      { $limit: 50 },
+    ];
+
+    const data = await storiesCollection.aggregate(pipeline).toArray();
+
+    // Add favorite field
     const serialized = data.map((story) => ({
       ...story,
       _id: story._id.toString(),

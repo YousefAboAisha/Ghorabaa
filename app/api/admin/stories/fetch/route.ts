@@ -33,10 +33,33 @@ export async function GET(req: NextRequest) {
     }
 
     if (search) {
-      // Case-insensitive regex search across multiple fields
+      // Case-insensitive regex search across all name fields and nickname
       matchStage.$or = [
-        { name: { $regex: search, $options: "i" } },
+        { "name.first_name": { $regex: search, $options: "i" } },
+        { "name.father_name": { $regex: search, $options: "i" } },
+        { "name.grandFather_name": { $regex: search, $options: "i" } },
+        { "name.last_name": { $regex: search, $options: "i" } },
         { nickname: { $regex: search, $options: "i" } },
+        // You can also add a combined full name search if needed
+        {
+          $expr: {
+            $regexMatch: {
+              input: {
+                $concat: [
+                  "$name.first_name",
+                  " ",
+                  "$name.father_name",
+                  " ",
+                  "$name.grandFather_name",
+                  " ",
+                  "$name.last_name",
+                ],
+              },
+              regex: search,
+              options: "i",
+            },
+          },
+        },
       ];
     }
 
