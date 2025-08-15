@@ -46,7 +46,7 @@ function ProfileMenu({ session }: Props) {
   };
 
   return (
-    <Menu as={"div"}>
+    <Menu as={"div"} className="flex items-center justify-center">
       <MenuButton
         as={"button"}
         className="group cursor-pointer disabled:cursor-not-allowed disabled:opacity-80 ml-1"
@@ -98,7 +98,7 @@ function ProfileMenu({ session }: Props) {
             session?.user?.role === Role.EDITOR) && (
             <MenuItem>
               <Link
-                href={"/admin/dashboard"}
+                href={"/admin/dashboard/stories"}
                 className="flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 text-[13px] rounded-lg"
                 prefetch
               >

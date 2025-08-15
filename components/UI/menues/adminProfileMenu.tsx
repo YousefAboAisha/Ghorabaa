@@ -44,10 +44,10 @@ function AdminProfileMenu({ session }: Props) {
   };
 
   return (
-    <Menu as={"div"}>
+    <Menu as={"div"}  className="flex items-center justify-center">
       <MenuButton
         as={"button"}
-        className="group cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
+        className="group cursor-pointer disabled:cursor-not-allowed disabled:opacity-80 m-0"
         disabled={loading}
       >
         {() => (

@@ -4,7 +4,6 @@ import PageTitles from "@/components/UI/typography/pageTitles";
 import { notFound } from "next/navigation";
 import { getSessionAction } from "@/app/actions/registerActions";
 import { dateConversion, fullDateConversion } from "@/utils/format";
-import StoryActions from "../stories/storyActions";
 import Link from "next/link";
 import { FaFacebook, FaInstagram, FaXTwitter } from "react-icons/fa6";
 import CommentsSection from "./commentsSection";
@@ -13,6 +12,7 @@ import { BsExclamationTriangle, BsEye } from "react-icons/bs";
 import { BiInfoCircle } from "react-icons/bi";
 import LogVisit from "@/containers/stories/logVisit";
 import { getAgeLabel } from "@/utils/text";
+import ShareButton from "../stories/shareButton";
 
 type Props = {
   id: string;
@@ -45,8 +45,6 @@ const StoryDetailsSection = async ({ id }: Props) => {
     notFound(); // only allow access if approved, OR user is admin/owner
   }
 
-  console.log("Story Details Data", data);
-
   const fullName = `${data.name?.first_name} ${data.name?.father_name || ""} ${
     data.name?.last_name || ""
   }`.trim();
@@ -55,11 +53,6 @@ const StoryDetailsSection = async ({ id }: Props) => {
     data && (
       <div className="mt-24">
         {data.status === StoryStatus.APPROVED && <LogVisit storyId={id} />}
-
-        {/* Story Actions Component [Edit | Share  | Report | Delete ] */}
-        {data.status === StoryStatus.APPROVED && data && (
-          <StoryActions data={data!} session={session} />
-        )}
 
         {data.status === StoryStatus.PENDING && (
           <div className="relative flex items-center gap-2 bg-pending text-white border rounded-md shadow-sm p-3 mt-4 mb-4 w-full font-semibold">
@@ -130,10 +123,21 @@ const StoryDetailsSection = async ({ id }: Props) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 mt-6">
-            <h4 className="text-lg font-semibold">الشهيد | {fullName}</h4>
-            {data.nickname && (
-              <p className="text-gray_dark"> &quot; {data.nickname} &quot; </p>
+          <div className="flex items-center justify-between mt-6">
+            <div className="flex items-center gap-2 ">
+              <h4 className="text-lg font-semibold">الشهيد | {fullName}</h4>
+
+              {data.nickname && (
+                <p className="text-gray_dark">
+                  {" "}
+                  &quot; {data.nickname} &quot;{" "}
+                </p>
+              )}
+            </div>
+            
+            {/* Share content button */}
+            {data.status === StoryStatus.APPROVED && data && (
+              <ShareButton data={data!} />
             )}
           </div>
 

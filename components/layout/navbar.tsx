@@ -44,7 +44,7 @@ const Navbar = ({ session }: NavbarProps) => {
           <Link
             key={index}
             href={href}
-            className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-sm font-primary outline-none font-noto_kufi ${
+            className={`cursor-pointer min-w-fit hover:text-primary duration-500 text-sm font-primary outline-none ${
               pathname === href ? "text-primary font-normal" : ""
             }`}
             title={title}
@@ -74,12 +74,12 @@ const Navbar = ({ session }: NavbarProps) => {
       className={`fixed w-full h-[70px] top-0 left-0 z-[50] items-center bg-white text-black duration-500 border-light border-b shadow-sm`}
     >
       <div className="container flex flex-row justify-between items-center h-full">
-        <div className={`flex items-center gap-1`}>
-          <div className="flex lg:hidden cursor-pointer m-0">
+        <div className={`flex items-center lg:gap-1 gap-3`}>
+          <div className="lg:hidden cursor-pointer border rounded-xl bg-secondary/10">
             <Hamburger
               toggled={sidebarIsOpen}
               toggle={setSidebarIsOpen}
-              size={24}
+              size={23}
               aria-label="Toggle sidebar"
             />
           </div>

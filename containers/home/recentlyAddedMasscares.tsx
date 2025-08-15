@@ -1,6 +1,8 @@
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import RecentlyAddedMassacresSwiper from "@/components/UI/swipers/massacres/recentlyAddedMassacresSwiper";
+import Link from "next/link";
+import { BsArrowLeft } from "react-icons/bs";
 
 const RecentlyAddedMasscares = async () => {
   // Fetch the data of recently added stories
@@ -25,7 +27,18 @@ const RecentlyAddedMasscares = async () => {
     return <NoDataMessage className="mt-8" />;
   }
 
-  return <RecentlyAddedMassacresSwiper data={data} />;
+  return (
+    <div className="flex flex-col">
+      <RecentlyAddedMassacresSwiper data={data} />;
+      <Link
+        href={"/massacres"}
+        className="text-secondary flex items-center gap-2 justify-center hover:underline text-sm w-fit mx-auto"
+      >
+        <p>كافة المجازر</p>
+        <BsArrowLeft />
+      </Link>
+    </div>
+  );
 };
 
 export default RecentlyAddedMasscares;
