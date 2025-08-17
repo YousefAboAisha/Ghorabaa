@@ -1,9 +1,9 @@
-import AddMassacres from "@/components/UI/forms/addMassacresForm";
+import MassacreForm from "@/components/UI/forms/massacreForm";
 
 const Page = () => {
   return (
     <div className="relative w-full lg:w-[70%]">
-      <AddMassacres />
+      <MassacreForm />
     </div>
   );
 };

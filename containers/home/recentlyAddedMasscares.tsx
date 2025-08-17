@@ -29,7 +29,7 @@ const RecentlyAddedMasscares = async () => {
 
   return (
     <div className="flex flex-col">
-      <RecentlyAddedMassacresSwiper data={data} />;
+      <RecentlyAddedMassacresSwiper data={data} />
       <Link
         href={"/massacres"}
         className="text-secondary flex items-center gap-2 justify-center hover:underline text-sm w-fit mx-auto"

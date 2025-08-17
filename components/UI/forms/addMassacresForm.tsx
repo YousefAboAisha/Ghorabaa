@@ -15,28 +15,15 @@ import Select from "@/components/UI/inputs/selectInput";
 import TextArea from "@/components/UI/inputs/textArea";
 import { CountriesData } from "@/data/countriesData";
 import { CitiesData } from "@/data/citiesData";
-import ReactImageUploading, { ImageListType } from "react-images-uploading";
-import { CiImageOn } from "react-icons/ci";
 import { FaQuoteLeft, FaTimes } from "react-icons/fa";
-import Image from "next/image";
 import { MassacreInterface } from "@/app/interfaces";
 import { toast } from "react-toastify";
 import { MassacresValidationSchema } from "@/utils/validators";
 import Input from "../inputs/input";
-import { getFileUniqueKey } from "@/utils/file";
 import { useRouter } from "next/navigation";
-import { compressImage, validateImage } from "@/utils/image";
 import { BsPlus } from "react-icons/bs";
 import { extractArabicKeywords } from "@/app/lib/extractArabicKeywords";
-
-interface ImageData {
-  data_url: string;
-  image_url: string;
-}
-
-interface ImagesObject {
-  [key: string]: ImageData;
-}
+import MultiImageUploader from "../imageUploaders/multiImageUploader";
 
 const AddMassacres = () => {
   const MAX_IMAGES = 5;
@@ -45,12 +32,6 @@ const AddMassacres = () => {
   // State
   const [formErrors, setFormErrors] = useState<string>("");
   const [cities, setCities] = useState<{ value: string; title: string }[]>([]);
-  const [images, setImages] = useState<ImagesObject>({});
-  const [uploadStatus, setUploadStatus] = useState<{
-    loading: boolean;
-    progress: number;
-    error: string | null;
-  }>({ loading: false, progress: 0, error: null });
 
   const publisherRef = useRef<HTMLInputElement>(null);
   const reactionRef = useRef<HTMLTextAreaElement>(null);
@@ -70,104 +51,6 @@ const AddMassacres = () => {
     destroyedHouses: 0,
     tags: [],
     internationalReactions: [],
-  };
-
-  // Upload a single image
-  const uploadSingleImage = async (file: File): Promise<string> => {
-    let processedFile = file;
-
-    if (file.size > 1 * 1024 * 1024) {
-      processedFile = await compressImage(file);
-    }
-
-    const formData = new FormData();
-    formData.append("image", processedFile);
-    formData.append("folder", "massacres");
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/massacres`,
-      {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      }
-    );
-
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData?.message || "Failed to upload image");
-    }
-
-    const data = await res.json();
-    return data.url;
-  };
-
-  // Handle image upload
-  const handleImageUpload = async (
-    imageList: ImageListType,
-    setFieldValue: (
-      field: string,
-      value: Partial<MassacreInterface> | string | number | string[] | number[]
-    ) => void,
-    values: typeof initialValues
-  ) => {
-    if (!imageList || imageList.length === 0) return;
-
-    // Check if we're exceeding the max number of images
-    const currentImageCount = Object.keys(images).length;
-    if (currentImageCount > MAX_IMAGES) {
-      throw new Error(`الحد الأقصى للصور المرفوعة هو ${MAX_IMAGES} صور`);
-    }
-
-    setUploadStatus({ loading: true, progress: 0, error: null });
-
-    try {
-      const newImages: ImagesObject = {};
-      const mediaUrls: string[] = [];
-
-      // Process each image
-      for (let i = 0; i < imageList.length; i++) {
-        const image = imageList[i];
-        if (!image.file) continue;
-
-        // Validate the image
-        validateImage(image);
-
-        // Generate unique key
-        const uniqueKey = getFileUniqueKey(image.file);
-
-        // Upload the image
-        const imageUrl = await uploadSingleImage(image.file);
-
-        // Add to our images object
-        newImages[uniqueKey] = {
-          data_url: image.data_url || "",
-          image_url: imageUrl,
-        };
-
-        // Add to media URLs array
-        mediaUrls.push(imageUrl);
-
-        // Update progress
-        setUploadStatus((prev) => ({
-          ...prev,
-          progress: Math.round(((i + 1) / imageList.length) * 100),
-        }));
-      }
-
-      // Update state
-      setImages((prev) => ({ ...prev, ...newImages }));
-      setFieldValue("media", [...(values.media || []), ...mediaUrls]);
-
-      toast.success("تم رفع الصور بنجاح!");
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Upload failed";
-      setUploadStatus((prev) => ({ ...prev, error: message }));
-      toast.error(message);
-      throw error;
-    } finally {
-      setUploadStatus((prev) => ({ ...prev, loading: false }));
-    }
   };
 
   // Handle form submission
@@ -210,9 +93,6 @@ const AddMassacres = () => {
     }
   };
 
-  console.log("Images array", images);
-  console.log("Upload Status", uploadStatus);
-
   return (
     <div className="relative w-full">
       <Formik
@@ -223,39 +103,6 @@ const AddMassacres = () => {
         {({ isSubmitting, values, setFieldValue, errors }) => {
           console.log("Form Errors", errors);
           console.log("Form Values", values);
-
-          // Handle image removal
-          const handleRemoveImage = (
-            uniqueKey: string,
-            setFieldValue: (
-              field: string,
-              value:
-                | Partial<MassacreInterface>
-                | string
-                | number
-                | string[]
-                | number[]
-            ) => void
-          ) => {
-            if (!images[uniqueKey]) return;
-
-            // Create new objects without the removed image
-            const { [uniqueKey]: removedImage, ...remainingImages } = images;
-            const updatedMediaUrls = (values.media || []).filter(
-              (url) => url !== removedImage.image_url
-            );
-
-            // Update cover image if needed
-            let updatedCoverImage: string = values.cover_image || "";
-            if (removedImage.image_url === values.cover_image) {
-              updatedCoverImage = "";
-            }
-
-            // Update state
-            setImages(remainingImages);
-            setFieldValue("media", updatedMediaUrls);
-            setFieldValue("cover_image", updatedCoverImage);
-          };
 
           // eslint-disable-next-line react-hooks/rules-of-hooks
           const [tags, setTags] = useState<string[]>([]);
@@ -632,139 +479,28 @@ const AddMassacres = () => {
                   </div>
                 </div>
 
-                {/* Image Upload Section */}
-                <fieldset
-                  disabled={isSubmitting || uploadStatus.loading}
-                  className="relative group disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-                >
-                  <ReactImageUploading
-                    multiple
-                    value={Object.values(images).map((img) => ({
-                      data_url: img.data_url,
-                    }))}
-                    onChange={(imageList) =>
-                      handleImageUpload(imageList, setFieldValue, values)
-                    }
-                    maxNumber={MAX_IMAGES}
-                    dataURLKey="data_url"
-                    acceptType={["jpg", "jpeg", "png", "webp"]}
-                  >
-                    {({ onImageUpload, dragProps }) => (
-                      <div className="flex flex-col gap-4">
-                        {/* Upload Trigger */}
-                        <div
-                          className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed p-6 rounded-xl ${
-                            Object.keys(images).length > 0
-                              ? "border-gray-300"
-                              : "border-primary/50 hover:border-primary"
-                          } cursor-pointer transition-colors`}
-                          onClick={onImageUpload}
-                          {...dragProps}
-                        >
-                          <div className="relative w-16 h-16">
-                            <CiImageOn
-                              size={64}
-                              className="text-gray-300 absolute inset-0"
-                            />
-                            {Object.keys(images).length > 0 && (
-                              <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                                {Object.keys(images).length}
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-sm text-theme text-center">
-                            اسحب وأفلت الصور هنا أو انقر للاختيار
-                          </span>
-                          <div className="text-xs text-gray-500 mt-2">
-                            <p>✓ الصور المدعومة: JPEG, PNG, Jpg, WebP</p>
-                            <p>✓ الحد الأقصى للحجم: 5MB لكل صورة</p>
-                            <p>✓ الحد الأقصى للعدد: {MAX_IMAGES} صور</p>
-                            {uploadStatus.error && (
-                              <p className="text-red-500">
-                                ✗ {uploadStatus.error}
-                              </p>
-                            )}
-                          </div>
-                        </div>
+                <MultiImageUploader
+                  maxImages={MAX_IMAGES}
+                  onImagesChange={(imageUrls) =>
+                    setFieldValue("media", imageUrls)
+                  }
+                  onCoverImageChange={(coverImage) =>
+                    setFieldValue("cover_image", coverImage)
+                  }
+                  folderName="massacres"
+                />
 
-                        {/* Upload Progress */}
-                        {uploadStatus.loading && (
-                          <div className="flex flex-col gap-2">
-                            <div className="w-full bg-gray-200 rounded-full h-2.5">
-                              <div
-                                className="bg-primary h-2.5 rounded-full transition-all duration-300"
-                                style={{ width: `${uploadStatus.progress}%` }}
-                              ></div>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                              <span className="animate-pulse">⏳</span>
-                              جارٍ رفع الصور... ({uploadStatus.progress}%)
-                            </div>
-                          </div>
-                        )}
+                <ErrorMessage
+                  name="media"
+                  component="div"
+                  className="text-red-500 mt-2 font-semibold text-[10px]"
+                />
 
-                        {/* Image Preview Grid */}
-                        <div className="flex items-center flex-wrap gap-4 mt-4">
-                          {Object.entries(images).map(
-                            ([uniqueKey, imageData]) => (
-                              <div
-                                onClick={() =>
-                                  setFieldValue(
-                                    "cover_image",
-                                    imageData.image_url
-                                  )
-                                }
-                                key={uniqueKey}
-                                className={`relative w-24 h-24 aspect-square rounded-xl cursor-pointer overflow-hidden`}
-                              >
-                                <Image
-                                  src={imageData.data_url}
-                                  alt={`Uploaded image ${uniqueKey}`}
-                                  fill
-                                  className="object-cover"
-                                  sizes="(max-width: 100px) 20vw, (max-width: 100px) 20vw, 20vw"
-                                />
-
-                                {imageData.image_url === values.cover_image && (
-                                  <span className="absolute flex flex-col justify-center items-center gap-2 bottom-0 left-0 right-0 w-full h-full bg-[#1e272eb6] backdrop-blur text-white font-semibold text-[10px] p-1 text-center">
-                                    <CiImageOn size={35} />
-                                    صورة الغلاف
-                                  </span>
-                                )}
-
-                                {/* Remove button */}
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRemoveImage(uniqueKey, setFieldValue);
-                                  }}
-                                  className="absolute top-1 right-1 bg-white text-rejected p-1 rounded shadow hover:bg-gray-100 transition-colors"
-                                  aria-label="إزالة الصورة"
-                                  title="إزالة الصورة"
-                                >
-                                  <FaTimes size={10} />
-                                </button>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </ReactImageUploading>
-
-                  <ErrorMessage
-                    name="media"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-
-                  <ErrorMessage
-                    name="cover_image"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
-                </fieldset>
+                <ErrorMessage
+                  name="cover_image"
+                  component="div"
+                  className="text-red-500 mt-2 font-semibold text-[10px]"
+                />
               </div>
 
               {/* Submit Button */}
@@ -774,7 +510,7 @@ const AddMassacres = () => {
                 className="bg-secondary w-full hover:shadow-lg text-sm"
                 icon={<BiSend className="rotate-180" />}
                 loading={isSubmitting}
-                disabled={isSubmitting || uploadStatus.loading}
+                disabled={isSubmitting}
               />
 
               {/* Form Errors */}

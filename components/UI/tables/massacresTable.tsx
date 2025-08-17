@@ -17,6 +17,7 @@ import MassacreSearch from "../modals/massacreSearch";
 import ApproveMassacre from "../dialogs/approveMassacre";
 import { GrCheckmark } from "react-icons/gr";
 import ArchiveMassacre from "../dialogs/archiveMassacre";
+import Input from "../inputs/input";
 
 const MassacresTable = () => {
   const [tableData, setTableData] = useState<MassacreInterface[]>([]);
@@ -42,13 +43,17 @@ const MassacresTable = () => {
     () => Number(searchParams.get("page")) || 1
   );
 
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
   const fetchTableData = async () => {
     setTableLoading(true);
     setError(null);
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/massacres/fetch?status=${MassacreStatus.PENDING}&page=${page}&limit=10`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/massacres/fetch?status=${
+          MassacreStatus.PENDING
+        }&page=${page}&limit=10&search=${encodeURIComponent(searchQuery)}`,
         { cache: "no-store" }
       );
 
@@ -289,28 +294,48 @@ const MassacresTable = () => {
     );
   };
 
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchQuery.length > 1) {
+        fetchTableData();
+      } else if (searchQuery.length === 0) {
+        fetchTableData();
+      }
+    }, 500); // debounce
+
+    return () => clearTimeout(delayDebounce);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
+
   return (
     <>
       {/* Role Filter + Search */}
       <div className="flex items-center justify-between gap-4">
-        <Link className="relative" href={"massacres/addMassacre"}>
+        <div className="w-full md:w-1/2">
+          <Input
+            placeholder="البحث عن مجزرة"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setPage(1);
+                fetchTableData();
+              }
+            }}
+            icon={<CiSearch size={20} className="text-gray-500" />}
+            className="border bg-white focus:border-secondary"
+          />
+        </div>
+
+        <Link className="relative min-w-fit" href={"massacres/addMassacre"}>
           <div className="md:w-fit w-full">
             <Button
               title="مجزرة جديدة"
-              className="px-6 w-full bg-primary text-white"
+              className="px-6 w-full bg-secondary text-white"
               icon={<BsPlus size={20} />}
             />
           </div>
         </Link>
-
-        <div className="w-full lg:w-fit">
-          <Button
-            onClick={() => setIsOpenMassacreSearch(true)}
-            title="البحث"
-            className="bg-secondary text-white px-4"
-            icon={<CiSearch size={20} />}
-          />
-        </div>
       </div>
 
       {/* Table */}

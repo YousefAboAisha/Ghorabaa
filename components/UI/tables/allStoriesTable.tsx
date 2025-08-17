@@ -55,7 +55,7 @@ const AllStoriesTable = () => {
   );
   const [totalPages, setTotalPages] = useState(1);
 
-  const [SearchValue, setSearchValue] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const { fetchStatistics } = useStatisticsStore();
 
@@ -68,7 +68,7 @@ const AllStoriesTable = () => {
         `${
           process.env.NEXT_PUBLIC_API_BASE_URL
         }/admin/stories/fetch?status=${currentTap}&page=${page}&limit=10&search=${encodeURIComponent(
-          SearchValue
+          searchQuery
         )}`
       );
 
@@ -366,16 +366,16 @@ const AllStoriesTable = () => {
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      if (SearchValue.length > 1) {
+      if (searchQuery.length > 1) {
         fetchTableData();
-      } else if (SearchValue.length === 0) {
+      } else if (searchQuery.length === 0) {
         fetchTableData();
       }
     }, 500); // debounce
 
     return () => clearTimeout(delayDebounce);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [SearchValue]);
+  }, [searchQuery]);
 
   return (
     <>
@@ -383,8 +383,8 @@ const AllStoriesTable = () => {
         <div className="w-full md:w-1/2">
           <Input
             placeholder="البحث عن الشهيد"
-            value={SearchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 setPage(1);
@@ -403,7 +403,7 @@ const AllStoriesTable = () => {
             value={currentTap}
             onChange={(e) => {
               setPage(1);
-              setSearchValue("");
+              setSearchQuery("");
               router.push(`/admin/dashboard/stories?page=1`);
               setCurrentTap(e.target.value as StoryStatus);
             }}

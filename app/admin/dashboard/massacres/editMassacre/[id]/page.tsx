@@ -1,4 +1,4 @@
-import EditMassacreForm from "@/components/UI/forms/editMassacreForm";
+import MassacreForm from "@/components/UI/forms/massacreForm";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -11,7 +11,7 @@ export default async function Page({ params }: Props) {
 
   return (
     <div className="relative w-full lg:w-[70%]">
-      <EditMassacreForm id={id} />
+      <MassacreForm id={id} />
     </div>
   );
 }

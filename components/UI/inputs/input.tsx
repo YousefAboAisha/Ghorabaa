@@ -36,7 +36,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           </div>
         )}
 
-        <div className={`relative h-[52px] rounded-xl ${className}`}>
+        <div className={`relative h-[50px] rounded-[8px] ${className}`}>
           <div className="absolute flex justify-center p-2 rounded-l-md items-center right-1 top-[50%] translate-y-[-50%] h-full border-none outline-none text-grey opacity-70">
             {Icon}
           </div>
