@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { getToken } from "next-auth/jwt";
-import { Role, StoryStatus } from "@/app/enums";
+import { Role } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -23,19 +23,13 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url);
-    const status = searchParams.get("status")?.trim();
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
     const search = searchParams.get("search")?.trim();
 
-    // Validate role if provided
-    const validStatus = Object.values(StoryStatus);
+    // Validate status if provided
     const matchStage: Record<string, unknown> = {};
-
-    if (status && validStatus.includes(status as StoryStatus)) {
-      matchStage.role = status;
-    }
 
     if (search) {
       matchStage.$or = [{ title: { $regex: search, $options: "i" } }];

@@ -51,9 +51,7 @@ const MassacresTable = () => {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/massacres/fetch?status=${
-          MassacreStatus.PENDING
-        }&page=${page}&limit=10&search=${encodeURIComponent(searchQuery)}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/massacres/fetch?&page=${page}&limit=10&search=${encodeURIComponent(searchQuery)}`,
         { cache: "no-store" }
       );
 
