@@ -31,7 +31,7 @@ const Sidebar = ({ isOpen, setIsOpen, routes }: SidebarTypes) => {
             >
               <p
                 className={`font-secondary ${
-                  pathname == `${href}` ? "text-primary font-normal" : ""
+                  pathname.startsWith(href) ? "text-primary font-normal" : null
                 }`}
               >
                 {title}

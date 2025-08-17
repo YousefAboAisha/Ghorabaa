@@ -1,5 +1,6 @@
 import { StoryInterface } from "@/app/interfaces";
 import { dateConversion } from "@/utils/format";
+import { getFullName } from "@/utils/text";
 import Link from "next/link";
 import { FaCircle } from "react-icons/fa";
 
@@ -8,6 +9,8 @@ interface StoryCardsProps {
 }
 
 const StoryPendingCard = ({ data }: StoryCardsProps) => {
+  const fullName = getFullName(data?.name);
+
   return (
     <Link
       target="_blank"
@@ -16,7 +19,7 @@ const StoryPendingCard = ({ data }: StoryCardsProps) => {
     >
       <FaCircle className="absolute top-2 left-2 text-orange-500" size={10} />
 
-      <h2 className="truncate">الشهيد/ {data?.name}</h2>
+      <h2 className="truncate">الشهيد/ {fullName}</h2>
 
       <p className="font-light text-[13px] mb-5 line-clamp-3">{data?.bio}</p>
 

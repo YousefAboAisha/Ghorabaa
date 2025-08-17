@@ -5,6 +5,7 @@ import { StoryInterface } from "@/app/interfaces";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useFavoriteStore } from "@/stores/favoriteStore";
+import { getFullName } from "@/utils/text";
 
 type FavoriteCardProps = {
   data?: StoryInterface;
@@ -25,6 +26,8 @@ const FavoriteCard = ({ data, refetchData }: FavoriteCardProps) => {
     setLoading(false);
   };
 
+  const fullName = getFullName(data?.name);
+
   return (
     <div className="relative group mt-4">
       <div
@@ -44,7 +47,7 @@ const FavoriteCard = ({ data, refetchData }: FavoriteCardProps) => {
         <div className="flex flex-col items-center justify-center gap-2 absolute bottom-0 group-hover:opacity-100 opacity-0 duration-300 left-0 w-full h-full p-6 text-white bg-[#00000084]">
           <div className="flex flex-col items-center gap-2 font-semibold text-md">
             <p>الشهيد</p>
-            <p className="truncate flex">{data?.name}</p>
+            <p className="truncate flex">{fullName}</p>
           </div>
 
           <div className="flex items-center justify-center gap-2 mt-2 w-full absolute bottom-4">
