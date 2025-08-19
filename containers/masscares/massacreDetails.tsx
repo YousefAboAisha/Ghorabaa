@@ -14,9 +14,9 @@ import dead from "@/public/icons/dead.png";
 import house from "@/public/icons/house.png";
 import injury from "@/public/icons/injury.png";
 import { getSessionAction } from "@/app/actions/registerActions";
-import { MassacreStatus, Role } from "@/app/enums";
+import { ContentType, MassacreStatus, Role } from "@/app/enums";
 import { BsExclamationTriangle } from "react-icons/bs";
-import MassacreActions from "./massacreActions";
+import ShareButton from "../stories/shareButton";
 
 type Props = {
   id: string;
@@ -81,8 +81,6 @@ const MassacreDetails = async ({ id }: Props) => {
     <div className="flex flex-col gap-2 mt-24">
       <LogVisit massacreId={id} />
 
-      <MassacreActions data={data!} />
-
       {data.status === MassacreStatus.PENDING && (
         <div className="relative flex items-center gap-2 bg-pending text-white border rounded-md shadow-sm p-3 mb-4 w-full font-semibold">
           <BsExclamationTriangle size={20} />
@@ -99,7 +97,7 @@ const MassacreDetails = async ({ id }: Props) => {
         </div>
       )}
 
-      <PageTitles storyName={data.title} />
+      <PageTitles content_title={data.title} />
 
       <div className="relative w-full h-[60vh] rounded-xl overflow-hidden">
         <Image
@@ -126,7 +124,14 @@ const MassacreDetails = async ({ id }: Props) => {
           </div>
         </div>
 
-        <h4 className="text-2xl font-bold mt-6">{data?.title}</h4>
+        <div className="flex items-center justify-between gap-6 ">
+          <h4 className="text-2xl font-bold mt-6">{data?.title}</h4>
+
+          {/* Share content button */}
+          {data.status === MassacreStatus.APPROVED && data && (
+            <ShareButton data={data!} content_type={ContentType.MASSACRE} />
+          )}
+        </div>
 
         {data.tags && (
           <div className="flex items-center flex-wrap gap-2 mt-4">

@@ -82,12 +82,16 @@ const EventsSection = () => {
     setPage(1);
     setHasMore(true);
     setInitialLoading(true);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.toString()]);
 
   useEffect(() => {
     if (page === 1 && initialLoading) {
       fetchStories(1);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, initialLoading]);
 
   console.log("Error", error);
@@ -109,6 +113,7 @@ const EventsSection = () => {
 
       if (node) observer.current.observe(node);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [hasMore, initialLoading, page]
   );
 

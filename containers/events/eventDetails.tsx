@@ -1,5 +1,5 @@
 import { getSessionAction } from "@/app/actions/registerActions";
-import { EventStatus, Role } from "@/app/enums";
+import { ContentType, EventStatus, Role } from "@/app/enums";
 import { EventInterface } from "@/app/interfaces";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { fullDateConversion } from "@/utils/format";
@@ -46,7 +46,7 @@ const EventDetails = async ({ id }: Props) => {
       {data.status === EventStatus.APPROVED && <LogVisit event_id={id} />}
 
       <div className="flex flex-col gap-2 mt-24">
-        <PageTitles />
+        <PageTitles content_title={data.title} />
 
         <Image
           src={data?.image || "/notFound.png"}
@@ -74,7 +74,9 @@ const EventDetails = async ({ id }: Props) => {
           <div className="flex items-center justify-between gap-8 mt-6">
             <h4 className="text-lg font-bold">فعالية {data.title}</h4>
             {/* Share content button */}
-            {data && <ShareButton />}
+            {data && (
+              <ShareButton data={data!} content_type={ContentType.EVENT} />
+            )}
           </div>
 
           <div className="flex flex-col gap-2 mt-4 text-sm">

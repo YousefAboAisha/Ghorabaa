@@ -27,9 +27,26 @@ const storySchema = new Schema<StoryInterface>(
       required: true,
     },
 
-    name: {
-      type: String,
-      required: [true, "First name is required and cannot be empty."],
+    title: {
+      first_name: {
+        type: String,
+        required: [true, "First name is required and cannot be empty."],
+      },
+
+      father_name_name: {
+        type: String,
+        required: [true, "Father name is required and cannot be empty."],
+      },
+
+      grandFather_name: {
+        type: String,
+        required: [true, "GrandFather name is required and cannot be empty."],
+      },
+
+      last_name: {
+        type: String,
+        required: [true, "Last name is required and cannot be empty."],
+      },
     },
 
     social_media: { type: SocialMediaSchema, required: false },
@@ -54,14 +71,16 @@ const storySchema = new Schema<StoryInterface>(
       required: false,
     },
 
-    city: {
-      type: String,
-      required: [true, "City is required and cannot be empty."],
-    },
+    location: {
+      city: {
+        type: String,
+        required: [true, "City is required and cannot be empty."],
+      },
 
-    neighborhood: {
-      type: String,
-      required: [true, "Neighborhood is required and cannot be empty."],
+      neighborhood: {
+        type: String,
+        required: [true, "Neighborhood is required and cannot be empty."],
+      },
     },
 
     bio: {

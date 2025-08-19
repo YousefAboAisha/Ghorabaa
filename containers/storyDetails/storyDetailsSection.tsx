@@ -7,7 +7,7 @@ import { dateConversion, fullDateConversion } from "@/utils/format";
 import Link from "next/link";
 import { FaFacebook, FaInstagram, FaXTwitter } from "react-icons/fa6";
 import CommentsSection from "./commentsSection";
-import { Role, StoryStatus } from "@/app/enums";
+import { ContentType, Role, StoryStatus } from "@/app/enums";
 import { BsExclamationTriangle, BsEye } from "react-icons/bs";
 import { BiInfoCircle } from "react-icons/bi";
 import LogVisit from "@/containers/stories/logVisit";
@@ -85,7 +85,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
         ))}
 
       <div className="flex flex-col gap-2">
-        <PageTitles storyName={fullName} />
+        <PageTitles content_title={fullName} />
       </div>
 
       <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-martyr-pattern rounded-2xl">
@@ -133,7 +133,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
 
           {/* Share content button */}
           {data.status === StoryStatus.APPROVED && data && (
-            <ShareButton data={data!} />
+            <ShareButton data={data!} content_type={ContentType.STORY} />
           )}
         </div>
 
@@ -196,7 +196,8 @@ const StoryDetailsSection = async ({ id }: Props) => {
               </td>
               <td className="py-3 px-4 border-b text-right text-sm">
                 <div className="flex items-center gap-1">
-                  <p>{data.location.city}</p>-<p>{data.location.neighborhood}</p>
+                  <p>{data.location.city}</p>-
+                  <p>{data.location.neighborhood}</p>
                 </div>
               </td>
             </tr>

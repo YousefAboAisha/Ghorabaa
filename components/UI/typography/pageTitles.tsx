@@ -19,16 +19,17 @@ const pathTranslations: Record<string, string> = {
 };
 
 type PageTitlesProps = {
-  storyName?: string;
+  content_title?: string;
 };
 
-const PageTitles = ({ storyName }: PageTitlesProps) => {
+const PageTitles = ({ content_title }: PageTitlesProps) => {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
   const isStoryDetailsPage =
     segments[0] === "stories" ||
-    (segments[0] === "massacres" && segments.length === 2);
+    segments[0] === "massacres" ||
+    (segments[0] === "events" && segments.length === 2);
 
   return (
     <div className="flex items-center mb-2 text-sm">
@@ -47,7 +48,7 @@ const PageTitles = ({ storyName }: PageTitlesProps) => {
         if (isStoryDetailsPage && index === 1) {
           return (
             <React.Fragment key={href}>
-              <span className="text-black">{storyName}</span>
+              <span className="text-black">{content_title}</span>
             </React.Fragment>
           );
         }

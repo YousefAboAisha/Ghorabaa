@@ -43,13 +43,13 @@ const ShareDialog = ({ data, content_type }: Props) => {
   const getShareTitle = (type: ContentType) => {
     switch (type) {
       case ContentType.STORY:
-        return `الشهيد | ${content_title} `;
+        return "مشاركة القصة";
 
       case ContentType.EVENT:
-        return `الفعالية | ${content_title}`;
+        return "مشاركة الفعالية";
 
-      case ContentType.EVENT:
-        return `المجزرة | ${content_title}`;
+      case ContentType.MASSACRE:
+        return "مشاركة المجزرة";
 
       default:
         return "";
@@ -69,7 +69,9 @@ const ShareDialog = ({ data, content_type }: Props) => {
     <div className="relative flex flex-col gap-2 p-6">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-semibold min-w-fit">مشاركة الصفحة</h2>
+          <h2 className="text-xl font-semibold min-w-fit">
+            {getShareTitle(content_type)}
+          </h2>
 
           <p className="mx-auto text-center text-gray_dark text-[12px] mt-2">
             / {content_title || `العنوان غير معرّف`}

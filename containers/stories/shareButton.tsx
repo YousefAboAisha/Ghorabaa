@@ -8,9 +8,10 @@ import { CiShare2 } from "react-icons/ci";
 type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any;
+  content_type: ContentType;
 };
 
-const ShareButton = ({ data }: Props) => {
+const ShareButton = ({ data, content_type }: Props) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
 
   return (
@@ -32,7 +33,7 @@ const ShareButton = ({ data }: Props) => {
         setIsOpen={setIsShareModalOpen}
         containerClassName="lg:w-[35%]"
       >
-        <ShareDialog content_type={ContentType.STORY} data={data} />
+        <ShareDialog content_type={content_type} data={data} />
       </Modal>
     </>
   );

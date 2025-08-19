@@ -2,7 +2,6 @@ import StoryDetailsSkeletonLoader from "@/components/UI/loaders/storyDetailsSkel
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { StoryStatus } from "@/app/enums";
-import { getFullName } from "@/utils/text";
 import EventDetails from "@/containers/events/eventDetails";
 
 type Props = {
@@ -22,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!res.ok) {
     return {
       title: "الفعالية غير موجودة",
-      description: "لم يتم العثور على معلومات الشهيد",
+      description: "لم يتم العثور على معلومات الفعالية",
     };
   }
 
@@ -30,29 +29,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (data.status !== StoryStatus.APPROVED) return {};
 
-  const fullName = getFullName(data.title);
+  const event_title = data.title;
 
   return {
-    title: `الشهيد ${fullName} | منصة الشهداء`,
-    description: data.bio?.slice(0, 150) || "نبذة عن الشهيد",
+    title: `فعالية ${event_title} | منصة الشهداء`,
+    description: data.bio?.slice(0, 150) || "تفاصيل عن الفعالية",
     openGraph: {
-      title: `الشهيد ${fullName} | منصة الشهداء`,
-      description: data.bio?.slice(0, 150) || "نبذة عن الشهيد",
+      title: `فعالية ${event_title} | منصة الشهداء`,
+      description: data.bio?.slice(0, 150) || "تفاصيل عن الفعالية",
       images: [
         {
           url: data.image || "/notFound.png",
           width: 800,
           height: 600,
-          alt: `صورة الشهيد ${fullName}`,
+          alt: `صورة الفعالية ${event_title}`,
         },
       ],
-      url: `https://ghorabaa.com/stories/${id}`,
+      url: `https://ghorabaa.com/events/${id}`,
       type: "article",
     },
     twitter: {
       card: "summary_large_image",
-      title: `الشهيد ${fullName} | منصة الشهداء`,
-      description: data.bio?.slice(0, 150) || "نبذة عن الشهيد",
+      title: `الفعالية ${event_title} | منصة الشهداء`,
+      description: data.bio?.slice(0, 150) || "تفاصيل عن الفعالية",
       images: [data.image || "/notFound.png"],
     },
   };
