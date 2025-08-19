@@ -9,71 +9,71 @@ const RESTRICTED_EDITOR_PATHS = [
   // Add more restricted paths if needed
 ];
 export async function middleware(request: NextRequest) {
-  // const token = await getToken({
-  //   req: request,
-  //   secret: process.env.NEXTAUTH_SECRET,
-  // });
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
 
-  // console.log("Middleware token:", token); // Add this for debugging
+  console.log("Middleware token:", token); // Add this for debugging
 
-  // const { pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl;
 
-  // const isAuthPage =
-  //   pathname.startsWith("/auth") ||
-  //   pathname === "/signin" ||
-  //   pathname === "/signup";
+  const isAuthPage =
+    pathname.startsWith("/auth") ||
+    pathname === "/signin" ||
+    pathname === "/signup";
 
-  // const isUserPage =
-  //   pathname.startsWith("/profile") ||
-  //   pathname === "/savedStories" ||
-  //   pathname === "/addStory";
+  const isUserPage =
+    pathname.startsWith("/profile") ||
+    pathname === "/savedStories" ||
+    pathname === "/addStory";
 
-  // const isAdminPage = pathname.startsWith(ADMIN_PATH);
+  const isAdminPage = pathname.startsWith(ADMIN_PATH);
 
-  // // User not authenticated
-  // if (!token) {
-  //   if (isUserPage || isAdminPage) {
-  //     return NextResponse.redirect(new URL("/signin", request.url));
-  //   }
-  //   return NextResponse.next();
-  // }
+  // User not authenticated
+  if (!token) {
+    if (isUserPage || isAdminPage) {
+      return NextResponse.redirect(new URL("/signin", request.url));
+    }
+    return NextResponse.next();
+  }
 
-  // // Block EDITORS from restricted paths
-  // if (
-  //   RESTRICTED_EDITOR_PATHS.some((path) => pathname.startsWith(path)) &&
-  //   token.role === Role.EDITOR
-  // ) {
-  //   return NextResponse.redirect(new URL("/unauthorized", request.url));
-  // }
+  // Block EDITORS from restricted paths
+  if (
+    RESTRICTED_EDITOR_PATHS.some((path) => pathname.startsWith(path)) &&
+    token.role === Role.EDITOR
+  ) {
+    return NextResponse.redirect(new URL("/unauthorized", request.url));
+  }
 
-  // // Authenticated user visiting an auth page — redirect based on role
-  // if (isAuthPage) {
-  //   const redirectUrl =
-  //     token.role === Role.ADMIN || token.role === Role.EDITOR
-  //       ? "/admin/dashboard"
-  //       : `/profile/${token.id}`;
+  // Authenticated user visiting an auth page — redirect based on role
+  if (isAuthPage) {
+    const redirectUrl =
+      token.role === Role.ADMIN || token.role === Role.EDITOR
+        ? "/admin/dashboard"
+        : `/profile/${token.id}`;
 
-  //   return NextResponse.redirect(new URL(redirectUrl, request.url));
-  // }
+    return NextResponse.redirect(new URL(redirectUrl, request.url));
+  }
 
-  // // Handle auth-redirect route
-  // if (pathname === "/auth-redirect") {
-  //   if (!token) {
-  //     return NextResponse.redirect(new URL("/signin", request.url));
-  //   }
+  // Handle auth-redirect route
+  if (pathname === "/auth-redirect") {
+    if (!token) {
+      return NextResponse.redirect(new URL("/signin", request.url));
+    }
 
-  //   const redirectUrl =
-  //     token.role === Role.ADMIN || token.role === Role.EDITOR
-  //       ? "/admin/dashboard"
-  //       : `/profile/${token.id}`;
+    const redirectUrl =
+      token.role === Role.ADMIN || token.role === Role.EDITOR
+        ? "/admin/dashboard"
+        : `/profile/${token.id}`;
 
-  //   return NextResponse.redirect(new URL(redirectUrl, request.url));
-  // }
+    return NextResponse.redirect(new URL(redirectUrl, request.url));
+  }
 
-  // // Authenticated but not admin or editor trying to access admin route
-  // if (isAdminPage && token.role !== Role.ADMIN && token.role !== Role.EDITOR) {
-  //   return NextResponse.redirect(new URL("/unauthorized", request.url));
-  // }
+  // Authenticated but not admin or editor trying to access admin route
+  if (isAdminPage && token.role !== Role.ADMIN && token.role !== Role.EDITOR) {
+    return NextResponse.redirect(new URL("/unauthorized", request.url));
+  }
 
   return NextResponse.next();
 }
