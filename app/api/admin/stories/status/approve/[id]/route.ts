@@ -63,12 +63,11 @@ export async function PUT(
 
     // && story.publisher_id?.toString() !== author_id - TO prevent sending notifications to the same user who accepted it.
     if (story) {
+      const fullName = getFullName(story.title);
       // Create notification
       const storyNotificationPayload = {
         user_id: story.publisher_id,
-        message: `تمت الموافقة على طلب إضافة قصة الشهيد ${getFullName(
-          story?.name
-        )} من قِبِل المشرف`,
+        message: `تمت الموافقة على طلب إضافة قصة الشهيد ${fullName} من قِبِل المشرف`,
         href: `/stories/${story._id}`,
         notification_type: NotificationTypes.ACCEPT,
         createdAt: new Date(),

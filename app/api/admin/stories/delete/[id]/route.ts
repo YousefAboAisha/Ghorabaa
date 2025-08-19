@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
-import { NotificationTypes, Role, StoryStatus } from "@/app/enums";
+import { NotificationTypes, Role } from "@/app/enums";
+import { getFullName } from "@/utils/text";
 
 const secret = process.env.NEXTAUTH_SECRET;
 type Params = Promise<{ id: string }>;
@@ -43,19 +44,17 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
       return NextResponse.json({ error: "القصة غير موجودة." }, { status: 404 });
     }
 
-    if (existingStory) {
-      // Create notification
-      const storyNotificationPayload = {
-        user_id: existingStory.publisher_id,
-        message: `تمت إزالة قصة الشهيد ${existingStory.name} من المنصة بواسطة المشرف`,
-        href: `/stories/${existingStory._id}`,
-        notification_type: NotificationTypes.DELETE,
-        createdAt: new Date(),
-        is_read: false,
-      };
+    const fullName = getFullName(existingStory.title);
 
-      await notificationsCollection.insertOne(storyNotificationPayload);
-    }
+    // 🔔 Create notification for the publisher
+    await notificationsCollection.insertOne({
+      user_id: existingStory.publisher_id,
+      message: `تمت إزالة قصة الشهيد ${fullName} من المنصة بواسطة المشرف`,
+      href: `/stories/${existingStory._id}`,
+      notification_type: NotificationTypes.DELETE,
+      createdAt: new Date(),
+      is_read: false,
+    });
 
     const isOwner = existingStory.publisher_id?.toString() === token.id;
     const isAuthenticated =
@@ -68,35 +67,24 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
       );
     }
 
-    await commentsCollection.deleteMany({ story_id: new ObjectId(id) });
-    await reportsCollection.deleteMany({ content_id: new ObjectId(id) });
+    // ❌ Delete all related comments & reports (cover ObjectId or string case)
+    await commentsCollection.deleteMany({
+      $or: [{ story_id: new ObjectId(id) }, { story_id: id }],
+    });
 
-    // Instead of deleting, we nullify specific fields and reset profile status
-    const updateFields = {
-      publisher_id: null,
-      nickname: null,
-      city: null,
-      neighborhood: null,
-      bio: null,
-      image: null,
-      status: StoryStatus.IMPORTED,
-      updatedAt: new Date(),
-    };
+    await reportsCollection.deleteMany({
+      $or: [{ content_id: new ObjectId(id) }, { content_id: id }],
+    });
 
-    const result = await storiesCollection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: updateFields }
-    );
+    // 🔴 Hard delete story itself
+    const result = await storiesCollection.deleteOne({ _id: new ObjectId(id) });
 
-    if (result.modifiedCount === 0) {
-      return NextResponse.json(
-        { error: "فشل في تحديث بيانات القصة." },
-        { status: 500 }
-      );
+    if (result.deletedCount === 0) {
+      return NextResponse.json({ error: "فشل في حذف القصة." }, { status: 500 });
     }
 
     return NextResponse.json(
-      { message: "تم حذف القصة بنجاح." },
+      { message: "تم حذف القصة وجميع تعليقاتها بنجاح (حذف كلي)." },
       { status: 200 }
     );
   } catch (error) {

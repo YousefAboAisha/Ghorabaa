@@ -8,7 +8,7 @@ interface StoryCardsProps {
 }
 
 const StoryRejectedCard = ({ data }: StoryCardsProps) => {
-  const fullName = getFullName(data?.name);
+  const fullName = getFullName(data?.title);
 
   return (
     <>

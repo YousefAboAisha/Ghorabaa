@@ -22,7 +22,7 @@ export const StoryValidationSchema = Yup.object({
     .required("رقم الهوية مطلوب")
     .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام فقط"),
 
-  name: Yup.object({
+  title: Yup.object({
     first_name: Yup.string()
       .trim()
       .required("الاسم الأول مطلوب")
@@ -64,9 +64,10 @@ export const StoryValidationSchema = Yup.object({
       "تاريخ الاستشهاد يجب أن يكون بعد تاريخ الميلاد"
     ),
 
-  city: Yup.string().trim().required("يرجى اختيار المدينة"),
-
-  neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
+  location: Yup.object({
+    city: Yup.string().trim().required("يرجى اختيار المدينة"),
+    neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
+  }),
 
   warTitle: Yup.string().trim().required("يرجى اختيار العُدوان"),
 
@@ -138,9 +139,10 @@ export const ProfileValidationSchema = Yup.object({
 });
 
 export const StoryPreviewValidationSchema = Yup.object({
-  city: Yup.string().trim().required("يرجى اختيار المدينة"),
-
-  neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
+  location: Yup.object({
+    city: Yup.string().trim().required("يرجى اختيار المدينة"),
+    neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
+  }),
 
   bio: Yup.string()
     .trim()
@@ -294,4 +296,37 @@ export const MassacresValidationSchema = Yup.object({
     )
     .min(1, "يرجى إضافة رد فعل دولي واحد على الأقل")
     .max(10, "لا يمكن إضافة أكثر من 10 ردود فعل"),
+});
+
+export const EventValidationSchema = Yup.object({
+  title: Yup.string().trim().required("عنوان الفعالية مطلوب"),
+
+  start_date: Yup.date().required("تاريخ بداية الفعالية"),
+
+  end_date: Yup.date()
+    .required("تاريخ انتهاء الفعالية")
+    .min(
+      Yup.ref("end_date"),
+      "تاريخ انتهاء الفعالية يجب أن يكون بعد تاريخ بداية الفعالية"
+    ),
+
+  location: Yup.object({
+    city: Yup.string().trim().required("يرجى اختيار المدينة"),
+    neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
+  }),
+
+  details: Yup.string()
+    .trim()
+    .required("يرجى إدخال تفاصيل الفعالية")
+    .test(
+      "min-words",
+      "يجب أن تحتوي تفاصيل الفعالية على 200 كلمة على الأقل",
+      function (value) {
+        const wordCount =
+          value?.trim().split(/\s+/).filter(Boolean).length || 0;
+        return wordCount >= 200;
+      }
+    ),
+
+  image: Yup.mixed().required("يرجى إضافة صورة"),
 });

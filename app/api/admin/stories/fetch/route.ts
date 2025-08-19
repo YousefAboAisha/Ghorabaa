@@ -35,10 +35,10 @@ export async function GET(req: NextRequest) {
     if (search) {
       // Case-insensitive regex search across all name fields and nickname
       matchStage.$or = [
-        { "name.first_name": { $regex: search, $options: "i" } },
-        { "name.father_name": { $regex: search, $options: "i" } },
-        { "name.grandFather_name": { $regex: search, $options: "i" } },
-        { "name.last_name": { $regex: search, $options: "i" } },
+        { "title.first_name": { $regex: search, $options: "i" } },
+        { "title.father_name": { $regex: search, $options: "i" } },
+        { "title.grandFather_name": { $regex: search, $options: "i" } },
+        { "title.last_name": { $regex: search, $options: "i" } },
         { nickname: { $regex: search, $options: "i" } },
         // You can also add a combined full name search if needed
         {
@@ -46,13 +46,13 @@ export async function GET(req: NextRequest) {
             $regexMatch: {
               input: {
                 $concat: [
-                  "$name.first_name",
+                  "$title.first_name",
                   " ",
-                  "$name.father_name",
+                  "$title.father_name",
                   " ",
-                  "$name.grandFather_name",
+                  "$title.grandFather_name",
                   " ",
-                  "$name.last_name",
+                  "$title.last_name",
                 ],
               },
               regex: search,
@@ -85,14 +85,13 @@ export async function GET(req: NextRequest) {
         $project: {
           _id: 1,
           id_number: 1,
-          name: 1,
+          title: 1,
           nickname: 1,
           social_media: 1,
           bio: 1,
           image: 1,
           status: 1,
-          city: 1,
-          neighborhood: 1,
+          location: 1,
           publisher_id: 1,
           publisher_name: "$publisher.name",
           createdAt: 1,

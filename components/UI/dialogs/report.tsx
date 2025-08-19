@@ -9,14 +9,14 @@ import Select from "../inputs/selectInput";
 import { ReportReasonsData } from "@/data/reportReasonsData";
 import { ReportValidationSchema } from "@/utils/validators";
 
-type ReportCommentProps = {
+type Props = {
   data: CommentInterface;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
 };
 
-export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
+export const ReportDialog = ({ setIsOpen, data }: Props) => {
   const comment_id = data?._id;
 
   const initialValues = {
@@ -56,7 +56,7 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
             );
 
             if (!res.ok) {
-              let errorMsg = "حدث خطأ أثناء جلب البيانات";
+              let errorMsg = "حدث خطأ أثناء الإبلاغ عن المحتوى";
               try {
                 const errorResponse = await res.json();
                 errorMsg = errorResponse?.error || errorMsg;
@@ -68,10 +68,10 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
             }
 
             const result = await res.json();
-            console.log("✅ Story updated:", result);
+            console.log("✅ Content reported successfully:", result);
             resetForm();
             setIsOpen(false);
-            toast.warn("تم إرسال البلاغ بنجاح");
+            toast.warn("تم الإبلاغ عن المحتوى بنجاح");
           } catch (error) {
             const message =
               error instanceof Error ? error.message : "حدث خطأ غير متوقع";
@@ -134,4 +134,4 @@ export const ReportComment = ({ setIsOpen, data }: ReportCommentProps) => {
   );
 };
 
-export default ReportComment;
+export default ReportDialog;

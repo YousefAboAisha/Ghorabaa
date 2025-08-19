@@ -18,7 +18,7 @@ interface Props {
 }
 
 const StoryCard = ({ data, session }: Props) => {
-  const fullName = getFullName(data?.name);
+  const fullName = getFullName(data?.title);
 
   return (
     <div className="relative group w-full flex flex-col border bg-white hover:shadow-xl duration-500 rounded-2xl overflow-hidden">
@@ -39,7 +39,7 @@ const StoryCard = ({ data, session }: Props) => {
       <div className="relative p-4">
         <div className="flex items-center gap-1 text-[12px] mb-2 font-light">
           <FiMapPin />
-          <p>{data?.city}</p>-<p>{data?.neighborhood}</p>
+          <p>{data?.location.city}</p>-<p>{data?.location.neighborhood}</p>
         </div>
 
         <div className="flex items-center gap-2 text-sm mb-2">

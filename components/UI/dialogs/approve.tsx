@@ -1,40 +1,62 @@
+"use client";
 import React, { Dispatch, SetStateAction } from "react";
 import { BiInfoCircle } from "react-icons/bi";
 import { toast } from "react-toastify";
 import Button from "../inputs/button";
-import { CommentInterface } from "@/app/interfaces";
+import { getFullName } from "@/utils/text";
+import { ContentType } from "@/app/enums";
 
-type DeleteCommentProps = {
-  data: CommentInterface;
+type Props = {
+  content_type: ContentType;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
   refetchData?: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
 };
 
-export const DeleteComment = ({
+export const ApproveDialog = ({
   data,
   refetchData,
   setIsOpen,
   setLoading,
   loading,
-}: DeleteCommentProps) => {
-  const comment_id = data._id;
+  content_type,
+}: Props) => {
+  const content_id = data?._id;
+  const content_title =
+    content_type === ContentType.STORY ? getFullName(data?.title) : data?.title;
 
-  const deleteCommentHandler = async () => {
+  const getContentRoute = (type: ContentType) => {
+    switch (type) {
+      case ContentType.STORY:
+        return `/admin/stories/status/approve/${content_id}`;
+
+      case ContentType.MASSACRE:
+        return `/admin/massacres/status/approve/${content_id}`;
+
+      case ContentType.EVENT:
+        return `/admin/events/status/approve/${content_id}`;
+    }
+  };
+
+  const ApproveHandler = async () => {
     setLoading(true);
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/comments/delete/${comment_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}${getContentRoute(
+          content_type
+        )}`,
         {
-          method: "DELETE",
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
         }
       );
 
       if (!res.ok) {
-        let errorMsg = "حدث خطأ أثناء حذف التعليق";
+        let errorMsg = "حدث خطأ غير متوقع!";
         try {
           const errorResponse = await res.json();
           errorMsg = errorResponse?.error || errorMsg;
@@ -47,15 +69,15 @@ export const DeleteComment = ({
       }
 
       const result = await res.json();
-      console.log("✅ Comment deleted:", result);
+      console.log("✅ Approved content:", result);
 
       setIsOpen(false); // Close the modal
       refetchData?.(); // Refetch data
-      toast.success("تم حذف التعليق بنجاح!");
+      toast.success("تمت الموافقة على المحتوى ونشره");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
-      console.error("❌ Error deleting comment:", error);
+      console.error("❌ Error while approving content:", error);
       toast.error(message);
     } finally {
       setLoading(false);
@@ -66,21 +88,22 @@ export const DeleteComment = ({
     <div className="flex flex-col bg-white p-8">
       <div className="flex items-center gap-2">
         <BiInfoCircle size={25} />
-        <h2 className="text-xl font-bold">حذف التعليق</h2>
+        <h2 className="text-xl font-bold">قبول المحتوى</h2>/
+        <p className="text-[12px]">{content_title}</p>
       </div>
 
       <hr className="mt-4" />
 
       <p className="mt-6 text-[15px]">
-        هل أنت متأكد من رغبتك في حذف هذا التعليق؟
+        هل أنت متأكد من رغبتك في قبول هذا المحتوى ؟
       </p>
 
       <div className="flex items-center gap-4 mt-8">
         <Button
-          title="حذف الآن"
-          className="bg-rejected text-white"
+          title="قبول الآن"
+          className="bg-approved text-white"
           loading={loading}
-          onClick={() => deleteCommentHandler()}
+          onClick={() => ApproveHandler()}
           disabled={loading}
         />
 
@@ -95,4 +118,4 @@ export const DeleteComment = ({
   );
 };
 
-export default DeleteComment;
+export default ApproveDialog;

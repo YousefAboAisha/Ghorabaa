@@ -35,23 +35,23 @@ export async function GET(req: NextRequest) {
     const matchStage: Record<string, unknown> = {
       status: StoryStatus.APPROVED,
       $or: [
-        { "name.first_name": { $regex: query, $options: "i" } },
-        { "name.father_name": { $regex: query, $options: "i" } },
-        { "name.grandFather_name": { $regex: query, $options: "i" } },
-        { "name.last_name": { $regex: query, $options: "i" } },
+        { "title.first_name": { $regex: query, $options: "i" } },
+        { "title.father_name": { $regex: query, $options: "i" } },
+        { "title.grandFather_name": { $regex: query, $options: "i" } },
+        { "title.last_name": { $regex: query, $options: "i" } },
         { nickname: { $regex: query, $options: "i" } },
         {
           $expr: {
             $regexMatch: {
               input: {
                 $concat: [
-                  "$name.first_name",
+                  "$title.first_name",
                   " ",
-                  "$name.father_name",
+                  "$title.father_name",
                   " ",
-                  "$name.grandFather_name",
+                  "$title.grandFather_name",
                   " ",
-                  "$name.last_name",
+                  "$title.last_name",
                 ],
               },
               regex: query,
@@ -69,13 +69,13 @@ export async function GET(req: NextRequest) {
         $addFields: {
           fullName: {
             $concat: [
-              "$name.first_name",
+              "$title.first_name",
               " ",
-              "$name.father_name",
+              "$title.father_name",
               " ",
-              "$name.grandFather_name",
+              "$title.grandFather_name",
               " ",
-              "$name.last_name",
+              "$title.last_name",
             ],
           },
           // Create a simple relevance score based on field matches
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
                 $cond: [
                   {
                     $regexMatch: {
-                      input: "$name.first_name",
+                      input: "$title.first_name",
                       regex: query,
                       options: "i",
                     },
@@ -98,7 +98,7 @@ export async function GET(req: NextRequest) {
                 $cond: [
                   {
                     $regexMatch: {
-                      input: "$name.last_name",
+                      input: "$title.last_name",
                       regex: query,
                       options: "i",
                     },
@@ -124,7 +124,7 @@ export async function GET(req: NextRequest) {
                 $cond: [
                   {
                     $regexMatch: {
-                      input: "$name.father_name",
+                      input: "$title.father_name",
                       regex: query,
                       options: "i",
                     },
@@ -137,7 +137,7 @@ export async function GET(req: NextRequest) {
                 $cond: [
                   {
                     $regexMatch: {
-                      input: "$name.grandFather_name",
+                      input: "$title.grandFather_name",
                       regex: query,
                       options: "i",
                     },
@@ -153,14 +153,13 @@ export async function GET(req: NextRequest) {
       {
         $project: {
           _id: 1,
-          name: 1,
+          title: 1,
           fullName: 1,
           nickname: 1,
           image: 1,
           bio: 1,
-          city: 1,
+          location: 1,
           age: 1,
-          neighborhood: 1,
           birth_date: 1,
           death_date: 1,
           score: 1,

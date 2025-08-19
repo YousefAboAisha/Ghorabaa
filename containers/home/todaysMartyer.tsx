@@ -25,7 +25,8 @@ const TodaysMartyr = async () => {
   }
 
   if (data) {
-    const fullName = getFullName(data?.name);
+    const fullName = getFullName(data?.title);
+
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 ">
         <div className="flex flex-col items-start">

@@ -10,23 +10,23 @@ import React, { Dispatch, SetStateAction } from "react";
 import { BiInfoCircle } from "react-icons/bi";
 import { toast } from "react-toastify";
 
-type RejectStoryProps = {
+type RejectDialogProps = {
   data: StoryInterface & { publisher_name: string };
   refetchData: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-export const RejectStory = ({
+export const RejectDialog = ({
   data,
   refetchData,
   setIsOpen,
   setLoading,
-}: RejectStoryProps) => {
+}: RejectDialogProps) => {
   const { fetchStatistics } = useStatisticsStore();
   const story_id = data?._id;
 
-  const fullName = getFullName(data?.name);
+  const fullName = getFullName(data?.title);
 
   const initialValues = {
     rejectReason: "",
@@ -139,4 +139,4 @@ export const RejectStory = ({
   );
 };
 
-export default RejectStory;
+export default RejectDialog;

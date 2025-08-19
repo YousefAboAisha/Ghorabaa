@@ -1,25 +1,26 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StoryInterface } from "@/app/interfaces";
-import { StoryStatus } from "@/app/enums";
+import { ContentType, StoryStatus } from "@/app/enums";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Modal from "@/components/UI/modals/modal";
 import { HiCheck } from "react-icons/hi";
 import { MdOutlineClose } from "react-icons/md";
-import RejectStory from "@/components/UI/modals/rejectStory";
 import Link from "next/link";
 import { StoryStatusData } from "@/data/storyTabsData";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "./pagination";
 import { CiEdit, CiSearch, CiTrash } from "react-icons/ci";
-import { DeleteStory } from "../modals/deleteStory";
 import { useStatisticsStore } from "@/stores/storiesTableStore";
 import Input from "../inputs/input";
 import Select from "../inputs/selectInput";
-import ApproveStory from "../dialogs/approveStory";
 import { getFullName } from "@/utils/text";
+import ApproveDialog from "../dialogs/approve";
+import RejectDialog from "../dialogs/reject";
+import DeleteDaialog from "../dialogs/delete";
+import Image from "next/image";
 
 const AllStoriesTable = () => {
   const [tableData, setTableData] = useState<
@@ -59,7 +60,7 @@ const AllStoriesTable = () => {
 
   const { fetchStatistics } = useStatisticsStore();
 
-  const fetchTableData = async () => {
+  const fetchTableData = useCallback(async () => {
     setTableLoading(true);
     setError(null);
 
@@ -84,6 +85,8 @@ const AllStoriesTable = () => {
       }
 
       const { data, pagination } = await res.json();
+      console.log("📊 All Stories Table data:", data);
+
       setTableData(Array.isArray(data) ? data : []);
       setTotalPages(pagination?.totalPages || 1);
     } catch (error) {
@@ -94,17 +97,7 @@ const AllStoriesTable = () => {
     } finally {
       setTableLoading(false);
     }
-  };
-
-  useEffect(() => {
-    router.push(`/admin/dashboard/stories?page=${page}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    fetchTableData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTap, page]);
+  }, [currentTap, page, searchQuery]); // Add dependencies here
 
   const renderTableActions = (
     story: StoryInterface & { publisher_name: string }
@@ -238,6 +231,10 @@ const AllStoriesTable = () => {
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
+               الصورة
+              </th>
+
+              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
                 رقم الهوية
               </th>
 
@@ -273,7 +270,7 @@ const AllStoriesTable = () => {
 
           <tbody>
             {tableData?.map((story, index) => {
-              const fullName = getFullName(story.name);
+              const fullName = getFullName(story?.title);
 
               return (
                 <tr key={story._id as string} className="hover:bg-gray-50">
@@ -282,7 +279,20 @@ const AllStoriesTable = () => {
                   </td>
 
                   <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                    {story.id_number || "غير محدد"}
+                    <div className="relative w-12 h-12 overflow-hidden rounded">
+                      <Image
+                        src={story.image || "/notFound.png"}
+                        alt={fullName}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, (max-width:  768px) 50vw, 33vw"
+                        loading="lazy"
+                      />
+                    </div>
+                  </td>
+
+                    <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                    {story?.id_number || "غير محدد"}
                   </td>
 
                   <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
@@ -302,11 +312,11 @@ const AllStoriesTable = () => {
                   </td>
 
                   <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                    {story.city || "غير محدد"}
+                    {story?.location?.city || "غير محدد"}
                   </td>
 
                   <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                    {story.neighborhood || "غير محدد"}
+                    {story?.location?.neighborhood || "غير محدد"}
                   </td>
 
                   <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
@@ -365,13 +375,26 @@ const AllStoriesTable = () => {
   };
 
   useEffect(() => {
+    router.push(`/admin/dashboard/stories?page=${page}`);
+    fetchTableData(); // Add this line to fetch data immediately
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Fetch data when currentTap, page, or searchQuery changes
+  useEffect(() => {
+    fetchTableData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTap, page]); // Add fetchTableData as dependency
+
+  // Debounce search input
+  useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (searchQuery.length > 1) {
         fetchTableData();
       } else if (searchQuery.length === 0) {
         fetchTableData();
       }
-    }, 500); // debounce
+    }, 700); // debounce
 
     return () => clearTimeout(delayDebounce);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -436,12 +459,16 @@ const AllStoriesTable = () => {
         containerClassName="w-11/12 md:w-7/12 lg:w-[30%]"
         loading={isStoryApproveLoading}
       >
-        <ApproveStory
+        <ApproveDialog
           data={storyData!}
-          refetchData={fetchTableData}
+          refetchData={() => {
+            fetchTableData();
+            fetchStatistics();
+          }}
           setLoading={setIsStoryApproveLoading}
           loading={isStoryApproveLoading}
           setIsOpen={setIsOpenStoryApprove}
+          content_type={ContentType.STORY}
         />
       </Modal>
 
@@ -452,9 +479,12 @@ const AllStoriesTable = () => {
         containerClassName="w-11/12 md:w-7/12 !lg:w-[20%]"
         loading={isStoryRejectLoading}
       >
-        <RejectStory
+        <RejectDialog
           data={storyData!}
-          refetchData={fetchTableData}
+          refetchData={() => {
+            fetchTableData();
+            fetchStatistics();
+          }}
           setIsOpen={setIsOpenStoryReject}
           setLoading={setIsStoryRejectLoading}
         />
@@ -467,7 +497,7 @@ const AllStoriesTable = () => {
         containerClassName="lg:w-[30%]"
         loading={isDeleteLoading}
       >
-        <DeleteStory
+        <DeleteDaialog
           setIsOpen={setIsDeleteModalOpen}
           setLoading={setIsDeleteLoading}
           loading={isDeleteLoading}
@@ -476,6 +506,7 @@ const AllStoriesTable = () => {
             fetchTableData();
             fetchStatistics();
           }}
+          content_type={ContentType.STORY}
         />
       </Modal>
     </>

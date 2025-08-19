@@ -2,32 +2,47 @@ import React, { Dispatch, SetStateAction } from "react";
 import { BiInfoCircle } from "react-icons/bi";
 import { toast } from "react-toastify";
 import Button from "../inputs/button";
-import { MassacreInterface } from "@/app/interfaces";
+import { EventInterface, MassacreInterface } from "@/app/interfaces";
+import { ContentType } from "@/app/enums";
 
 type Props = {
-  data: MassacreInterface;
+  content_type: ContentType;
+  data: MassacreInterface | EventInterface;
   refetchData?: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
 };
 
-export const ArchiveMassacre = ({
+export const ArchiveDialog = ({
   data,
   refetchData,
   setIsOpen,
   setLoading,
   loading,
+  content_type,
 }: Props) => {
-  const massacre_id = data?._id;
-  const massacre_title = data?.title;
+  const content_id = data?._id;
+  const content_title = data?.title;
 
-  const ArchiveMassacreHandler = async () => {
+  const getContentRoute = (type: ContentType) => {
+    switch (type) {
+      case ContentType.MASSACRE:
+        return `/admin/massacres/status/archive/${content_id}`;
+
+      case ContentType.EVENT:
+        return `/admin/events/status/approve/${content_id}`;
+    }
+  };
+
+  const ArchiveDialogHandler = async () => {
     setLoading(true);
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/massacres/status/archive/${massacre_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}${getContentRoute(
+          content_type
+        )}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -35,7 +50,7 @@ export const ArchiveMassacre = ({
       );
 
       if (!res.ok) {
-        let errorMsg = "حدث خطأ أثناء أرشفة المجزرة";
+        let errorMsg = "حدث خطأ أثناء أرشفة المحتوى";
         try {
           const errorResponse = await res.json();
           errorMsg = errorResponse?.error || errorMsg;
@@ -52,7 +67,7 @@ export const ArchiveMassacre = ({
 
       setIsOpen(false); // Close the modal
       refetchData?.(); // Refetch data
-      toast.success("تمت أرشفة المجزرة بنجاح");
+      toast.success("تمت أرشفة المحتوى بنجاح");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
@@ -67,14 +82,14 @@ export const ArchiveMassacre = ({
     <div className="flex flex-col bg-white p-8">
       <div className="flex items-center gap-2">
         <BiInfoCircle size={25} />
-        <h2 className="text-xl font-bold">أرشفة المجزرة</h2>/
-        <p className="text-[12px]">{massacre_title}</p>
+        <h2 className="text-xl font-bold">أرشفة المحتوى</h2>/
+        <p className="text-[12px]">{content_title}</p>
       </div>
 
       <hr className="mt-4" />
 
       <p className="mt-6 text-[15px]">
-        هل أنت متأكد من رغبتك في أرشفة هذا المجزرة؟
+        هل أنت متأكد من رغبتك في أرشفة هذا المحتوى؟
       </p>
 
       <div className="flex items-center gap-4 mt-8">
@@ -82,7 +97,7 @@ export const ArchiveMassacre = ({
           title="أرشفة الآن"
           className="bg-rejected text-white"
           loading={loading}
-          onClick={() => ArchiveMassacreHandler()}
+          onClick={() => ArchiveDialogHandler()}
           disabled={loading}
         />
 
@@ -97,4 +112,4 @@ export const ArchiveMassacre = ({
   );
 };
 
-export default ArchiveMassacre;
+export default ArchiveDialog;

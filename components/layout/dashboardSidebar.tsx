@@ -72,7 +72,7 @@ const DashboardSidebar = ({ session }: Props) => {
             key={index}
             href={item.href}
             className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${
-              pathname.startsWith(item.href)
+              pathname === item.href
                 ? "bg-secondary text-white"
                 : "text-gray-700 hover:bg-gray-100"
             }`}

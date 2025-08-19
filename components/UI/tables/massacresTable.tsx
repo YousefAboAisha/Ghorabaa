@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { MassacreInterface } from "@/app/interfaces";
-import { MassacreStatus } from "@/app/enums";
+import { ContentType, MassacreStatus } from "@/app/enums";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
@@ -13,11 +13,10 @@ import Button from "../inputs/button";
 import Modal from "@/components/UI/modals/modal";
 import { CiEdit, CiSearch } from "react-icons/ci";
 import { BsArchive, BsPlus } from "react-icons/bs";
-import MassacreSearch from "../modals/massacreSearch";
-import ApproveMassacre from "../dialogs/approveMassacre";
 import { GrCheckmark } from "react-icons/gr";
-import ArchiveMassacre from "../dialogs/archiveMassacre";
 import Input from "../inputs/input";
+import ApproveDialog from "../dialogs/approve";
+import ArchiveDialog from "../dialogs/archive";
 
 const MassacresTable = () => {
   const [tableData, setTableData] = useState<MassacreInterface[]>([]);
@@ -27,8 +26,6 @@ const MassacresTable = () => {
   const [massacreData, setMassacreData] = useState<MassacreInterface | null>(
     null
   );
-
-  const [isOpenMassacreSearch, setIsOpenMassacreSearch] = useState(false);
 
   const [isOpenMassacreApprove, setIsOpenMassacreApprove] = useState(false);
   const [approveLoading, setApproveLoading] = useState<boolean>(false);
@@ -45,13 +42,17 @@ const MassacresTable = () => {
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const fetchTableData = async () => {
+  const fetchTableData = useCallback(async () => {
     setTableLoading(true);
     setError(null);
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/massacres/fetch?&page=${page}&limit=10&search=${encodeURIComponent(searchQuery)}`,
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/admin/massacres/fetch?&page=${page}&limit=10&search=${encodeURIComponent(
+          searchQuery
+        )}`,
         { cache: "no-store" }
       );
 
@@ -84,7 +85,7 @@ const MassacresTable = () => {
     } finally {
       setTableLoading(false);
     }
-  };
+  }, [page, searchQuery]); // Add dependencies here
 
   // Initial URL sync
   useEffect(() => {
@@ -353,15 +354,6 @@ const MassacresTable = () => {
         }}
       />
 
-      {/* Search Modal */}
-      <Modal
-        isOpen={isOpenMassacreSearch}
-        setIsOpen={setIsOpenMassacreSearch}
-        containerClassName="!lg:w-3/12"
-      >
-        <MassacreSearch />
-      </Modal>
-
       {/* Approve massacre Modal */}
       <Modal
         isOpen={isOpenMassacreApprove}
@@ -369,12 +361,13 @@ const MassacresTable = () => {
         containerClassName="lg:w-[25%]"
         loading={approveLoading}
       >
-        <ApproveMassacre
+        <ApproveDialog
           data={massacreData!}
           setIsOpen={setIsOpenMassacreApprove}
           refetchData={fetchTableData}
           setLoading={setApproveLoading}
           loading={approveLoading}
+          content_type={ContentType.MASSACRE}
         />
       </Modal>
 
@@ -385,12 +378,13 @@ const MassacresTable = () => {
         containerClassName="lg:w-[25%]"
         loading={approveLoading}
       >
-        <ArchiveMassacre
+        <ArchiveDialog
           data={massacreData!}
           setIsOpen={setIsOpenMassacreArchive}
           refetchData={fetchTableData}
           setLoading={setArchiveLoading}
           loading={archiveLoading}
+          content_type={ContentType.MASSACRE}
         />
       </Modal>
     </>

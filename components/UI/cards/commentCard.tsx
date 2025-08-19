@@ -6,12 +6,12 @@ import { useState } from "react";
 import { BsTrash } from "react-icons/bs";
 import { FaUserCircle } from "react-icons/fa";
 import Modal from "../modals/modal";
-import DeleteComment from "../modals/deleteComment";
 import { Session } from "next-auth";
-import { Role } from "@/app/enums";
+import { ContentType, Role } from "@/app/enums";
 import { MdOutlineReport } from "react-icons/md";
-import ReportComment from "../modals/reportComment";
 import Link from "next/link";
+import ReportDialog from "../dialogs/report";
+import DeleteDaialog from "../dialogs/delete";
 
 type CommentCardProps = {
   data: CommentInterface & { author_email?: string };
@@ -140,12 +140,13 @@ const CommentCard = ({
         loading={loading}
         containerClassName="lg:w-[440px]"
       >
-        <DeleteComment
-          refetchData={refetchData}
+        <DeleteDaialog
+          callback={refetchData}
           setIsOpen={setIsOpenDeleteComment}
           setLoading={setLoading}
           loading={loading}
           data={data}
+          content_type={ContentType.COMMENT}
         />
       </Modal>
 
@@ -155,7 +156,7 @@ const CommentCard = ({
         loading={loading}
         containerClassName="lg:w-[33%]"
       >
-        <ReportComment
+        <ReportDialog
           setIsOpen={setIsOpenReportComment}
           setLoading={setLoading}
           loading={loading}

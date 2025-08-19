@@ -87,7 +87,7 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
       // Create notification
       const storyNotificationPayload = {
         user_id: updatedStory.publisher_id,
-        message: `تمت إضافة طلبك لتعديل قصة الشهيد ${updatedStory.name} بنجاح، وستتم مراجعة الطلب في أسرع وقت!`,
+        message: `تمت إضافة طلبك لتعديل قصة الشهيد ${updatedStory.title} بنجاح، وستتم مراجعة الطلب في أسرع وقت!`,
         href: `/stories/${updatedStory._id}`,
         notification_type: NotificationTypes.REQUEST,
         createdAt: new Date(),

@@ -45,7 +45,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
     notFound(); // only allow access if approved, OR user is admin/owner
   }
 
-  const fullName = getFullName(data.name);
+  const fullName = getFullName(data.title);
 
   console.log("Story Details Data:", data);
 
@@ -196,7 +196,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
               </td>
               <td className="py-3 px-4 border-b text-right text-sm">
                 <div className="flex items-center gap-1">
-                  <p>{data.city}</p>-<p>{data.neighborhood}</p>
+                  <p>{data.location.city}</p>-<p>{data.location.neighborhood}</p>
                 </div>
               </td>
             </tr>

@@ -1,7 +1,8 @@
 import Hero from "@/components/layout/hero";
-import EventsCards from "@/containers/events/eventsCards";
 import { Metadata } from "next";
 import { EventsMetadata } from "../lib/metadata";
+import EventsSection from "@/containers/events/eventsCards";
+import Heading from "@/components/UI/typography/heading";
 
 export const metadata: Metadata = EventsMetadata;
 
@@ -9,7 +10,15 @@ const page = () => {
   return (
     <div className="relative container mt-24">
       <Hero />
-      <EventsCards />
+
+      <Heading
+        title=""
+        highLightText="الفعاليات القادمة"
+        details="مشاركتك دعماً لأهالي وأسر الشهداء"
+        className="min-w-fit mt-16"
+      />
+
+      <EventsSection />
     </div>
   );
 };

@@ -9,7 +9,7 @@ interface StoryCardsProps {
 }
 
 const StoryPendingCard = ({ data }: StoryCardsProps) => {
-  const fullName = getFullName(data?.name);
+  const fullName = getFullName(data?.title);
 
   return (
     <Link

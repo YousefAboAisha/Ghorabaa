@@ -57,15 +57,14 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     const body = await req.json();
     const {
       id_number,
-      name,
+      title,
       nickname,
       profession,
       gender,
       birth_date,
       death_date,
       social_media,
-      city,
-      neighborhood,
+      location,
       bio,
       image,
       warTitle,
@@ -76,31 +75,28 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id, ...safeRest } = rest;
 
+    // Basic validation
+    if (!title?.first_name || !title?.last_name) {
+      return NextResponse.json({ error: "حقل الاسم مطلوب!" }, { status: 400 });
+    }
+
     const age = birth_date
       ? new Date(death_date).getFullYear() - new Date(birth_date).getFullYear()
       : null;
 
-    // Basic validation
-    if (!name?.first_name || !name?.last_name) {
-      return NextResponse.json(
-        { error: "First name and last name are required" },
-        { status: 400 }
-      );
-    }
-
     const updateData: Partial<StoryInterface> = {
       ...safeRest,
       id_number,
-      name,
+      title,
       age,
+      publisher_id: new ObjectId(token.id),
       ...(nickname && { nickname }),
       ...(profession && { profession }),
       ...(gender && { gender }),
       ...(birth_date && { birth_date: new Date(birth_date) }),
       ...(death_date && { death_date: new Date(death_date) }),
       ...(social_media && { social_media }),
-      ...(city && { city }),
-      ...(neighborhood && { neighborhood }),
+      ...(location && { location }),
       ...(bio && { bio }),
       ...(image && { image }),
       ...(warTitle && { warTitle }),

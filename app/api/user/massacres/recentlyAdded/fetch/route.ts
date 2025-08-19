@@ -1,3 +1,4 @@
+import { MassacreStatus } from "@/app/enums";
 import clientPromise from "@/app/lib/mongodb";
 import { NextResponse } from "next/server";
 
@@ -9,7 +10,9 @@ export async function GET() {
 
     // ✅ Fetch massacres with status APPROVED (10 recent)
     const massacres = await massacresCollection
-      .find({})
+      .find({
+        status: MassacreStatus.APPROVED,
+      })
       .sort({ createdAt: -1, updatedAt: -1 })
       .limit(5)
       .toArray();

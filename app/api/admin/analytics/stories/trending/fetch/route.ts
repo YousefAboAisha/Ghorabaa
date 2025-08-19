@@ -34,7 +34,7 @@ export async function GET() {
         {
           status: StoryStatus.APPROVED, // Only approved stories
         },
-        { projection: { name: 1, visits: 1, image: 1, age: 1 } }
+        { projection: { title: 1, visits: 1, image: 1, age: 1 } }
       )
       .toArray();
 
@@ -47,7 +47,7 @@ export async function GET() {
       const age = story.age || "غير معروف"; // Default to "غير معروف" if age is not set
       return {
         story_id: story._id,
-        name: story.name,
+        title: story.title,
         age,
         visits,
         image,

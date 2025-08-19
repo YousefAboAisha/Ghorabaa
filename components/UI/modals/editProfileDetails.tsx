@@ -28,6 +28,8 @@ const EditProfileDetails = ({ data, setLoading }: EditProfileFormPDetails) => {
   const [placeholderImage, setPlaceholderImage] =
     useState<string>("/notFound.png");
 
+  console.log("EditProfileDetails data:", data);
+
   const initialValues = {
     name: name || "",
     phone_number: phone_number || "",

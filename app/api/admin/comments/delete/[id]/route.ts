@@ -57,14 +57,14 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     // ✅ Fetch story name via projection
     const story = await storiesCollection.findOne(
       { _id: comment.story_id },
-      { projection: { name: 1 } }
+      { projection: { title: 1 } }
     );
 
     // 🔔 Add notification if admin deleted another user's comment
     if (isAuthenticated && !isOwner && comment.author_id) {
       const storyNotificationPayload = {
         user_id: comment.author_id,
-        message: `تم حذف تعلقيك على قصة الشهيد ${story?.name} بسبب مخالفته لمعايير المنصة`,
+        message: `تم حذف تعلقيك على قصة الشهيد ${story?.title} بسبب مخالفته لمعايير المنصة`,
         href: `/stories/${comment.story_id}`,
         notification_type: NotificationTypes.DELETE,
         is_read: false,

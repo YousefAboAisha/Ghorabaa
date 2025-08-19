@@ -40,6 +40,9 @@ const Navbar = ({ session }: NavbarProps) => {
     () =>
       Routes.map(({ title, href }, index) => {
         if (hiddenRoutes.includes(href)) return;
+
+        console.log("[href - pathname]", [href, pathname]);
+
         return (
           <Link
             key={index}

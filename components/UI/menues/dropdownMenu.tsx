@@ -7,6 +7,25 @@ import { BiChevronDown } from "react-icons/bi";
 const DropdownMenu = () => {
   const pathname = usePathname();
 
+  const DropDonwMenuRoutes = [
+    {
+      title: "المجازر الصهيونية",
+      href: "/massacres",
+    },
+    {
+      title: "الفعاليات القادمة",
+      href: "/events",
+    },
+    {
+      title: "الإحصائيات",
+      href: "/statistics",
+    },
+    {
+      title: "من نحن",
+      href: "/about",
+    },
+  ];
+
   return (
     <Menu as={"div"}>
       <MenuButton
@@ -23,53 +42,21 @@ const DropdownMenu = () => {
         className="flex flex-col w-48 bg-white z-[100000] rounded-b-md border shadow-2xl origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 outline-none"
       >
         <div className="p-1 flex flex-col gap-2 text-sm">
-          <MenuItem>
-            <Link
-              href={"/massacres"}
-              className={`flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 rounded-sm ${
-                pathname === "/massacres" ? "text-primary font-normal" : ""
-              }`}
-              prefetch
-            >
-              <span>المجازر الصهيونية </span>
-            </Link>
-          </MenuItem>
-
-          <MenuItem>
-            <Link
-              href={"/statistics"}
-              className={`flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 rounded-sm ${
-                pathname === "/statistics" ? "text-primary font-normal" : ""
-              }`}
-              prefetch
-            >
-              <span>الإحصائيات</span>
-            </Link>
-          </MenuItem>
-
-          <MenuItem>
-            <Link
-              href={`/events`}
-              className={`flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 rounded-sm ${
-                pathname === "/events" ? "text-primary font-normal" : ""
-              }`}
-              prefetch
-            >
-              <span>الفعاليات</span>
-            </Link>
-          </MenuItem>
-
-          <MenuItem>
-            <Link
-              href={`/about`}
-              className={`flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 rounded-sm ${
-                pathname === "/about" ? "text-primary font-normal" : ""
-              }`}
-              prefetch
-            >
-              <span>من نحن</span>
-            </Link>
-          </MenuItem>
+          {DropDonwMenuRoutes.map(({ href, title }, index) => {
+            return (
+              <MenuItem key={index}>
+                <Link
+                  href={href}
+                  className={`flex items-center gap-2 p-3 hover:bg-gray_light cursor-pointer duration-100 rounded-sm ${
+                    pathname === href ? "text-primary font-normal" : ""
+                  }`}
+                  prefetch
+                >
+                  <span>{title}</span>
+                </Link>
+              </MenuItem>
+            );
+          })}
         </div>
       </MenuItems>
     </Menu>

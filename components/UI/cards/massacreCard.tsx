@@ -1,7 +1,6 @@
 import { MassacreInterface } from "@/app/interfaces";
 import Image from "next/image";
 import React from "react";
-import { HighlightedText } from "../typography/highlightText";
 import { GrCalendar, GrLocation } from "react-icons/gr";
 import { arabicDateConversion } from "@/utils/format";
 import Link from "next/link";
@@ -35,11 +34,7 @@ const MassacreCard = ({ data }: Props) => {
 
         <div className="flex items-center gap-2 text-sm mb-2 mt-2">
           <p className="text-lg font-bold text-secondary truncate">
-            <HighlightedText
-              highlights={data?.highlight}
-              field="title"
-              fallback={data?.title ?? "مجزرة الشجاعية"}
-            />
+            {data?.title || "عنوان المجزرة غير متوفر"}
           </p>
         </div>
 
@@ -66,14 +61,7 @@ const MassacreCard = ({ data }: Props) => {
           }}
           className="text-gray-600 text-[13px] mt-3 line-clamp-4"
         >
-          <HighlightedText
-            highlights={data?.highlight}
-            field="description"
-            fallback={
-              data?.description ??
-              "هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة هذه تفاصيل المجزرة "
-            }
-          />
+          {data?.description}
         </p>
       </div>
 

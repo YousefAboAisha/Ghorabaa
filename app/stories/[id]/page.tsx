@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (data.status !== StoryStatus.APPROVED) return {};
 
-  const fullName = getFullName(data.name);
+  const fullName = getFullName(data.title);
 
   return {
     title: `الشهيد ${fullName} | منصة الشهداء`,

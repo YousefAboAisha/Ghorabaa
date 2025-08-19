@@ -83,7 +83,7 @@ const SingleImageUploader = ({
               className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed p-6 rounded-xl ${
                 images.length > 0
                   ? "border-gray-300"
-                  : "border-primary/50 hover:border-primary"
+                  : "border-secondary/50 hover:border-secondary"
               } cursor-pointer transition-colors`}
               style={isDragging ? { borderColor: "red" } : undefined}
               onClick={onImageUpload}

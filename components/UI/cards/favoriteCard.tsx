@@ -26,7 +26,7 @@ const FavoriteCard = ({ data, refetchData }: FavoriteCardProps) => {
     setLoading(false);
   };
 
-  const fullName = getFullName(data?.name);
+  const fullName = getFullName(data?.title);
 
   return (
     <div className="relative group mt-4">

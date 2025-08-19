@@ -62,10 +62,15 @@ export type MartyrName = {
   last_name: string;
 };
 
+export type Location = {
+  city: string;
+  neighborhood: string;
+};
+
 export interface StoryInterface extends Document {
   _id: Types.ObjectId | string;
   id_number: string;
-  name: MartyrName;
+  title: MartyrName;
   gender: Gender;
   highlight: Highlight[];
   social_media?: SocialMediaLinks;
@@ -74,8 +79,7 @@ export interface StoryInterface extends Document {
   death_date: Date | string;
   age: number;
   visits: number;
-  city: string;
-  neighborhood: string;
+  location: Location;
   bio: string;
   status: StoryStatus;
   image: string;
@@ -92,7 +96,7 @@ export interface StoryInterface extends Document {
 
 export interface TrendingStoryInterface {
   story_id: string;
-  name: MartyrName;
+  title: MartyrName;
   age: number;
   image?: string;
   visits: number;
@@ -149,12 +153,16 @@ export interface UserProfileInterface extends Document {
 
 // Define the Event interface
 export interface EventInterface extends Document {
-  _id: Types.ObjectId | string; // Unique identifier for the report.
+  _id: Types.ObjectId | string; // Unique identifier for the event.
+  publisher_id: Types.ObjectId | string;
+  image: string;
   title: string;
+  location: Location;
+  start_date: Date | string;
+  end_date: Date | string;
   details: string;
-  location: string;
-  start_date: Date;
-  end_date: Date;
+  keywords: string[];
+  visits: number;
   status: EventStatus;
   createdAt: Date;
 }
@@ -232,10 +240,7 @@ export interface MassacreInterface {
   title: string;
   cover_image: string;
   date: string | Date;
-  location: {
-    city: string;
-    neighborhood?: string;
-  };
+  location: Location;
   deaths: number;
   injuries: number;
   destroyedHouses: number;

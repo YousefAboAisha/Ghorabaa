@@ -27,7 +27,7 @@ export async function POST(originalReq: Request) {
     const notificationsCollection = db.collection("notifications");
 
     const body = await originalReq.json();
-    const { id_number, keywords, bio, birth_date, death_date, name, ...rest } =
+    const { id_number, keywords, bio, birth_date, death_date, title, ...rest } =
       body;
 
     // Validate required fields
@@ -53,7 +53,7 @@ export async function POST(originalReq: Request) {
     const newStory = {
       ...rest,
       id_number,
-      name,
+      title,
       bio,
       keywords,
       age,
@@ -69,13 +69,13 @@ export async function POST(originalReq: Request) {
     // Insert new story
     const result = await collection.insertOne(newStory);
 
+    const fullName = getFullName(title);
+
     // Create notification
     if (result.insertedId) {
       const storyNotificationPayload = {
         user_id: new ObjectId(token.id),
-        message: `تمت إضافة طلبك لإضافة قصة عن الشهيد ${getFullName(
-          name
-        )} بنجاح، وستتم مراجعة الطلب في أسرع وقت!`,
+        message: `تمت إضافة طلبك لإضافة قصة عن الشهيد ${fullName} بنجاح، وستتم مراجعة الطلب في أسرع وقت!`,
         href: `/stories/${result.insertedId}`,
         notification_type: NotificationTypes.REQUEST,
         createdAt: new Date(),

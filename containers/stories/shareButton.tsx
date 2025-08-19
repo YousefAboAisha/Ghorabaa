@@ -1,13 +1,13 @@
 "use client";
-import { StoryInterface } from "@/app/interfaces";
+import { ContentType } from "@/app/enums";
+import ShareDialog from "@/components/UI/dialogs/share";
 import Modal from "@/components/UI/modals/modal";
-import ShareContent from "@/components/UI/modals/shareContent";
-import { getFullName } from "@/utils/text";
 import { useState } from "react";
 import { CiShare2 } from "react-icons/ci";
 
 type Props = {
-  data?: StoryInterface;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any;
 };
 
 const ShareButton = ({ data }: Props) => {
@@ -15,12 +15,14 @@ const ShareButton = ({ data }: Props) => {
 
   return (
     <>
-      <div className="group relative w-fit bg-white p-1 border rounded-md ">
+      <div
+        onClick={() => setIsShareModalOpen(true)}
+        className="group relative w-fit bg-white p-1 border rounded-md cursor-pointer "
+      >
         <CiShare2
-          title="مشاركة قصة الشهيد"
+          title="مشاركة المحتوى"
           size={24}
-          onClick={() => setIsShareModalOpen(true)}
-          className="group-hover:text-primary cursor-pointer text-secondary duration-200"
+          className="group-hover:text-primary text-secondary duration-200"
         />
       </div>
 
@@ -30,7 +32,7 @@ const ShareButton = ({ data }: Props) => {
         setIsOpen={setIsShareModalOpen}
         containerClassName="lg:w-[35%]"
       >
-        <ShareContent type="الشهيد" story_title={getFullName(data?.name)} />
+        <ShareDialog content_type={ContentType.STORY} data={data} />
       </Modal>
     </>
   );

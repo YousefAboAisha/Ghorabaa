@@ -4,7 +4,7 @@ import Modal from "@/components/UI/modals/modal";
 import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 
-type editProfileDetailsButtonProps = {
+type Props = {
   data: {
     name: string;
     phone_number: string;
@@ -13,14 +13,14 @@ type editProfileDetailsButtonProps = {
   };
 };
 
-const EditProfileDetailsButton = ({ data }: editProfileDetailsButtonProps) => {
+const EditProfileDetailsButton = ({ data }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   return (
     <>
       <div
-        title="تعديل القصة"
+        title="تعديل الملف الشخصي"
         onClick={() => setIsOpen(true)}
         className="group absolute top-7 right-7 p-1.5 bg-[#ffffff52] backdrop-blur-md rounded-full z-10 cursor-pointer hover:shadow-xl duration-300"
       >
@@ -33,7 +33,11 @@ const EditProfileDetailsButton = ({ data }: editProfileDetailsButtonProps) => {
         loading={loading}
         containerClassName="lg:w-[28%]"
       >
-        <EditProfileDetails loading={loading} setLoading={setLoading} data={data} />
+        <EditProfileDetails
+          loading={loading}
+          setLoading={setLoading}
+          data={data}
+        />
       </Modal>
     </>
   );

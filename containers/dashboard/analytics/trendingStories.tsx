@@ -87,11 +87,11 @@ const TrendingStories = () => {
         className="mt-4 "
       >
         {data?.map(
-          ({ story_id, name, age, image, comments, visits }, index) => (
+          ({ story_id, title, age, image, comments, visits }, index) => (
             <SwiperSlide key={index} className="pb-10">
               <TrendingStoryCard
                 story_id={story_id}
-                name={name}
+                title={title}
                 age={age}
                 image={image}
                 visits={visits}

@@ -11,7 +11,7 @@ interface TrendingStoryCardProps extends TrendingStoryInterface {
 
 const TrendingStoryCard = ({
   story_id,
-  name,
+  title,
   image,
   comments,
   visits,
@@ -19,7 +19,7 @@ const TrendingStoryCard = ({
   total,
   className = "",
 }: TrendingStoryCardProps) => {
-  const fullName = getFullName(name);
+  const fullName = getFullName(title);
   return (
     <div
       key={story_id}

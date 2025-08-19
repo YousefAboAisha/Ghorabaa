@@ -2,7 +2,7 @@ import { getSessionAction } from "@/app/actions/registerActions";
 import { Role } from "@/app/enums";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
 import { arabicDateConversion } from "@/utils/format";
-import { getFullName, getRoleColor, getRoleInArabic } from "@/utils/text";
+import { getRoleColor, getRoleInArabic } from "@/utils/text";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import EditProfileDetailsButton from "./editProfileDetailsButton";
@@ -38,14 +38,12 @@ const ProfileDetails = async ({ user_id }: ProfileDetailsProps) => {
   }
 
   if (data) {
-    const fullName = getFullName(data.name);
-
     return (
       <div className="relative w-full bg-white border rounded-md min-h-[30vh] mb-6 p-4">
         {isOwner ? (
           <EditProfileDetailsButton
             data={{
-              name: fullName,
+              name: data.name,
               phone_number: data?.phone_number,
               id_number: data?.id_number,
               image: data?.image || "/notFound.png",

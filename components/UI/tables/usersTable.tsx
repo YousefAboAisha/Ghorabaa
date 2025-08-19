@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,9 +39,9 @@ const UsersTable = () => {
     () => Number(searchParams.get("page")) || 1
   );
 
-  const [SearchValue, setSearchValue] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const fetchTableData = async () => {
+  const fetchTableData = useCallback(async () => {
     setTableLoading(true);
     setError(null);
 
@@ -50,7 +50,7 @@ const UsersTable = () => {
         `${
           process.env.NEXT_PUBLIC_API_BASE_URL
         }/admin/users/fetch?role=${currentRole}&page=${page}&limit=10&search=${encodeURIComponent(
-          SearchValue
+          searchQuery
         )}`
       );
 
@@ -83,7 +83,7 @@ const UsersTable = () => {
     } finally {
       setTableLoading(false);
     }
-  };
+  }, [currentRole, page, searchQuery]); // Add dependencies here
 
   // Initial URL sync
   useEffect(() => {
@@ -195,16 +195,16 @@ const UsersTable = () => {
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      if (SearchValue.length > 1) {
+      if (searchQuery.length > 1) {
         fetchTableData();
-      } else if (SearchValue.length === 0) {
+      } else if (searchQuery.length === 0) {
         fetchTableData();
       }
     }, 500); // debounce
 
     return () => clearTimeout(delayDebounce);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [SearchValue]);
+  }, [searchQuery]);
 
   return (
     <>
@@ -213,8 +213,8 @@ const UsersTable = () => {
         <div className="w-full md:w-1/2">
           <Input
             placeholder="البحث عن المستخدم "
-            value={SearchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 setPage(1);
@@ -233,7 +233,7 @@ const UsersTable = () => {
             value={currentRole}
             onChange={(e) => {
               setPage(1);
-              setSearchValue("");
+              setSearchQuery("");
               router.push(`/admin/dashboard/users?page=1`);
               setCurrentRole(e.target.value as Role);
             }}

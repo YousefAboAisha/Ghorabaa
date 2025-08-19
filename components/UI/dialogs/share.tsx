@@ -1,20 +1,26 @@
 "use client";
+import { ContentType } from "@/app/enums";
 import Input from "@/components/UI/inputs/input";
+import { getFullName } from "@/utils/text";
 import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaFacebook, FaLinkedin, FaTelegram, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FiCheck, FiCopy } from "react-icons/fi";
 
-type ShareModalProps = {
-  story_title: string;
-  type: "الشهيد" | "المجزرة";
+type Props = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
+  content_type: ContentType;
 };
 
-const ShareContent = ({ story_title, type }: ShareModalProps) => {
+const ShareDialog = ({ data, content_type }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [shareIcon, setShareIcon] = useState(<FiCopy size={18} />);
   const [sharedLink, setSharedLink] = useState("");
+
+  const content_title =
+    content_type === ContentType.STORY ? getFullName(data?.title) : data?.title;
 
   const copyToClipboard = async () => {
     console.log(loading);
@@ -34,6 +40,22 @@ const ShareContent = ({ story_title, type }: ShareModalProps) => {
     });
   };
 
+  const getShareTitle = (type: ContentType) => {
+    switch (type) {
+      case ContentType.STORY:
+        return `الشهيد | ${content_title} `;
+
+      case ContentType.EVENT:
+        return `الفعالية | ${content_title}`;
+
+      case ContentType.EVENT:
+        return `المجزرة | ${content_title}`;
+
+      default:
+        return "";
+    }
+  };
+
   useEffect(() => {
     // This runs only on the client
     setSharedLink(window.location.href);
@@ -50,7 +72,7 @@ const ShareContent = ({ story_title, type }: ShareModalProps) => {
           <h2 className="text-xl font-semibold min-w-fit">مشاركة الصفحة</h2>
 
           <p className="mx-auto text-center text-gray_dark text-[12px] mt-2">
-            / {story_title || `عنوان ${type} غير معرّف`}
+            / {content_title || `العنوان غير معرّف`}
           </p>
         </div>
       </div>
@@ -103,7 +125,7 @@ const ShareContent = ({ story_title, type }: ShareModalProps) => {
               openShareWindow(
                 `https://twitter.com/intent/tweet?url=${encodeURIComponent(
                   sharedLink
-                )}&text=${encodeURIComponent("الشهيد/ " + story_title)}`
+                )}&text=${encodeURIComponent(getShareTitle(content_type))}`
               )
             }
           >
@@ -117,7 +139,7 @@ const ShareContent = ({ story_title, type }: ShareModalProps) => {
               openShareWindow(
                 `https://www.linkedin.com/shareArticle?url=${encodeURIComponent(
                   sharedLink
-                )}&title=${encodeURIComponent("الشهيد/ " + story_title)}`
+                )}&title=${encodeURIComponent(getShareTitle(content_type))}`
               )
             }
           >
@@ -130,7 +152,7 @@ const ShareContent = ({ story_title, type }: ShareModalProps) => {
             onClick={() =>
               openShareWindow(
                 `https://wa.me/?text=${encodeURIComponent(
-                  "الشهيد/ " + story_title + " " + sharedLink
+                  getShareTitle(content_type) + " " + sharedLink
                 )}`
               )
             }
@@ -145,7 +167,7 @@ const ShareContent = ({ story_title, type }: ShareModalProps) => {
               openShareWindow(
                 `https://t.me/share/url?url=${encodeURIComponent(
                   sharedLink
-                )}&text=${encodeURIComponent("الشهيد/ " + story_title)}`
+                )}&text=${encodeURIComponent(getShareTitle(content_type))}`
               )
             }
           >
@@ -157,4 +179,4 @@ const ShareContent = ({ story_title, type }: ShareModalProps) => {
   );
 };
 
-export default ShareContent;
+export default ShareDialog;

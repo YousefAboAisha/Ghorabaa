@@ -9,6 +9,8 @@ export enum Role {
 export enum ContentType {
   STORY = "STORY", // for stories
   COMMENT = "COMMENT", // for comments
+  MASSACRE = "MASSACRE",
+  EVENT = "EVENT",
 }
 
 // Story Status Enums
@@ -24,13 +26,6 @@ export enum ReportStatus {
   PENDING = "PENDING",
   DELETED = "DELETED",
   KEPT = "KEPT",
-}
-
-// Event Status Enums
-export enum EventStatus {
-  UPCOMING = "UPCOMING",
-  ACTIVE = "ACTIVE",
-  EXPIRED = "EXPIRED",
 }
 
 // Donation Campaigns status Enums
@@ -78,8 +73,15 @@ export enum Gender {
   FEMALE = "female",
 }
 
-// Story Status Enums
+// Massacre Status Enums
 export enum MassacreStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  ARCHIVED = "ARCHIVED",
+}
+
+// Event Status Enums
+export enum EventStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   ARCHIVED = "ARCHIVED",

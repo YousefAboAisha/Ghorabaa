@@ -38,7 +38,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
 
   const [initialValues, setInitialValues] = useState<Partial<StoryInterface>>({
     id_number: "",
-    name: {
+    title: {
       first_name: "",
       father_name: "",
       grandFather_name: "",
@@ -54,8 +54,10 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
       facebook: "",
       x: "",
     },
-    city: "",
-    neighborhood: "",
+    location: {
+      city: "",
+      neighborhood: "",
+    },
     bio: "",
     keywords: [],
     image: "",
@@ -76,7 +78,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
           );
 
           if (!response.ok) {
-            throw new Error("Failed to fetch story data");
+            throw new Error("حدث خطأ أثناء جلب بيانات القصة");
           }
 
           const data = await response.json();
@@ -87,11 +89,11 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
               ...initialValues,
               ...data,
               id_number: data.id_number || "",
-              name: {
-                first_name: data.name?.first_name || "",
-                father_name: data.name?.father_name || "",
-                grandFather_name: data.name?.grandFather_name || "",
-                last_name: data.name?.last_name || "",
+              title: {
+                first_name: data.title?.first_name || "",
+                father_name: data.title?.father_name || "",
+                grandFather_name: data?.title?.grandFather_name || "",
+                last_name: data.title?.last_name || "",
               },
               social_media: {
                 instagram: data.social_media?.instagram || "",
@@ -107,8 +109,10 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                 : "",
               gender: data?.gender || undefined,
               profession: data.profession || "",
-              city: data.city || "",
-              neighborhood: data.neighborhood || "",
+              location: {
+                city: data.location.city || "",
+                neighborhood: data.location.neighborhood || "",
+              },
               bio: data.bio || "",
               keywords: data.keywords || [],
               warTitle: data.warTitle || "",
@@ -120,12 +124,14 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
             }
 
             // Set cities if city exists
-            if (data.city) {
+            if (data.location.city) {
               const cityObj = CitiesData.find(
-                (city) => city[data.city as keyof typeof city]
+                (city) => city[data.location.city as keyof typeof city]
               );
               setCities(
-                cityObj ? cityObj[data.city as keyof typeof cityObj] || [] : []
+                cityObj
+                  ? cityObj[data.location.city as keyof typeof cityObj] || []
+                  : []
               );
             }
           }
@@ -147,12 +153,14 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
       if (initialData.image) {
         setImages([{ data_url: initialData.image }]);
       }
-      if (initialData.city) {
+      if (initialData.location.city) {
         const cityObj = CitiesData.find(
-          (city) => city[initialData.city as keyof typeof city]
+          (city) => city[initialData.location.city as keyof typeof city]
         );
         setCities(
-          cityObj ? cityObj[initialData.city as keyof typeof cityObj] || [] : []
+          cityObj
+            ? cityObj[initialData.location.city as keyof typeof cityObj] || []
+            : []
         );
       }
     }
@@ -234,7 +242,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
 
       setTimeout(() => {
         router.push(
-          isEditMode ? `/stories/${id}` : `/stories/${data?.data?._id}`
+          isEditMode ? `/admin/dashboard/stories` : `/stories/${data?.data?._id}`
         );
       }, 500);
     } catch (error) {
@@ -338,7 +346,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                   <div>
                     <Field
                       disabled={isSubmitting}
-                      name="name.first_name"
+                      name="title.first_name"
                       as={Input}
                       type="text"
                       placeholder="مثال: محمد"
@@ -349,7 +357,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                     />
 
                     <ErrorMessage
-                      name="name.first_name"
+                      name="title.first_name"
                       component="div"
                       className="text-red-500 mt-2 font-semibold text-[10px]"
                     />
@@ -357,7 +365,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                   <div>
                     <Field
                       disabled={isSubmitting}
-                      name="name.father_name"
+                      name="title.father_name"
                       as={Input}
                       type="text"
                       placeholder="مثال: عبدالله"
@@ -368,7 +376,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                     />
 
                     <ErrorMessage
-                      name="name.father_name"
+                      name="title.father_name"
                       component="div"
                       className="text-red-500 mt-2 font-semibold text-[10px]"
                     />
@@ -380,7 +388,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                   <div>
                     <Field
                       disabled={isSubmitting}
-                      name="name.grandFather_name"
+                      name="title.grandFather_name"
                       as={Input}
                       type="text"
                       placeholder="مثال: طارق"
@@ -391,7 +399,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                     />
 
                     <ErrorMessage
-                      name="name.grandFather_name"
+                      name="title.grandFather_name"
                       component="div"
                       className="text-red-500 mt-2 font-semibold text-[10px]"
                     />
@@ -400,7 +408,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                   <div>
                     <Field
                       disabled={isSubmitting}
-                      name="name.last_name"
+                      name="title.last_name"
                       as={Input}
                       type="text"
                       placeholder="مثال: حسب الله"
@@ -411,7 +419,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                     />
 
                     <ErrorMessage
-                      name="name.last_name"
+                      name="title.last_name"
                       component="div"
                       className="text-red-500 mt-2 font-semibold text-[10px]"
                     />
@@ -562,11 +570,11 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                       disabled={isSubmitting}
                       label="المدينة"
                       options={CountriesData}
-                      value={values?.city}
+                      value={values?.location?.city}
                       title="اختر المدينة"
                       onChange={(e) => {
                         const selectedCity = e.target.value;
-                        setFieldValue("city", selectedCity);
+                        setFieldValue("location.city", selectedCity);
 
                         // Find the city object that contains the selected city
                         const cityObj = CitiesData.find(
@@ -584,7 +592,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                       className={`focus:border-primary`}
                     />
                     <ErrorMessage
-                      name="city"
+                      name="location.city"
                       component="div"
                       className="text-red-500 mt-2 font-semibold text-[10px]"
                     />
@@ -594,15 +602,15 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                       disabled={isSubmitting}
                       label="الحي"
                       options={cities}
-                      value={values?.neighborhood}
+                      value={values?.location?.neighborhood}
                       title="اختر الحي"
                       onChange={(e) =>
-                        setFieldValue("neighborhood", e.target.value)
+                        setFieldValue("location.neighborhood", e.target.value)
                       }
                       className={`focus:border-primary`}
                     />
                     <ErrorMessage
-                      name="neighborhood"
+                      name="location.neighborhood"
                       component="div"
                       className="text-red-500 mt-2 font-semibold text-[10px]"
                     />
