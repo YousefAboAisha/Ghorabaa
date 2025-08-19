@@ -1,7 +1,7 @@
 export const DashboardRoutes = [
   {
     title: "كافة القصص",
-    href: "/admin/dashboard",
+    href: "/admin/dashboard/stories",
   },
   {
     title: "المستخدمون",

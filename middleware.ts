@@ -50,7 +50,7 @@ export async function middleware(request: NextRequest) {
   if (isAuthPage) {
     const redirectUrl =
       token.role === Role.ADMIN || token.role === Role.EDITOR
-        ? "/admin/dashboard"
+        ? "/admin/dashboard/stories"
         : `/profile/${token.id}`;
 
     return NextResponse.redirect(new URL(redirectUrl, request.url));
@@ -64,7 +64,7 @@ export async function middleware(request: NextRequest) {
 
     const redirectUrl =
       token.role === Role.ADMIN || token.role === Role.EDITOR
-        ? "/admin/dashboard"
+        ? "/admin/dashboard/stories"
         : `/profile/${token.id}`;
 
     return NextResponse.redirect(new URL(redirectUrl, request.url));
