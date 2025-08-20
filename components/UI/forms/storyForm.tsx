@@ -1,6 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { BiSend, BiUser } from "react-icons/bi";
+import {
+  BiCheckCircle,
+  BiErrorCircle,
+  BiLoaderAlt,
+  BiSend,
+  BiUser,
+} from "react-icons/bi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@/components/UI/inputs/button";
 import Heading from "@/components/UI/typography/heading";
@@ -17,10 +23,11 @@ import Input from "../inputs/input";
 import { WarsData } from "@/data/warsData";
 import { ProfessionData } from "@/data/professionData";
 import { GenderData } from "@/data/genderData";
-import { Gender } from "@/app/enums";
+import { Gender, IdNumberStatus } from "@/app/enums";
 import SingleImageUploader from "../imageUploaders/singleImageUploader";
 import MassacreFormLoader from "../loaders/massacreFormLoader";
 import { extractMartyrStoryKeywords } from "@/utils/extractTags";
+import Link from "next/link";
 
 type StoryFormProps = {
   id?: string; // For edit mode
@@ -35,6 +42,16 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(!!id); // Loading state for edit mode
   const router = useRouter();
+
+  const [isValidIdNumber, setIsValidIdNumber] = useState<{
+    isValid: boolean;
+    story_id: string | null;
+  } | null>(null);
+
+  const [idCheckLoading, setIdCheckLoading] = useState<boolean>(false);
+  const [idCheckStatus, setIdCheckStatus] = useState<IdNumberStatus>(
+    IdNumberStatus.IDLE
+  );
 
   const [initialValues, setInitialValues] = useState<Partial<StoryInterface>>({
     id_number: "",
@@ -242,7 +259,9 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
 
       setTimeout(() => {
         router.push(
-          isEditMode ? `/admin/dashboard/stories` : `/stories/${data?.data?._id}`
+          isEditMode
+            ? `/admin/dashboard/stories`
+            : `/stories/${data?.data?._id}`
         );
       }, 500);
     } catch (error) {
@@ -260,7 +279,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
   }
 
   return (
-    <div className="relative flex items-center justify-center">
+    <div className="relative flex items-center justify-center container md:w-1/2">
       <Formik
         initialValues={initialValues}
         validationSchema={StoryValidationSchema}
@@ -292,31 +311,108 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
           }, [values.bio, setFieldValue]);
 
           return (
-            <Form className="flex flex-col gap-8">
+            <Form className="flex flex-col gap-8 w-full">
               <div className="relative flex flex-col gap-4 w-full border p-8 bg-white rounded-lg">
                 <Heading
                   title="المعلومات الأساسية"
                   className="mb-4 !text-xl z-10"
                 />
 
-                <div>
-                  <Field
-                    disabled={isSubmitting}
-                    name="id_number"
-                    as={Input}
-                    type="number"
-                    placeholder="رقم الهوية يتكون من 9 خانات"
-                    label="رقم الهوية"
-                    className={`focus:border-primary`}
-                    maxLength={9}
-                    minLength={9}
-                    aria-label="رقم الهوية"
-                  />
+                <div className="relative">
+                  <div className="relative">
+                    <Field
+                      disabled={isSubmitting}
+                      name="id_number"
+                      as={Input}
+                      type="number"
+                      placeholder="رقم الهوية يتكون من 9 خانات"
+                      label="رقم الهوية"
+                      className={`focus:border-primary ${
+                        idCheckStatus === "valid"
+                          ? "!border-approved"
+                          : idCheckStatus === "invalid"
+                          ? "!border-rejected"
+                          : ""
+                      }`}
+                      maxLength={9}
+                      minLength={9}
+                      aria-label="رقم الهوية"
+                      onBlur={async (e: React.FocusEvent<HTMLInputElement>) => {
+                        const idValue = e.target.value.trim();
+                        if (idValue.length === 9 && !idCheckLoading) {
+                          setIdCheckLoading(true);
+                          setIdCheckStatus(IdNumberStatus.CHECKING);
+
+                          try {
+                            const res = await fetch(
+                              `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/check-id-validity?id_number=${idValue}`
+                            );
+                            const data = await res.json();
+
+                            if (data.exists) {
+                              setIdCheckStatus(IdNumberStatus.INVALID);
+                              setIsValidIdNumber({
+                                isValid: false,
+                                story_id: data._id,
+                              });
+                            } else {
+                              setIdCheckStatus(IdNumberStatus.VALID);
+                              setIsValidIdNumber({
+                                isValid: true,
+                                story_id: null,
+                              });
+                            }
+                          } catch (err) {
+                            console.error("Error checking id_number:", err);
+                            setIdCheckStatus(IdNumberStatus.IDLE);
+                            toast.error("خطأ في التحقق من رقم الهوية");
+                          } finally {
+                            setIdCheckLoading(false);
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+
                   <ErrorMessage
                     name="id_number"
                     component="div"
                     className="text-red-500 mt-2 font-semibold text-[10px]"
                   />
+
+                  {/* Validation Messages */}
+                  <div className="mt-2 text-sm">
+                    {idCheckStatus === IdNumberStatus.CHECKING && (
+                      <p className="text-gray-500 flex items-center gap-2 text-[12px]">
+                        <BiLoaderAlt className="animate-spin" size={14} />
+                        جاري التحقق من رقم الهوية...
+                      </p>
+                    )}
+
+                    {idCheckStatus === IdNumberStatus.VALID && (
+                      <p className="text-approved flex items-center gap-2 text-[12px]">
+                        <BiCheckCircle size={14} />
+                        رقم الهوية صالح ويمكن استخدامه
+                      </p>
+                    )}
+
+                    {idCheckStatus === IdNumberStatus.INVALID && (
+                      <div className="flex items-center gap-2 text-rejected text-[12px]">
+                        <p className="flex items-center gap-1">
+                          <BiErrorCircle size={14} />
+                          {isValidIdNumber?.story_id && (
+                            <Link
+                              href={`/stories/${isValidIdNumber.story_id}`}
+                              target="_blank"
+                              className="hover:underline flex items-center gap-1"
+                            >
+                              رقم الهوية المدخل لديه قصة في المنصة
+                            </Link>
+                          )}{" "}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div>
@@ -326,11 +422,12 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                     value={values?.gender}
                     title="اختر جنس الشهيد.."
                     options={GenderData}
-                    className="focus:border-secondary"
+                    className="focus:border-primary"
                     onChange={(e) => {
                       setFieldValue("gender", e.target.value as Gender);
                     }}
                     disabled={isSubmitting}
+                    required={true}
                   />
 
                   <ErrorMessage
@@ -694,7 +791,11 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                 className="bg-primary w-full hover:shadow-lg text-sm"
                 icon={<BiSend className="rotate-180" />}
                 loading={isSubmitting}
-                disabled={isSubmitting}
+                disabled={
+                  isSubmitting ||
+                  idCheckStatus == IdNumberStatus.INVALID ||
+                  idCheckStatus == IdNumberStatus.CHECKING
+                }
               />
 
               {formErrors && (

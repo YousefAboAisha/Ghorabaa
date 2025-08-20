@@ -1,5 +1,4 @@
 import StoryDetailsSkeletonLoader from "@/components/UI/loaders/storyDetailsSkeletonLoader";
-import { getSessionAction } from "@/app/actions/registerActions";
 import StoryDetailsSection from "@/containers/storyDetails/storyDetailsSection";
 import { Suspense } from "react";
 import { Metadata } from "next";
@@ -61,9 +60,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { id } = await params;
-
-  const session = await getSessionAction();
-  console.log("[Story Details] Session values", session);
 
   return (
     <div className="mt-[70px] min-h-screen">

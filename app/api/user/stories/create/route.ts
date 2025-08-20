@@ -40,7 +40,7 @@ export async function POST(originalReq: Request) {
 
     if (existingStory) {
       return NextResponse.json(
-        { error: "قصة برقم الهوية المُدخل موجودة بالفعل" },
+        { error: "القصة برقم الهوية المُدخل موجودة بالفعل" },
         { status: 409 }
       );
     }

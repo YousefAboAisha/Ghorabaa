@@ -96,3 +96,10 @@ export enum Profession {
   FORIGEN = "أجنبي",
   NONE = "غير ذلك",
 }
+
+export enum IdNumberStatus {
+  IDLE = "idle",
+  CHECKING = "checking",
+  VALID = "valid",
+  INVALID = "invalid",
+}
