@@ -2,7 +2,7 @@ import { MassacreInterface } from "@/app/interfaces";
 import Image from "next/image";
 import React from "react";
 import { GrCalendar, GrLocation } from "react-icons/gr";
-import { arabicDateConversion } from "@/utils/format";
+import { arabicDateConversion, fullDateConversion } from "@/utils/format";
 import Link from "next/link";
 import Button from "../inputs/button";
 import { FaEye } from "react-icons/fa";
@@ -29,7 +29,7 @@ const MassacreCard = ({ data }: Props) => {
       <div className="relative p-4">
         <div className="flex items-center gap-2 text-[10px] text-gray_dark">
           <p> تاريخ النشر:</p>
-          <p>{arabicDateConversion(data?.date as Date)}</p>
+          <p>{fullDateConversion(data?.date as Date)}</p>
         </div>
 
         <div className="flex items-center gap-2 text-sm mb-2 mt-2">

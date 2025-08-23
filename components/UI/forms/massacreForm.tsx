@@ -243,6 +243,8 @@ const MassacreForm = ({ id, initialData }: MassacreFormProps) => {
           // eslint-disable-next-line react-hooks/rules-of-hooks
           const [tags, setTags] = useState<string[]>([]);
 
+          console.log("Massacre form values: ", values);
+
           // eslint-disable-next-line react-hooks/rules-of-hooks
           useEffect(() => {
             const timeout = setTimeout(() => {
@@ -314,6 +316,7 @@ const MassacreForm = ({ id, initialData }: MassacreFormProps) => {
                       disabled={isSubmitting}
                       label="المدينة"
                       options={CountriesData}
+                      value={values.location?.city}
                       title="اختر المدينة"
                       onChange={(e) => {
                         const selectedCity = e.target.value;
@@ -341,6 +344,7 @@ const MassacreForm = ({ id, initialData }: MassacreFormProps) => {
                     <Select
                       disabled={isSubmitting}
                       label="الحي"
+                      value={values.location?.neighborhood}
                       options={cities}
                       title="اختر الحي"
                       onChange={(e) =>

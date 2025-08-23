@@ -47,6 +47,7 @@ export const CitiesData = [
       { value: "أصداء", title: "أصداء" },
       { value: "حي_الامل", title: "حي الامل" },
       { value: "المعسكر", title: "المعسكر" },
+      { value: "المواصي", title: "المواصي" },
     ],
   },
   {
