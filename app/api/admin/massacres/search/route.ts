@@ -13,8 +13,6 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("query")?.trim();
 
-  console.log("Search Query", query);
-
   if (!query || query.length < 2) {
     return NextResponse.json([], { status: 200 });
   }
@@ -74,8 +72,6 @@ export async function GET(req: NextRequest) {
         { $limit: 20 },
       ])
       .toArray();
-
-    console.log("massacre data [server]", data);
 
     return NextResponse.json({ data }, { status: 200 });
   } catch (error) {

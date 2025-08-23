@@ -64,7 +64,6 @@ const EventForm = ({ id, initialData }: EventFormProps) => {
           const data = await response.json();
 
           if (data) {
-            console.log("Fetched event data:", data);
             setInitialValues({
               ...initialValues,
               ...data,
@@ -229,10 +228,7 @@ const EventForm = ({ id, initialData }: EventFormProps) => {
         onSubmit={handleSubmit}
         enableReinitialize={true}
       >
-        {({ isSubmitting, errors, values, setFieldValue }) => {
-          console.log("Errors:", errors);
-          console.log("Form Values", values);
-
+        {({ isSubmitting, values, setFieldValue }) => {
           // eslint-disable-next-line react-hooks/rules-of-hooks
           const [tags, setTags] = useState<string[]>(values.keywords || []);
 
@@ -243,7 +239,6 @@ const EventForm = ({ id, initialData }: EventFormProps) => {
                 const extractedTags = extractMartyrStoryKeywords(
                   values.details
                 );
-                console.log("Extracted Tags:", extractedTags);
                 setTags(extractedTags);
                 setFieldValue("keywords", extractedTags); // Also update Formik's tags field
               } else {

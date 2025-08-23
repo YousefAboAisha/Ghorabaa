@@ -36,7 +36,6 @@ const Users = () => {
       }
 
       const { data } = await res.json();
-      console.log("📊 Users Statistics data:", data);
       setUsersData(data);
     } catch (error) {
       setUsersCountLoader(false);

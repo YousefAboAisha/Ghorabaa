@@ -55,8 +55,6 @@ const MultiImageUploader: React.FC<MultiImageUploaderProps> = ({
     cover_image
   );
 
-  console.log("MultiImageUploader initial images:", initialImages);
-
   const uploadSingleImage = async (file: File): Promise<string> => {
     let processedFile = file;
 

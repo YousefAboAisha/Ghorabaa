@@ -44,10 +44,7 @@ const StoryDetailsSection = async ({ id }: Props) => {
   if (!isApproved && !isStoryOwner && !isAdmin) {
     notFound(); // only allow access if approved, OR user is admin/owner
   }
-
   const fullName = getFullName(data.title);
-
-  console.log("Story Details Data:", data);
 
   return (
     <div className="mt-24">

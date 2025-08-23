@@ -21,8 +21,6 @@ export async function POST(req: NextRequest) {
 
     const record = await otpCollection.findOne({ email, otp });
 
-    console.log(`Email: ${email} otp ${otp}`);
-
     if (!record) {
       return NextResponse.json({ error: "رمز غير صحيح" }, { status: 400 });
     }

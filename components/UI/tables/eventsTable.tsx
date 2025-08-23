@@ -68,9 +68,6 @@ const EventsTable = () => {
       const { data, pagination } = await res.json();
 
       if (Array.isArray(data)) {
-        console.log("Fetched events Data:", data);
-        console.log("Fetched Pagination Data:", pagination);
-
         setTableData(data);
         setTotalPages(pagination.totalPages);
       } else {

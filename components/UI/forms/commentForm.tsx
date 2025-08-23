@@ -21,10 +21,6 @@ const CommentForm = ({ session, id, refetchData }: CommentFormProps) => {
   const searchParams = useSearchParams();
   const currentUrl =
     pathname + (searchParams.toString() ? `?${searchParams}` : "");
-  console.log("Current URL:", currentUrl);
-
-  console.log("Session values", session);
-  console.log("Search params:", searchParams);
 
   // Updated initialValues to include image
   const initialValues: Partial<CommentInterface> = {
@@ -60,7 +56,6 @@ const CommentForm = ({ session, id, refetchData }: CommentFormProps) => {
               const data = await response.json();
 
               if (response.ok) {
-                console.log("Comment added:", data);
                 resetForm(); // ✅ This clears the form
                 toast.success("تمت إضافة تعليق بنجاح!");
                 if (refetchData) refetchData();

@@ -34,9 +34,6 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
   const year = searchParams.get("year");
 
   const fetchStories = async (pageToFetch: number) => {
-    console.log("hasMore: ", hasMore);
-    console.log("fetching.current: ", fetching.current);
-
     if (!hasMore || fetching.current) return;
 
     fetching.current = true;
@@ -105,15 +102,15 @@ const StoriesSection = ({ session }: StoriesSectionProps) => {
     setPage(1);
     setHasMore(true);
     setInitialLoading(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.toString()]);
 
   useEffect(() => {
     if (page === 1 && initialLoading) {
       fetchStories(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, initialLoading]);
-
-  console.log("Error", error);
 
   const lastElementRef = useCallback(
     (node: HTMLDivElement) => {

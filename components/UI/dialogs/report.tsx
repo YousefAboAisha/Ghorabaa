@@ -39,8 +39,6 @@ export const ReportDialog = ({ setIsOpen, data }: Props) => {
         validationSchema={ReportValidationSchema}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
           setSubmitting(true);
-          console.log("Submitting report with values:", values);
-
           try {
             const res = await fetch(
               `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/reports/create`,
@@ -67,8 +65,6 @@ export const ReportDialog = ({ setIsOpen, data }: Props) => {
               throw new Error(errorMsg);
             }
 
-            const result = await res.json();
-            console.log("✅ Content reported successfully:", result);
             resetForm();
             setIsOpen(false);
             toast.warn("تم الإبلاغ عن المحتوى بنجاح");
@@ -82,10 +78,7 @@ export const ReportDialog = ({ setIsOpen, data }: Props) => {
           }
         }}
       >
-        {({ isSubmitting, errors, values, setFieldValue }) => {
-          console.log("Errors:", errors);
-          console.log("Form Values", values);
-
+        {({ isSubmitting, setFieldValue }) => {
           return (
             <Form className="flex flex-col gap-4 mt-6">
               <div>

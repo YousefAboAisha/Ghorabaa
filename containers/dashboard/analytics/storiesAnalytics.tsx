@@ -53,7 +53,6 @@ const StoriesAnalytics = () => {
       }
 
       const { data } = await res.json();
-      console.log("📊 Stories growth Statistics data:", data);
       setStoriesGrowthData(data);
     } catch (error) {
       setStoriesGrowthLoader(false);
@@ -86,7 +85,6 @@ const StoriesAnalytics = () => {
       }
 
       const { data } = await res.json();
-      console.log("📊 Stories growth Statistics data:", data);
       setStoriesResolutionData(data);
     } catch (error) {
       setStoriesResolutionLoader(false);

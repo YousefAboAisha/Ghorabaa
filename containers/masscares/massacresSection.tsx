@@ -20,9 +20,6 @@ const MassacresSection = () => {
   const searchParams = useSearchParams();
 
   const fetchStories = async (pageToFetch: number) => {
-    console.log("hasMore: ", hasMore);
-    console.log("fetching.current: ", fetching.current);
-
     if (!hasMore || fetching.current) return;
 
     fetching.current = true;
@@ -82,15 +79,16 @@ const MassacresSection = () => {
     setPage(1);
     setHasMore(true);
     setInitialLoading(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.toString()]);
 
   useEffect(() => {
     if (page === 1 && initialLoading) {
       fetchStories(1);
     }
-  }, [page, initialLoading]);
 
-  console.log("Error", error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, initialLoading]);
 
   const lastElementRef = useCallback(
     (node: HTMLDivElement) => {

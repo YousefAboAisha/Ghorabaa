@@ -45,8 +45,6 @@ const ReportsTable = () => {
       const { data, pagination } = await res.json();
 
       if (data && Array.isArray(data)) {
-        console.log("pagination data", pagination);
-        console.log("table's data", data);
         setTableData(data);
         setTotalPages(pagination.totalPages);
       } else {

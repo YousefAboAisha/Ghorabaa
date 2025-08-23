@@ -59,8 +59,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { id } = await params;
 
-  console.log("massacre ID", id);
-
   return (
     <div className="mt-[70px] min-h-screen">
       <div className="container lg:w-6/12 mt-24">

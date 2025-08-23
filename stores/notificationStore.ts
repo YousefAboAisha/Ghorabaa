@@ -47,7 +47,6 @@ export const useNotificationStore = create<NotificationState>((set) => ({
       }
 
       const { data, hasUnread } = await res.json();
-      console.log("[data, hasUnread]", [data, hasUnread]);
 
       set({
         notifications: data,

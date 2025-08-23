@@ -27,8 +27,6 @@ const ReportPreview = ({
   setLoading,
   loading,
 }: ReportPreviewProps) => {
-  console.log("Report data ", data);
-
   const commentData = {
     author_id: data?.user_id,
     author_image: data?.reported_user_image || "/notFound.png",
@@ -53,8 +51,6 @@ const ReportPreview = ({
         throw new Error("Failed to update the story.");
       }
 
-      const result = await response.json();
-      console.log("✅ Story updated:", result);
       setIsOpen(false); // Close the preview modal
       setLoading(false);
       refetchData?.(); // Refetch the data after successful update

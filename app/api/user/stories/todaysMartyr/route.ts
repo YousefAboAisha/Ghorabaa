@@ -20,8 +20,6 @@ export async function GET() {
       ])
       .toArray();
 
-    console.log("Random Approved Story:", randomStory);
-
     if (!randomStory) {
       return NextResponse.json(
         { error: "لم يتم العثور على قصة عشوائية" },
@@ -35,6 +33,9 @@ export async function GET() {
     );
   } catch (error) {
     console.error("Error fetching random approved story:", error);
-    return NextResponse.json({ error: "تعذر الوصول إلى السيرفر" }, { status: 500 });
+    return NextResponse.json(
+      { error: "تعذر الوصول إلى السيرفر" },
+      { status: 500 }
+    );
   }
 }

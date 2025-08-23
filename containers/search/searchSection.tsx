@@ -20,8 +20,6 @@ const SearchSection = ({ session }: SearchSectionProps) => {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  console.log("Stories", stories);
-
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (searchQuery.length > 2) {
@@ -53,7 +51,6 @@ const SearchSection = ({ session }: SearchSectionProps) => {
 
             const { data } = await res.json();
             setStories(data);
-            console.log("Data inside the useEffect", data);
           } catch (error) {
             const message =
               error instanceof Error ? error.message : "حدث خطأ غير متوقع";

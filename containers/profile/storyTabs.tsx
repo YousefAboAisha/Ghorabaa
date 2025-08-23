@@ -28,8 +28,6 @@ const StoryTabs = ({ session, user_id }: SubmittedStoriesProps) => {
   const isOwner = user_id == session?.user.id;
   const isAdmin = session?.user.role === Role.ADMIN;
 
-  console.log("Front-end USER_ID ", user_id);
-
   const [currentTap, setCurrentTap] = useState<StoryStatus>(
     () => (searchParams.get("activeTap") as StoryStatus) || StoryStatus.APPROVED
   );
@@ -117,16 +115,16 @@ const StoryTabs = ({ session, user_id }: SubmittedStoriesProps) => {
     }
   };
 
-  console.log("All Stories data", stories);
-
   useEffect(() => {
     fetchStoryCounts();
 
     fetchStories(currentTap);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTap]);
 
   useEffect(() => {
     router.push(`/profile/${user_id}?activeTap=${currentTap}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const searchParamsHandler = (status: StoryStatus) => {
@@ -219,8 +217,6 @@ const StoryTabs = ({ session, user_id }: SubmittedStoriesProps) => {
         );
     }
   };
-
-  console.log("currentTap", currentTap);
 
   return (
     <div className="section relative">

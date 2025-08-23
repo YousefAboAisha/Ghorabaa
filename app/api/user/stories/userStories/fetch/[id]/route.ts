@@ -97,12 +97,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
 
     const serializedStories = stories.map((s) => {
       const isFavorite = favoritesArray.includes(s._id.toString());
-      // Debug log: compare story id and favoritesArray
-      console.log(
-        `Story ID: ${s._id.toString()}, Is Favorite: ${isFavorite}, Favorites: ${JSON.stringify(
-          favoritesArray
-        )}`
-      );
+
       return {
         ...s,
         _id: s._id.toString(),

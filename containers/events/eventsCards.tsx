@@ -20,9 +20,6 @@ const EventsSection = () => {
   const searchParams = useSearchParams();
 
   const fetchStories = async (pageToFetch: number) => {
-    console.log("hasMore: ", hasMore);
-    console.log("fetching.current: ", fetching.current);
-
     if (!hasMore || fetching.current) return;
 
     fetching.current = true;
@@ -93,8 +90,6 @@ const EventsSection = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, initialLoading]);
-
-  console.log("Error", error);
 
   const lastElementRef = useCallback(
     (node: HTMLDivElement) => {

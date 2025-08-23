@@ -30,8 +30,6 @@ export async function GET(req: NextRequest) {
     const month = parseInt(searchParams.get("month") || "", 10);
     const year = parseInt(searchParams.get("year") || "", 10);
 
-    console.log("Date Filters:", { day, month, year });
-
     // Base query
     const query: Record<string, unknown> = {};
 
@@ -62,8 +60,6 @@ export async function GET(req: NextRequest) {
 
       query["death_date"] = { $gte: from, $lt: to };
     }
-
-    console.log("Final Mongo Query:", JSON.stringify(query, null, 2));
 
     // Get session token
     const token = await getToken({ req, secret });

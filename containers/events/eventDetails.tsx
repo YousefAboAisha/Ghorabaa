@@ -39,8 +39,6 @@ const EventDetails = async ({ id }: Props) => {
     notFound(); // only allow access if approved, OR user is admin/owner
   }
 
-  console.log("Event Details Data:", data);
-
   return (
     <div className="mt-[70px] min-h-screen">
       {data.status === EventStatus.APPROVED && <LogVisit event_id={id} />}

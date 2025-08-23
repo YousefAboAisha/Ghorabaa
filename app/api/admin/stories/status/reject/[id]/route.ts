@@ -33,8 +33,6 @@ export async function PUT(
     const body = await originalReq.json();
     const { rejectReason } = body;
 
-    console.log("Received body [Reject Story]:", body);
-
     // Validate required inputs
     if (!id) {
       return NextResponse.json({ error: "بعض الحقول مفقودة" }, { status: 400 });

@@ -31,8 +31,6 @@ const getFullImageUrl = (url: string) => {
 const MassacreDetails = async ({ id }: Props) => {
   const session = await getSessionAction();
 
-  console.log("massacre ID", id);
-
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/massacres/fetch/${id}`,
     {
@@ -45,8 +43,6 @@ const MassacreDetails = async ({ id }: Props) => {
   }
 
   const result = await response.json();
-
-  console.log("Result", result);
 
   const { error } = result;
 
@@ -69,9 +65,6 @@ const MassacreDetails = async ({ id }: Props) => {
   if (!isAdmin && !isApproved) {
     notFound();
   }
-
-  console.log("Massacres Error:", error);
-  console.log("Massacres Data:", data);
 
   const imageUrl = getFullImageUrl(data.cover_image);
   const mediaUrls = data.media.map((url) => getFullImageUrl(url));

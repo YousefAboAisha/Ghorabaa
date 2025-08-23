@@ -69,9 +69,6 @@ export const authOptions: AuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
-      console.log("SIGNIN CALLBACK TRIGGERED");
-      console.log({ user, account });
-
       try {
         const client = await clientPromise;
         const db = client.db("ghorabaa");
@@ -96,7 +93,6 @@ export const authOptions: AuthOptions = {
           };
 
           await usersCollection.insertOne(newUser);
-          console.log("New user created:", newUser);
         }
 
         return true;

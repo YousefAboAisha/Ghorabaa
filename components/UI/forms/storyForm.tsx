@@ -101,7 +101,6 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
           const data = await response.json();
 
           if (data) {
-            console.log("Fetched story data:", data);
             setInitialValues({
               ...initialValues,
               ...data,
@@ -286,10 +285,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
         onSubmit={handleSubmit}
         enableReinitialize={true}
       >
-        {({ isSubmitting, errors, values, setFieldValue }) => {
-          console.log("Errors:", errors);
-          console.log("Form Values", values);
-
+        {({ isSubmitting, values, setFieldValue }) => {
           // eslint-disable-next-line react-hooks/rules-of-hooks
           const [tags, setTags] = useState<string[]>(values.keywords || []);
 
@@ -298,7 +294,6 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
             const timeout = setTimeout(() => {
               if (values.bio && values.bio.length > 20) {
                 const extractedTags = extractMartyrStoryKeywords(values.bio);
-                console.log("Extracted Tags:", extractedTags);
                 setTags(extractedTags);
                 setFieldValue("keywords", extractedTags); // Also update Formik's tags field
               } else {

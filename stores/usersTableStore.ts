@@ -34,7 +34,6 @@ export const useUsersTableData = create<usersTableState>((set) => ({
       }
 
       const data = await res.json();
-      console.log("Users table data are fetched: ", data);
       set({ data, error: null, loading: false });
     } catch (error) {
       const message = error instanceof Error ? error.message : "خطأ غير معروف";

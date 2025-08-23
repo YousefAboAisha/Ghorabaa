@@ -68,9 +68,6 @@ export const ApproveDialog = ({
         throw new Error(errorMsg);
       }
 
-      const result = await res.json();
-      console.log("✅ Approved content:", result);
-
       setIsOpen(false); // Close the modal
       refetchData?.(); // Refetch data
       toast.success("تمت الموافقة على المحتوى ونشره");

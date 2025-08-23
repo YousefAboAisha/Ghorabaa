@@ -59,7 +59,6 @@ const RecentComments = async ({ user_id }: RecentCommentsProps) => {
     }
   };
 
-  console.log("User comments data", data);
   return (
     <div className="section">
       <Heading title="" highLightText="التعليقات الأخيرة" className="" />

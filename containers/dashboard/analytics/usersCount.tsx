@@ -41,7 +41,6 @@ const UsersCount = () => {
       }
 
       const { data } = await res.json();
-      console.log("📊 Users Role count data:", data);
       setUsersCountLoader(false);
 
       // Convert keys to uppercase

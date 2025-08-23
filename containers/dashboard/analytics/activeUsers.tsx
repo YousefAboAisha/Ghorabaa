@@ -52,7 +52,6 @@ const ActiveUsers = () => {
       }
 
       const { data } = await res.json();
-      console.log("📊 Trending stories data:", data);
       setLoading(false);
 
       setData(data);

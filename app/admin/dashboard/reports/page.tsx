@@ -47,7 +47,6 @@ const Reports = () => {
       }
 
       const { data } = await res.json();
-      console.log("📊 Reports Statistics data:", data);
       setReportsData(data);
     } catch (error) {
       setReportsCountLoading(false);
@@ -79,7 +78,6 @@ const Reports = () => {
       }
 
       const { data } = await res.json();
-      console.log("📊 Reports Resolution data:", data);
       setResolutionData(data);
     } catch (error) {
       const message =

@@ -28,8 +28,6 @@ const EditProfileDetails = ({ data, setLoading }: EditProfileFormPDetails) => {
   const [placeholderImage, setPlaceholderImage] =
     useState<string>("/notFound.png");
 
-  console.log("EditProfileDetails data:", data);
-
   const initialValues = {
     name: name || "",
     phone_number: phone_number || "",
@@ -98,7 +96,6 @@ const EditProfileDetails = ({ data, setLoading }: EditProfileFormPDetails) => {
 
             if (response.ok) {
               setLoading(true);
-              console.log("User details updated:", data);
               window.location.reload();
             } else {
               console.error("Failed to update user details:", data.error);

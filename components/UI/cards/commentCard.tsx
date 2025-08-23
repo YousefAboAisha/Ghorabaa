@@ -48,9 +48,6 @@ const CommentCard = ({
   const [isOpenReportComment, setIsOpenReportComment] =
     useState<boolean>(false);
 
-  console.log("author_id", author_id);
-  console.log("user_id", current_user_id);
-
   const isCommentOwner = author_id === current_user_id;
   const isAdmin = current_user_role === Role.ADMIN;
 

@@ -25,8 +25,6 @@ type ReportCardProps = {
 const ReportCard = ({ data, refetchData }: ReportCardProps) => {
   const [isOpenReportAction, setIsOpenReportAction] = useState<boolean>(false);
 
-  console.log("Report data ", data);
-
   const commentData = {
     author_id: data?.content.author_id,
     story_id: data?.content.story_id,

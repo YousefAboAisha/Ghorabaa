@@ -75,8 +75,6 @@ const Page = () => {
     fetchFavoriteStories();
   }, []);
 
-  console.log("Favorites data", favorites);
-
   return (
     <div className="container mt-24">
       <PageTitles />

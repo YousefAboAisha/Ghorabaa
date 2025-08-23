@@ -41,7 +41,6 @@ const ContactForm = () => {
               const data = await response.json();
 
               if (response.ok) {
-                console.log("User details updated:", data);
                 toast.success("تم إرسال رسالتك بنجاح!");
                 resetForm(); // Reset the form after successful submission
               } else {
@@ -54,10 +53,7 @@ const ContactForm = () => {
             }
           }}
         >
-          {({ isSubmitting, errors, values }) => {
-            console.log("Form Errors: ", errors);
-            console.log("Form Values: ", values);
-
+          {({ isSubmitting, errors }) => {
             return (
               <Form className="relative flex flex-col gap-4">
                 {/* Message title Field */}

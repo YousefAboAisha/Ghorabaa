@@ -62,9 +62,6 @@ export const ArchiveDialog = ({
         throw new Error(errorMsg);
       }
 
-      const result = await res.json();
-      console.log("✅ massacre approved:", result);
-
       setIsOpen(false); // Close the modal
       refetchData?.(); // Refetch data
       toast.success("تمت أرشفة المحتوى بنجاح");

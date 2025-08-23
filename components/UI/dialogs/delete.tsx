@@ -60,8 +60,6 @@ export const DeleteDaialog = ({
         throw new Error("Failed to update the content.");
       }
 
-      const result = await response.json();
-      console.log("✅ Content updated:", result);
       setIsOpen(false); // Close the preview modal
       setLoading(false);
       if (typeof callback === "function") {

@@ -74,8 +74,6 @@ export const RejectDialog = ({
               throw new Error("Failed to update the story.");
             }
 
-            const result = await response.json();
-            console.log("✅ Story updated:", result);
             resetForm(); // ✅ Clear form values
             setIsOpen(false); // Close the preview modal
             refetchData?.(); // Refetch the data after successful update
@@ -90,10 +88,7 @@ export const RejectDialog = ({
           }
         }}
       >
-        {({ isSubmitting, errors, values }) => {
-          console.log("Errors:", errors);
-          console.log("Form Values", values);
-
+        {({ isSubmitting, values }) => {
           return (
             <Form className="flex flex-col gap-4 mt-6">
               {/* Notes Field with Word Counter */}

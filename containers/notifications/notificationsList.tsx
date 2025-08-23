@@ -22,8 +22,6 @@ const NotificationsList = async () => {
   const result = await notificationResponse.json();
   const notificationData: CommentNotificationInterface[] = result.data;
 
-  console.log("notification Data", notificationData);
-
   return (
     <div className="flex flex-col gap-2 pb-4 mt-6">
       <div className="flex items-center gap-2">

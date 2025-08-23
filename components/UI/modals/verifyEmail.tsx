@@ -23,8 +23,6 @@ export const VerifyEmail = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  console.log("Email in VerifyEmail:", email);
-
   const VerifyEmailHandler = async () => {
     setError(null); // Reset error state
     setLoading(true);

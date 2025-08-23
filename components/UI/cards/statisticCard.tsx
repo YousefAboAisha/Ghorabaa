@@ -12,8 +12,6 @@ type StatisticCardProps = {
 };
 
 const StatisticCard = ({ label, color, data }: StatisticCardProps) => {
-  console.log("StatisticCard Data: ", data);
-
   return (
     <div className="relative bg-white rounded-xl flex flex-col items-center justify-center border overflow-hidden">
       <div className="relative flex flex-col justify-center items-center gap-3 p-8">

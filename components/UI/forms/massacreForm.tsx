@@ -239,10 +239,7 @@ const MassacreForm = ({ id, initialData }: MassacreFormProps) => {
         validationSchema={MassacresValidationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, values, setFieldValue, errors }) => {
-          console.log("Form Errors", errors);
-          console.log("Form Values", values);
-
+        {({ isSubmitting, values, setFieldValue }) => {
           // eslint-disable-next-line react-hooks/rules-of-hooks
           const [tags, setTags] = useState<string[]>([]);
 
@@ -266,10 +263,7 @@ const MassacreForm = ({ id, initialData }: MassacreFormProps) => {
             <Form className="flex flex-col gap-8">
               {/* Massacre Details Section */}
               <div className="flex flex-col gap-6 w-full border rounded-xl p-8 bg-white">
-                <Heading
-                  title="تفاصيل المجزرة"
-                  className="mb-4 !text-xl"
-                />
+                <Heading title="تفاصيل المجزرة" className="mb-4 !text-xl" />
 
                 <div className="cards-grid-2 gap-4">
                   {/* Title Field */}
@@ -406,10 +400,7 @@ const MassacreForm = ({ id, initialData }: MassacreFormProps) => {
               </div>
 
               <div className="flex flex-col gap-5 w-full border rounded-xl p-8 bg-white">
-                <Heading
-                  title="ردود الفعل الدولية"
-                  className="mb-4 !text-xl"
-                />
+                <Heading title="ردود الفعل الدولية" className="mb-4 !text-xl" />
 
                 {/* International Reactions */}
                 <div>
@@ -548,10 +539,7 @@ const MassacreForm = ({ id, initialData }: MassacreFormProps) => {
 
               {/* Massacre Results Section */}
               <div className="flex flex-col gap-2 w-full border rounded-xl p-8 bg-white">
-                <Heading
-                  title="نتائج المجزرة"
-                  className="mb-4 !text-xl"
-                />
+                <Heading title="نتائج المجزرة" className="mb-4 !text-xl" />
 
                 <div className="cards-grid-3">
                   {/* Deaths Field */}

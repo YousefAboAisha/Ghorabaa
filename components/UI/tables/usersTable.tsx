@@ -68,9 +68,6 @@ const UsersTable = () => {
       const { data, pagination } = await res.json();
 
       if (Array.isArray(data)) {
-        console.log("Fetched Users Data:", data);
-        console.log("Fetched Pagination Data:", pagination);
-
         setTableData(data);
         setTotalPages(pagination.totalPages);
       } else {

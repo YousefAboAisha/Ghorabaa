@@ -36,8 +36,6 @@ export const DeleteReport = ({
         throw new Error("Failed to update the story.");
       }
 
-      const result = await response.json();
-      console.log("✅ Story updated:", result);
       setIsOpen(false); // Close the preview modal
       setDeleteLoading(false);
       refetchData?.(); // Refetch the data after successful update
@@ -64,8 +62,6 @@ export const DeleteReport = ({
         throw new Error("فشل أثناء تحديث حالة الإبلاغ");
       }
 
-      const result = await response.json();
-      console.log("✅ Story updated:", result);
       setIsOpen(false); // Close the preview modal
       setKeepLoading(false);
       refetchData?.(); // Refetch the data after successful update

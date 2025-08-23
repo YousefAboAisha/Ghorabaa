@@ -80,9 +80,6 @@ const EditUser = ({
                 throw new Error(errorMsg);
               }
 
-              const result = await res.json();
-              console.log("✅ User updated:", result);
-
               toast.success("تم تحديث بيانات المستخدم بنجاح!");
               setIsOpen(false);
 
@@ -102,9 +99,6 @@ const EditUser = ({
           }}
         >
           {({ isSubmitting, errors, values, setFieldValue }) => {
-            console.log("Errors:", errors);
-            console.log("Form Values", values);
-
             return (
               <Form className="flex flex-col gap-4 mt-6">
                 <div>
@@ -182,8 +176,6 @@ const EditUser = ({
                         icon={<Icon size={22} />}
                         onClick={() => {
                           setFieldValue("role", role);
-                          console.log("Role", role);
-                          console.log("Values.role", values.role);
                         }}
                         className={`${
                           role == values.role

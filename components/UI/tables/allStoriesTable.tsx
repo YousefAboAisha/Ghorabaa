@@ -85,8 +85,6 @@ const AllStoriesTable = () => {
       }
 
       const { data, pagination } = await res.json();
-      console.log("📊 All Stories Table data:", data);
-
       setTableData(Array.isArray(data) ? data : []);
       setTotalPages(pagination?.totalPages || 1);
     } catch (error) {
@@ -220,8 +218,6 @@ const AllStoriesTable = () => {
     }
 
     if (tableData && tableData.length > 0) {
-      console.log("Table data", tableData);
-
       return (
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
@@ -231,7 +227,7 @@ const AllStoriesTable = () => {
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-               الصورة
+                الصورة
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
@@ -291,7 +287,7 @@ const AllStoriesTable = () => {
                     </div>
                   </td>
 
-                    <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                  <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
                     {story?.id_number || "غير محدد"}
                   </td>
 

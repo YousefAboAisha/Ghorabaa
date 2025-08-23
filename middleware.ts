@@ -14,8 +14,6 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  console.log("Middleware token:", token); // Add this for debugging
-
   const { pathname } = request.nextUrl;
 
   const isAuthPage =

@@ -25,10 +25,7 @@ const VisitsAnalytics = () => {
         const err = await res.json();
         throw new Error(err?.error || "فشل في تحميل البيانات");
       }
-
       const { data } = await res.json();
-      console.log("Fetched visits data:", data);
-
       setData(data);
     } catch (err) {
       const message = err instanceof Error ? err.message : "حدث خطأ غير متوقع";

@@ -5,6 +5,7 @@ interface StatisticsData {
   approved: number;
   pending: number;
   rejected: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any; // optional for flexibility
 }
 
@@ -41,7 +42,6 @@ export const useStatisticsStore = create<StatisticsState>((set) => ({
       }
 
       const data = await res.json();
-      console.log("📊 Statistics data from store:", data);
       set({ data, error: null, loading: false });
     } catch (error) {
       const message = error instanceof Error ? error.message : "خطأ غير معروف";
