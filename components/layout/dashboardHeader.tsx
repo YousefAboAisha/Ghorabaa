@@ -1,5 +1,4 @@
 "use client";
-import { Session } from "next-auth";
 import Link from "next/link";
 import Logo from "../UI/logo";
 import AdminProfileMenu from "../UI/menues/adminProfileMenu";
@@ -7,12 +6,11 @@ import Hamburger from "hamburger-react";
 import { useState } from "react";
 import Sidebar from "./sidebar";
 import { DashboardRoutes } from "@/data/dashboardRoutes";
+import { useSession } from "next-auth/react";
 
-type Props = {
-  session: Session | null;
-};
+const DashboardHeader = () => {
+  const { data: session } = useSession(); // 👈 now handled client-side
 
-const DashboardHeader = ({ session }: Props) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState<boolean>(false);
 
   return (

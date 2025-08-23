@@ -29,7 +29,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     const db = client.db("ghorabaa");
     const commentsCollection = db.collection("comments");
 
-    const commentsWithAuthor = await commentsCollection
+    const comments = await commentsCollection
       .aggregate([
         { $match: { author_id: new ObjectId(id) } },
         { $sort: { createdAt: -1 } }, // newest first
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
       ])
       .toArray();
 
-    return NextResponse.json({ data: commentsWithAuthor }, { status: 200 });
+    return NextResponse.json({ data: comments }, { status: 200 });
   } catch (error) {
     console.error("Error fetching comments:", error);
     return NextResponse.json(

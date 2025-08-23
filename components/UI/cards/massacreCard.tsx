@@ -29,7 +29,7 @@ const MassacreCard = ({ data }: Props) => {
       <div className="relative p-4">
         <div className="flex items-center gap-2 text-[10px] text-gray_dark">
           <p> تاريخ النشر:</p>
-          <p>{fullDateConversion(data?.date as Date)}</p>
+          <p>{fullDateConversion(data?.createdAt as Date)}</p>
         </div>
 
         <div className="flex items-center gap-2 text-sm mb-2 mt-2">
@@ -50,7 +50,9 @@ const MassacreCard = ({ data }: Props) => {
 
           <div className="flex items-center gap-2">
             <GrCalendar size={16} className="text-primary" />
-            <p className="text-[12px]">{arabicDateConversion(new Date())}</p>
+            <p className="text-[12px]">
+              {arabicDateConversion(data?.date as Date)}
+            </p>
           </div>
         </div>
 

@@ -1,7 +1,11 @@
-import { getSessionAction } from "@/app/actions/registerActions";
-import DashboardHeader from "@/components/layout/dashboardHeader";
+"use client";
+import DashboardSidebar from "@/components/layout/dashboardSidebar";
+import { SessionProvider } from "next-auth/react";
 
-export default async function DashboardHeaderWrapper() {
-  const session = await getSessionAction();
-  return <DashboardHeader session={session} />; // Pass the session as a prop
+export default function NavbarWrapper() {
+  return (
+    <SessionProvider>
+      <DashboardSidebar />
+    </SessionProvider>
+  );
 }

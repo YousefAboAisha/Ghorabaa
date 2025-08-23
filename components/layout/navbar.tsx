@@ -15,19 +15,16 @@ import {
   BsPlusCircle,
   BsSearch,
 } from "react-icons/bs";
-import { Session } from "next-auth";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useFavoriteStore } from "@/stores/favoriteStore";
 import ProfileMenu from "../UI/menues/profileMenu";
 import DropdownMenu from "../UI/menues/dropdownMenu";
+import { useSession } from "next-auth/react";
 
-type NavbarProps = {
-  session: Session | null;
-};
-
-const Navbar = ({ session }: NavbarProps) => {
+const Navbar = () => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const { data: session } = useSession(); // 👈 now handled client-side
 
   const pathname = usePathname();
 
@@ -59,11 +56,13 @@ const Navbar = ({ session }: NavbarProps) => {
   );
 
   useEffect(() => {
-    setLoading(true);
-    fetchAndUpdateCount();
-    setLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const fetchData = async () => {
+      setLoading(true);
+      await fetchAndUpdateCount();
+      setLoading(false);
+    };
+    fetchData();
+  }, [fetchAndUpdateCount]);
 
   // Only render the navbar if it's not an admin page
   if (pathname.startsWith("/admin")) {
@@ -86,40 +85,7 @@ const Navbar = ({ session }: NavbarProps) => {
           </div>
 
           {/* Conditionally render Sign In or Profile Icon */}
-          {!session ? (
-            <div className="flex items-center gap-2">
-              <Link
-                href={"/signin"}
-                className="outline-none hidden lg:flex !min-w-fit"
-                prefetch
-              >
-                <Button
-                  title="تسجيل الدخول"
-                  className="bg-primary px-4 lg:px-3 !min-w-fit"
-                  icon={<FiUser />}
-                  hasShiningBar={false}
-                />
-              </Link>
-
-              <Link
-                title="تسجيل الدخول"
-                prefetch
-                href={"/signin"}
-                className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
-              >
-                <BsPersonAdd size={24} />
-              </Link>
-
-              <Link
-                title="البحث عن الشهداء"
-                prefetch
-                href={"/search"}
-                className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
-              >
-                <BsSearch size={18} />
-              </Link>
-            </div>
-          ) : (
+          {session ? (
             <div className="flex items-center">
               {session && (
                 <Link
@@ -136,20 +102,21 @@ const Navbar = ({ session }: NavbarProps) => {
                 </Link>
               )}
 
-              {/* Profile popper */}
-              <ProfileMenu session={session} />
+              {session && <ProfileMenu session={session} />}
 
-              <Link
-                title="إضافة قصة جديدة"
-                prefetch
-                href={"/addStory"}
-                className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
-              >
-                <BsPlusCircle size={20} />
-              </Link>
+              {session && (
+                <Link
+                  title="إضافة قصة جديدة"
+                  prefetch
+                  href={"/addStory"}
+                  className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+                >
+                  <BsPlusCircle size={20} />
+                </Link>
+              )}
 
               {/* Notifications popper */}
-              <NotificationPopper session={session} />
+              {session && <NotificationPopper session={session} />}
 
               {/* Search page */}
               <Link
@@ -181,6 +148,39 @@ const Navbar = ({ session }: NavbarProps) => {
                 )}
               </Link>
               <span className="hidden lg:flex">|</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                href={"/signin"}
+                className="outline-none hidden lg:flex !min-w-fit"
+                prefetch
+              >
+                <Button
+                  title="تسجيل الدخول"
+                  className="bg-primary px-4 lg:px-3 !min-w-fit"
+                  icon={<FiUser />}
+                  hasShiningBar={false}
+                />
+              </Link>
+
+              <Link
+                title="تسجيل الدخول"
+                prefetch
+                href={"/signin"}
+                className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+              >
+                <BsPersonAdd size={24} />
+              </Link>
+
+              <Link
+                title="البحث عن الشهداء"
+                prefetch
+                href={"/search"}
+                className="flex lg:hidden items-center justify-center p-3 text-secondary hover:bg-gray_light duration-200 rounded-full cursor-pointer"
+              >
+                <BsSearch size={18} />
+              </Link>
             </div>
           )}
 

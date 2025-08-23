@@ -6,23 +6,24 @@ import StoryCard from "@/components/UI/cards/storyCard";
 import StoryPendingCard from "@/components/UI/cards/storyPendingCard";
 import StoryRejectedCard from "@/components/UI/cards/storyRejectedCard";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
-import { Session } from "next-auth";
 import { StoryTabsData } from "@/data/storyTabsData";
 import RejectAndPendingCardSkeltonLoader from "@/components/UI/loaders/rejectAndPendingCardSkeltonLoader";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import { useRouter, useSearchParams } from "next/navigation";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
+import { useSession } from "next-auth/react";
 
 type StoryCounts = {
   [key in StoryStatus]: number;
 };
 
 type SubmittedStoriesProps = {
-  session: Session | null;
   user_id: string;
 };
 
-const StoryTabs = ({ session, user_id }: SubmittedStoriesProps) => {
+const StoryTabs = ({ user_id }: SubmittedStoriesProps) => {
+  const { data: session } = useSession(); // 👈 now handled client-side
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const isOwner = user_id == session?.user.id;

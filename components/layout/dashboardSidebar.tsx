@@ -1,6 +1,5 @@
 "use client";
 import { Role } from "@/app/enums";
-import { Session } from "next-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; // Import usePathname
 import { BiLineChart } from "react-icons/bi";
@@ -11,12 +10,11 @@ import { MdOutlineReport } from "react-icons/md";
 import Logo from "../UI/logo";
 import { getRoleColor, getRoleInArabic } from "@/utils/text";
 import AdminProfileMenu from "../UI/menues/adminProfileMenu";
+import { useSession } from "next-auth/react";
 
-type Props = {
-  session: Session | null;
-};
+const DashboardSidebar = () => {
+  const { data: session } = useSession(); // 👈 now handled client-side
 
-const DashboardSidebar = ({ session }: Props) => {
   const pathname = usePathname(); // Get the current route
   const role = session?.user.role || "غير معرف";
   const isEditor = role === Role.EDITOR;
@@ -83,21 +81,23 @@ const DashboardSidebar = ({ session }: Props) => {
           </Link>
         ))}
 
-      <div className="relative flex items-center mt-6 gap-2 bg-background_light rounded-lg border p-2">
-        <AdminProfileMenu session={session} />
+      {session && (
+        <div className="relative flex items-center mt-6 gap-2 bg-background_light rounded-lg border p-2">
+          <AdminProfileMenu session={session} />
 
-        <div className="flex flex-col gap-1 text-xs">
-          <p className="truncate">{name}</p>
-          <p
-            className="font-semibold truncate"
-            style={{
-              color: getRoleColor(Role.ADMIN),
-            }}
-          >
-            {roleLabel}
-          </p>
+          <div className="flex flex-col gap-1 text-xs">
+            <p className="truncate">{name}</p>
+            <p
+              className="font-semibold truncate"
+              style={{
+                color: getRoleColor(Role.ADMIN),
+              }}
+            >
+              {roleLabel}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
     </ul>
   );
 

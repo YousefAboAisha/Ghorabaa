@@ -99,7 +99,7 @@ const SingleImageUploader = ({
                 اسحب وأفلت الصورة هنا أو انقر للاختيار
               </span>
               <div className="text-xs text-gray-500 mt-2">
-                <p>✓ الصور المدعومة: JPEG, PNG, GIF, JFIF, WebP</p>
+                <p>✓ الصور المدعومة: JPEG, PNG, JPG, WebP</p>
                 <p>✓ الحد الأقصى للحجم: 5MB</p>
                 <p>✓ قم بإرفاق صورة واحدة فقط </p>
                 {uploadError && <p className="text-red-500">✗ {uploadError}</p>}

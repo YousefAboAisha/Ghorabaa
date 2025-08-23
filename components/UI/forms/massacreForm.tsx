@@ -61,9 +61,9 @@ const MassacreForm = ({ id, initialData }: MassacreFormProps) => {
     },
     description: "",
     media: [],
-    deaths: 0,
-    injuries: 0,
-    destroyedHouses: 0,
+    deaths: undefined,
+    injuries: undefined,
+    destroyedHouses: undefined,
     tags: [],
     internationalReactions: [],
   });
@@ -550,6 +550,7 @@ const MassacreForm = ({ id, initialData }: MassacreFormProps) => {
                   <div>
                     <Field
                       disabled={isSubmitting}
+                      value={values.deaths ?? ""} // fallback to empty string if undefined
                       name="deaths"
                       as={Input}
                       type="number"
@@ -569,6 +570,7 @@ const MassacreForm = ({ id, initialData }: MassacreFormProps) => {
                   <div>
                     <Field
                       disabled={isSubmitting}
+                      value={values.injuries ?? ""} // fallback to empty string if undefined
                       name="injuries"
                       as={Input}
                       type="number"
@@ -588,6 +590,7 @@ const MassacreForm = ({ id, initialData }: MassacreFormProps) => {
                   <div>
                     <Field
                       disabled={isSubmitting}
+                      value={values.destroyedHouses ?? ""} // fallback to empty string if undefined
                       name="destroyedHouses"
                       as={Input}
                       type="number"

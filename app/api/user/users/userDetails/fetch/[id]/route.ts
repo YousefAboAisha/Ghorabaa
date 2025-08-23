@@ -38,9 +38,9 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     const db = client.db("ghorabaa");
     const collection = db.collection("users");
 
-    const users = await collection.findOne({ _id: new ObjectId(id) });
+    const data = await collection.findOne({ _id: new ObjectId(id) });
 
-    return NextResponse.json({ data: users }, { status: 200 });
+    return NextResponse.json({ data }, { status: 200 });
   } catch (error) {
     console.error("Error fetching users:", error);
     return NextResponse.json(
