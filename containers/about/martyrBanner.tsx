@@ -61,7 +61,7 @@ const MartyrBanner = () => {
         </div>
 
         <Link
-          href={"/stories/686f8239277517371d13858f"}
+          href={"/stories/68a9b9eadceaf81d7517f94a"}
           className="relative md:w-fit w-full mt-4"
         >
           <Button

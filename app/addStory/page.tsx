@@ -7,7 +7,7 @@ export const metadata: Metadata = AddStoryMetadata;
 
 const Page = () => {
   return (
-    <div className="w-full mx-auto flex flex-col items-center justify-center min-h-screen mt-28">
+    <div className="container md:w-1/2 mx-auto flex flex-col items-center justify-center min-h-screen mt-28">
       <StoryForm />
     </div>
   );

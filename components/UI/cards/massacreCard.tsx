@@ -34,7 +34,7 @@ const MassacreCard = ({ data }: Props) => {
 
         <div className="flex items-center gap-2 text-sm mb-2 mt-2">
           <p className="text-lg font-bold text-secondary truncate">
-            {data?.title || "عنوان المجزرة غير متوفر"}
+            مجزرة {data?.title || "عنوان المجزرة غير متوفر"}
           </p>
         </div>
 

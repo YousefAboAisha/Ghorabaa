@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
     const query: Record<string, unknown> = {};
 
     if (status) query["status"] = status;
-    if (gender) query["gender"] = gender.toUpperCase();
+    if (gender) query["gender"] = gender;
     if (!isNaN(ageFrom))
       query["age"] = { ...(query["age"] || {}), $gte: ageFrom };
     if (!isNaN(ageTo)) query["age"] = { ...(query["age"] || {}), $lte: ageTo };

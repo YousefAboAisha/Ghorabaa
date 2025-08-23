@@ -53,6 +53,8 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
     IdNumberStatus.IDLE
   );
 
+  const [originalIdNumber, setOriginalIdNumber] = useState<string>("");
+
   const [initialValues, setInitialValues] = useState<Partial<StoryInterface>>({
     id_number: "",
     title: {
@@ -101,6 +103,8 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
           const data = await response.json();
 
           if (data) {
+            setOriginalIdNumber(data.id_number || ""); // Store the original ID
+
             setInitialValues({
               ...initialValues,
               ...data,
@@ -161,6 +165,8 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
 
       fetchStoryData();
     } else if (initialData) {
+      setOriginalIdNumber(initialData.id_number || ""); // Store the original ID
+
       // Use provided initialData
       setInitialValues((prev) => ({
         ...prev,
@@ -278,7 +284,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
   }
 
   return (
-    <div className="relative flex items-center justify-center container md:w-1/2">
+    <div className="relative flex items-center justify-center w-full ">
       <Formik
         initialValues={initialValues}
         validationSchema={StoryValidationSchema}
@@ -334,7 +340,20 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                       aria-label="رقم الهوية"
                       onBlur={async (e: React.FocusEvent<HTMLInputElement>) => {
                         const idValue = e.target.value.trim();
-                        if (idValue.length === 9 && !idCheckLoading) {
+
+                        // Only validate if:
+                        // 1. We're in edit mode AND the ID has changed from the original
+                        // OR
+                        // 2. We're in create mode (no original ID)
+                        const shouldValidate = id
+                          ? idValue != originalIdNumber
+                          : true;
+
+                        if (
+                          idValue.length === 9 &&
+                          !idCheckLoading &&
+                          shouldValidate
+                        ) {
                           setIdCheckLoading(true);
                           setIdCheckStatus(IdNumberStatus.CHECKING);
 
@@ -364,6 +383,10 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                           } finally {
                             setIdCheckLoading(false);
                           }
+                        } else if (idValue === originalIdNumber) {
+                          // If ID is same as original, reset validation status
+                          setIdCheckStatus(IdNumberStatus.IDLE);
+                          setIsValidIdNumber(null);
                         }
                       }}
                     />

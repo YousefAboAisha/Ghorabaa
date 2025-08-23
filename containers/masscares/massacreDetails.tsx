@@ -118,7 +118,10 @@ const MassacreDetails = async ({ id }: Props) => {
         </div>
 
         <div className="flex items-center justify-between gap-6 ">
-          <h4 className="text-2xl font-bold mt-6">{data?.title}</h4>
+          <h4 className="text-2xl font-bold mt-6">
+            {" "}
+            مجزرة {data?.title || "عنوان المجزرة غير متوفر"}
+          </h4>
 
           {/* Share content button */}
           {data.status === MassacreStatus.APPROVED && data && (
@@ -126,7 +129,7 @@ const MassacreDetails = async ({ id }: Props) => {
           )}
         </div>
 
-        {data.tags && (
+        {data.tags && data.tags.length > 0 && (
           <div className="flex items-center flex-wrap gap-2 mt-4">
             {data.tags?.map((keywrod, index) => {
               return (
