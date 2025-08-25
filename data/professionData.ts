@@ -26,6 +26,10 @@ export const ProfessionData = [
     value: Profession.TEACHER,
   },
   {
+    title: "لاعب رياضي",
+    value: Profession.ATHLETE,
+  },
+  {
     title: "غير ذلك",
     value: "",
   },

@@ -94,6 +94,7 @@ export enum Profession {
   TEACHER = "معلم",
   SCIENTIST = "عالِم",
   FORIGEN = "أجنبي",
+  ATHLETE = "لاعب رياضي",
   NONE = "غير ذلك",
 }
 
