@@ -67,12 +67,14 @@ const CommentsSection = ({ session, id }: CommentSectionProps) => {
 
   useEffect(() => {
     fetchComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (page > 1) {
       fetchComments(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   useEffect(() => {

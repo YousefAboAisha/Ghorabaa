@@ -291,7 +291,14 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
         onSubmit={handleSubmit}
         enableReinitialize={true}
       >
-        {({ isSubmitting, values, setFieldValue, errors }) => {
+        {({
+          isSubmitting,
+          values,
+          setFieldValue,
+          errors,
+          touched,
+          setFieldTouched,
+        }) => {
           // eslint-disable-next-line react-hooks/rules-of-hooks
           const [tags, setTags] = useState<string[]>(values.keywords || []);
 
@@ -325,7 +332,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                       disabled={isSubmitting}
                       name="id_number"
                       as={Input}
-                      type="number"
+                      type="text"
                       placeholder="رقم الهوية يتكون من 9 خانات"
                       label="رقم الهوية"
                       className={`focus:border-secondary ${
@@ -340,9 +347,11 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                       aria-label="رقم الهوية"
                       onBlur={async (e: React.FocusEvent<HTMLInputElement>) => {
                         const idValue = e.target.value.trim();
+                        setFieldTouched("id_number", true); // Mark as touched on blur
 
+                        // Only validate if the field has a value and it's exactly 9 digits
                         if (idValue.length !== 9) {
-                          setIdCheckStatus(IdNumberStatus.IDLE); // Skip API check
+                          setIdCheckStatus(IdNumberStatus.IDLE);
                           setIsValidIdNumber(null);
                           return;
                         }
@@ -354,7 +363,13 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                           ? idValue != originalIdNumber
                           : true;
 
-                        if (!idCheckLoading && shouldValidate) {
+                        if (!shouldValidate) {
+                          setIdCheckStatus(IdNumberStatus.IDLE);
+                          setIsValidIdNumber(null);
+                          return;
+                        }
+
+                        if (!idCheckLoading) {
                           setIdCheckLoading(true);
                           setIdCheckStatus(IdNumberStatus.CHECKING);
 
@@ -384,25 +399,19 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                           } finally {
                             setIdCheckLoading(false);
                           }
-                        } else if (idValue == originalIdNumber) {
-                          setIdCheckStatus(IdNumberStatus.IDLE);
-                          setIsValidIdNumber(null);
                         }
                       }}
                       onChange={(e: { target: { value: number } }) => {
                         setFieldValue("id_number", e.target.value);
-                        setIdCheckStatus(IdNumberStatus.IDLE);
-                        setIsValidIdNumber(null);
+                        // Only reset validation status if we previously had a validation result
+                        if (idCheckStatus !== "idle") {
+                          setIdCheckStatus(IdNumberStatus.IDLE);
+                          setIsValidIdNumber(null);
+                        }
                       }}
-                      error={errors["id_number"]}
+                      error={touched.id_number && errors.id_number}
                     />
                   </div>
-
-                  <ErrorMessage
-                    name="id_number"
-                    component="div"
-                    className="text-red-500 mt-2 font-semibold text-[10px]"
-                  />
 
                   {/* Only show API validation if Formik has no error */}
                   {!errors.id_number && (
@@ -592,6 +601,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                   {/* Social Media Fields */}
                   <div>
                     <Field
+                      dir="ltr"
                       disabled={isSubmitting}
                       name="social_media.instagram"
                       as={Input}
@@ -609,6 +619,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                   </div>
                   <div>
                     <Field
+                      dir="ltr"
                       disabled={isSubmitting}
                       name="social_media.facebook"
                       as={Input}
@@ -626,6 +637,7 @@ const StoryForm = ({ id, id_number, initialData }: StoryFormProps) => {
                   </div>
                   <div>
                     <Field
+                      dir="ltr"
                       disabled={isSubmitting}
                       name="social_media.x"
                       as={Input}

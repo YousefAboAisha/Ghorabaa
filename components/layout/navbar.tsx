@@ -19,12 +19,15 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useFavoriteStore } from "@/stores/favoriteStore";
 import ProfileMenu from "../UI/menues/profileMenu";
 import DropdownMenu from "../UI/menues/dropdownMenu";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
 
-const Navbar = () => {
+type Props = {
+  session: Session | null;
+};
+
+const Navbar = ({ session }: Props) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const { data: session } = useSession(); // 👈 now handled client-side
 
   const pathname = usePathname();
 
