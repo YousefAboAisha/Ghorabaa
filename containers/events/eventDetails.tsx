@@ -1,4 +1,3 @@
-import { getSessionAction } from "@/app/actions/registerActions";
 import { ContentType, EventStatus, Role } from "@/app/enums";
 import { EventInterface } from "@/app/interfaces";
 import PageTitles from "@/components/UI/typography/pageTitles";
@@ -10,13 +9,14 @@ import { BsEye } from "react-icons/bs";
 import { FiCalendar, FiMapPin } from "react-icons/fi";
 import ShareButton from "../stories/shareButton";
 import LogVisit from "./logVisits";
+import { getServerSession } from "next-auth";
 
 type Props = {
   id: string;
 };
 
 const EventDetails = async ({ id }: Props) => {
-  const session = await getSessionAction();
+  const session = await getServerSession();
 
   const storyResponse = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/events/fetch/${id}`,

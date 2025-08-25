@@ -1,10 +1,10 @@
 // app/auth-redirect/page.tsx
 import { redirect } from "next/navigation";
-import { getSessionAction } from "../actions/registerActions";
 import Logo from "@/components/UI/logo";
+import { getServerSession } from "next-auth";
 
 export default async function AuthRedirect() {
-  const session = await getSessionAction();
+  const session = await getServerSession();
 
   // This is just a fallback - middleware should handle the redirect
   if (!session) {

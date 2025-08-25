@@ -13,10 +13,10 @@ import LogVisit from "./logVisits";
 import dead from "@/public/icons/dead.png";
 import house from "@/public/icons/house.png";
 import injury from "@/public/icons/injury.png";
-import { getSessionAction } from "@/app/actions/registerActions";
 import { ContentType, MassacreStatus, Role } from "@/app/enums";
 import { BsExclamationTriangle } from "react-icons/bs";
 import ShareButton from "../stories/shareButton";
+import { getServerSession } from "next-auth";
 
 type Props = {
   id: string;
@@ -29,7 +29,7 @@ const getFullImageUrl = (url: string) => {
 };
 
 const MassacreDetails = async ({ id }: Props) => {
-  const session = await getSessionAction();
+  const session = await getServerSession();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/massacres/fetch/${id}`,

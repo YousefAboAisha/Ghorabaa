@@ -1,12 +1,12 @@
 import SearchSection from "@/containers/search/searchSection";
 import { SearchMetadata } from "../lib/metadata";
-import { getSessionAction } from "../actions/registerActions";
 import Hero from "@/components/layout/hero";
+import { getServerSession } from "next-auth";
 
 export const generateMetadata = async () => SearchMetadata;
 
 const Page = async () => {
-  const session = await getSessionAction();
+  const session = await getServerSession();
 
   return (
     <div className="container min-h-screen mt-24">

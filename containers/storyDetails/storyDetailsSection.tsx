@@ -2,7 +2,6 @@ import { StoryInterface } from "@/app/interfaces";
 import Image from "next/image";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { notFound } from "next/navigation";
-import { getSessionAction } from "@/app/actions/registerActions";
 import { dateConversion, fullDateConversion } from "@/utils/format";
 import Link from "next/link";
 import { FaFacebook, FaInstagram, FaXTwitter } from "react-icons/fa6";
@@ -13,13 +12,14 @@ import { BiInfoCircle } from "react-icons/bi";
 import LogVisit from "@/containers/stories/logVisit";
 import { getAgeLabel, getFullName } from "@/utils/text";
 import ShareButton from "../stories/shareButton";
+import { getServerSession } from "next-auth";
 
 type Props = {
   id: string;
 };
 
 const StoryDetailsSection = async ({ id }: Props) => {
-  const session = await getSessionAction();
+  const session = await getServerSession();
   const user_id = session?.user.id;
 
   const storyResponse = await fetch(

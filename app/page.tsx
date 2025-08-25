@@ -7,8 +7,8 @@ import { Suspense } from "react";
 import StoryCardSkeletonLoader from "@/components/UI/loaders/storyCardSkeletonLoader";
 import Heading from "@/components/UI/typography/heading";
 import { HomeMetadata } from "./lib/metadata";
-import { getSessionAction } from "./actions/registerActions";
 import RecentlyAddedMasscares from "@/containers/home/recentlyAddedMasscares";
+import { getServerSession } from "next-auth";
 
 export const generateMetadata = async () => HomeMetadata;
 
@@ -16,7 +16,7 @@ export const generateMetadata = async () => HomeMetadata;
 export const viewport = "width=device-width, initial-scale=1";
 
 export default async function Home() {
-  const session = await getSessionAction();
+  const session = await getServerSession();
 
   return (
     <>

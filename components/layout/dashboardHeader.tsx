@@ -16,8 +16,8 @@ const DashboardHeader = ({ session }: Props) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState<boolean>(false);
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-white z-50 border-b border-r h-[70px] px-8 block md:hidden">
-      <div className="flex items-center justify-between container w-full h-full">
+    <div className="fixed top-0 left-0 w-full bg-white z-50 border-b border-r h-[70px] block md:hidden">
+      <div className="flex items-center justify-between px-8 w-full h-full">
         <div className="flex items-center gap-4">
           <div className="lg:hidden cursor-pointer border rounded-xl bg-secondary/10">
             <Hamburger

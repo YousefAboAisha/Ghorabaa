@@ -1,11 +1,11 @@
-import { getSessionAction } from "@/app/actions/registerActions";
 import Button from "@/components/UI/inputs/button";
 import Heading from "@/components/UI/typography/heading";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa";
 
 const AddStoryBanner = async () => {
-  const session = await getSessionAction();
+  const session = await getServerSession();
 
   const url = session
     ? "/addStory"
