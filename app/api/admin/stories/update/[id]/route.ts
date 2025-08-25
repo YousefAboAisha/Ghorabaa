@@ -55,55 +55,34 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     }
 
     const body = await req.json();
-    const {
-      id_number,
-      title,
-      nickname,
-      profession,
-      gender,
-      birth_date,
-      death_date,
-      social_media,
-      location,
-      bio,
-      image,
-      warTitle,
-      ...rest
-    } = body;
 
-    // Remove _id from rest if it exists
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _id, ...safeRest } = rest;
-
-    // Basic validation
-    if (!title?.first_name || !title?.last_name) {
-      return NextResponse.json({ error: "حقل الاسم مطلوب!" }, { status: 400 });
-    }
-
-    const age = birth_date
-      ? new Date(death_date).getFullYear() - new Date(birth_date).getFullYear()
-      : null;
-
+    // ✅ whitelist fields only
     const updateData: Partial<StoryInterface> = {
-      ...safeRest,
-      id_number,
-      title,
-      age,
-      publisher_id: new ObjectId(token.id),
-      ...(nickname && { nickname }),
-      ...(profession && { profession }),
-      ...(gender && { gender }),
-      ...(birth_date && { birth_date: new Date(birth_date) }),
-      ...(death_date && { death_date: new Date(death_date) }),
-      ...(social_media && { social_media }),
-      ...(location && { location }),
-      ...(bio && { bio }),
-      ...(image && { image }),
-      ...(warTitle && { warTitle }),
+      ...(body.id_number && { id_number: body.id_number }),
+      ...(body.title &&
+        body.title.first_name &&
+        body.title.last_name && { title: body.title }),
+      ...(body.nickname && { nickname: body.nickname }),
+      ...(body.profession && { profession: body.profession }),
+      ...(body.gender && { gender: body.gender }),
+      ...(body.birth_date && { birth_date: new Date(body.birth_date) }),
+      ...(body.death_date && { death_date: new Date(body.death_date) }),
+      ...(body.social_media && { social_media: body.social_media }),
+      ...(body.location && { location: body.location }),
+      ...(body.bio && { bio: body.bio }),
+      ...(body.image && { image: body.image }),
+      ...(body.warTitle && { warTitle: body.warTitle }),
       updatedAt: new Date(),
     };
 
-    // For admin updates, preserve the original status
+    // Calculate age if dates are provided
+    if (body.birth_date && body.death_date) {
+      updateData.age =
+        new Date(body.death_date).getFullYear() -
+        new Date(body.birth_date).getFullYear();
+    }
+
+    // Status logic
     if (
       token.role !== Role.ADMIN &&
       existingStory.status === StoryStatus.APPROVED

@@ -12,31 +12,33 @@ export async function PUT(
   originalReq: NextRequest,
   { params }: { params: Params }
 ) {
-  const { id } = await params;
-
-  const req = originalReq.clone();
-  const nextReq = new NextRequest(req);
-
-  const token = await getToken({ req: nextReq, secret });
-
-  if (!token || token.role === Role.USER) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
+    const { id } = await params;
+
+    if (!id || !ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { error: "Invalid story ID format" },
+        { status: 400 }
+      );
+    }
+
+    const req = originalReq.clone();
+    const nextReq = new NextRequest(req);
+
+    const token = await getToken({ req: nextReq, secret });
+
+    // ✅ Allow only ADMINs
+    if (!token || token.role !== Role.ADMIN) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const client = await clientPromise;
     const db = client.db("ghorabaa");
     const storiesCollection = db.collection("stories");
     const notificationsCollection = db.collection("notifications");
 
-    // Validate required inputs
-    if (!id) {
-      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
-    }
-
-    const story = await storiesCollection.findOne({
-      _id: new ObjectId(id),
-    });
+    // Fetch story
+    const story = await storiesCollection.findOne({ _id: new ObjectId(id) });
 
     if (!story) {
       return NextResponse.json({ error: "القصة غير موجودة!" }, { status: 404 });
@@ -44,13 +46,21 @@ export async function PUT(
 
     if (!story.publisher_id) {
       return NextResponse.json(
-        { error: "يجب إضافة معرف ناشر القصة" },
+        { error: "لا يوجد ناشر مرتبط بهذه القصة" },
         { status: 500 }
       );
     }
 
-    // Update the story
-    await storiesCollection.updateOne(
+    // ✅ Prevent re-approving already approved stories
+    if (story.status === StoryStatus.APPROVED) {
+      return NextResponse.json(
+        { error: "القصة تمت الموافقة عليها مسبقًا" },
+        { status: 400 }
+      );
+    }
+
+    // Update story
+    const updateResult = await storiesCollection.updateOne(
       { _id: new ObjectId(id) },
       {
         $set: {
@@ -61,13 +71,20 @@ export async function PUT(
       }
     );
 
-    // && story.publisher_id?.toString() !== author_id - TO prevent sending notifications to the same user who accepted it.
-    if (story) {
+    if (updateResult.modifiedCount === 0) {
+      return NextResponse.json(
+        { error: "لم يتم تعديل أي بيانات للقصة" },
+        { status: 400 }
+      );
+    }
+
+    // ✅ Notify publisher if not the approving admin
+    if (story.publisher_id.toString() !== token.id) {
       const fullName = getFullName(story.title);
-      // Create notification
+
       const storyNotificationPayload = {
         user_id: story.publisher_id,
-        message: `تمت الموافقة على طلب إضافة قصة الشهيد ${fullName} من قِبِل المشرف`,
+        message: `تمت الموافقة على إضافة قصة الشهيد ${fullName} من قِبَل المشرف`,
         href: `/stories/${story._id}`,
         notification_type: NotificationTypes.ACCEPT,
         createdAt: new Date(),

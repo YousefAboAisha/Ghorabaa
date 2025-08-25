@@ -33,14 +33,12 @@ export async function GET(req: NextRequest) {
     }
 
     if (search) {
-      // Case-insensitive regex search across all name fields and nickname
       matchStage.$or = [
         { "title.first_name": { $regex: search, $options: "i" } },
         { "title.father_name": { $regex: search, $options: "i" } },
         { "title.grandFather_name": { $regex: search, $options: "i" } },
         { "title.last_name": { $regex: search, $options: "i" } },
         { nickname: { $regex: search, $options: "i" } },
-        // You can also add a combined full name search if needed
         {
           $expr: {
             $regexMatch: {
@@ -65,6 +63,7 @@ export async function GET(req: NextRequest) {
 
     const pipeline = [
       { $match: matchStage },
+      // Lookup publisher
       {
         $lookup: {
           from: "users",
@@ -74,6 +73,21 @@ export async function GET(req: NextRequest) {
         },
       },
       { $unwind: "$publisher" },
+      // Lookup approvedBy
+      {
+        $lookup: {
+          from: "users",
+          localField: "approvedBy",
+          foreignField: "_id",
+          as: "approvedByUser",
+        },
+      },
+      {
+        $unwind: {
+          path: "$approvedByUser",
+          preserveNullAndEmptyArrays: true, // allow null if not approved yet
+        },
+      },
       {
         $addFields: {
           effectiveDate: {
@@ -94,6 +108,7 @@ export async function GET(req: NextRequest) {
           location: 1,
           publisher_id: 1,
           publisher_name: "$publisher.name",
+          approvedBy: "$approvedByUser.name",
           createdAt: 1,
           updatedAt: 1,
           effectiveDate: 1,

@@ -1,8 +1,8 @@
 import Hero from "@/components/layout/hero";
 import { Metadata } from "next";
 import { EventsMetadata } from "../lib/metadata";
-import EventsSection from "@/containers/events/eventsCards";
 import Heading from "@/components/UI/typography/heading";
+import EventsSection from "@/containers/events/eventsSection";
 
 export const metadata: Metadata = EventsMetadata;
 

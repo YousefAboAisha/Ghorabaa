@@ -1,11 +1,9 @@
-"use client";
-import DashboardSidebar from "@/components/layout/dashboardSidebar";
-import { SessionProvider } from "next-auth/react";
+import { authOptions } from "@/app/lib/authOptions";
+import DashboardHeader from "@/components/layout/dashboardHeader";
+import { getServerSession } from "next-auth";
 
-export default function NavbarWrapper() {
-  return (
-    <SessionProvider>
-      <DashboardSidebar />
-    </SessionProvider>
-  );
+export default async function DashboardSidebarWrapper() {
+  const session = await getServerSession(authOptions);
+
+  return <DashboardHeader session={session} />;
 }

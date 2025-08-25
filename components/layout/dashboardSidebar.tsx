@@ -1,27 +1,29 @@
-"use client";
 import { Role } from "@/app/enums";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // Import usePathname
-import { BiLineChart } from "react-icons/bi";
-import { BsCalendar4Week } from "react-icons/bs";
-import { FiHome, FiUsers } from "react-icons/fi";
-import { GiBlood } from "react-icons/gi";
-import { MdOutlineReport } from "react-icons/md";
 import Logo from "../UI/logo";
 import { getRoleColor, getRoleInArabic } from "@/utils/text";
 import AdminProfileMenu from "../UI/menues/adminProfileMenu";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
+import SidebarMenuItems from "./sidebarMenuItems";
 
-const DashboardSidebar = () => {
-  const { data: session } = useSession(); // 👈 now handled client-side
+import { FiHome, FiUsers } from "react-icons/fi";
+import { GiBlood } from "react-icons/gi";
+import { BsCalendar4Week } from "react-icons/bs";
+import { MdOutlineReport } from "react-icons/md";
+import { BiLineChart } from "react-icons/bi";
 
-  const pathname = usePathname(); // Get the current route
+type Props = {
+  session: Session | null;
+};
+
+const DashboardSidebar = ({ session }: Props) => {
   const role = session?.user.role || "غير معرف";
   const isEditor = role === Role.EDITOR;
   const isAdmin = role === Role.ADMIN;
-  const name = session?.user.name.split(" ").slice(0, 1) || "غير معرف";
+  const name = session?.user.name.split(" ")[0] || "غير معرف";
   const roleLabel = getRoleInArabic(role as Role);
 
+  // 👇 icons stay with items
   const menuItems = [
     {
       title: "كافة القصص",
@@ -61,46 +63,6 @@ const DashboardSidebar = () => {
     },
   ];
 
-  const renderredTabs = () => (
-    <ul className="flex flex-col gap-3 w-full p-4 mt-8 list">
-      {menuItems
-        .filter((item) => item.show)
-        .map((item, index) => (
-          <Link
-            key={index}
-            href={item.href}
-            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${
-              pathname === item.href
-                ? "bg-secondary text-white"
-                : "text-gray-700 hover:bg-gray-100"
-            }`}
-            dir="rtl"
-          >
-            <span className="ml-3">{item.icon}</span>
-            <span className="text-sm font-medium">{item.title}</span>
-          </Link>
-        ))}
-
-      {session && (
-        <div className="relative flex items-center mt-6 gap-2 bg-background_light rounded-lg border p-2">
-          <AdminProfileMenu session={session} />
-
-          <div className="flex flex-col gap-1 text-xs">
-            <p className="truncate">{name}</p>
-            <p
-              className="font-semibold truncate"
-              style={{
-                color: getRoleColor(Role.ADMIN),
-              }}
-            >
-              {roleLabel}
-            </p>
-          </div>
-        </div>
-      )}
-    </ul>
-  );
-
   return (
     <div className="fixed top-0 bg-white shadow-sm h-full w-56 z-10 border-l hidden md:block">
       <div className="relative mt-16">
@@ -110,7 +72,22 @@ const DashboardSidebar = () => {
           </Link>
         </div>
 
-        {renderredTabs()}
+        <SidebarMenuItems menuItems={menuItems} />
+
+        {session && (
+          <div className="relative flex items-center mt-6 gap-2 bg-background_light rounded-lg border p-2 mx-4">
+            <AdminProfileMenu session={session} />
+            <div className="flex flex-col gap-1 text-xs">
+              <p className="truncate">{name}</p>
+              <p
+                className="font-semibold truncate"
+                style={{ color: getRoleColor(Role.ADMIN) }}
+              >
+                {roleLabel}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

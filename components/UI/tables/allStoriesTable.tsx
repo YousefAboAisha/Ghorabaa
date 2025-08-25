@@ -227,6 +227,10 @@ const AllStoriesTable = () => {
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
+                بواسطة
+              </th>
+
+              <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
                 الصورة
               </th>
 
@@ -255,7 +259,7 @@ const AllStoriesTable = () => {
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
-                الناشر
+                المُحرِّر
               </th>
 
               <th className="py-3 px-4 border-b text-right text-sm text-[12px] font-medium">
@@ -272,6 +276,17 @@ const AllStoriesTable = () => {
                 <tr key={story._id as string} className="hover:bg-gray-50">
                   <td className="py-3 px-4 border-b text-center text-sm text-gray-700">
                     {(page - 1) * 10 + index + 1}
+                  </td>
+
+                  <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                    <Link
+                      title="الملف الشخصي"
+                      className="hover:underline"
+                      href={`/profile/${story.publisher_id}`}
+                      target="_blank"
+                    >
+                      {story.publisher_name || "غير محدد"}
+                    </Link>
                   </td>
 
                   <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
@@ -345,15 +360,9 @@ const AllStoriesTable = () => {
                   </td>
 
                   <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                    <Link
-                      title="عرض القصة"
-                      className="hover:underline"
-                      href={`/profile/${story.publisher_id}`}
-                      target="_blank"
-                    >
-                      {story.publisher_name.split(" ").slice(0, 1) ||
-                        "غير محدد"}
-                    </Link>
+                    {typeof story?.approvedBy === "string"
+                      ? story.approvedBy.split(" ").slice(0, 1)[0]
+                      : "غير محدد"}
                   </td>
 
                   <td className="py-3 px-4 border-b text-right">
