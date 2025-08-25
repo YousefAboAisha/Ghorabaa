@@ -38,8 +38,8 @@ export async function GET(req: NextRequest) {
     if (!isNaN(ageFrom))
       query["age"] = { ...(query["age"] || {}), $gte: ageFrom };
     if (!isNaN(ageTo)) query["age"] = { ...(query["age"] || {}), $lte: ageTo };
-    if (city) query["city"] = city;
-    if (neighborhood) query["neighborhood"] = neighborhood;
+    if (city) query["location.city"] = city;
+    if (neighborhood) query["location.neighborhood"] = neighborhood;
 
     // death_date filtering logic
     if (!isNaN(year)) {

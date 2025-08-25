@@ -28,7 +28,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const Icon = icon;
 
     return (
-      <div>
+      <div className="flex flex-col">
         {label && (
           <div className="flex items-center gap-1">
             {required && <span className="text-rejected">*</span>}
@@ -47,19 +47,17 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             className={`h-full w-full pl-2 text-[13px] bg-gray-50 ${
               Icon ? "pr-10" : "px-4"
             } rounded-xl duration-200 outline-none border-2 border-transparent disabled:cursor-not-allowed focus:border-primary focus:border-2 disabled:bg-gray-300 disabled:opacity-50 ${
-              error ? "border border-rejected animate-shake" : ""
+              error ? "border !border-rejected" : ""
             } ${additionalStyles} ${className} z-10`}
             placeholder={placeholder}
             pattern={pattern}
             required={required}
           />
-
-          {error && (
-            <p className="absolute text-rejected !text-[10px] w-fit right-1 top-[52px]">
-              {error}
-            </p>
-          )}
         </div>
+
+        {error && (
+          <div className="relative mt-1 text-[10px] text-rejected">{error}</div>
+        )}
       </div>
     );
   }

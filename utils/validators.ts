@@ -18,9 +18,8 @@ export const SignupvalidationSchema = Yup.object({
 
 export const StoryValidationSchema = Yup.object({
   id_number: Yup.string()
-    .trim()
     .required("رقم الهوية مطلوب")
-    .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام فقط"),
+    .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام"),
 
   title: Yup.object({
     first_name: Yup.string()
@@ -69,7 +68,7 @@ export const StoryValidationSchema = Yup.object({
     neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
   }),
 
-  warTitle: Yup.string().trim().required("يرجى اختيار العُدوان"),
+  warTitle: Yup.string().trim().notRequired(),
 
   bio: Yup.string()
     .trim()
@@ -136,26 +135,6 @@ export const ProfileValidationSchema = Yup.object({
     .trim()
     .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام")
     .required("يُرجى إضافة رقم الهوية"),
-});
-
-export const StoryPreviewValidationSchema = Yup.object({
-  location: Yup.object({
-    city: Yup.string().trim().required("يرجى اختيار المدينة"),
-    neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
-  }),
-
-  bio: Yup.string()
-    .trim()
-    .required("يرجى إدخال السيرة الذاتية")
-    .test(
-      "min-words",
-      "يجب أن تحتوي السيرة الذاتية على 200 كلمة على الأقل",
-      function (value) {
-        const wordCount =
-          value?.trim().split(/\s+/).filter(Boolean).length || 0;
-        return wordCount >= 200;
-      }
-    ),
 });
 
 export const StoryRejectValidationSchema = Yup.object({
