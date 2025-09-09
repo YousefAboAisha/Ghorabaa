@@ -8,8 +8,8 @@ const baseDescription =
   "منصة غُرباء توثق قصص الشهداء الفلسطينيين وتخلد ذكراهم. استكشف مكتبة رقمية غنية بالسير الذاتية، الصور، والإحصائيات حول الشهداء، وشارك قصصهم مع العالم.";
 const baseImage = `${baseUrl}/og-banner.png`;
 const baseIcons = {
-  icon: "/zad-logo.svg",
-  apple: "/zad-logo.svg",
+  icon: "/logo.png",
+  apple: "/logo.png",
 };
 
 const baseTwitterHandle = "@ghorabaa"; // update if needed

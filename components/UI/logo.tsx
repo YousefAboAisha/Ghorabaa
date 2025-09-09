@@ -1,12 +1,19 @@
+import Image from "next/image";
+
 type LogoProps = {
   className?: string;
-} & React.ComponentPropsWithoutRef<"h2">;
+} & React.ComponentPropsWithoutRef<"img">;
 
 const Logo = ({ className = "", ...rest }: LogoProps) => {
   return (
-    <h2 {...rest} className={` font-semibold ${className}`}>
-      غُربَاء
-    </h2>
+    <Image
+      {...rest}
+      className={`${className} h-full`}
+      src={"/logo.svg"}
+      alt="Ghorabaa's Logo"
+      width={35}
+      height={35}
+    />
   );
 };
 
