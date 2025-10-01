@@ -1,3 +1,5 @@
+// containers/wrappers/navbarWrapper.tsx
+
 import { authOptions } from "@/app/lib/authOptions";
 import Navbar from "@/components/layout/navbar";
 import { getServerSession } from "next-auth";

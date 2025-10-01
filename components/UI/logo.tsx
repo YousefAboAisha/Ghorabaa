@@ -9,10 +9,10 @@ const Logo = ({ className = "", ...rest }: LogoProps) => {
     <Image
       {...rest}
       className={`${className} h-full`}
-      src={"/logo.svg"}
+      src={"/logos/logo.svg"}
       alt="Ghorabaa's Logo"
-      width={35}
-      height={35}
+      width={45}
+      height={45}
     />
   );
 };

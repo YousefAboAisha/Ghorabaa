@@ -2,14 +2,14 @@
 
 import { Metadata } from "next";
 
-const baseUrl = "https://ghorabaa.com";
+const baseUrl = "https://www.ghorabaa.com";
 const baseTitle = "غُرباء";
 const baseDescription =
   "منصة غُرباء توثق قصص الشهداء الفلسطينيين وتخلد ذكراهم. استكشف مكتبة رقمية غنية بالسير الذاتية، الصور، والإحصائيات حول الشهداء، وشارك قصصهم مع العالم.";
-const baseImage = `${baseUrl}/og-banner.png`;
+const baseImage = `/logos/og-image.jpg`;
 const baseIcons = {
-  icon: "/logo.png",
-  apple: "/logo.png",
+  icon: "/logos/logo.svg",
+  apple: "/logos/logo.svg",
 };
 
 const baseTwitterHandle = "@ghorabaa"; // update if needed
@@ -144,7 +144,7 @@ export const MassacresMetadata: Metadata = {
     title: "المجازر الصهيونية | سجل جرائم الاحتلال - غرباء",
     description:
       "أرشيف كامل لمجازر الاحتلال الصهيوني ضد الفلسطينيين مع صور وتفاصيل الضحايا",
-    url: "https://ghorabaa.vercel.app/massacres",
+    url: `${baseUrl}/massacres`,
     images: [
       {
         url: "/images/massacres-og.jpg",
@@ -190,7 +190,7 @@ export const StatisticsMetadata: Metadata = {
   openGraph: {
     title: "الإحصائيات والبيانات | أرقام وتقارير عن الشهداء - غرباء",
     description: "بيانات رقمية موثقة وتقارير إحصائية عن شهداء فلسطين",
-    url: "https://ghorabaa.vercel.app/statistics",
+    url: `${baseUrl}/statistics`,
     images: [
       {
         url: "/images/statistics-og.jpg",
@@ -237,7 +237,7 @@ export const AboutMetadata: Metadata = {
     title: "عن غرباء | منصة توثيق الشهداء الفلسطينيين",
     description:
       "تعرف على رؤية ورسالة منصة غرباء في توثيق قصص الشهداء وإحصاءات الجرائم الصهيونية",
-    url: "https://ghorabaa.vercel.app/about",
+    url: `${baseUrl}/about`,
     images: [
       {
         url: "/images/about-og.jpg",
@@ -284,7 +284,7 @@ export const EventsMetadata: Metadata = {
     title: "الفعاليات والأحداث | أنشطة تضامنية مع فلسطين - غرباء",
     description:
       "تقويم الفعاليات والأنشطة التضامنية مع الشعب الفلسطيني حول العالم",
-    url: "https://ghorabaa.vercel.app/events",
+    url: `${baseUrl}/events`,
     images: [
       {
         url: "/images/events-og.jpg",
@@ -326,7 +326,7 @@ export const SigninMetadata: Metadata = {
   openGraph: {
     title: "تسجيل الدخول - موقع غرباء",
     description: "سجل الدخول إلى حسابك للوصول إلى محتوى غرباء الحصري",
-    url: "https://ghorabaa.vercel.app/signin",
+    url: `${baseUrl}/signin`,
     type: "website",
   },
 };
@@ -351,11 +351,11 @@ export const SignupMetadata: Metadata = {
     title: "إنشاء حساب جديد - موقع غرباء",
     description:
       "انضم إلى مجتمع غرباء وأنشئ حسابك الشخصي للوصول إلى المحتوى الحصري",
-    url: "https://ghorabaa.vercel.app/signup",
+    url: `${baseUrl}/signup`,
     type: "website",
     images: [
       {
-        url: "/images/og-signup.jpg", // Your custom signup OG image
+        url: "/logos/og-image.jpg", // Your custom signup OG image
         width: 1200,
         height: 630,
         alt: "إنشاء حساب في موقع غرباء",
@@ -366,10 +366,10 @@ export const SignupMetadata: Metadata = {
     card: "summary_large_image",
     title: "إنشاء حساب جديد - موقع غرباء",
     description: "انضم إلى مجتمع غرباء وأنشئ حسابك الشخصي",
-    images: ["/images/og-signup.jpg"],
+    images: ["/logos/og-image.jpg"],
   },
   alternates: {
-    canonical: "https://ghorabaa.vercel.app/signup",
+    canonical: `${baseUrl}/signup`,
   },
 };
 
@@ -390,7 +390,7 @@ export const AddStoryMetadata: Metadata = {
     title: "إضافة قصة شهيد جديد | منصة غرباء",
     description:
       "ساهم في توثيق تاريخ الشهداء الفلسطينيين عبر إضافة قصصهم على منصة غرباء",
-    url: "https://ghorabaa.vercel.app/addStory",
+    url: `${baseUrl}/addStory`,
     images: [
       {
         url: "/images/add-story-og.jpg",

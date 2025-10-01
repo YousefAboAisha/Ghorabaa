@@ -12,6 +12,7 @@ import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const SigninForm = () => {
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +20,8 @@ const SigninForm = () => {
 
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/auth-redirect";
+
+  const router = useRouter();
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -42,7 +45,7 @@ const SigninForm = () => {
 
     const res = await signIn("credentials", {
       callbackUrl,
-      redirect: false,
+      redirect: true,
       email: values.email,
       password: values.password,
     });
@@ -51,7 +54,8 @@ const SigninForm = () => {
       setError(res.error);
     } else {
       toast.success("تم تسجيل الدخول بنجاح!");
-      window.location.reload();
+      router.replace(callbackUrl); // ⬅️ soft-refresh server tree (NavbarWrapper gets new session)
+      setError("");
     }
 
     setSubmitting(false);
