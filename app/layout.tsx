@@ -4,6 +4,7 @@ import Footer from "@/components/layout/footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import VisitTrackerWrapper from "@/containers/wrappers/visitTrackerWrapper";
+import CookieConsentBanner from "@/components/layout/CookieConsentBanner";
 
 export async function generateMetadata() {
   return {
@@ -51,6 +52,7 @@ export default function RootLayout({
         <NavbarWrapper /> {/* Use the server-side wrapper */}
         <div className="min-h-screen">{children}</div>
         <Footer />
+        <CookieConsentBanner />
       </body>
     </html>
   );

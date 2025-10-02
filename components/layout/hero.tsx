@@ -9,6 +9,8 @@ const pathTranslations: Record<string, string> = {
   massacres: "المجازر الصهيونية",
   stories: "شهداؤنا",
   search: "البحث عن الشهداء",
+  privacyPolicy: "سياسة الخصوصية",
+  termsOfService: "شروط الخدمة",
 };
 
 type Props = {

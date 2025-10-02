@@ -75,6 +75,7 @@ module.exports = {
         "statistics-pattern": "url('/statistics-pattern.svg')",
         "massacres-pattern": "url('/massacres-pattern.svg')",
         "about-pattern": "url('/about-pattern.svg')",
+        "privacy-pattern": "url('/privacy-pattern.svg')",
       },
     },
   },
