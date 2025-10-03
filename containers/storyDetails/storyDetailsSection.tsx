@@ -13,6 +13,7 @@ import LogVisit from "@/containers/stories/logVisit";
 import { getAgeLabel, getFullName } from "@/utils/text";
 import ShareButton from "../stories/shareButton";
 import { getServerSession } from "next-auth";
+import { StoryWatermark } from "@/components/UI/watermark/storyWatermark";
 
 type Props = {
   id: string;
@@ -86,16 +87,19 @@ const StoryDetailsSection = async ({ id }: Props) => {
       </div>
 
       <div className="relative mt-2 flex flex-col justify-center items-start w-full min-h-[80vh] bg-martyr-pattern rounded-2xl">
-        <Image
-          src={data?.image || "/notFound.png"}
-          alt="صورة الشهيد"
-          width={350}
-          height={350}
-          className="mx-auto z-[10] max-h-[60vh] object-cover rounded-2xl shadow-xl"
-          priority
-          quality={100}
-          unoptimized
-        />
+        <div className="relative max-h-[60vh] mx-auto overflow-hidden rounded-2xl shadow-xl">
+          <Image
+            src={data?.image || "/notFound.png"}
+            alt="صورة الشهيد"
+            width={350}
+            height={350}
+            className="mx-auto z-[10] object-cover "
+            priority
+            quality={100}
+            unoptimized
+          />
+          <StoryWatermark />
+        </div>
       </div>
 
       <div className="relative mt-1">
