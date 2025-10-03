@@ -3,6 +3,8 @@ import { usePathname } from "next/navigation";
 import Logo from "../UI/logo";
 import RenderredRoutes from "./renderredRoutes";
 import Link from "next/link";
+import { FaInstagram, FaXTwitter } from "react-icons/fa6";
+import { FaFacebookF } from "react-icons/fa";
 
 const Footer = () => {
   const date = new Date().getFullYear();
@@ -35,6 +37,26 @@ const Footer = () => {
               يوسف رشاد أبو عيشة
             </Link>{" "}
             {date}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link
+              target="_blank"
+              href={"https://www.instagram.com/ghorabaa_gaza"}
+            >
+              <FaInstagram size={17} />
+            </Link>
+
+            <Link target="_blank" href={"https://www.x.com/ghorabaa_gaza"}>
+              <FaXTwitter  size={17} />
+            </Link>
+
+            <Link
+              target="_blank"
+              href={"https://www.facebook.com/ghorabaa_gaza"}
+            >
+              <FaFacebookF size={17} />
+            </Link>
           </div>
         </div>
       </div>
