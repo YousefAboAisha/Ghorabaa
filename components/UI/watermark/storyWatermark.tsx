@@ -10,18 +10,9 @@ export const StoryWatermark = () => {
         {/* Social Icons */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
-            <FaInstagram
-              size={10}
-              className="text-white/70 hover:text-white transition-colors"
-            />
-            <FaXTwitter
-              size={10}
-              className="text-white/70 hover:text-white transition-colors"
-            />
-            <FaFacebookF
-              size={10}
-              className="text-white/70 hover:text-white transition-colors"
-            />
+            <FaInstagram size={10} />
+            <FaXTwitter size={10} />
+            <FaFacebookF size={10} />
           </div>
 
           {/* Handle */}
