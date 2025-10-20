@@ -1,7 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { GiPeaceDove } from "react-icons/gi";
-import { HiUser } from "react-icons/hi";
 import { MartyrName, MissingInterface } from "@/app/interfaces";
 import Button from "../inputs/button";
 import { FaEye } from "react-icons/fa";
@@ -64,19 +62,13 @@ const MissingCard = ({ data }: Props) => {
       <hr />
 
       <div className="flex flex-col gap-2 p-4">
-        <div className="flex items-center gap-3 text-[13px]">
-          <GiPeaceDove
-            style={{
-              transform: "scale(-1,1)",
-            }}
-            size={22}
-            className="text-primary"
-          />
+        <div className="flex items-center gap-2 text-[13px]">
+          <p className="font-semibold text-rejected">تاريخ الاختفاء: </p>
           <p>{dateConversion(data?.missing_date as string)}</p>
         </div>
 
-        <div className="flex items-center gap-3 text-[13px]">
-          <HiUser size={22} className="text-primary" />
+        <div className="flex items-center gap-2 text-[13px]">
+          <p className="font-semibold text-rejected"> العمر: </p>
           <p>{getAgeLabel(data?.age as number)}</p>
         </div>
 
@@ -87,9 +79,9 @@ const MissingCard = ({ data }: Props) => {
             className="w-full"
           >
             <Button
-              title="عرض الملف الشخصي "
+              title="عرض التفاصيل"
               icon={<FaEye />}
-              className="bg-primary"
+              className="bg-secondary"
               hasShiningBar={false}
             />
           </Link>

@@ -3,14 +3,11 @@ import Image from "next/image";
 import PageTitles from "@/components/UI/typography/pageTitles";
 import { notFound } from "next/navigation";
 import { dateConversion, fullDateConversion } from "@/utils/format";
-import Link from "next/link";
-import { ContentType, MissingStatus, Role } from "@/app/enums";
-import { BsExclamationTriangle, BsEye } from "react-icons/bs";
-import { BiInfoCircle } from "react-icons/bi";
+import { ContentType, MissingStatus } from "@/app/enums";
+import { BsEye } from "react-icons/bs";
 import LogVisit from "@/containers/missings/logVisit";
 import { getAgeLabel, getFullName } from "@/utils/text";
 import ShareButton from "../stories/shareButton";
-import { getServerSession } from "next-auth";
 import { StoryWatermark } from "@/components/UI/watermark/storyWatermark";
 
 type Props = {
@@ -18,9 +15,6 @@ type Props = {
 };
 
 const MissingDetails = async ({ id }: Props) => {
-  const session = await getServerSession();
-  const user_id = session?.user.id;
-
   const storyResponse = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/missings/fetch/${id}`,
     {
@@ -35,50 +29,21 @@ const MissingDetails = async ({ id }: Props) => {
   const data: MissingInterface & { publisherName: string } =
     await storyResponse.json();
 
-  const isStoryOwner = data?.publisher_id === user_id;
-  const isAdmin =
-    session?.user.role === Role.ADMIN || session?.user.role === Role.EDITOR;
   const isApproved = data.status === MissingStatus.APPROVED;
 
-  if (!isApproved && !isStoryOwner && !isAdmin) {
+  if (!isApproved) {
     notFound(); // only allow access if approved, OR user is admin/owner
   }
   const fullName = getFullName(data.title);
 
+  const missingDurationInDays = Math.floor(
+    (new Date().getTime() - new Date(data.missing_date).getTime()) /
+      (1000 * 60 * 60 * 24)
+  );
+
   return (
     <div className="mt-24">
       {data.status === MissingStatus.APPROVED && <LogVisit missing_id={id} />}
-
-      {data.status === MissingStatus.PENDING && (
-        <div className="relative flex items-center gap-2 bg-pending text-white border rounded-md shadow-sm p-3 mt-4 mb-4 w-full font-semibold">
-          <BsExclamationTriangle size={20} />
-          <p className="text-[13px]">
-            هذه القصة قيد المراجعة حالياً، وسيتم نشرها بعد الموافقة عليها من قبل
-            المشرفين!
-          </p>
-        </div>
-      )}
-
-      {data.status === MissingStatus.REJECTED &&
-        (isStoryOwner ? (
-          <Link
-            target="_blank"
-            href={`/profile/${user_id}?activeTap=${MissingStatus.REJECTED}#storyContainer`}
-            className="group relative flex items-center gap-2 bg-rejected text-white border rounded-md shadow-sm p-3 mt-4 mb-4 w-full font-semibold"
-          >
-            <BiInfoCircle size={20} />
-            <p className="text-[13px] group-hover:underline">
-              تم رفض طلبك لإضافة قصة المفقود!
-            </p>
-          </Link>
-        ) : (
-          <div className="relative flex items-center gap-2 bg-rejected text-white border rounded-md shadow-sm p-3 mt-4 mb-4 w-full font-semibold">
-            <BiInfoCircle size={20} />
-            <p className="text-[13px]">
-              هذه القصة مرفوضة حالياً، ولم يتم نشرها رسمياً بعد!
-            </p>
-          </div>
-        ))}
 
       <div className="flex flex-col gap-2">
         <PageTitles content_title={fullName} />
@@ -159,19 +124,40 @@ const MissingDetails = async ({ id }: Props) => {
 
             <tr>
               <td className="py-3 px-4 border-b text-right text-sm border-l">
-                تاريخ الميلاد
+                تاريخ الفقد
               </td>
               <td className="py-3 px-4 border-b text-right text-sm">
-                {dateConversion(data.birth_date as Date)}
+                {dateConversion(data.missing_date as Date)}
               </td>
             </tr>
 
             <tr>
               <td className="py-3 px-4 border-b text-right text-sm border-l">
-                تاريخ الفقد
+                مكان الفقد
               </td>
               <td className="py-3 px-4 border-b text-right text-sm">
-                {dateConversion(data.missing_date as Date)}
+                <div className="flex items-center gap-1">
+                  <p>{data.location.city}</p>-
+                  <p>{data.location.neighborhood}</p>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td className="py-3 px-4 border-b text-right text-sm border-l">
+                مدة الفقد
+              </td>
+              <td className="py-3 px-4 border-b text-right text-sm text-rejected font-semibold">
+                {missingDurationInDays} يوم
+              </td>
+            </tr>
+
+            <tr>
+              <td className="py-3 px-4 border-b text-right text-sm border-l">
+                تاريخ الميلاد
+              </td>
+              <td className="py-3 px-4 border-b text-right text-sm">
+                {dateConversion(data.birth_date as Date)}
               </td>
             </tr>
 
@@ -186,13 +172,10 @@ const MissingDetails = async ({ id }: Props) => {
 
             <tr>
               <td className="py-3 px-4 border-b text-right text-sm border-l">
-                مكان الفقد
+                هاتف ذوي المفقود
               </td>
               <td className="py-3 px-4 border-b text-right text-sm">
-                <div className="flex items-center gap-1">
-                  <p>{data.location.city}</p>-
-                  <p>{data.location.neighborhood}</p>
-                </div>
+                {data.reporter_phone_number}
               </td>
             </tr>
           </tbody>
