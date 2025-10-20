@@ -3,13 +3,12 @@ import React, { Dispatch, SetStateAction } from "react";
 import { BiInfoCircle } from "react-icons/bi";
 import { toast } from "react-toastify";
 import Button from "../inputs/button";
-import { getFullName } from "@/utils/text";
 import { ContentType } from "@/app/enums";
 
 type Props = {
+  content_id: string;
   content_type: ContentType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
+  content_title: string;
   refetchData?: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
@@ -17,17 +16,14 @@ type Props = {
 };
 
 export const ApproveDialog = ({
-  data,
+  content_id,
+  content_title,
   refetchData,
   setIsOpen,
   setLoading,
   loading,
   content_type,
 }: Props) => {
-  const content_id = data?._id;
-  const content_title =
-    content_type === ContentType.STORY ? getFullName(data?.title) : data?.title;
-
   const getContentRoute = (type: ContentType) => {
     switch (type) {
       case ContentType.STORY:
@@ -38,6 +34,9 @@ export const ApproveDialog = ({
 
       case ContentType.EVENT:
         return `/admin/events/status/approve/${content_id}`;
+
+      case ContentType.MISSING:
+        return `/admin/missings/status/approve/${content_id}`;
     }
   };
 

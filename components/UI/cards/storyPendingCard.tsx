@@ -1,4 +1,4 @@
-import { StoryInterface } from "@/app/interfaces";
+import { MartyrName, StoryInterface } from "@/app/interfaces";
 import { dateConversion } from "@/utils/format";
 import { getFullName } from "@/utils/text";
 import Link from "next/link";
@@ -9,7 +9,7 @@ interface StoryCardsProps {
 }
 
 const StoryPendingCard = ({ data }: StoryCardsProps) => {
-  const fullName = getFullName(data?.title);
+  const fullName = getFullName(data?.title as MartyrName);
 
   return (
     <Link

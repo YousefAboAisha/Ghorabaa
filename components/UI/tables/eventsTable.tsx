@@ -17,6 +17,7 @@ import { EventInterface } from "@/app/interfaces";
 import { ContentType, EventStatus } from "@/app/enums";
 import ApproveDialog from "../dialogs/approve";
 import ArchiveDialog from "../dialogs/archive";
+import { getFullName } from "@/utils/text";
 
 const EventsTable = () => {
   const [tableData, setTableData] = useState<EventInterface[]>([]);
@@ -360,7 +361,8 @@ const EventsTable = () => {
         loading={approveLoading}
       >
         <ApproveDialog
-          data={eventData!}
+          content_id={eventData?._id as string}
+          content_title={getFullName(eventData?.title as string)}
           setIsOpen={setIsOpeneventApprove}
           refetchData={fetchTableData}
           setLoading={setApproveLoading}
@@ -377,7 +379,8 @@ const EventsTable = () => {
         loading={approveLoading}
       >
         <ArchiveDialog
-          data={eventData!}
+          content_id={eventData?._id as string}
+          content_title={getFullName(eventData?.title as string)}
           setIsOpen={setIsOpeneventArchive}
           refetchData={fetchTableData}
           setLoading={setArchiveLoading}

@@ -2,32 +2,28 @@ import Image from "next/image";
 import Link from "next/link";
 import { GiPeaceDove } from "react-icons/gi";
 import { HiUser } from "react-icons/hi";
-import { MartyrName, StoryInterface } from "@/app/interfaces";
+import { MartyrName, MissingInterface } from "@/app/interfaces";
 import Button from "../inputs/button";
 import { FaEye } from "react-icons/fa";
-import FavoriteButton from "@/containers/storyDetails/favoriteButton";
-import { Session } from "next-auth";
-import { HighlightedText } from "../typography/highlightText";
 import { dateConversion } from "@/utils/format";
 import { FiMapPin } from "react-icons/fi";
 import { getAgeLabel, getFullName } from "@/utils/text";
 import { StoryWatermark } from "../watermark/storyWatermark";
 
 interface Props {
-  data?: StoryInterface & { favorite?: boolean };
-  session: Session | null;
+  data?: MissingInterface;
 }
 
-const StoryCard = ({ data, session }: Props) => {
+const MissingCard = ({ data }: Props) => {
   const fullName = getFullName(data?.title as MartyrName);
 
   return (
     <div className="relative group w-full flex flex-col border bg-white hover:shadow-xl duration-500 rounded-2xl overflow-hidden">
-      <Link href={`/stories/${data?._id}`} title={`قصة الشهيد | ${fullName}`}>
+      <Link href={`/missings/${data?._id}`} title={`ملف المفقود | ${fullName}`}>
         <div className="relative flex items-center justify-center h-[270px] w-full overflow-hidden">
           <Image
             src={data?.image || "/notFound.png"}
-            alt="صورة الشهيد"
+            alt="صورة المفقود"
             className="w-full rounded-2xl rounded-b-none object-cover min-h-full"
             width={1000}
             height={1000}
@@ -61,11 +57,7 @@ const StoryCard = ({ data, session }: Props) => {
           }}
           className="text-gray-600 text-[13px] mt-2 line-clamp-2 h-10"
         >
-          <HighlightedText
-            highlights={data?.highlight}
-            field="bio"
-            fallback={data?.bio ?? ""}
-          />
+          {data?.details}
         </p>
       </div>
 
@@ -80,7 +72,7 @@ const StoryCard = ({ data, session }: Props) => {
             size={22}
             className="text-primary"
           />
-          <p>{dateConversion(data?.death_date as string)}</p>
+          <p>{dateConversion(data?.missing_date as string)}</p>
         </div>
 
         <div className="flex items-center gap-3 text-[13px]">
@@ -90,7 +82,7 @@ const StoryCard = ({ data, session }: Props) => {
 
         <div className="w-full flex items-center gap-2 mt-2">
           <Link
-            href={`/stories/${data?._id}`}
+            href={`/missings/${data?._id}`}
             title="عرض الملف الشخصي"
             className="w-full"
           >
@@ -101,17 +93,10 @@ const StoryCard = ({ data, session }: Props) => {
               hasShiningBar={false}
             />
           </Link>
-
-          {session && session.user && (
-            <FavoriteButton
-              story_id={data?._id as string}
-              initialFavorite={data?.favorite as boolean}
-            />
-          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default StoryCard;
+export default MissingCard;

@@ -413,3 +413,45 @@ export const AddStoryMetadata: Metadata = {
     "dc:rights": "جميع الحقوق محفوظة للمساهمين",
   },
 };
+
+// Add Missing Person Form metadata
+export const AddMissingFormMetadata: Metadata = {
+  title: "منصة غُرباء | إضافة مفقود جديد",
+  description:
+    "ساهم معنا في توثيق بيانات المفقودين الفلسطينيين عبر منصة غرباء لمساعدة عائلاتهم في البحث عن أحبائهم",
+  keywords: [
+    "إضافة مفقود",
+    "توثيق المفقودين",
+    "نموذج إضافة مفقود",
+    "سجل المفقودين",
+    "منصة غرباء",
+    "المفقودين الفلسطينيين",
+    "بحث عن مفقودين",
+  ],
+  openGraph: {
+    title: "منصة غُرباء | إضافة مفقود جديد",
+    description:
+      "ساهم في توثيق بيانات المفقودين الفلسطينيين عبر إضافة معلوماتهم على منصة غرباء لمساعدة عائلاتهم",
+    url: `${baseUrl}/addMissing`,
+    images: [
+      {
+        url: "/images/add-missing-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "نموذج إضافة مفقود على منصة غرباء",
+      },
+    ],
+  },
+  alternates: {
+    canonical: "/addMissing",
+  },
+  robots: {
+    index: false, // Recommended for form pages
+    follow: true,
+  },
+  other: {
+    privacy: "form-submission", // Indicates this is a form page
+    "cache-control": "private, no-store", // Sensitive form handling
+    "dc:rights": "جميع الحقوق محفوظة للمساهمين",
+  },
+};

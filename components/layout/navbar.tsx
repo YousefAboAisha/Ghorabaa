@@ -33,7 +33,13 @@ const Navbar = ({ session }: Props) => {
 
   const { count, fetchAndUpdateCount } = useFavoriteStore();
 
-  const hiddenRoutes = ["/massacres", "/statistics", "/events", "/about"];
+  const hiddenRoutes = [
+    "/massacres",
+    "/statistics",
+    "/events",
+    "/about",
+    "/missings",
+  ];
 
   // Memoize the routes to avoid unnecessary re-renders
   const renderedRoutes = useMemo(

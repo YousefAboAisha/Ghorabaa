@@ -11,6 +11,7 @@ import { GiBlood } from "react-icons/gi";
 import { BsCalendar4Week } from "react-icons/bs";
 import { MdOutlineReport } from "react-icons/md";
 import { BiLineChart } from "react-icons/bi";
+import { GrDocumentMissing } from "react-icons/gr";
 
 type Props = {
   session: Session | null;
@@ -36,6 +37,12 @@ const DashboardSidebar = ({ session }: Props) => {
       href: "/admin/dashboard/users",
       icon: <FiUsers size={20} />,
       show: !isEditor && isAdmin,
+    },
+    {
+      title: "المفقودون",
+      href: "/admin/dashboard/missings",
+      icon: <GrDocumentMissing size={20} />,
+      show: true,
     },
     {
       title: "المجازر الصهيونية",

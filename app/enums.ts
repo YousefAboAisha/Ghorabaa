@@ -8,6 +8,7 @@ export enum Role {
 // Conntent Types Enums
 export enum ContentType {
   STORY = "STORY", // for stories
+  MISSING = "MISSING", // for stories
   COMMENT = "COMMENT", // for comments
   MASSACRE = "MASSACRE",
   EVENT = "EVENT",
@@ -19,6 +20,14 @@ export enum StoryStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
+}
+
+// Story Status Enums
+export enum MissingStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+  ARCHIVED = "ARCHIVED",
 }
 
 // Report Status Enums

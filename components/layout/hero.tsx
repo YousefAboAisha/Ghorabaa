@@ -11,6 +11,7 @@ const pathTranslations: Record<string, string> = {
   search: "البحث عن الشهداء",
   privacyPolicy: "سياسة الخصوصية",
   termsOfService: "شروط الخدمة",
+  missings: "المفقودون",
 };
 
 type Props = {

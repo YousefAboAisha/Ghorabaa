@@ -8,6 +8,10 @@ export const DashboardRoutes = [
     href: "/admin/dashboard/users",
   },
   {
+    title: "المفقودون",
+    href: "/admin/dashboard/missings",
+  },
+  {
     title: "المجازر الصهيونية",
     href: "/admin/dashboard/massacres",
   },

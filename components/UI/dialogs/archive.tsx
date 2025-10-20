@@ -2,12 +2,12 @@ import React, { Dispatch, SetStateAction } from "react";
 import { BiInfoCircle } from "react-icons/bi";
 import { toast } from "react-toastify";
 import Button from "../inputs/button";
-import { EventInterface, MassacreInterface } from "@/app/interfaces";
 import { ContentType } from "@/app/enums";
 
 type Props = {
   content_type: ContentType;
-  data: MassacreInterface | EventInterface;
+  content_id: string;
+  content_title: string;
   refetchData?: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
@@ -15,23 +15,24 @@ type Props = {
 };
 
 export const ArchiveDialog = ({
-  data,
+  content_id,
+  content_title,
   refetchData,
   setIsOpen,
   setLoading,
   loading,
   content_type,
 }: Props) => {
-  const content_id = data?._id;
-  const content_title = data?.title;
-
   const getContentRoute = (type: ContentType) => {
     switch (type) {
       case ContentType.MASSACRE:
         return `/admin/massacres/status/archive/${content_id}`;
 
       case ContentType.EVENT:
-        return `/admin/events/status/approve/${content_id}`;
+        return `/admin/events/status/archive/${content_id}`;
+
+      case ContentType.MISSING:
+        return `/admin/missings/status/archive/${content_id}`;
     }
   };
 

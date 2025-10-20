@@ -16,6 +16,7 @@ const pathTranslations: Record<string, string> = {
   notifications: "الإشعارات",
   savedStories: "القصص المحفوظة",
   massacres: "المجازر الصهيونية",
+  missings: "المفقودون",
 };
 
 type PageTitlesProps = {
@@ -29,6 +30,7 @@ const PageTitles = ({ content_title }: PageTitlesProps) => {
   const isStoryDetailsPage =
     segments[0] === "stories" ||
     segments[0] === "massacres" ||
+    segments[0] === "missings" ||
     (segments[0] === "events" && segments.length === 2);
 
   return (

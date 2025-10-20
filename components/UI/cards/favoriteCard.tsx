@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BsEye, BsTrash } from "react-icons/bs";
-import { StoryInterface } from "@/app/interfaces";
+import { MartyrName, StoryInterface } from "@/app/interfaces";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useFavoriteStore } from "@/stores/favoriteStore";
@@ -26,7 +26,7 @@ const FavoriteCard = ({ data, refetchData }: FavoriteCardProps) => {
     setLoading(false);
   };
 
-  const fullName = getFullName(data?.title);
+  const fullName = getFullName(data?.title as MartyrName);
 
   return (
     <div className="relative group mt-4">

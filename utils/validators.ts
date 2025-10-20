@@ -309,3 +309,123 @@ export const EventValidationSchema = Yup.object({
 
   image: Yup.mixed().required("يرجى إضافة صورة"),
 });
+
+export const MissingValidationSchema = Yup.object({
+  reporter_name: Yup.string()
+    .trim()
+    .required("الاسم الأول مطلوب")
+    .matches(/^[\u0600-\u06FF\s]+$/, "يجب أن يحتوي الاسم على أحرف عربية فقط"),
+
+  reporter_phone_number: Yup.string()
+    .trim()
+    .matches(
+      /^(059|056)\d{7}$/,
+      "رقم الهاتف يجب أن يكون 10 أرقام ويبدأ بـ 059 أو 056"
+    )
+    .required("يُرجى إضافة رقم الهاتف"),
+
+  reporter_location: Yup.object({
+    city: Yup.string().trim().required("يرجى اختيار المدينة"),
+    neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
+  }),
+
+  id_number: Yup.string()
+    .required("رقم الهوية مطلوب")
+    .matches(/^\d{9}$/, "رقم الهوية يجب أن يتكون من 9 أرقام"),
+
+  title: Yup.object({
+    first_name: Yup.string()
+      .trim()
+      .required("الاسم الأول مطلوب")
+      .matches(/^[\u0600-\u06FF\s]+$/, "يجب أن يحتوي الاسم على أحرف عربية فقط"),
+
+    father_name: Yup.string()
+      .trim()
+      .required("اسم الأب مطلوب")
+      .matches(/^[\u0600-\u06FF\s]+$/, "يجب أن يحتوي الاسم على أحرف عربية فقط"),
+
+    grandFather_name: Yup.string()
+      .trim()
+      .required("اسم الجد مطلوب")
+      .matches(/^[\u0600-\u06FF\s]+$/, "يجب أن يحتوي الاسم على أحرف عربية فقط"),
+
+    last_name: Yup.string()
+      .trim()
+      .required("اسم العائلة مطلوب")
+      .matches(/^[\u0600-\u06FF\s]+$/, "يجب أن يحتوي الاسم على أحرف عربية فقط"),
+  }),
+
+  nickname: Yup.string()
+    .trim()
+    .notRequired()
+    .matches(/^[\u0600-\u06FF\s]*$/, "يجب أن يحتوي اللقب على أحرف عربية فقط"),
+
+  profession: Yup.string().trim().notRequired(),
+
+  gender: Yup.string().required("يرجى تحديد الجنس"),
+
+  birth_date: Yup.date()
+    .required("تاريخ الميلاد مطلوب")
+    .max(new Date(), "تاريخ الميلاد لا يمكن أن يكون في المستقبل"),
+
+  missing_date: Yup.date()
+    .required("تاريخ الفقدان مطلوب")
+    .min(
+      Yup.ref("birth_date"),
+      "تاريخ الاستشهاد يجب أن يكون بعد تاريخ الميلاد"
+    ),
+
+  location: Yup.object({
+    city: Yup.string().trim().required("يرجى اختيار المدينة"),
+    neighborhood: Yup.string().trim().required("يرجى اختيار الحي"),
+  }),
+
+  details: Yup.string()
+    .trim()
+    .required("يرجى إدخال تفاصيل فقدان الشخص")
+    .test(
+      "min-words",
+      "تفاصيل الفقدان يجب أت تحتوي على 100 كلمة على الأقل",
+      function (value) {
+        const wordCount =
+          value?.trim().split(/\s+/).filter(Boolean).length || 0;
+        return wordCount >= 100;
+      }
+    ),
+
+  image: Yup.mixed().required("يرجى إضافة صورة"),
+
+  social_media: Yup.object({
+    facebook: Yup.string()
+      .trim()
+      .nullable()
+      .notRequired()
+      .url("يرجى إدخال رابط فيسبوك صحيح")
+      .test(
+        "is-facebook-url",
+        "يجب أن يكون الرابط من فيسبوك",
+        (value) => !value || value.includes("facebook.com")
+      ),
+    instagram: Yup.string()
+      .trim()
+      .nullable()
+      .notRequired()
+      .url("يرجى إدخال رابط انستغرام صحيح")
+      .test(
+        "is-instagram-url",
+        "يجب أن يكون الرابط من انستغرام",
+        (value) => !value || value.includes("instagram.com")
+      ),
+    x: Yup.string()
+      .trim()
+      .nullable()
+      .notRequired()
+      .url("يرجى إدخال رابط إكس صحيح")
+      .test(
+        "is-x-url",
+        "يجب أن يكون الرابط من X (تويتر سابقًا)",
+        (value) =>
+          !value || value.includes("x.com") || value.includes("twitter.com")
+      ),
+  }),
+});

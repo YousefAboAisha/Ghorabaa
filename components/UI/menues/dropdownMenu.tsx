@@ -9,6 +9,10 @@ const DropdownMenu = () => {
 
   const DropDonwMenuRoutes = [
     {
+      title: "المفقودون",
+      href: "/missings",
+    },
+    {
       title: "المجازر الصهيونية",
       href: "/massacres",
     },

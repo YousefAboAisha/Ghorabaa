@@ -11,6 +11,7 @@ import {
   Gender,
   MassacreStatus,
   Profession,
+  MissingStatus,
 } from "./enums";
 
 // Define the User interface
@@ -262,4 +263,31 @@ export interface ContactMessageInterface {
   details: string;
   createdAt: Date;
   read: boolean;
+}
+
+export interface MissingInterface extends Document {
+  _id: Types.ObjectId | string;
+  id_number: string;
+  reporter_name: string;
+  reporter_phone_number: string;
+  reporter_location: Location;
+  title: MartyrName;
+  gender: Gender;
+  highlight: Highlight[];
+  nickname?: string;
+  birth_date: Date | string;
+  missing_date: Date | string;
+  age: number;
+  visits: number;
+  location: Location;
+  details: string;
+  status: MissingStatus;
+  image: string;
+  publisher_id: Types.ObjectId | string;
+  keywords: string[];
+  profession: Profession | "";
+  createdAt: Date;
+  updatedAt?: Date;
+  approvedBy: Types.ObjectId | string;
+  effectiveDate?: Date; // The date used for sorting and filtering, can be updated to the latest update date if available.
 }

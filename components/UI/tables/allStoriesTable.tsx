@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { StoryInterface } from "@/app/interfaces";
+import { MartyrName, StoryInterface } from "@/app/interfaces";
 import { ContentType, StoryStatus } from "@/app/enums";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
@@ -465,7 +465,8 @@ const AllStoriesTable = () => {
         loading={isStoryApproveLoading}
       >
         <ApproveDialog
-          data={storyData!}
+          content_id={storyData?._id as string}
+          content_title={getFullName(storyData?.title as MartyrName)}
           refetchData={() => {
             fetchTableData();
             fetchStatistics();

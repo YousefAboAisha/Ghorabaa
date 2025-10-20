@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { MassacreInterface } from "@/app/interfaces";
-import { ContentType, MassacreStatus } from "@/app/enums";
+import { MartyrName, MissingInterface } from "@/app/interfaces";
+import { ContentType, MissingStatus } from "@/app/enums";
 import DashboardTableSkeletonLoader from "../loaders/dashboardTableSkeletonLoader";
 import NoDataMessage from "@/components/responseMessages/noDataMessage";
 import ErrorMessage from "@/components/responseMessages/errorMessage";
@@ -19,19 +19,17 @@ import ApproveDialog from "../dialogs/approve";
 import ArchiveDialog from "../dialogs/archive";
 import { getFullName } from "@/utils/text";
 
-const MassacresTable = () => {
-  const [tableData, setTableData] = useState<MassacreInterface[]>([]);
+const MissingsTable = () => {
+  const [tableData, setTableData] = useState<MissingInterface[]>([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState(1);
-  const [massacreData, setMassacreData] = useState<MassacreInterface | null>(
-    null
-  );
+  const [missingData, setMissingData] = useState<MissingInterface | null>(null);
 
-  const [isOpenMassacreApprove, setIsOpenMassacreApprove] = useState(false);
+  const [isOpenMissingApprove, setIsOpenMissingApprove] = useState(false);
   const [approveLoading, setApproveLoading] = useState<boolean>(false);
 
-  const [isOpenMassacreArchive, setIsOpenMassacreArchive] = useState(false);
+  const [isOpenMissingArchive, setIsOpenMissingArchive] = useState(false);
   const [archiveLoading, setArchiveLoading] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
@@ -51,7 +49,7 @@ const MassacresTable = () => {
       const res = await fetch(
         `${
           process.env.NEXT_PUBLIC_API_BASE_URL
-        }/admin/massacres/fetch?&page=${page}&limit=10&search=${encodeURIComponent(
+        }/admin/missings/fetch?&page=${page}&limit=10&search=${encodeURIComponent(
           searchQuery
         )}`,
         { cache: "no-store" }
@@ -83,11 +81,11 @@ const MassacresTable = () => {
     } finally {
       setTableLoading(false);
     }
-  }, [page, searchQuery]); // Add dependencies here
+  }, [page, searchQuery]);
 
   // Initial URL sync
   useEffect(() => {
-    router.push(`/admin/dashboard/massacres?page=${page}`);
+    router.push(`/admin/dashboard/missings?page=${page}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -97,19 +95,19 @@ const MassacresTable = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
-  const renderTableActions = (massacre: MassacreInterface) => {
-    const status = massacre.status;
+  const renderTableActions = (missing: MissingInterface) => {
+    const status = missing.status;
 
-    if (status == MassacreStatus.APPROVED)
+    if (status == MissingStatus.APPROVED)
       return (
         <>
           <BsArchive
-            title="أرشفة المجزرة"
+            title="أرشفة البلاغ"
             className="cursor-pointer text-rejected"
             size={17}
             onClick={() => {
-              setMassacreData(massacre);
-              setIsOpenMassacreArchive(true);
+              setMissingData(missing);
+              setIsOpenMissingArchive(true);
             }}
           />
 
@@ -118,7 +116,7 @@ const MassacresTable = () => {
             className="cursor-pointer"
             onClick={() => {
               router.push(
-                `/admin/dashboard/massacres/editMassacre/${massacre._id}`
+                `/admin/dashboard/missings/editMissing/${missing._id}`
               );
             }}
             size={22}
@@ -126,22 +124,20 @@ const MassacresTable = () => {
         </>
       );
 
-    if (status == MassacreStatus.PENDING) {
+    if (status == MissingStatus.PENDING) {
       return (
         <>
           <GrCheckmark
-            title="قبول المجزرة"
+            title="قبول البلاغ"
             className="cursor-pointer text-[green]"
             size={18}
             onClick={() => {
-              setMassacreData(massacre);
-              setIsOpenMassacreApprove(true);
+              setMissingData(missing);
+              setIsOpenMissingApprove(true);
             }}
           />
 
-          <Link
-            href={`/admin/dashboard/massacres/editMassacre/${massacre._id}`}
-          >
+          <Link href={`/admin/dashboard/missings/editMissing/${missing._id}`}>
             <CiEdit
               title="تعديل البيانات"
               className="cursor-pointer"
@@ -152,22 +148,20 @@ const MassacresTable = () => {
       );
     }
 
-    if (status == MassacreStatus.ARCHIVED) {
+    if (status == MissingStatus.ARCHIVED) {
       return (
         <>
           <GrCheckmark
-            title="قبول المجزرة"
+            title="قبول البلاغ"
             className="cursor-pointer text-[green]"
             size={18}
             onClick={() => {
-              setMassacreData(massacre);
-              setIsOpenMassacreApprove(true);
+              setMissingData(missing);
+              setIsOpenMissingApprove(true);
             }}
           />
 
-          <Link
-            href={`/admin/dashboard/massacres/editMassacre/${massacre._id}`}
-          >
+          <Link href={`/admin/dashboard/missings/editMissing/${missing._id}`}>
             <CiEdit
               title="تعديل البيانات"
               className="cursor-pointer"
@@ -190,12 +184,12 @@ const MassacresTable = () => {
           <tr className="bg-gray-100">
             {[
               "#",
-              "صورة الغلاف",
-              "عنوان المجزرة",
-              "تاريخ الحدوث",
+              "الصورة",
+              "اسم المفقود",
+              "تاريخ الاختفاء",
               "المدينة",
               "الحي",
-              "تاريخ النشر",
+              "تاريخ البلاغ",
               "الحالة",
               "العمليات",
             ].map((title, i) => (
@@ -210,82 +204,86 @@ const MassacresTable = () => {
         </thead>
 
         <tbody>
-          {tableData.map((massacre: MassacreInterface, index) => (
-            <tr key={massacre._id as string} className="hover:bg-gray-50">
-              <td className="py-3 px-4 border-b text-center text-sm text-gray-700">
-                {(page - 1) * 10 + index + 1}
-              </td>
+          {tableData.map((missing: MissingInterface, index) => {
+            const fullName = getFullName(missing?.title);
 
-              <td className="py-3 px-4 border-b text-right">
-                <div className="relative w-12 h-12 overflow-hidden rounded">
-                  <Image
-                    src={massacre.cover_image}
-                    alt={massacre.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, (max-width:  768px) 50vw, 33vw"
-                    loading="lazy"
-                  />
-                </div>
-              </td>
+            return (
+              <tr key={missing._id as string} className="hover:bg-gray-50">
+                <td className="py-3 px-4 border-b text-center text-sm text-gray-700">
+                  {(page - 1) * 10 + index + 1}
+                </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm text-gray-700 hover:underline">
-                <Link
-                  title="عرض المستخدم"
-                  href={`/massacres/${massacre._id}`}
-                  target="_blank"
-                >
-                  {massacre.title}
-                </Link>
-              </td>
+                <td className="py-3 px-4 border-b text-right">
+                  <div className="relative w-12 h-12 overflow-hidden rounded">
+                    <Image
+                      src={missing.image}
+                      alt={fullName}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, (max-width:  768px) 50vw, 33vw"
+                      loading="lazy"
+                    />
+                  </div>
+                </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                {new Date(massacre.date).toLocaleDateString("ar-EG", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}{" "}
-              </td>
+                <td className="py-3 px-4 border-b text-right text-sm text-gray-700 hover:underline">
+                  <Link
+                    title="عرض البلاغ"
+                    href={`/missings/${missing._id}`}
+                    target="_blank"
+                  >
+                    {fullName}
+                  </Link>
+                </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                {massacre.location.city || "غير محدد"}
-              </td>
+                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                  {new Date(missing.missing_date).toLocaleDateString("ar-EG", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}{" "}
+                </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                {massacre.location.neighborhood || "غير محدد"}
-              </td>
+                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                  {missing.location.city || "غير محدد"}
+                </td>
 
-              <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
-                {new Date(massacre.createdAt).toLocaleDateString("ar-EG", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </td>
+                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                  {missing.location.neighborhood || "غير محدد"}
+                </td>
 
-              <td className="py-3 px-4 border-b text-right text-[12px]">
-                {massacre.status === MassacreStatus.PENDING ? (
-                  <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-pending">
-                    قيد المراجعة
-                  </span>
-                ) : massacre.status === MassacreStatus.APPROVED ? (
-                  <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-approved">
-                    مقبولة
-                  </span>
-                ) : (
-                  <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-rejected">
-                    مؤرشفة
-                  </span>
-                )}
-              </td>
+                <td className="py-3 px-4 border-b text-right text-sm text-gray-700">
+                  {new Date(missing.createdAt).toLocaleDateString("ar-EG", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </td>
 
-              <td className="py-3 px-4 border-b text-right">
-                <div className="flex items-center gap-4">
-                  {renderTableActions(massacre)}
-                </div>
-              </td>
-            </tr>
-          ))}
+                <td className="py-3 px-4 border-b text-right text-[12px]">
+                  {missing.status === MissingStatus.PENDING ? (
+                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-pending">
+                      قيد المراجعة
+                    </span>
+                  ) : missing.status === MissingStatus.APPROVED ? (
+                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-approved">
+                      مقبول
+                    </span>
+                  ) : (
+                    <span className="text-white text-[11px] p-1 px-2 rounded-sm bg-rejected">
+                      مؤرشف
+                    </span>
+                  )}
+                </td>
+
+                <td className="py-3 px-4 border-b text-right">
+                  <div className="flex items-center gap-4">
+                    {renderTableActions(missing)}
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     );
@@ -298,7 +296,7 @@ const MassacresTable = () => {
       } else if (searchQuery.length === 0) {
         fetchTableData();
       }
-    }, 500); // debounce
+    }, 500);
 
     return () => clearTimeout(delayDebounce);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -306,11 +304,11 @@ const MassacresTable = () => {
 
   return (
     <>
-      {/* Role Filter + Search */}
+      {/* Search + Add New */}
       <div className="flex items-center justify-between gap-4">
         <div className="w-full md:w-1/2">
           <Input
-            placeholder="البحث عن مجزرة"
+            placeholder="البحث عن شخص مفقود"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
@@ -324,10 +322,10 @@ const MassacresTable = () => {
           />
         </div>
 
-        <Link className="relative min-w-fit" href={"massacres/addMassacre"}>
+        <Link className="relative min-w-fit" href={"/addMissing"}>
           <div className="md:w-fit w-full">
             <Button
-              title="مجزرة جديدة"
+              title="بلاغ جديد"
               className="px-6 w-full bg-secondary text-white"
               icon={<BsPlus size={20} />}
             />
@@ -347,48 +345,48 @@ const MassacresTable = () => {
         onPageChange={(newPage) => {
           if (newPage !== page) {
             setPage(newPage);
-            router.push(`/admin/dashboard/massacres?page=${newPage}`);
+            router.push(`/admin/dashboard/missings?page=${newPage}`);
           }
         }}
       />
 
-      {/* Approve massacre Modal */}
+      {/* Approve Missing Person Report Modal */}
       <Modal
-        isOpen={isOpenMassacreApprove}
-        setIsOpen={setIsOpenMassacreApprove}
+        isOpen={isOpenMissingApprove}
+        setIsOpen={setIsOpenMissingApprove}
         containerClassName="lg:w-[25%]"
         loading={approveLoading}
       >
         <ApproveDialog
-          content_id={massacreData?._id as string}
-          content_title={getFullName(massacreData?.title as string)}
-          setIsOpen={setIsOpenMassacreApprove}
+          content_id={missingData?._id as string}
+          content_title={getFullName(missingData?.title as MartyrName)}
+          setIsOpen={setIsOpenMissingApprove}
           refetchData={fetchTableData}
           setLoading={setApproveLoading}
           loading={approveLoading}
-          content_type={ContentType.MASSACRE}
+          content_type={ContentType.MISSING}
         />
       </Modal>
 
-      {/* Archive massacre Modal */}
+      {/* Archive Missing Person Report Modal */}
       <Modal
-        isOpen={isOpenMassacreArchive}
-        setIsOpen={setIsOpenMassacreArchive}
-        containerClassName="lg:w-[25%]"
-        loading={approveLoading}
+        isOpen={isOpenMissingArchive}
+        setIsOpen={setIsOpenMissingArchive}
+        containerClassName="lg:w-[30%]"
+        loading={archiveLoading}
       >
         <ArchiveDialog
-          content_id={massacreData?._id as string}
-          content_title={getFullName(massacreData?.title as string)}
-          setIsOpen={setIsOpenMassacreArchive}
+          content_id={missingData?._id as string}
+          content_title={getFullName(missingData?.title as MartyrName)}
+          setIsOpen={setIsOpenMissingArchive}
           refetchData={fetchTableData}
           setLoading={setArchiveLoading}
           loading={archiveLoading}
-          content_type={ContentType.MASSACRE}
+          content_type={ContentType.MISSING}
         />
       </Modal>
     </>
   );
 };
 
-export default MassacresTable;
+export default MissingsTable;

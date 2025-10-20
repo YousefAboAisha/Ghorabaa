@@ -264,17 +264,23 @@ export const getAgeLabel = (age: number) => {
   if (age >= 100) return `${age} عام`;
 };
 
-export const getFullName = (name?: {
-  first_name?: string;
-  father_name?: string;
-  grandFather_name?: string;
-  last_name?: string;
-}): string => {
-  if (!name) return "غير معروف";
+export const getFullName = (
+  title:
+    | {
+        first_name?: string;
+        father_name?: string;
+        grandFather_name?: string;
+        last_name?: string;
+      }
+    | string
+): string => {
+  if (!title) return "غير معروف";
 
-  return (
-    [name.first_name, name.father_name, name.last_name]
-      .filter(Boolean)
-      .join(" ") || "غير معروف"
-  );
+  if (typeof title === "string") return title;
+
+  const { first_name, father_name, last_name } = title;
+
+  const nameParts = [first_name, father_name, last_name].filter(Boolean);
+
+  return nameParts.join(" ") || "غير معروف";
 };
