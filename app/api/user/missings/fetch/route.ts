@@ -1,22 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
-import { getToken } from "next-auth/jwt";
-import { Role, MissingStatus } from "@/app/enums";
-
-const secret = process.env.NEXTAUTH_SECRET;
+import { MissingStatus } from "@/app/enums";
 
 export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
-    const token = await getToken({ req, secret });
-
-    if (!token || token.role === Role.USER) {
-      return NextResponse.json(
-        { error: "غير مصرح لك بالوصول إلى هذه الصفحة" },
-        { status: 403 }
-      );
-    }
 
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
