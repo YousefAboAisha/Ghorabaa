@@ -274,11 +274,7 @@ const MissingForm = ({ id, id_number, initialData }: MissingFormProps) => {
       );
 
       setTimeout(() => {
-        router.push(
-          isEditMode
-            ? `/admin/dashboard/missings`
-            : `/missings/${data?.data?._id}`
-        );
+        router.push("/");
       }, 500);
     } catch (error) {
       const message =

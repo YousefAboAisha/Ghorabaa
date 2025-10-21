@@ -32,25 +32,18 @@ export async function PUT(
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
-    const story = await massacreCollection.findOne({
+    const missing = await massacreCollection.findOne({
       _id: new ObjectId(id),
     });
 
-    if (!story) {
+    if (!missing) {
       return NextResponse.json(
         { error: "المفقود غير موجودة!" },
         { status: 404 }
       );
     }
 
-    if (!story.publisher_id) {
-      return NextResponse.json(
-        { error: "يجب إضافة معرف ناشر المفقود" },
-        { status: 500 }
-      );
-    }
-
-    // Update the story
+    // Update the missing
     await massacreCollection.updateOne(
       { _id: new ObjectId(id) },
       {
@@ -63,7 +56,7 @@ export async function PUT(
     );
 
     return NextResponse.json(
-      { message: `Story ${MissingStatus.ARCHIVED.toLowerCase()}` },
+      { message: `missing ${MissingStatus.ARCHIVED.toLowerCase()}` },
       { status: 200 }
     );
   } catch (error) {
