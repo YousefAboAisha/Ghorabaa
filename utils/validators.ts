@@ -370,10 +370,7 @@ export const MissingValidationSchema = Yup.object({
 
   missing_date: Yup.date()
     .required("تاريخ الفقدان مطلوب")
-    .min(
-      Yup.ref("birth_date"),
-      "تاريخ الاستشهاد يجب أن يكون بعد تاريخ الميلاد"
-    ),
+    .min(Yup.ref("birth_date"), "تاريخ الفقد يجب أن يكون بعد تاريخ الميلاد"),
 
   location: Yup.object({
     city: Yup.string().trim().required("يرجى اختيار المدينة"),

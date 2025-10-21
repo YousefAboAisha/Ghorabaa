@@ -274,7 +274,7 @@ const MissingForm = ({ id, id_number, initialData }: MissingFormProps) => {
       );
 
       setTimeout(() => {
-        router.push("/");
+        router.push("/missings");
       }, 500);
     } catch (error) {
       const message =
