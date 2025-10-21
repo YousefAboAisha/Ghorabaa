@@ -1,45 +1,26 @@
 import clientPromise from "@/app/lib/mongodb";
-import { NextResponse, NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
-import { ObjectId } from "mongodb";
-import { NotificationTypes, StoryStatus } from "@/app/enums";
-import { getFullName } from "@/utils/text";
-
-const secret = process.env.NEXTAUTH_SECRET;
+import { NextResponse } from "next/server";
+import { StoryStatus } from "@/app/enums";
 
 export async function POST(originalReq: Request) {
-  const req = originalReq.clone();
-  const nextReq = new NextRequest(req);
-
-  const token = await getToken({ req: nextReq, secret });
-
-  if (!token) {
-    return NextResponse.json(
-      { error: "أنت غير مصرح لك، الرجاء تسجيل الدخول!" },
-      { status: 401 }
-    );
-  }
-
   try {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
     const collection = db.collection("missings");
-    const notificationsCollection = db.collection("notifications");
 
     const body = await originalReq.json();
 
     // Extract all fields from the form
     const {
-      id_number,
       reporter_name,
       reporter_phone_number,
       reporter_location,
+      id_number,
       title,
       nickname,
       gender,
       birth_date,
       missing_date,
-      social_media,
       location,
       details,
       image,
@@ -142,19 +123,11 @@ export async function POST(originalReq: Request) {
         neighborhood: "",
       },
 
-      // Social media
-      social_media: social_media || {
-        instagram: "",
-        facebook: "",
-        x: "",
-      },
-
       details, // Using details instead of bio
       image: image || "",
       keywords: keywords || [],
 
       // System fields
-      publisher_id: new ObjectId(token.id),
       status: StoryStatus.PENDING,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -163,31 +136,12 @@ export async function POST(originalReq: Request) {
     };
 
     // Insert new missing person record
-    const result = await collection.insertOne(newMissing);
-
-    const fullName = getFullName(title);
-
-    // Create notification
-    if (result.insertedId) {
-      const missingNotificationPayload = {
-        user_id: new ObjectId(token.id),
-        message: `تمت إضافة طلبك لإضافة بيانات المفقود ${fullName} بنجاح، وستتم مراجعة الطلب في أسرع وقت!`,
-        href: `/missings/${result.insertedId}`,
-        notification_type: NotificationTypes.REQUEST,
-        createdAt: new Date(),
-        is_read: false,
-      };
-
-      await notificationsCollection.insertOne(missingNotificationPayload);
-    }
+    const missing = await collection.insertOne(newMissing);
 
     return NextResponse.json(
       {
+        data: missing,
         message: "تم إرسال طلب إضافة بيانات المفقود بنجاح",
-        data: {
-          ...newMissing,
-          _id: result.insertedId,
-        },
       },
       { status: 201 }
     );

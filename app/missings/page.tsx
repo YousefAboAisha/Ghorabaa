@@ -5,7 +5,7 @@ import MissingsSection from "@/containers/missings/missingsSection";
 const Page = () => {
   return (
     <div className="container min-h-screen mt-24">
-      <Hero pattern="bg-statistics-pattern" className="bg-top" />
+      <Hero pattern="bg-missing-banner" className="bg-bottom" />
 
       <MissingsSection />
     </div>

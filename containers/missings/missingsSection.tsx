@@ -15,18 +15,18 @@ import { BsPlus } from "react-icons/bs";
 import { CiSearch } from "react-icons/ci";
 
 const MissingsSection = () => {
-  const [stories, setStories] = useState<MissingInterface[]>([]);
+  const [missings, setMissings] = useState<MissingInterface[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState<string | "">("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const observer = useRef<IntersectionObserver | null>(null);
-  const fetching = useRef(false); // ✅ prevent double-fetching
+  const fetching = useRef(false);
   const searchParams = useSearchParams();
 
-  const fetchStories = async (pageToFetch: number) => {
+  const fetchMissings = async (pageToFetch: number) => {
     if (!hasMore || fetching.current) return;
 
     fetching.current = true;
@@ -38,11 +38,16 @@ const MissingsSection = () => {
       limit: "8",
     });
 
+    // Add search query if it exists
+    if (searchQuery) {
+      params.set("query", searchQuery);
+    }
+
     try {
       const res = await fetch(
         `${
           process.env.NEXT_PUBLIC_API_BASE_URL
-        }/user/missings/fetch?query=${searchQuery}&${params.toString()}`,
+        }/user/missings/fetch?${params.toString()}`,
         { cache: "no-store" }
       );
 
@@ -60,16 +65,25 @@ const MissingsSection = () => {
       const { data, hasMore: newHasMore } = await res.json();
 
       setInitialLoading(false);
-      setStories((prev) => {
-        const existingIds = new Set(prev.map((s) => s._id));
+      setMissings((prev) => {
+        // Only for initial load (page 1), replace the data
+        if (pageToFetch === 1) {
+          return data;
+        }
+        // For subsequent pages, append unique items
+        const existingIds = new Set(prev.map((m) => m._id));
         const unique = data.filter(
-          (s: MissingInterface) => !existingIds.has(s._id)
+          (m: MissingInterface) => !existingIds.has(m._id)
         );
         return [...prev, ...unique];
       });
 
       setHasMore(newHasMore);
-      setPage((prev) => prev + 1);
+      if (pageToFetch === 1) {
+        setPage(2); // Set to next page after initial load
+      } else {
+        setPage((prev) => prev + 1);
+      }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
@@ -80,22 +94,38 @@ const MissingsSection = () => {
     }
   };
 
-  // Initial load (page 1)
+  // Reset and fetch when search params change
   useEffect(() => {
-    setStories([]);
+    setMissings([]);
     setPage(1);
     setHasMore(true);
     setInitialLoading(true);
+    fetching.current = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.toString()]);
 
+  // Initial load when page is 1 and initialLoading is true
   useEffect(() => {
-    if (page === 1 && initialLoading) {
-      fetchStories(1);
+    if (page === 1 && initialLoading && !fetching.current) {
+      fetchMissings(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, initialLoading]);
 
+  // Search effect with debounce
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      setMissings([]);
+      setPage(1);
+      setHasMore(true);
+      setInitialLoading(true);
+      fetching.current = false;
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
+
+  // Intersection Observer for infinite scroll
   const lastElementRef = useCallback(
     (node: HTMLDivElement) => {
       if (observer.current) observer.current.disconnect();
@@ -107,7 +137,7 @@ const MissingsSection = () => {
           !initialLoading &&
           !fetching.current
         ) {
-          fetchStories(page); // use latest page
+          fetchMissings(page);
         }
       });
 
@@ -117,9 +147,39 @@ const MissingsSection = () => {
     [hasMore, initialLoading, page]
   );
 
-  if (error) {
-    return <ErrorMessage error={error} className="mt-8" />;
-  }
+  const renderContent = () => {
+    if (error) {
+      return <ErrorMessage error={error} className="mt-8" />;
+    }
+
+    if (initialLoading && missings.length === 0) {
+      return <StoryCardSkeletonLoader length={8} className="!mt-8" />;
+    }
+
+    if (missings.length > 0) {
+      return (
+        <>
+          <div className="cards-grid-4">
+            {missings.map((missing: MissingInterface) => (
+              <MissingCard key={missing._id as string} data={missing} />
+            ))}
+          </div>
+
+          {/* Observed loader div for infinite scroll */}
+          <div ref={lastElementRef} className="h-10 mt-10 bg-transparent" />
+
+          {!hasMore ? null : (
+            <div className="mt-4 flex justify-center gap-2 text-gray_dark text-[14px]">
+              جارٍ جلب البيانات
+              <AiOutlineLoading3Quarters size={16} className="animate-spin" />
+            </div>
+          )}
+        </>
+      );
+    }
+
+    return <NoDataMessage className="min-h-[50vh]" />;
+  };
 
   return (
     <>
@@ -130,7 +190,7 @@ const MissingsSection = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             icon={<CiSearch size={20} className="text-gray-500" />}
-            className="border bg-white focus:border-secondary"
+            className="bg-white focus:border-secondary border !rounded-xl"
           />
         </div>
 
@@ -145,31 +205,7 @@ const MissingsSection = () => {
         </Link>
       </div>
 
-      <div className="relative mb-12 mt-8">
-        {initialLoading ? (
-          <StoryCardSkeletonLoader length={8} className="!mt-8" />
-        ) : stories.length > 0 ? (
-          <>
-            <div className="cards-grid-4">
-              {stories.map((story: MissingInterface) => (
-                <MissingCard key={story._id as string} data={story} />
-              ))}
-            </div>
-
-            {/* Observed loader div for infinite scroll */}
-            <div ref={lastElementRef} className="h-10 mt-10 bg-transparent" />
-
-            {!hasMore ? null : (
-              <div className="mt-4 flex justify-center gap-2 text-gray_dark text-[14px]">
-                جارٍ جلب البيانات
-                <AiOutlineLoading3Quarters size={16} className="animate-spin" />
-              </div>
-            )}
-          </>
-        ) : (
-          <NoDataMessage className="min-h-[50vh]" />
-        )}
-      </div>
+      <div className="relative mb-12 mt-8">{renderContent()}</div>
     </>
   );
 };

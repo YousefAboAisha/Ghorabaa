@@ -70,7 +70,7 @@ const MissingDetails = async ({ id }: Props) => {
           <div className="flex items-center gap-2 text-gray_dark">
             <p>بواسطة: </p>
 
-            {data.publisherName}
+            {data.reporter_name}
             <p> | </p>
             <p>{fullDateConversion(data.createdAt)}</p>
           </div>
