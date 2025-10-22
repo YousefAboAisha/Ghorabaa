@@ -26,8 +26,15 @@ const MissingsSection = () => {
   const fetching = useRef(false);
   const searchParams = useSearchParams();
 
-  const fetchMissings = async (pageToFetch: number) => {
-    if (!hasMore || fetching.current) return;
+  // Refs to track initial loads
+  const initialMount = useRef(true);
+  const searchQueryInitial = useRef(true);
+
+  const fetchMissings = async (
+    pageToFetch: number,
+    isSearch: boolean = false
+  ) => {
+    if (fetching.current) return;
 
     fetching.current = true;
     setError(null);
@@ -38,7 +45,6 @@ const MissingsSection = () => {
       limit: "8",
     });
 
-    // Add search query if it exists
     if (searchQuery) {
       params.set("query", searchQuery);
     }
@@ -66,11 +72,8 @@ const MissingsSection = () => {
 
       setInitialLoading(false);
       setMissings((prev) => {
-        // Only for initial load (page 1), replace the data
-        if (pageToFetch === 1) {
-          return data;
-        }
-        // For subsequent pages, append unique items
+        if (pageToFetch === 1 || isSearch) return data;
+
         const existingIds = new Set(prev.map((m) => m._id));
         const unique = data.filter(
           (m: MissingInterface) => !existingIds.has(m._id)
@@ -79,11 +82,7 @@ const MissingsSection = () => {
       });
 
       setHasMore(newHasMore);
-      if (pageToFetch === 1) {
-        setPage(2); // Set to next page after initial load
-      } else {
-        setPage((prev) => prev + 1);
-      }
+      setPage(pageToFetch + 1);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
@@ -94,38 +93,44 @@ const MissingsSection = () => {
     }
   };
 
-  // Reset and fetch when search params change
+  // **SINGLE SOURCE OF TRUTH FOR INITIAL LOAD**
   useEffect(() => {
+    if (initialMount.current) {
+      initialMount.current = false;
+      fetchMissings(1);
+    }
+  }, []);
+
+  // Handle search params changes (only after initial mount)
+  useEffect(() => {
+    if (initialMount.current) return; // Skip on initial mount
+
     setMissings([]);
     setPage(1);
     setHasMore(true);
     setInitialLoading(true);
-    fetching.current = false;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams.toString()]);
+    fetchMissings(1, true);
+  }, [searchParams]);
 
-  // Initial load when page is 1 and initialLoading is true
+  // Handle search query changes (only after initial mount)
   useEffect(() => {
-    if (page === 1 && initialLoading && !fetching.current) {
-      fetchMissings(1);
+    if (searchQueryInitial.current) {
+      searchQueryInitial.current = false;
+      return; // Skip initial mount
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, initialLoading]);
 
-  // Search effect with debounce
-  useEffect(() => {
     const delayDebounce = setTimeout(() => {
       setMissings([]);
       setPage(1);
       setHasMore(true);
       setInitialLoading(true);
-      fetching.current = false;
+      fetchMissings(1, true);
     }, 500);
 
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
 
-  // Intersection Observer for infinite scroll
+  // Infinite scroll
   const lastElementRef = useCallback(
     (node: HTMLDivElement) => {
       if (observer.current) observer.current.disconnect();
@@ -143,7 +148,6 @@ const MissingsSection = () => {
 
       if (node) observer.current.observe(node);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [hasMore, initialLoading, page]
   );
 
@@ -160,15 +164,19 @@ const MissingsSection = () => {
       return (
         <>
           <div className="cards-grid-4">
-            {missings.map((missing: MissingInterface) => (
-              <MissingCard key={missing._id as string} data={missing} />
-            ))}
+            {missings.map((missing: MissingInterface, index: number) => {
+              const isLast = index === missings.length - 1;
+              return isLast ? (
+                <div key={missing._id as string} ref={lastElementRef}>
+                  <MissingCard data={missing} />
+                </div>
+              ) : (
+                <MissingCard key={missing._id as string} data={missing} />
+              );
+            })}
           </div>
 
-          {/* Observed loader div for infinite scroll */}
-          <div ref={lastElementRef} className="h-10 mt-10 bg-transparent" />
-
-          {!hasMore ? null : (
+          {hasMore && !initialLoading && (
             <div className="mt-4 flex justify-center gap-2 text-gray_dark text-[14px]">
               جارٍ جلب البيانات
               <AiOutlineLoading3Quarters size={16} className="animate-spin" />
