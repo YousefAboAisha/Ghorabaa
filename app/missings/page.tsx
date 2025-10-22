@@ -1,6 +1,8 @@
-"use client";
 import Hero from "@/components/layout/hero";
 import MissingsSection from "@/containers/missings/missingsSection";
+import { MissingsMetadata } from "../lib/metadata";
+
+export const generateMetadata = async () => MissingsMetadata;
 
 const Page = () => {
   return (
