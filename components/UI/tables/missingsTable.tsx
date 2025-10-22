@@ -11,13 +11,14 @@ import ErrorMessage from "@/components/responseMessages/errorMessage";
 import Pagination from "./pagination";
 import Button from "../inputs/button";
 import Modal from "@/components/UI/modals/modal";
-import { CiEdit, CiSearch } from "react-icons/ci";
+import { CiEdit, CiSearch, CiTrash } from "react-icons/ci";
 import { BsArchive, BsPlus } from "react-icons/bs";
 import { GrCheckmark } from "react-icons/gr";
 import Input from "../inputs/input";
 import ApproveDialog from "../dialogs/approve";
 import ArchiveDialog from "../dialogs/archive";
 import { getFullName } from "@/utils/text";
+import DeleteDaialog from "../dialogs/delete";
 
 const MissingsTable = () => {
   const [tableData, setTableData] = useState<MissingInterface[]>([]);
@@ -31,6 +32,10 @@ const MissingsTable = () => {
 
   const [isOpenMissingArchive, setIsOpenMissingArchive] = useState(false);
   const [archiveLoading, setArchiveLoading] = useState<boolean>(false);
+
+  // Delete Story Modal state variables
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -168,6 +173,16 @@ const MissingsTable = () => {
               size={22}
             />
           </Link>
+
+          <CiTrash
+            title="حذف القصة"
+            className="cursor-pointer text-rejected"
+            onClick={() => {
+              setIsDeleteModalOpen(true);
+              setMissingData(missing);
+            }}
+            size={22}
+          />
         </>
       );
     }
@@ -382,6 +397,26 @@ const MissingsTable = () => {
           refetchData={fetchTableData}
           setLoading={setArchiveLoading}
           loading={archiveLoading}
+          content_type={ContentType.MISSING}
+        />
+      </Modal>
+
+      {/* Delete Story Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        setIsOpen={setIsDeleteModalOpen}
+        containerClassName="lg:w-[30%]"
+        loading={isDeleteLoading}
+      >
+        <DeleteDaialog
+          setIsOpen={setIsDeleteModalOpen}
+          setLoading={setIsDeleteLoading}
+          loading={isDeleteLoading}
+          content_id={missingData?._id as string}
+          content_title={getFullName(missingData?.title as MartyrName)}
+          callback={() => {
+            fetchTableData();
+          }}
           content_type={ContentType.MISSING}
         />
       </Modal>

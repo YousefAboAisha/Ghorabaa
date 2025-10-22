@@ -7,8 +7,8 @@ import { ContentType } from "@/app/enums";
 
 type Props = {
   content_id: string;
-  content_type: ContentType;
   content_title: string;
+  content_type: ContentType;
   refetchData?: () => void;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;

@@ -52,87 +52,71 @@ export async function GET(req: NextRequest) {
 
     const pipeline = [
       { $match: matchStage },
-      // Lookup publisher
       {
-        $lookup: {
-          from: "users",
-          localField: "publisher_id",
-          foreignField: "_id",
-          as: "publisher",
-        },
-      },
-      { $unwind: "$publisher" },
-      // Lookup approvedBy
-      {
-        $lookup: {
-          from: "users",
-          localField: "approvedBy",
-          foreignField: "_id",
-          as: "approvedByUser",
-        },
-      },
-      {
-        $unwind: {
-          path: "$approvedByUser",
-          preserveNullAndEmptyArrays: true, // allow null if not approved yet
-        },
-      },
-      {
-        $addFields: {
-          effectiveDate: {
-            $ifNull: ["$updatedAt", "$createdAt"],
-          },
+        $facet: {
+          metadata: [{ $count: "total" }],
+          data: [
+            {
+              $project: {
+                _id: 1,
+                id_number: 1,
+                image: 1,
+                title: 1,
+                age: 1,
+                gender: 1,
+                profession: 1,
+                nickname: 1,
+                birth_date: 1,
+                missing_date: 1,
+                location: 1,
+                details: 1,
+                status: 1,
+                keywords: 1,
+                createdAt: 1,
+                updatedAt: 1,
+                publisher_id: 1,
+                visits: 1,
+                reporter_name: 1,
+                reporter_phone_number: 1,
+                reporter_location: 1,
+                effectiveDate: 1,
+              },
+            },
+            { $sort: { effectiveDate: -1 } },
+            { $skip: skip },
+            { $limit: limit },
+          ],
         },
       },
       {
         $project: {
-          _id: 1,
-          id_number: 1,
-          image: 1,
-          title: 1,
-          age: 1,
-          gender: 1,
-          profession: 1,
-          nickname: 1,
-          birth_date: 1,
-          missing_date: 1,
-          location: 1,
-          details: 1,
-          status: 1,
-          keywords: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          publisher_id: 1,
-          visits: 1,
-          reporter_name: 1,
-          reporter_phone_number: 1,
-          reporter_location: 1,
-          publisher_name: "$publisher.name",
-          approvedBy: "$approvedByUser.name",
-          effectiveDate: 1,
+          data: 1,
+          pagination: {
+            total: { $arrayElemAt: ["$metadata.total", 0] },
+            page: { $literal: page },
+            limit: { $literal: limit },
+            totalPages: {
+              $ceil: {
+                $divide: [{ $arrayElemAt: ["$metadata.total", 0] }, limit],
+              },
+            },
+          },
         },
       },
-      { $sort: { effectiveDate: -1 } },
-      { $skip: skip },
-      { $limit: limit },
     ];
 
-    const totalDocs = await db
-      .collection("missings")
-      .countDocuments(matchStage);
-    const missings = await db
-      .collection("missings")
-      .aggregate(pipeline)
-      .toArray();
+    const result = await db.collection("missings").aggregate(pipeline).next();
+
+    const total = result?.pagination?.total || 0;
 
     return NextResponse.json(
       {
-        data: missings,
+        data: result?.data || [],
         pagination: {
-          total: totalDocs,
+          total,
           page,
           limit,
-          totalPages: Math.ceil(totalDocs / limit),
+          totalPages: Math.ceil(total / limit),
         },
       },
       { status: 200 }

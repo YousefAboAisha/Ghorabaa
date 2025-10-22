@@ -507,7 +507,8 @@ const AllStoriesTable = () => {
           setIsOpen={setIsDeleteModalOpen}
           setLoading={setIsDeleteLoading}
           loading={isDeleteLoading}
-          data={storyData!}
+          content_id={storyData?._id as string}
+          content_title={getFullName(storyData?.title as MartyrName)}
           callback={() => {
             fetchTableData();
             fetchStatistics();

@@ -343,7 +343,7 @@ const MissingForm = ({ id, id_number, initialData }: MissingFormProps) => {
 
               try {
                 const res = await fetch(
-                  `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/stories/check-id-validity?id_number=${idValue}`
+                  `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/missings/check-id-validity?id_number=${idValue}`
                 );
 
                 if (!res.ok) {
@@ -405,6 +405,7 @@ const MissingForm = ({ id, id_number, initialData }: MissingFormProps) => {
 
                 <div>
                   <Field
+                    disabled={isSubmitting}
                     name="reporter_phone_number"
                     as={Input}
                     type="tel"

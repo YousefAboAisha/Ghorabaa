@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction } from "react";
 import { BiInfoCircle } from "react-icons/bi";
 import { toast } from "react-toastify";
 import Button from "../inputs/button";
-import { getFullName } from "@/utils/text";
 import { ContentType } from "@/app/enums";
 
 type Props = {
   content_type: ContentType;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
+  content_id: string;
+  content_title: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
@@ -16,17 +16,14 @@ type Props = {
 };
 
 export const DeleteDaialog = ({
-  data,
+  content_id,
+  content_title,
   setIsOpen,
   setLoading,
   loading,
   callback,
   content_type,
 }: Props) => {
-  const content_id = data?._id;
-  const content_title =
-    content_type === ContentType.STORY ? getFullName(data?.title) : data?.title;
-
   const getContentRoute = (type: ContentType) => {
     switch (type) {
       case ContentType.STORY:
@@ -37,6 +34,8 @@ export const DeleteDaialog = ({
         return `/admin/events/status/delete/${content_id}`;
       case ContentType.COMMENT:
         return `/admin/comments/delete/${content_id}`;
+      case ContentType.MISSING:
+        return `/admin/missings/delete/${content_id}`;
       default:
         return ""; // or handle unexpected types
     }

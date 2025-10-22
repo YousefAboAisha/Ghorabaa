@@ -142,7 +142,8 @@ const CommentCard = ({
           setIsOpen={setIsOpenDeleteComment}
           setLoading={setLoading}
           loading={loading}
-          data={data}
+          content_id={data.id}
+          content_title={data.author_name as string}
           content_type={ContentType.COMMENT}
         />
       </Modal>
