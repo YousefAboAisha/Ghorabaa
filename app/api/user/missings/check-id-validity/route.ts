@@ -14,6 +14,14 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // Validate ID number format
+    if (id_numberParam.length !== 9) {
+      return NextResponse.json(
+        { error: "id_number must be exactly 9 digits" },
+        { status: 400 }
+      );
+    }
+
     const id_number = Number(id_numberParam);
 
     if (isNaN(id_number)) {
@@ -26,16 +34,29 @@ export async function GET(req: NextRequest) {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
     const missingsCollection = db.collection("missings");
-    const story = await missingsCollection.findOne({ id_number });
 
-    if (story) {
+    // Add proper query with string comparison if needed
+    const missing = await missingsCollection.findOne({
+      id_number: id_numberParam, // Try as string first
+    });
+
+    // If not found as string, try as number
+    if (!missing) {
+      await missingsCollection.findOne({
+        id_number: id_number,
+      });
+    }
+
+    if (missing) {
       return NextResponse.json({
-        _id: story._id,
+        _id: missing._id.toString(), // Ensure _id is string
         exists: true,
       });
     }
 
-    return NextResponse.json({ exists: false });
+    return NextResponse.json({
+      exists: false,
+    });
   } catch (err) {
     console.error("Error checking id_number:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

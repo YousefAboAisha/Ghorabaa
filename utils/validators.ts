@@ -355,11 +355,6 @@ export const MissingValidationSchema = Yup.object({
       .matches(/^[\u0600-\u06FF\s]+$/, "يجب أن يحتوي الاسم على أحرف عربية فقط"),
   }),
 
-  nickname: Yup.string()
-    .trim()
-    .notRequired()
-    .matches(/^[\u0600-\u06FF\s]*$/, "يجب أن يحتوي اللقب على أحرف عربية فقط"),
-
   profession: Yup.string().trim().notRequired(),
 
   gender: Yup.string().required("يرجى تحديد الجنس"),
@@ -391,38 +386,4 @@ export const MissingValidationSchema = Yup.object({
     ),
 
   image: Yup.mixed().required("يرجى إضافة صورة"),
-
-  social_media: Yup.object({
-    facebook: Yup.string()
-      .trim()
-      .nullable()
-      .notRequired()
-      .url("يرجى إدخال رابط فيسبوك صحيح")
-      .test(
-        "is-facebook-url",
-        "يجب أن يكون الرابط من فيسبوك",
-        (value) => !value || value.includes("facebook.com")
-      ),
-    instagram: Yup.string()
-      .trim()
-      .nullable()
-      .notRequired()
-      .url("يرجى إدخال رابط انستغرام صحيح")
-      .test(
-        "is-instagram-url",
-        "يجب أن يكون الرابط من انستغرام",
-        (value) => !value || value.includes("instagram.com")
-      ),
-    x: Yup.string()
-      .trim()
-      .nullable()
-      .notRequired()
-      .url("يرجى إدخال رابط إكس صحيح")
-      .test(
-        "is-x-url",
-        "يجب أن يكون الرابط من X (تويتر سابقًا)",
-        (value) =>
-          !value || value.includes("x.com") || value.includes("twitter.com")
-      ),
-  }),
 });

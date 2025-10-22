@@ -274,7 +274,11 @@ const MissingForm = ({ id, id_number, initialData }: MissingFormProps) => {
       );
 
       setTimeout(() => {
-        router.push("/missings");
+        if (isEditMode) {
+          router.push(`/missings/${id}`);
+        } else {
+          router.push("/missings");
+        }
       }, 500);
     } catch (error) {
       const message =
@@ -323,55 +327,87 @@ const MissingForm = ({ id, id_number, initialData }: MissingFormProps) => {
 
           // Fixed ID validation function
           const validateIdNumber = async (idValue: string) => {
+            // Reset state first
+            setIdCheckStatus(IdNumberStatus.IDLE);
+            setIsValidIdNumber(null);
+
+            // Basic validation
             if (idValue.length !== 9) {
-              setIdCheckStatus(IdNumberStatus.IDLE);
-              setIsValidIdNumber(null);
-              return;
-            }
-
-            const shouldValidate = id ? idValue !== originalIdNumber : true;
-
-            if (!shouldValidate) {
-              setIdCheckStatus(IdNumberStatus.IDLE);
-              setIsValidIdNumber(null);
-              return;
-            }
-
-            if (!idCheckLoading) {
-              setIdCheckLoading(true);
-              setIdCheckStatus(IdNumberStatus.CHECKING);
-
-              try {
-                const res = await fetch(
-                  `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/missings/check-id-validity?id_number=${idValue}`
-                );
-
-                if (!res.ok) {
-                  throw new Error("فشل في التحقق من رقم الهوية");
-                }
-
-                const data = await res.json();
-
-                if (data.exists) {
-                  setIdCheckStatus(IdNumberStatus.INVALID);
-                  setIsValidIdNumber({
-                    isValid: false,
-                    story_id: data._id,
-                  });
-                } else {
-                  setIdCheckStatus(IdNumberStatus.VALID);
-                  setIsValidIdNumber({
-                    isValid: true,
-                    story_id: null,
-                  });
-                }
-              } catch (err) {
-                console.error("Error checking id_number:", err);
-                setIdCheckStatus(IdNumberStatus.IDLE);
-                toast.error("خطأ في التحقق من رقم الهوية");
-              } finally {
-                setIdCheckLoading(false);
+              if (idValue.length > 0) {
+                setIdCheckStatus(IdNumberStatus.INVALID);
+                setIsValidIdNumber({
+                  isValid: false,
+                  story_id: null,
+                });
               }
+              return;
+            }
+
+            // Check if it's a valid number
+            if (!/^\d+$/.test(idValue)) {
+              setIdCheckStatus(IdNumberStatus.INVALID);
+              setIsValidIdNumber({
+                isValid: false,
+                story_id: null,
+              });
+              return;
+            }
+
+            // Skip validation in edit mode if ID hasn't changed
+            const shouldValidate = id ? idValue !== originalIdNumber : true;
+            if (!shouldValidate) {
+              setIdCheckStatus(IdNumberStatus.VALID);
+              setIsValidIdNumber({
+                isValid: true,
+                story_id: null,
+              });
+              return;
+            }
+
+            // Prevent multiple simultaneous requests
+            if (idCheckLoading) {
+              return;
+            }
+
+            setIdCheckLoading(true);
+            setIdCheckStatus(IdNumberStatus.CHECKING);
+
+            try {
+              const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/missings/check-id-validity?id_number=${idValue}`
+              );
+
+              if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                throw new Error(
+                  errorData?.error || "فشل في التحقق من رقم الهوية"
+                );
+              }
+
+              const data = await res.json();
+
+              console.log("ID Validation Response:", data); // Debug log
+
+              if (data.exists) {
+                setIdCheckStatus(IdNumberStatus.INVALID);
+                setIsValidIdNumber({
+                  isValid: false,
+                  story_id: data._id,
+                });
+              } else {
+                setIdCheckStatus(IdNumberStatus.VALID);
+                setIsValidIdNumber({
+                  isValid: true,
+                  story_id: null,
+                });
+              }
+            } catch (err) {
+              console.error("Error checking id_number:", err);
+              setIdCheckStatus(IdNumberStatus.IDLE);
+              setIsValidIdNumber(null);
+              toast.error("خطأ في التحقق من رقم الهوية");
+            } finally {
+              setIdCheckLoading(false);
             }
           };
 

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
-import { MissingStatus, Role } from "@/app/enums";
+import { Role } from "@/app/enums";
 
 const secret = process.env.NEXTAUTH_SECRET;
 type Params = Promise<{ id: string }>;
@@ -49,7 +49,6 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
       {
         $set: {
           ...updateData,
-          status: MissingStatus.PENDING,
           updatedAt: new Date(),
         },
       } // ✅ include tags here
