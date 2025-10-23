@@ -1,31 +1,39 @@
-import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { ObjectId } from "mongodb";
 import { MissingStatus } from "@/app/enums";
+
+const secret = process.env.NEXTAUTH_SECRET;
 
 export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db("ghorabaa");
+    const missingsCollection = db.collection("missings");
+    const usersCollection = db.collection("users");
 
     const { searchParams } = new URL(req.url);
-    const status = searchParams.get("status");
+
+    const status = searchParams.get("status")?.trim();
     const search = searchParams.get("query")?.trim();
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
-    // Build match stage
-    const matchStage: Record<string, unknown> = {};
+    // Base query
+    const query: Record<string, unknown> = {};
 
     if (
       status &&
       Object.values(MissingStatus).includes(status as MissingStatus)
     ) {
-      matchStage.status = status;
+      query["status"] = status;
     }
 
+    // Search query
     if (search) {
-      matchStage.$or = [
+      query.$or = [
         { title: { $regex: search, $options: "i" } },
         { nickname: { $regex: search, $options: "i" } },
         {
@@ -50,74 +58,48 @@ export async function GET(req: NextRequest) {
       ];
     }
 
-    const pipeline = [
-      { $match: matchStage },
-      {
-        $facet: {
-          metadata: [{ $count: "total" }],
-          data: [
-            {
-              $project: {
-                _id: 1,
-                id_number: 1,
-                image: 1,
-                title: 1,
-                age: 1,
-                gender: 1,
-                profession: 1,
-                nickname: 1,
-                birth_date: 1,
-                missing_date: 1,
-                location: 1,
-                details: 1,
-                status: 1,
-                keywords: 1,
-                createdAt: 1,
-                updatedAt: 1,
-                publisher_id: 1,
-                visits: 1,
-                reporter_name: 1,
-                reporter_phone_number: 1,
-                reporter_location: 1,
-                effectiveDate: 1,
-              },
-            },
-            { $sort: { effectiveDate: -1 } },
-            { $skip: skip },
-            { $limit: limit },
-          ],
-        },
-      },
-      {
-        $project: {
-          data: 1,
-          pagination: {
-            total: { $arrayElemAt: ["$metadata.total", 0] },
-            page: { $literal: page },
-            limit: { $literal: limit },
-            totalPages: {
-              $ceil: {
-                $divide: [{ $arrayElemAt: ["$metadata.total", 0] }, limit],
-              },
-            },
-          },
-        },
-      },
-    ];
+    // Get session token for favorites
+    const token = await getToken({ req, secret });
 
-    const result = await db.collection("missings").aggregate(pipeline).next();
+    let favoritesArray: ObjectId[] = [];
 
-    const total = result?.pagination?.total || 0;
+    if (token?.email) {
+      const user = await usersCollection.findOne({ email: token.email });
+      favoritesArray = user?.favoritesArray || [];
+    }
+
+    // Fetch missings using find instead of aggregate
+    const missings = await missingsCollection
+      .find(query)
+      .sort({ effectiveDate: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
+    // Serialize data and check favorites
+    const serializedMissings = missings.map((m) => {
+      const isFavorited = favoritesArray.some((favId) =>
+        favId.equals ? favId.equals(m._id) : favId === m._id
+      );
+
+      return {
+        ...m,
+        _id: m._id.toString(),
+        favorite: isFavorited,
+      };
+    });
+
+    const total = await missingsCollection.countDocuments(query);
+    const hasMore = skip + missings.length < total;
 
     return NextResponse.json(
       {
-        data: result?.data || [],
-        pagination: {
-          total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit),
-        },
+        message: "تم جلب البيانات بنجاح",
+        data: serializedMissings,
+        hasMore,
+        total,
+        page,
+        limit,
       },
       { status: 200 }
     );

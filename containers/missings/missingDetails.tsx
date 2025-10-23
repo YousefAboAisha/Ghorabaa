@@ -4,7 +4,7 @@ import PageTitles from "@/components/UI/typography/pageTitles";
 import { notFound } from "next/navigation";
 import { dateConversion, fullDateConversion } from "@/utils/format";
 import { ContentType, MissingStatus } from "@/app/enums";
-import { BsEye } from "react-icons/bs";
+import { BsExclamationTriangle, BsEye } from "react-icons/bs";
 import LogVisit from "@/containers/missings/logVisit";
 import { getAgeLabel, getFullName } from "@/utils/text";
 import ShareButton from "../stories/shareButton";
@@ -30,10 +30,13 @@ const MissingDetails = async ({ id }: Props) => {
     await storyResponse.json();
 
   const isApproved = data.status === MissingStatus.APPROVED;
+  const isPending = data.status === MissingStatus.PENDING;
+  const isArchived = data.status === MissingStatus.ARCHIVED;
 
-  if (!isApproved) {
-    notFound(); // only allow access if approved, OR user is admin/owner
+  if (isArchived) {
+    notFound();
   }
+
   const fullName = getFullName(data.title);
 
   const missingDurationInDays = Math.floor(
@@ -43,7 +46,17 @@ const MissingDetails = async ({ id }: Props) => {
 
   return (
     <div className="mt-24">
-      {data.status === MissingStatus.APPROVED && <LogVisit missing_id={id} />}
+      {isApproved && <LogVisit missing_id={id} />}
+
+      {isPending && (
+        <div className="relative flex items-center gap-2 bg-pending text-white border rounded-md shadow-sm p-3 mt-4 mb-4 w-full font-semibold">
+          <BsExclamationTriangle size={20} />
+          <p className="text-[13px]">
+            طلب إضافة المفقود قيد المراجعة حالياً، وسيتم نشره بعد التأكد من
+            سلامة البيانات المُدخلة من قبل المشرفين
+          </p>
+        </div>
+      )}
 
       <div className="flex flex-col gap-2">
         <PageTitles content_title={fullName} />

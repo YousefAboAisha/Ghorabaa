@@ -23,18 +23,21 @@ const MissingsSection = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const observer = useRef<IntersectionObserver | null>(null);
-  const fetching = useRef(false);
+  const fetching = useRef(false); // ✅ prevent double-fetching
   const searchParams = useSearchParams();
 
-  // Refs to track initial loads
-  const initialMount = useRef(true);
-  const searchQueryInitial = useRef(true);
+  // Search params
+  const gender = searchParams.get("gender");
+  const ageFrom = searchParams.get("ageFrom");
+  const ageTo = searchParams.get("ageTo");
+  const city = searchParams.get("city");
+  const neighborhood = searchParams.get("neighborhood");
+  const day = searchParams.get("day");
+  const month = searchParams.get("month");
+  const year = searchParams.get("year");
 
-  const fetchMissings = async (
-    pageToFetch: number,
-    isSearch: boolean = false
-  ) => {
-    if (fetching.current) return;
+  const fetchMissings = async (pageToFetch: number) => {
+    if (!hasMore || fetching.current) return;
 
     fetching.current = true;
     setError(null);
@@ -45,9 +48,18 @@ const MissingsSection = () => {
       limit: "8",
     });
 
-    if (searchQuery) {
-      params.set("query", searchQuery);
-    }
+    // Add search query if exists
+    if (searchQuery) params.set("query", searchQuery);
+
+    // Add filter params
+    if (gender) params.set("gender", gender);
+    if (ageFrom) params.set("ageFrom", ageFrom);
+    if (ageTo) params.set("ageTo", ageTo);
+    if (city) params.set("city", city);
+    if (neighborhood) params.set("neighborhood", neighborhood);
+    if (day) params.set("day", day);
+    if (month) params.set("month", month);
+    if (year) params.set("year", year);
 
     try {
       const res = await fetch(
@@ -72,7 +84,7 @@ const MissingsSection = () => {
 
       setInitialLoading(false);
       setMissings((prev) => {
-        if (pageToFetch === 1 || isSearch) return data;
+        if (pageToFetch === 1) return data;
 
         const existingIds = new Set(prev.map((m) => m._id));
         const unique = data.filter(
@@ -82,7 +94,7 @@ const MissingsSection = () => {
       });
 
       setHasMore(newHasMore);
-      setPage(pageToFetch + 1);
+      setPage((prev) => prev + 1);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
@@ -93,44 +105,37 @@ const MissingsSection = () => {
     }
   };
 
-  // **SINGLE SOURCE OF TRUTH FOR INITIAL LOAD**
+  // Reset everything when search params or search query changes
   useEffect(() => {
-    if (initialMount.current) {
-      initialMount.current = false;
-      fetchMissings(1);
-    }
-  }, []);
-
-  // Handle search params changes (only after initial mount)
-  useEffect(() => {
-    if (initialMount.current) return; // Skip on initial mount
-
     setMissings([]);
     setPage(1);
     setHasMore(true);
     setInitialLoading(true);
-    fetchMissings(1, true);
-  }, [searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.toString(), searchQuery]);
 
-  // Handle search query changes (only after initial mount)
+  // Fetch data when page or initialLoading changes
   useEffect(() => {
-    if (searchQueryInitial.current) {
-      searchQueryInitial.current = false;
-      return; // Skip initial mount
+    if (page === 1 && initialLoading) {
+      fetchMissings(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, initialLoading]);
 
+  // Search query debounce effect
+  useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      setMissings([]);
-      setPage(1);
-      setHasMore(true);
-      setInitialLoading(true);
-      fetchMissings(1, true);
+      if (!initialLoading) {
+        setMissings([]);
+        setPage(1);
+        setHasMore(true);
+        setInitialLoading(true);
+      }
     }, 500);
 
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
 
-  // Infinite scroll
   const lastElementRef = useCallback(
     (node: HTMLDivElement) => {
       if (observer.current) observer.current.disconnect();
@@ -142,7 +147,7 @@ const MissingsSection = () => {
           !initialLoading &&
           !fetching.current
         ) {
-          fetchMissings(page);
+          fetchMissings(page); // use latest page
         }
       });
 
@@ -151,70 +156,81 @@ const MissingsSection = () => {
     [hasMore, initialLoading, page]
   );
 
-  const renderContent = () => {
-    if (error) {
-      return <ErrorMessage error={error} className="mt-8" />;
-    }
-
-    if (initialLoading && missings.length === 0) {
-      return <StoryCardSkeletonLoader length={8} className="!mt-8" />;
-    }
-
-    if (missings.length > 0) {
-      return (
-        <>
-          <div className="cards-grid-4">
-            {missings.map((missing: MissingInterface, index: number) => {
-              const isLast = index === missings.length - 1;
-              return isLast ? (
-                <div key={missing._id as string} ref={lastElementRef}>
-                  <MissingCard data={missing} />
-                </div>
-              ) : (
-                <MissingCard key={missing._id as string} data={missing} />
-              );
-            })}
-          </div>
-
-          {hasMore && !initialLoading && (
-            <div className="mt-4 flex justify-center gap-2 text-gray_dark text-[14px]">
-              جارٍ جلب البيانات
-              <AiOutlineLoading3Quarters size={16} className="animate-spin" />
-            </div>
-          )}
-        </>
-      );
-    }
-
-    return <NoDataMessage className="min-h-[50vh]" />;
-  };
+  if (error) {
+    return (
+      <>
+        <SearchHeader
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
+        <ErrorMessage error={error} className="mt-8" />
+      </>
+    );
+  }
 
   return (
     <>
-      <div className="flex items-center justify-between gap-4 mt-8">
-        <div className="w-full md:w-1/2">
-          <Input
-            placeholder="البحث عن مفقود"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            icon={<CiSearch size={20} className="text-gray-500" />}
-            className="bg-white focus:border-secondary border !rounded-xl"
-          />
-        </div>
+      <SearchHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-        <Link className="relative min-w-fit" href={"/addMissing"}>
-          <div className="md:w-fit w-full">
-            <Button
-              title="مفقود جديد"
-              className="px-6 w-full bg-secondary text-white"
-              icon={<BsPlus size={20} />}
-            />
-          </div>
-        </Link>
+      <div className="relative mb-12 mt-8">
+        {initialLoading ? (
+          <StoryCardSkeletonLoader length={8} className="!mt-8" />
+        ) : missings.length > 0 ? (
+          <>
+            <div className="cards-grid-4">
+              {missings.map((missing: MissingInterface) => (
+                <MissingCard key={missing._id as string} data={missing} />
+              ))}
+            </div>
+
+            {/* Observed loader div for infinite scroll */}
+            <div ref={lastElementRef} className="h-10 mt-10 bg-transparent" />
+
+            {!hasMore ? null : (
+              <div className="mt-4 flex justify-center gap-2 text-gray_dark text-[14px]">
+                جارٍ جلب البيانات
+                <AiOutlineLoading3Quarters size={16} className="animate-spin" />
+              </div>
+            )}
+          </>
+        ) : (
+          <NoDataMessage className="min-h-[50vh]" />
+        )}
+      </div>
+    </>
+  );
+};
+
+// Extracted search header component for better readability
+const SearchHeader = ({
+  searchQuery,
+  setSearchQuery,
+}: {
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
+}) => {
+  return (
+    <div className="flex items-center justify-between gap-4 mt-8">
+      <div className="w-full md:w-1/2">
+        <Input
+          placeholder="البحث عن مفقود"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          icon={<CiSearch size={20} className="text-gray-500" />}
+          className="bg-white focus:border-secondary border !rounded-xl"
+        />
       </div>
 
-      <div className="relative mb-12 mt-8">{renderContent()}</div>
-    </>
+      <Link className="relative min-w-fit" href={"/addMissing"}>
+        <div className="md:w-fit w-full">
+          <Button
+            title="مفقود جديد"
+            className="px-6 w-full bg-secondary text-white"
+            icon={<BsPlus size={20} />}
+          />
+        </div>
+      </Link>
+    </div>
   );
 };
 
