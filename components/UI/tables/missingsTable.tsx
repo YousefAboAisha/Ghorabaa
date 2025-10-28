@@ -149,6 +149,16 @@ const MissingsTable = () => {
               size={22}
             />
           </Link>
+
+          <CiTrash
+            title="حذف القصة"
+            className="cursor-pointer text-rejected"
+            onClick={() => {
+              setIsDeleteModalOpen(true);
+              setMissingData(missing);
+            }}
+            size={22}
+          />
         </>
       );
     }

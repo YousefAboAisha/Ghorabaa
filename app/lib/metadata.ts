@@ -1,21 +1,21 @@
 // lib/metadata.ts
-
 import { Metadata } from "next";
 
 const baseUrl = "https://www.ghorabaa.com";
 const baseTitle = "غُرباء";
 const baseDescription =
   "منصة غُرباء توثق قصص الشهداء الفلسطينيين وتخلد ذكراهم. استكشف مكتبة رقمية غنية بالسير الذاتية، الصور، والإحصائيات حول الشهداء، وشارك قصصهم مع العالم.";
-const baseImage = `/logos/og-image.jpg`;
+const baseImage = `${baseUrl}/logos/og-image.jpg`;
+
 const baseIcons = {
-  icon: "/logos/logo.svg",
-  apple: "/logos/logo.svg",
+  icon: `${baseUrl}/logos/logo.svg`,
+  apple: `${baseUrl}/logos/logo.svg`,
 };
 
-const baseTwitterHandle = "@ghorabaa"; // update if needed
+const baseTwitterHandle = "@ghorabaa_gaza";
 
 const sharedOpenGraph = {
-  siteName: "غُرباء",
+  siteName: baseTitle,
   images: [
     {
       url: baseImage,
@@ -35,12 +35,9 @@ const sharedTwitter = {
   creator: baseTwitterHandle,
 };
 
-// [ Home metadata ]
-export const HomeMetadata = {
-  title: {
-    default: `${baseTitle} | أكبر منصة رقمية لقصص الشهداء الفلسطينيين`,
-    template: "%s | غُرباء",
-  },
+// ===== Home =====
+export const HomeMetadata: Metadata = {
+  title: "غُرباء | أكبر منصة رقمية لقصص الشهداء الفلسطينيين",
   description: baseDescription,
   keywords: [
     "غُرباء",
@@ -52,32 +49,25 @@ export const HomeMetadata = {
     "مكتبة الشهداء",
     "توثيق الشهداء",
   ],
-  authors: [{ name: "منصة غُرباء", url: baseUrl }],
+  authors: [{ name: baseTitle, url: baseUrl }],
   metadataBase: new URL(baseUrl),
-  alternates: {
-    canonical: baseUrl,
-  },
+  alternates: { canonical: baseUrl },
   openGraph: {
     ...sharedOpenGraph,
     title: baseTitle,
     description: baseDescription,
     url: baseUrl,
   },
-  twitter: {
-    ...sharedTwitter,
-    title: baseTitle,
-    description: baseDescription,
-  },
+  twitter: { ...sharedTwitter, title: baseTitle, description: baseDescription },
   icons: baseIcons,
+  robots: { index: true, follow: true },
 };
 
-// [ Search metadata ]
-export const SearchMetadata = {
-  title: {
-    default: `${baseTitle} |  البحث عن الشهداء`,
-  },
+// ===== Search =====
+export const SearchMetadata: Metadata = {
+  title: "البحث عن الشهداء | غُرباء",
   description:
-    "ابحث في أكبر قاعدة بيانات رقمية للشهداء الفلسطينيين حسب الاسم، أو رقم الهوية.",
+    "ابحث في أكبر قاعدة بيانات رقمية للشهداء الفلسطينيين حسب الاسم أو رقم الهوية.",
   openGraph: {
     ...sharedOpenGraph,
     title: "البحث عن الشهداء | غُرباء",
@@ -92,14 +82,13 @@ export const SearchMetadata = {
       "ابحث في قصص الشهداء الفلسطينيين بسهولة عبر منصة غُرباء الرقمية.",
   },
   icons: baseIcons,
+  robots: { index: true, follow: true },
+  alternates: { canonical: `${baseUrl}/search` },
 };
 
-// [ Stories metadata ]
-export const StoriesMetadata = {
-  title: {
-    default: `${baseTitle} | قصص الشهداء`,
-    template: "%s | شهداؤنا",
-  },
+// ===== Stories =====
+export const StoriesMetadata: Metadata = {
+  title: "قصص الشهداء | غُرباء",
   description:
     "اكتشف قصص شهدائنا الأبرار الذين ضحوا في سبيل الحق والحرية. منصة غُرباء تجمع أرشيفاً رقمياً شاملاً لتوثيق بطولات الشهداء الفلسطينيين.",
   keywords: [
@@ -109,45 +98,46 @@ export const StoriesMetadata = {
     "شهداء فلسطين",
     "تاريخ الشهداء",
     "غُرباء",
-    "شهداؤنا الأبرار",
   ],
   openGraph: {
     ...sharedOpenGraph,
-    title: "شهداؤنا الأبرار | غُرباء - منصة الشهداء",
+    title: "قصص الشهداء | غُرباء",
     description:
       "منصة غُرباء تعرض قصص الشهداء الفلسطينيين الأبرار الذين ضحوا في سبيل الحق.",
     url: `${baseUrl}/stories`,
   },
   twitter: {
     ...sharedTwitter,
-    title: "شهداؤنا الأبرار | غُرباء - منصة الشهداء",
+    title: "قصص الشهداء | غُرباء",
     description:
       "منصة غُرباء تعرض قصص الشهداء الفلسطينيين الأبرار الذين ضحوا في سبيل الحق.",
   },
   icons: baseIcons,
+  robots: { index: true, follow: true },
+  alternates: { canonical: `${baseUrl}/stories` },
 };
 
-// Massacres metadate
+// ===== Massacres =====
 export const MassacresMetadata: Metadata = {
-  title: "المجازر الصهيونية | سجل جرائم الاحتلال - غرباء",
+  title: "المجازر الصهيونية | سجل جرائم الاحتلال - غُرباء",
   description:
-    "توثيق شامل للمجازر الصهيونية بحق الشعب الفلسطيني مع تفاصيل الضحايا والأحداث والتواريخ",
+    "توثيق شامل للمجازر الصهيونية بحق الشعب الفلسطيني مع تفاصيل الضحايا والأحداث والتواريخ.",
   keywords: [
     "مجازر صهيونية",
     "جرائم الاحتلال",
     "شهداء فلسطين",
     "توثيق المجازر",
-    "جرائم الحرب",
     "غرباء",
   ],
   openGraph: {
-    title: "المجازر الصهيونية | سجل جرائم الاحتلال - غرباء",
+    ...sharedOpenGraph,
+    title: "المجازر الصهيونية | سجل جرائم الاحتلال - غُرباء",
     description:
-      "أرشيف كامل لمجازر الاحتلال الصهيوني ضد الفلسطينيين مع صور وتفاصيل الضحايا",
+      "أرشيف كامل لمجازر الاحتلال الصهيوني ضد الفلسطينيين مع صور وتفاصيل الضحايا.",
     url: `${baseUrl}/massacres`,
     images: [
       {
-        url: "/images/massacres-og.jpg",
+        url: `${baseUrl}/images/massacres-og.jpg`,
         width: 1200,
         height: 630,
         alt: "توثيق المجازر الصهيونية بحق الشعب الفلسطيني",
@@ -155,45 +145,35 @@ export const MassacresMetadata: Metadata = {
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "المجازر الصهيونية | سجل جرائم الاحتلال - غرباء",
-    description: "توثيق كامل لمجازر الاحتلال الصهيوني ضد الشعب الفلسطيني",
-    images: ["/images/massacres-og.jpg"],
+    ...sharedTwitter,
+    title: "المجازر الصهيونية | سجل جرائم الاحتلال - غُرباء",
+    description: "توثيق كامل لمجازر الاحتلال الصهيوني ضد الشعب الفلسطيني.",
+    images: [`${baseUrl}/images/massacres-og.jpg`],
   },
-  alternates: {
-    canonical: "/massacres",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  other: {
-    "dc:language": "ar",
-    "dc:title": "المجازر الصهيونية ضد الفلسطينيين",
-    "dc:description": "توثيق تاريخي للمجازر الصهيونية بحق الشعب الفلسطيني",
-  },
+  robots: { index: true, follow: true },
+  alternates: { canonical: `${baseUrl}/massacres` },
 };
 
-// Statistics metadata
+// ===== Statistics =====
 export const StatisticsMetadata: Metadata = {
-  title: "الإحصائيات والبيانات | أرقام وتقارير عن الشهداء - غرباء",
+  title: "الإحصائيات والبيانات | غُرباء",
   description:
-    "أحدث الإحصائيات والبيانات الموثقة عن شهداء فلسطين مع تحليلات وتقارير مفصلة",
+    "أحدث الإحصائيات والبيانات الموثقة عن شهداء فلسطين مع تحليلات وتقارير مفصلة.",
   keywords: [
     "إحصائيات الشهداء",
     "بيانات الشهداء الفلسطينيين",
     "تقارير إحصائية",
     "أرقام الشهداء",
-    "توثيق إحصائي",
     "غرباء",
   ],
   openGraph: {
-    title: "الإحصائيات والبيانات | أرقام وتقارير عن الشهداء - غرباء",
-    description: "بيانات رقمية موثقة وتقارير إحصائية عن شهداء فلسطين",
+    ...sharedOpenGraph,
+    title: "الإحصائيات والبيانات | غُرباء",
+    description: "بيانات رقمية موثقة وتقارير إحصائية عن شهداء فلسطين.",
     url: `${baseUrl}/statistics`,
     images: [
       {
-        url: "/images/statistics-og.jpg",
+        url: `${baseUrl}/images/statistics-og.jpg`,
         width: 1200,
         height: 630,
         alt: "إحصائيات وتقارير عن شهداء فلسطين",
@@ -201,46 +181,36 @@ export const StatisticsMetadata: Metadata = {
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "الإحصائيات والبيانات | أرقام وتقارير عن الشهداء - غرباء",
-    description: "أحدث البيانات الإحصائية الموثقة عن شهداء فلسطين",
-    images: ["/images/statistics-og.jpg"],
+    ...sharedTwitter,
+    title: "الإحصائيات والبيانات | غُرباء",
+    description: "أحدث البيانات الإحصائية الموثقة عن شهداء فلسطين.",
+    images: [`${baseUrl}/images/statistics-og.jpg`],
   },
-  alternates: {
-    canonical: "/statistics",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  other: {
-    "dc:format": "dataset",
-    "dc:publisher": "غرباء",
-    "dc:date": new Date().toISOString(),
-  },
+  robots: { index: true, follow: true },
+  alternates: { canonical: `${baseUrl}/statistics` },
 };
 
-// About metadata
+// ===== About =====
 export const AboutMetadata: Metadata = {
-  title: "عن غرباء | منصة توثيق الشهداء الفلسطينيين - قصص وإحصائيات",
+  title: "عن غُرباء | منصة توثيق الشهداء الفلسطينيين",
   description:
-    "منصة غرباء توثق قصص الشهداء الفلسطينيين وتقدم بيانات موثقة عن جرائم الاحتلال",
+    "منصة غُرباء توثق قصص الشهداء الفلسطينيين وتقدم بيانات موثقة عن جرائم الاحتلال.",
   keywords: [
     "منصة غرباء",
     "توثيق الشهداء",
     "قصص الشهداء الفلسطينيين",
     "عن الموقع",
     "رسالة غرباء",
-    "رؤية المنصة",
   ],
   openGraph: {
-    title: "عن غرباء | منصة توثيق الشهداء الفلسطينيين",
+    ...sharedOpenGraph,
+    title: "عن غُرباء | منصة توثيق الشهداء الفلسطينيين",
     description:
-      "تعرف على رؤية ورسالة منصة غرباء في توثيق قصص الشهداء وإحصاءات الجرائم الصهيونية",
+      "تعرف على رؤية ورسالة منصة غُرباء في توثيق قصص الشهداء وإحصاءات الجرائم الصهيونية.",
     url: `${baseUrl}/about`,
     images: [
       {
-        url: "/images/about-og.jpg",
+        url: `${baseUrl}/images/about-og.jpg`,
         width: 1200,
         height: 630,
         alt: "عن منصة غرباء لتوثيق الشهداء الفلسطينيين",
@@ -248,46 +218,35 @@ export const AboutMetadata: Metadata = {
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "عن غرباء | منصة توثيق الشهداء الفلسطينيين",
-    description: "الرؤية والرسالة وراء منصة غرباء لتوثيق جرائم الاحتلال",
-    images: ["/images/about-og.jpg"],
+    ...sharedTwitter,
+    title: "عن غُرباء | منصة توثيق الشهداء الفلسطينيين",
+    description: "الرؤية والرسالة وراء منصة غُرباء لتوثيق جرائم الاحتلال.",
+    images: [`${baseUrl}/images/about-og.jpg`],
   },
-  alternates: {
-    canonical: "/about",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  other: {
-    "dc:publisher": "منصة غرباء",
-    "dc:type": "InteractiveResource",
-    "og:video": "/videos/platform-overview.mp4",
-  },
+  robots: { index: true, follow: true },
+  alternates: { canonical: `${baseUrl}/about` },
 };
 
-// Events metadata
+// ===== Events =====
 export const EventsMetadata: Metadata = {
-  title: "الفعاليات والأحداث | أنشطة ونشاطات تضامنية مع فلسطين - غرباء",
+  title: "الفعاليات والأحداث | غُرباء",
   description:
-    "أحدث الفعاليات والأنشطة التضامنية مع القضية الفلسطينية وتوثيق الأحداث الجارية",
+    "أحدث الفعاليات والأنشطة التضامنية مع القضية الفلسطينية وتوثيق الأحداث الجارية.",
   keywords: [
     "فعاليات فلسطين",
     "أحداث تضامنية",
-    "أنشطة دعم فلسطين",
-    "تقويم الأحداث",
-    "فعاليات غرباء",
     "نشاطات فلسطينية",
+    "فعاليات غرباء",
   ],
   openGraph: {
-    title: "الفعاليات والأحداث | أنشطة تضامنية مع فلسطين - غرباء",
+    ...sharedOpenGraph,
+    title: "الفعاليات والأحداث | غُرباء",
     description:
-      "تقويم الفعاليات والأنشطة التضامنية مع الشعب الفلسطيني حول العالم",
+      "تقويم الفعاليات والأنشطة التضامنية مع الشعب الفلسطيني حول العالم.",
     url: `${baseUrl}/events`,
     images: [
       {
-        url: "/images/events-og.jpg",
+        url: `${baseUrl}/images/events-og.jpg`,
         width: 1200,
         height: 630,
         alt: "فعاليات وأنشطة تضامنية مع فلسطين",
@@ -295,126 +254,15 @@ export const EventsMetadata: Metadata = {
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "الفعاليات والأحداث | أنشطة تضامنية مع فلسطين",
-    description: "أحدث الفعاليات التضامنية والأنشطة الداعمة للقضية الفلسطينية",
-    images: ["/images/events-og.jpg"],
+    ...sharedTwitter,
+    title: "الفعاليات والأحداث | غُرباء",
+    description: "أحدث الفعاليات التضامنية والأنشطة الداعمة للقضية الفلسطينية.",
+    images: [`${baseUrl}/images/events-og.jpg`],
   },
-  alternates: {
-    canonical: "/events",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  other: {
-    "dc:title": "فعاليات دعم فلسطين",
-    "dc:creator": "غرباء",
-    "event:type": "PoliticalActivity",
-  },
+  robots: { index: true, follow: true },
+  alternates: { canonical: `${baseUrl}/events` },
 };
 
-// Sign-in metadata
-export const SigninMetadata: Metadata = {
-  title: "تسجيل الدخول - موقع غرباء",
-  description: "سجل الدخول إلى حسابك للوصول إلى محتوى غرباء الحصري",
-  keywords: ["تسجيل دخول", "حساب غرباء", "دخول الأعضاء", "موقع غرباء"],
-  robots: {
-    index: false, // Prevent search engines from indexing sign-in page
-    follow: true,
-  },
-  openGraph: {
-    title: "تسجيل الدخول - موقع غرباء",
-    description: "سجل الدخول إلى حسابك للوصول إلى محتوى غرباء الحصري",
-    url: `${baseUrl}/signin`,
-    type: "website",
-  },
-};
-
-// Sign-up metadata
-export const SignupMetadata: Metadata = {
-  title: "إنشاء حساب جديد - موقع غرباء",
-  description:
-    "انضم إلى مجتمع غرباء وأنشئ حسابك الشخصي للوصول إلى المحتوى الحصري",
-  keywords: [
-    "تسجيل جديد",
-    "إنشاء حساب",
-    "تسجيل عضو جديد",
-    "موقع غرباء",
-    "انضم إلينا",
-  ],
-  robots: {
-    index: false, // Recommended to prevent indexing of signup pages
-    follow: true,
-  },
-  openGraph: {
-    title: "إنشاء حساب جديد - موقع غرباء",
-    description:
-      "انضم إلى مجتمع غرباء وأنشئ حسابك الشخصي للوصول إلى المحتوى الحصري",
-    url: `${baseUrl}/signup`,
-    type: "website",
-    images: [
-      {
-        url: "/logos/og-image.jpg", // Your custom signup OG image
-        width: 1200,
-        height: 630,
-        alt: "إنشاء حساب في موقع غرباء",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "إنشاء حساب جديد - موقع غرباء",
-    description: "انضم إلى مجتمع غرباء وأنشئ حسابك الشخصي",
-    images: ["/logos/og-image.jpg"],
-  },
-  alternates: {
-    canonical: `${baseUrl}/signup`,
-  },
-};
-
-// Add Story metadata
-export const AddStoryMetadata: Metadata = {
-  title: "إضافة قصة شهيد جديد | توثيق قصص الشهداء - غرباء",
-  description:
-    "ساهم معنا في توثيق قصة شهيد فلسطيني عبر منصة غرباء لضمان بقاء الذكرى خالدة",
-  keywords: [
-    "إضافة قصة شهيد",
-    "توثيق الشهداء",
-    "نموذج إضافة قصة",
-    "سجل الشهداء",
-    "منصة غرباء",
-    "قصص الشهداء الفلسطينيين",
-  ],
-  openGraph: {
-    title: "إضافة قصة شهيد جديد | منصة غرباء",
-    description:
-      "ساهم في توثيق تاريخ الشهداء الفلسطينيين عبر إضافة قصصهم على منصة غرباء",
-    url: `${baseUrl}/addStory`,
-    images: [
-      {
-        url: "/images/add-story-og.jpg",
-        width: 1200,
-        height: 630,
-        alt: "نموذج إضافة قصة شهيد على منصة غرباء",
-      },
-    ],
-  },
-  alternates: {
-    canonical: "/addStory",
-  },
-  robots: {
-    index: false, // Recommended for form pages
-    follow: true,
-  },
-  other: {
-    privacy: "form-submission", // Indicates this is a form page
-    "cache-control": "private, no-store", // Sensitive form handling
-    "dc:rights": "جميع الحقوق محفوظة للمساهمين",
-  },
-};
-
-// Add Missing Person Form metadata
 export const AddMissingFormMetadata: Metadata = {
   title: "منصة غُرباء | إضافة مفقود جديد",
   description:

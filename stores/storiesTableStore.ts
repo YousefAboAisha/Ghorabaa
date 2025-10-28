@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface StatisticsData {
+export interface StatisticsData {
   // Define your expected data structure here
   approved: number;
   pending: number;
